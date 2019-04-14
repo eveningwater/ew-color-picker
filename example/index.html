@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>example</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .demo {
+            width: 200px;
+            height: 200px;
+            border: 1px solid;
+        }
+        .box{
+            width: 400px;
+            height: 400px;
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="demo"></div>
+    </div>
+    <script src="../src/index.js"></script>
+    <script>
+        var drag = new ewDrag('.demo');
+        // var drag = new ewDrag({
+        //     el: document.getElementsByClassName('demo'),//拖动元素
+        //     // scopeEl:document.getElementsByClassName('box'),
+        //     isWindow: true,//是否限制在浏览器可见窗口内,如果为false，超出后出现滚动条
+        //     width:800,
+        //     height:800
+        // });
+    </script>
+</body>
+
+</html>

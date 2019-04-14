@@ -1,0 +1,39 @@
+{
+  "name": "ew-drag",
+  "version": "0.0.1",
+  "description": "一个拖拽插件",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "release": "webpack",
+    "example": "http-server -p 8080"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eveningwater/ew-drag.git"
+  },
+  "keywords": [
+    "drag",
+    "plugin"
+  ],
+  "author": "eveningwater",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eveningwater/ew-drag/issues"
+  },
+  "homepage": "https://github.com/eveningwater/ew-drag#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-latest": "^6.24.1",
+    "gitbook-cli": "^2.3.2",
+    "http-server": "^0.11.1",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  },
+  "dependencies": {
+    "user": "0.0.0"
+  }
+}
