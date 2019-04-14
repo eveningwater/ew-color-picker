@@ -15,9 +15,9 @@
   //默认配置(传入拖拽元素的dom对象或者获取dom对象的字符串)
   var drag = new ewDrag('.demo');
   //或var drag = new ewDrag(document.getElementByClassName('demo'))
-  
+
 ```
 
 ## cdn引入
 
-CDN:https://www.unpkg.com/ew-drag@0.0.1/release/bundle.js
+CDN:https://www.unpkg.com/ew-drag@0.0.3/release/bundle.js
