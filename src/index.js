@@ -2,9 +2,27 @@
  * 功能:构造函数
  * params@1:配置对象
  */
+/*
+ * 功能:判断是否是一个字符串
+ * params@1:字符串
+ */
 function isStr(str){
     return typeof str === 'string';
 }
+/*
+ * 功能:判断是否是一个undefined
+ * params@1:值
+ */
+function isUndefined(value){
+    return typeof value === 'undefined';
+}
+/*
+ * 功能:判断是否是一个对象
+ * params@1:对象
+ */
+function isObject(obj) {
+    return Object.prototype.toString.call(obj) === "[object Object]";
+};
 function ewDrag(option) {
     var config,el,scopeEl;
     // 默认配置
@@ -15,7 +33,7 @@ function ewDrag(option) {
             height: window.innerHeight,
             isWindow: true
         };
-    } else if (this.isObject(option) && option.el) {
+    } else if (isObject(option) && option.el) {
         el = isStr(option.el) ? this.getDOM(option.el) : option.el;
         scopeEl = isStr(option.scopeEl) ? this.getDOM(option.scopeEl) : option.scopeEl;
         // 配置对象
@@ -72,13 +90,6 @@ ewDrag.prototype.getDOM = function (ident) {
         selector = document.getElementsByTagName(ident);
     }
     return selector;
-};
-/*
- * 功能:判断是否是一个对象
- * params@1:对象
- */
-ewDrag.prototype.isObject = function (obj) {
-    return Object.prototype.toString.call(obj) === "[object Object]";
 };
 /*
  * 功能:窗口拖动
