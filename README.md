@@ -1,6 +1,22 @@
 # ew-drag
+
 一个基于原生js而封装的拖拽插件
+
 ## 安装与使用
+
+### 安装
+```
+  npm install ew-drag --save-dev
+
+```
+### 引入
+
+```
+  <script src="./release/bundle.js"></script>
+  
+```
+
+然后允许默认配置与自定义配置，代码如下:
 
 ```
   //自定义配置
