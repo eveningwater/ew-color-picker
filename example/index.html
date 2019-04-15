@@ -39,16 +39,17 @@
     <div class="box">
         <div class="demo onlyX">1</div>
         <div class="demo onlyY">2</div>
-        <div class="demo onlyXY">2</div>
+        <div class="demo onlyXY">3</div>
     </div>
     <script src="../src/index.js"></script>
     <script>
         var drag = new ewDrag({
             el:'.demo',
             origin:true,
-            // axis:"y",
+            axis:"x",
             scopeEl:'.box'
         });
+        console.log(drag)
     </script>
 </body>
 

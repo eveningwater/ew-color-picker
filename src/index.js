@@ -1,4 +1,12 @@
 /*
+* 功能:判断是否是一个数值
+* params@1:字符串
+*/
+
+function isNumber(str) {
+    return typeof str === 'number';
+}
+/*
 * 功能:判断是否是一个字符串
 * params@1:字符串
 */
@@ -21,11 +29,54 @@ function isUndefined(value) {
 * params@1:对象
 */
 
-function isObject(obj) {
-    return Object.prototype.toString.call(obj) === "[object Object]";
-}
+function isShallowObject(obj) {
+    return obj !== null && typeof obj === 'object';
+};
+/*
+* 功能:判断是否是一个对象
+* params@1:对象
+*/
 
-;
+function isDeepObject(obj) {
+    return Object.prototype.toString.call(obj) === "[object Object]";
+};
+/*
+* 功能:将类数组对象转换成数组
+* params@1:类数组对象
+*/
+function ObjToArray(obj){
+    if(obj.length){
+        return Array.prototype.slice.call(obj);
+    }
+}
+/*
+* 功能:是否是行内块元素
+* params@1:字符串
+*/
+function isIB(str){
+    return str.indexOf('inline-block') > -1;
+}
+/*
+* 功能:是否是默认定位
+* params@1:字符串
+*/
+function isStat(str){
+    return str.indexOf('static') > -1;
+}
+/*
+* 功能:是否是相对定位
+* params@1:字符串
+*/
+function isRel(str){
+    return str.indexOf('relative') > -1;
+}
+/*
+* 功能:是否是绝对定位
+* params@1:字符串
+*/
+function isAbs(str){
+    return str.indexOf('absolute') > -1;
+}
 /*
 * 功能:构造函数
 * params@1:配置对象
@@ -38,14 +89,19 @@ function ewDrag(option) {
     if (isStr(option)) {
         el = this.getDOM(option);
         config = {
-            width: window.innerWidth, height: window.innerHeight, isWindow: true, origin: option.origin || false
+            width: window.innerWidth, 
+            height: window.innerHeight, 
+            isWindow: true
         };
-    }
-    else if (isObject(option) && option.el) {
+    }else if (isDeepObject(option) && option.el) {
         el = isStr(option.el) ? this.getDOM(option.el) : option.el;
         scopeEl = isStr(option.scopeEl) ? this.getDOM(option.scopeEl) : option.scopeEl; // 配置对象
         config = {
-            width: option.width || window.innerWidth, height: option.height || window.innerHeight, scopeEl: option.scopeEl || null, isWindow: typeof option.isWindow !== "undefined" ? option.isWindow : true, origin: option.origin || false
+            width: option.width || window.innerWidth, 
+            height: option.height || window.innerHeight, 
+            scopeEl: option.scopeEl || null, 
+            isWindow: typeof option.isWindow !== "undefined" ? option.isWindow : true, 
+            origin: option.origin || false
         }; // 限制拖拽
         if (config.scopeEl) {
             config.scopeEl = scopeEl.length ? scopeEl[0] : scopeEl;
@@ -70,12 +126,11 @@ function ewDrag(option) {
 ewDrag.prototype.beforeInit = function (el, config) {
     //判断是单个还是多个拖动元素
     if (el && el.length > 0) {
-        for (var j = 0;j < el.length;j++) {
+        for (var j = 0,len = el.length;j < len;j++) {
             this.init(this.assign(config, {el: el[j] }));
-            this.resize(this, this.assign(config, {el: el[j]}));
+            this.resize(this,this.assign(config, {el: el[j] }));
         }
-    }
-    else {
+    }else {
         config.el = el;
         this.init(config);
         this.resize(this, config);
@@ -170,12 +225,11 @@ ewDrag.prototype.getCss = function (el, prop) {
 
 ewDrag.prototype.onMouseDown = function (option) {
     var el = option.el;
-    var style = el.style;
     var pos = this.getCss(el, "position");
     el.onmousedown = function (e) {
         var disX = e.clientX - el.offsetLeft;
         var disY = e.clientY - el.offsetTop;
-        style.cursor = "move";
+        el.style.cursor = "move";
         this.onMouseMove(el, pos, option, disX, disY);
         this.onMouseUp(el, option);
     }.bind(this);
@@ -191,11 +245,7 @@ ewDrag.prototype.onMouseDown = function (option) {
 
 ewDrag.prototype.onMouseMove = function (el, pos, option, disX, disY) {
     document.onmousemove = function (e) {
-        if (pos.indexOf('static') === -1) {
-            el.style.cssText = pos ? 'margin:0;' : 'position:absolute;margin:0;';
-        }else {
-            el.style.cssText = 'position:absolute;margin:0;';
-        }
+        el.style.cssText = isStat(pos) ? 'position:absolute;margin:0;' : 'margin:0;';
         var moveX = e.clientX - disX,
             limitX = option.width - el.offsetWidth;
         var moveY = e.clientY - disY,
@@ -269,9 +319,21 @@ ewDrag.prototype.restoreY = function (el) {
 
 ewDrag.prototype.moveLeft = function (el, option, moveX, limitX) {
     var left = moveX <= 0 && option.isWindow ? 0 : moveX >= limitX && option.isWindow ? limitX : moveX;
-    el.style.left = left + 'px';
+    var defaultLeft = parseInt(this.getCss(el,'left')),
+        allLeft = 0,
+        isRelative = isRel(this.getCss(el,'position'));
+    var children = option.scopeEl.children;
+    var elIndex = ObjToArray(children).indexOf(el);
+    if(elIndex > 0 && defaultLeft > 0 && isRelative){
+        for(var k = 0; k < elIndex;k++){
+            allLeft += children[k].offsetWidth;
+        }
+        // 行内块元素之间的默认间距是否4px有待考究
+        el.style.left = left - allLeft - 4 * elIndex + 'px';
+    }else{
+        el.style.left = left + 'px';
+    }
 }
-
 /*
 * 功能:top偏移量
 * params@1:元素
@@ -294,7 +356,6 @@ ewDrag.prototype.onMouseUp = function (el, option) {
     document.onmouseup = function () {
         document.onmousemove = document.onmouseup = null; // 还原位置
         if (option.origin) {
-            el.style.cssText = 'margin:0;position:"";';
             if (option.axis) {
                 if (option.axis.toLowerCase().indexOf('x') > -1) {
                     this.restoreX(el);
@@ -307,6 +368,7 @@ ewDrag.prototype.onMouseUp = function (el, option) {
                 this.restoreX(el);
                 this.restoreY(el);
             }
+            el.style.cssText = 'margin:0;position:"";';
         }
     }.bind(this);
 };
