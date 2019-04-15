@@ -26,6 +26,8 @@
       scopeEl:document.getElementsByClassName('box'),//如果和width与height同时设置了，则优先执行这个限制元素,设置了此属性，则不能将isWindow属性设置为false
       width: 400,//限制拖动元素范围宽，则不能将isWindow属性设置为false
       height: 400//限制拖动元素范围高，则不能将isWindow属性设置为false
+      axis:"x" //或"y",限制在X轴或者y轴拖动
+      origin:true //或false,是否在拖动之后还原位置
   });
   //其中el和scopeEl的值也可以是传成字符串,如el:'.demo',scopeEl:'.box'
   //默认配置(传入拖拽元素的dom对象或者获取dom对象的字符串)
@@ -36,4 +38,4 @@
 
 ## cdn引入
 
-CDN:https://www.unpkg.com/ew-drag@0.0.3/release/bundle.js
+CDN:https://www.unpkg.com/ew-drag@0.0.4/release/bundle.js
