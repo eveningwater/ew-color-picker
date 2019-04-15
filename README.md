@@ -38,4 +38,4 @@
 
 ## cdn引入
 
-CDN:https://www.unpkg.com/ew-drag@0.0.4/release/bundle.js
+CDN:https://www.unpkg.com/ew-drag@0.0.5/release/bundle.js
