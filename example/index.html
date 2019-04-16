@@ -1,55 +1,107 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
     <style>
-        *{
+        * {
             margin: 0;
             padding: 0;
+            user-select: none;
         }
+
         .demo {
-            width: 50px;
-            height: 50px;
+            width: 100px;
+            height: 100px;
             border: 1px solid;
+            background-color: #ffffff;
             display: inline-block;
         }
-        .box{
+
+        .box {
             width: 400px;
             height: 400px;
-            border: 1px solid #000;
+            margin: 20px;
+            background-color: #999999;
+            position: relative;
+            /* font-size: 0; */
         }
         .onlyX{
             left: 10%;
             position: relative;
         }
-        .onlyY{
-            position: relative;
-            left: 15%;
-        }
-        .onlyXY{
-            position: relative;
+        .onlyY {
             left: 40%;
+            position: relative;
+        }
+        .title{
+            width: 100%;
+            height: 20px;
+            background-color: #999999;
+        }
+        .btn1,.btn2{
+            cursor: pointer;
         }
     </style>
 </head>
 
 <body>
     <div class="box">
-        <div class="demo onlyX">1</div>
+        <div class="demo onlyX">
+            <div class="title">1</div>
+        </div>
         <div class="demo onlyY">2</div>
-        <div class="demo onlyXY">3</div>
     </div>
+    start:<div class="start">0</div>
+    move:<div class="move">0</div>
+    end:<div class="end">0</div>
+    <div class="btn1">点击开启或关闭拖拽1</div>
+    <div class="btn2">点击开启或关闭拖拽2</div>
     <script src="../src/index.js"></script>
     <script>
-        var drag = new ewDrag({
-            el:'.demo',
-            origin:true,
-            axis:"x",
-            scopeEl:'.box'
+        var dragX = new ewDrag({
+            el: '.onlyX',
+            scopeEl: '.box',
+            designEl:'.title',
+            // axis: 'X',
+            origin: true,
+            // dragDisabled:true,
+            startCB:function(){
+                var start = document.getElementsByClassName('start')[0];
+                 start.innerHTML = Number(start.innerHTML) + 1;
+            },
+            moveCB:function(){
+                var move = document.getElementsByClassName('move')[0];
+                move.innerHTML = Number(move.innerHTML) + 1;
+            },
+            endCB:function(){
+                var end = document.getElementsByClassName('end')[0];
+                end.innerHTML = Number(end.innerHTML) + 1;
+            }
         });
-        console.log(drag)
+        var dragY = new ewDrag({
+            el: '.onlyY',
+            scopeEl: '.box',
+            // axis: 'x',
+            origin: true,
+            // dragDisabled:true,
+            startCB:function(){
+                var start = document.getElementsByClassName('start')[0];
+                 start.innerHTML = Number(start.innerHTML) + 1;
+            },
+            moveCB:function(){
+                var move = document.getElementsByClassName('move')[0];
+                move.innerHTML = Number(move.innerHTML) + 1;
+            },
+            endCB:function(){
+                var end = document.getElementsByClassName('end')[0];
+                end.innerHTML = Number(end.innerHTML) + 1;
+            }
+        });
+        // console.log(dragY)
     </script>
 </body>
 
