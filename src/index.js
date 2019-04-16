@@ -332,7 +332,7 @@
                 option.moveCB();
             }
             el.style.margin = 0;
-            el.style.postion = isStat(pos) ? 'position:absolute;' : '';
+            el.style.position = isStat(pos) ? 'absolute' : '';
             var moveX = e.clientX - disX,
                 limitX = option.width - el.offsetWidth;
             var moveY = e.clientY - disY,
