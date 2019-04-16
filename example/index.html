@@ -62,45 +62,46 @@
     <div class="btn2">点击开启或关闭拖拽2</div>
     <script src="../src/index.js"></script>
     <script>
-        var dragX = new ewDrag({
-            el: '.onlyX',
-            scopeEl: '.box',
-            designEl:'.title',
-            // axis: 'X',
-            origin: true,
-            // dragDisabled:true,
-            startCB:function(){
-                var start = document.getElementsByClassName('start')[0];
-                 start.innerHTML = Number(start.innerHTML) + 1;
-            },
-            moveCB:function(){
-                var move = document.getElementsByClassName('move')[0];
-                move.innerHTML = Number(move.innerHTML) + 1;
-            },
-            endCB:function(){
-                var end = document.getElementsByClassName('end')[0];
-                end.innerHTML = Number(end.innerHTML) + 1;
-            }
-        });
-        var dragY = new ewDrag({
-            el: '.onlyY',
-            scopeEl: '.box',
-            // axis: 'x',
-            origin: true,
-            // dragDisabled:true,
-            startCB:function(){
-                var start = document.getElementsByClassName('start')[0];
-                 start.innerHTML = Number(start.innerHTML) + 1;
-            },
-            moveCB:function(){
-                var move = document.getElementsByClassName('move')[0];
-                move.innerHTML = Number(move.innerHTML) + 1;
-            },
-            endCB:function(){
-                var end = document.getElementsByClassName('end')[0];
-                end.innerHTML = Number(end.innerHTML) + 1;
-            }
-        });
+        var drag = new ewDrag('.btn1');
+        // var dragX = new ewDrag({
+        //     el: '.onlyX',
+        //     scopeEl: '.box',
+        //     designEl:'.title',
+        //     // axis: 'X',
+        //     origin: true,
+        //     // dragDisabled:true,
+        //     startCB:function(){
+        //         var start = document.getElementsByClassName('start')[0];
+        //          start.innerHTML = Number(start.innerHTML) + 1;
+        //     },
+        //     moveCB:function(){
+        //         var move = document.getElementsByClassName('move')[0];
+        //         move.innerHTML = Number(move.innerHTML) + 1;
+        //     },
+        //     endCB:function(){
+        //         var end = document.getElementsByClassName('end')[0];
+        //         end.innerHTML = Number(end.innerHTML) + 1;
+        //     }
+        // });
+        // var dragY = new ewDrag({
+        //     el: '.onlyY',
+        //     scopeEl: '.box',
+        //     // axis: 'x',
+        //     origin: true,
+        //     // dragDisabled:true,
+        //     startCB:function(){
+        //         var start = document.getElementsByClassName('start')[0];
+        //          start.innerHTML = Number(start.innerHTML) + 1;
+        //     },
+        //     moveCB:function(){
+        //         var move = document.getElementsByClassName('move')[0];
+        //         move.innerHTML = Number(move.innerHTML) + 1;
+        //     },
+        //     endCB:function(){
+        //         var end = document.getElementsByClassName('end')[0];
+        //         end.innerHTML = Number(end.innerHTML) + 1;
+        //     }
+        // });
         // console.log(dragY)
     </script>
 </body>

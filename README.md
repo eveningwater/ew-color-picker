@@ -44,3 +44,14 @@
 ## cdn引入
 
 CDN:https://www.unpkg.com/ew-drag@0.0.6/release/bundle.js
+
+## 在组件中使用
+
+```
+   import ewDrag from 'ew-drag'
+
+   var drag = new ewDrag(option);//option为配置对象，详情见前述
+
+   如果是在`vue`中使用，最好在`mounted`周期中实例化
+   
+```
