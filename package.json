@@ -1,6 +1,6 @@
 {
   "name": "ew-drag",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "一个基于原生js而封装的拖拽插件",
   "main": "src/index.js",
   "scripts": {

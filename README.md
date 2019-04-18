@@ -34,6 +34,7 @@
       moveCB:function(){},//拖动时回调
       endCB:function(){},//拖动结束时回调
       dragDisabled:true,//或false，是否禁止拖拽
+      disabledButton:'.btn'//或document.getElementByClassName('btn')//点击按钮禁止或启用拖拽
   });
   //其中el和scopeEl的值也可以是传成字符串,如el:'.demo',scopeEl:'.box'
   //默认配置(传入拖拽元素的dom对象或者获取dom对象的字符串)
@@ -44,7 +45,7 @@
 
 ## cdn引入
 
-CDN:https://www.unpkg.com/ew-drag@1.0.1/release/bundle.js
+CDN:https://www.unpkg.com/ew-drag@1.0.2/release/bundle.js
 
 ## 在组件中使用
 
