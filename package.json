@@ -1,7 +1,7 @@
 {
-  "name": "ewplugins",
-  "version": "1.0.0",
-  "description": "一个插件集合",
+  "name": "ew-drag",
+  "version": "1.0.1",
+  "description": "一个基于原生js而封装的拖拽插件",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
