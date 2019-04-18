@@ -1,7 +1,7 @@
 {
-  "name": "ew-drag",
-  "version": "0.0.7",
-  "description": "一个拖拽插件",
+  "name": "ewplugins",
+  "version": "1.0.0",
+  "description": "一个插件集合",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -13,7 +13,7 @@
     "url": "git+https://github.com/eveningwater/ew-drag.git"
   },
   "keywords": [
-    "drag",
+    "ewdrag",
     "plugin"
   ],
   "author": "eveningwater",

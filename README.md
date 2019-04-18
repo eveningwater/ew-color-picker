@@ -6,7 +6,7 @@
 
 ### 安装
 ```
-  npm install ew-drag --save-dev
+  npm install ewplugins --save-dev
 
 ```
 ### 引入
@@ -20,7 +20,8 @@
 
 ```
   //自定义配置
-  var drag = new ewDrag({
+  //第一个参数为指定插件的类型，目前仅支持拖拽插件，所以第一个参数为`ewDrag`,第二个参数为插件的配置对象
+  var drag = new ewPlugins('ewDrag',{
       el: document.getElementsByClassName('demo'),//拖动元素
       designEL:'.title',//或document.getElementByClassName('title),//指定拖拽区域
       isWindow: true,//是否限制在浏览器可见窗口内,如果为false，超出后出现滚动条
@@ -36,21 +37,21 @@
   });
   //其中el和scopeEl的值也可以是传成字符串,如el:'.demo',scopeEl:'.box'
   //默认配置(传入拖拽元素的dom对象或者获取dom对象的字符串)
-  var drag = new ewDrag('.demo');
-  //或var drag = new ewDrag(document.getElementByClassName('demo'))
+  var drag = new ewPlugins('ewDrag','.demo');
+  //或var drag = new ewPlugins('ewDrag',document.getElementByClassName('demo'))
 
 ```
 
 ## cdn引入
 
-CDN:https://www.unpkg.com/ew-drag@0.0.6/release/bundle.js
+CDN:https://www.unpkg.com/ew-drag@1.0.0/release/bundle.js
 
 ## 在组件中使用
 
 ```
-   import ewDrag from 'ew-drag'
+   import ewPlugins from 'ewPlugins'
 
-   var drag = new ewDrag(option);//option为配置对象，详情见前述
+   var drag = new ewPlugins('ewDrag',option);//option为配置对象，详情见前述
 
    如果是在`vue`中使用，最好在`mounted`周期中实例化
    

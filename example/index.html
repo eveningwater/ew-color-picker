@@ -53,56 +53,39 @@
         <div class="demo onlyX">
             <div class="title">1</div>
         </div>
-        <div class="demo onlyY">2</div>
+        <div class="demo onlyY">
+            <div class="title">2</div>
+        </div>
+        <div class="demo">
+            <div class="title">3</div>
+        </div>
     </div>
     start:<div class="start">0</div>
     move:<div class="move">0</div>
     end:<div class="end">0</div>
     <div class="btn1">点击开启或关闭拖拽1</div>
     <div class="btn2">点击开启或关闭拖拽2</div>
-    <script src="../src/index.js"></script>
+    <script src="../release/bundle.js"></script>
     <script>
-        var drag = new ewDrag('.btn1');
-        // var dragX = new ewDrag({
-        //     el: '.onlyX',
-        //     scopeEl: '.box',
-        //     designEl:'.title',
-        //     // axis: 'X',
-        //     origin: true,
-        //     // dragDisabled:true,
-        //     startCB:function(){
-        //         var start = document.getElementsByClassName('start')[0];
-        //          start.innerHTML = Number(start.innerHTML) + 1;
-        //     },
-        //     moveCB:function(){
-        //         var move = document.getElementsByClassName('move')[0];
-        //         move.innerHTML = Number(move.innerHTML) + 1;
-        //     },
-        //     endCB:function(){
-        //         var end = document.getElementsByClassName('end')[0];
-        //         end.innerHTML = Number(end.innerHTML) + 1;
-        //     }
-        // });
-        // var dragY = new ewDrag({
-        //     el: '.onlyY',
-        //     scopeEl: '.box',
-        //     // axis: 'x',
-        //     origin: true,
-        //     // dragDisabled:true,
-        //     startCB:function(){
-        //         var start = document.getElementsByClassName('start')[0];
-        //          start.innerHTML = Number(start.innerHTML) + 1;
-        //     },
-        //     moveCB:function(){
-        //         var move = document.getElementsByClassName('move')[0];
-        //         move.innerHTML = Number(move.innerHTML) + 1;
-        //     },
-        //     endCB:function(){
-        //         var end = document.getElementsByClassName('end')[0];
-        //         end.innerHTML = Number(end.innerHTML) + 1;
-        //     }
-        // });
-        // console.log(dragY)
+        var drag1 = new ewPlugins('ewDrag',{
+            el:'.demo',//拖动元素
+            scopeEl:'.box',//限制拖动范围元素
+            disabledButton:'.btn1',//禁用按钮
+            designEl:'.title',//允许拖拽区域元素
+            // axis:"y",//x轴或y轴拖动
+            dragDisabled:true,//是否禁止拖动元素
+            origin:true,//拖动后还原位置
+            startCB:function(){
+                console.log('拖动开始时',this)
+            },//拖动开始回调
+            moveCB:function(){
+                console.log('拖动时',this)
+            },//拖动时回调
+            endCB:function(){
+                console.log('拖动结束时',this)
+            },//拖动结束时回调
+        });
+        // console.log(drag1);
     </script>
 </body>
 
