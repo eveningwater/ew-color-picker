@@ -172,7 +172,8 @@
                 moveCB: typeof option.moveCB === 'function' ? option.moveCB : null,
                 endCB: typeof option.endCB === 'function' ? option.endCB : null,
                 dragDisabled: option.dragDisabled || false,
-                disabledButton: disabledButton || null
+                disabledButton: disabledButton || null,
+                grid:option.grid || []
             };
             // 限制拖拽
             if (config.scopeEl) {
@@ -318,7 +319,7 @@
                 ewObjToArray(option.designEl).forEach(function (de) {
                     if (_this.config.length > 1) {
                         _this.config.map(function (con) {
-                            if (ewObjToArray(con.designEl).indexOf(de) > -1) {
+                            if (con.designEl && ewObjToArray(con.designEl).indexOf(de) > -1) {
                                 mouseDown(_this, con.el, de, con);
                             }
                         })
@@ -374,6 +375,7 @@
     ewDrag.prototype.onMouseMove = function (el, option, disX, disY) {
         var pos = this.getCss(el, 'position');
         document.onmousemove = function (e) {
+            var moveX,moveY,limitX,limitY;
             el.style.margin = 0;
             if (isStat(pos)) {
                 el.style.position = 'absolute';
@@ -381,10 +383,21 @@
             if (option.moveCB) {
                 option.moveCB();
             }
-            var moveX = e.clientX - disX,
-                limitX = option.width - el.offsetWidth;
-            var moveY = e.clientY - disY,
-                limitY = option.height - el.offsetHeight;
+            if(isDeepArray(option.grid) && option.grid.length > 0 && option.grid.length <= 2){
+                var curX = e.clientX - disX,gridX = parseInt(option.grid[0]),
+                    curY = e.clientY - disY,gridY = parseInt(option.grid[1]);
+               if(!isNaN(gridX)){
+                    moveX = gridX * (parseInt(curX / gridX));
+               }
+               if(!isNaN(gridY)){
+                    moveY = gridY * (parseInt(curY / gridY));
+               }
+            }else{
+                moveX = e.clientX - disX;
+                moveY = e.clientY - disY;
+            }
+            limitX = option.width - el.offsetWidth;
+            limitY = option.height - el.offsetHeight;
             if (option.axis) {
                 if (option.axis.toLowerCase().indexOf('x') > -1) {
                     this.moveLeft(el, option, moveX, limitX);
@@ -419,17 +432,19 @@
         var pl_m = parseInt(this.getCss(el.parentElement, 'margin-left'));
         if (elIndex > 0 && defaultLeft && isRelative && children) {
             for (var k = 0; k < elIndex; k++) {
-                allLeft += children[k].offsetWidth;
+               var child = children[k];
+                if(this.getCss(child,'width') && isIB(this.getCss(child,'display')) && parseInt(this.getCss(child,'height')) > 0){
+                    allLeft += children[k].offsetWidth;
+                }
             }
             if (!option.scopeEl) allLeft += pl_m;
             // 行内块元素之间的默认间距是否6px有待考究
-            if (isIB) allLeft += 6 * elIndex;
-            el.style.left = left - allLeft + 'px';
+            if (isIB(this.getCss(el,'display'))) allLeft += 6 * elIndex;
+            left = left - allLeft;
         } else if (isRelative && !option.scopeEl) {
-            el.style.left = left - pl_m + 'px';
-        } else {
-            el.style.left = left + 'px';
+            left = left - pl_m;
         }
+        el.style.left =  left + 'px';
     }
     /*
     * 功能:top偏移量
@@ -443,11 +458,18 @@
         var isRelative = isRel(this.getCss(el, 'position'));
         var pt_m = parseInt(this.getCss(el.parentElement, 'margin-top'));
         var top = moveY <= 0 && option.isWindow ? 0 : moveY >= limitY && option.isWindow ? limitY : moveY;
-        if (isRelative && !option.scopeEl) {
-            el.style.top = top - pt_m + 'px';
-        } else {
-            el.style.top = top + 'px';
+        var children = el.parentElement.children,elIndex;
+        for(var c = 0,len = children.length;c < len;c++){
+            if(children[c].children.length <= 0){
+                elIndex = c > 0 ? c - 1 : c + 1;
+            }
         }
+        if (isRelative && pt_m && !option.scopeEl) {
+            top = top - pt_m;
+        }else if(isNumber(elIndex) && ewObjToArray(children).indexOf(el) === elIndex && option.scopeEl){
+            top = top - el.offsetWidth - 2 + pt_m;
+        }    
+        el.style.top = top + 'px';
     }
     /*
     * 功能:还原left偏移量

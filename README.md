@@ -34,7 +34,8 @@
       moveCB:function(){},//拖动时回调
       endCB:function(){},//拖动结束时回调
       dragDisabled:true,//或false，是否禁止拖拽
-      disabledButton:'.btn'//或document.getElementByClassName('btn')//点击按钮禁止或启用拖拽
+      disabledButton:'.btn'//或document.getElementByClassName('btn'),//点击按钮禁止或启用拖拽
+      grid:[50,50] //网格规范拖动
   });
   //其中el和scopeEl的值也可以是传成字符串,如el:'.demo',scopeEl:'.box'
   //默认配置(传入拖拽元素的dom对象或者获取dom对象的字符串)

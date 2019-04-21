@@ -29,20 +29,25 @@
             position: relative;
             /* font-size: 0; */
         }
-        .onlyX{
+
+        .onlyX {
             left: 10%;
             position: relative;
         }
+
         .onlyY {
             left: 40%;
             position: relative;
         }
-        .title{
+
+        .title {
             width: 100%;
             height: 20px;
             background-color: #999999;
         }
-        .btn1,.btn2{
+
+        .btn1,
+        .btn2 {
             cursor: pointer;
         }
     </style>
@@ -68,24 +73,24 @@
     <script src="../src/index.js"></script>
     <script>
         var drag1 = new ewDrag({
-            el:'.demo',//拖动元素
-            scopeEl:'.box',//限制拖动范围元素
-            disabledButton:'.btn1',//禁用按钮
-            designEl:'.title',//允许拖拽区域元素
+            el: '.demo',//拖动元素
+            scopeEl: '.box',//限制拖动范围元素
+            disabledButton: '.btn1',//禁用按钮
+            designEl: '.title',//允许拖拽区域元素
             // axis:"y",//x轴或y轴拖动
-            dragDisabled:true,//是否禁止拖动元素
-            origin:true,//拖动后还原位置
-            startCB:function(){
-                console.log('拖动开始时',this)
+            dragDisabled: false,//是否禁止拖动元素
+            origin: false,//拖动后还原位置
+            grid: [50, 50],//网格拖动
+            startCB: function () {
+                // console.log('拖动开始时',this)
             },//拖动开始回调
-            moveCB:function(){
-                console.log('拖动时',this)
+            moveCB: function () {
+                // console.log('拖动时',this)
             },//拖动时回调
-            endCB:function(){
-                console.log('拖动结束时',this)
+            endCB: function () {
+                // console.log('拖动结束时',this)
             },//拖动结束时回调
         });
-        // console.log(drag1);
     </script>
 </body>
 
