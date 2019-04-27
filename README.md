@@ -1,6 +1,6 @@
 # ew-drag
 
-一个基于原生js而封装的拖拽插件
+一个基于原生js而封装的拖拽插件,支持移动端和PC端拖拽。
 
 ## 安装与使用
 
@@ -12,7 +12,7 @@
 ### 引入
 
 ```
-  <script src="./release/bundle.js"></script>
+  <script src="./release/ewDrag.min.js"></script>
   
 ```
 
@@ -46,7 +46,7 @@
 
 ## cdn引入
 
-CDN:https://www.unpkg.com/ew-drag@1.0.2/release/bundle.js
+CDN:https://www.unpkg.com/ew-drag@1.0.4/release/ewDrag.min.js
 
 ## 在组件中使用
 
