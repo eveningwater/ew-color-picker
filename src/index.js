@@ -4,7 +4,6 @@
         define(factory) : (global = global || self, global.ewDrag = factory());
 }(this, function () {
     'use strict';
-
     /*
     * 功能:判断是否是一个数值
     * params@1:字符串
@@ -92,6 +91,13 @@
     */
     function isAbs(str) {
         return str.indexOf('absolute') > -1;
+    }
+    /*
+    * 功能:判断是否是一个DOM元素
+    * params@1:元素
+    */
+    function isDom(el){
+        return typeof HTMLElement === 'object' ? el instanceof HTMLElement : el && typeof el === 'object' && el.nodeType === 1 && typeof el.nodeName === 'string';
     }
     /*
     * 功能:合并对象
@@ -313,7 +319,7 @@
     */
 
     ewDrag.prototype.onMouseDown = function (option) {
-        if (option.designEl) {
+        if (isDom(option.designEl)) {
             if (option.designEl.length > 0) {
                 var _this = this;
                 ewObjToArray(option.designEl).forEach(function (de) {
@@ -342,23 +348,25 @@
             this.style.cursor = '';
         }
         function mouseDown(scope, el, element, config) {
+            var eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart','touchmove','touchend'] : ['mousedown','mousemove','mouseup'];
             // 禁用拖拽
             if (config.dragDisabled) {
                 element.removeEventListener('mouseenter', setCursor);
                 element.removeEventListener('mouseleave', deleteCursor);
-                element.onmousedown = null;
-                document.onmousemove = document.onmouseup = null;
+                element['on' + eventType[0]] = null;
+                document['on' + eventType[1]] = document['on' + eventType[2]] = null;
+
             } else {
                 element.addEventListener('mouseenter', setCursor);
                 element.addEventListener('mouseleave', deleteCursor);
-                element.onmousedown = function (e) {
+                element['on' + eventType[0]] = function (e) {
                     if (config.startCB) {
                         config.startCB();
                     }
-                    var disX = e.clientX - el.offsetLeft;
-                    var disY = e.clientY - el.offsetTop;
-                    scope.onMouseMove(el, config, disX, disY);
-                    scope.onMouseUp(el, element, config);
+                    var disX = eventType[0].indexOf('touch') > -1 ? e.changedTouches[0].clientX - el.offsetLeft : e.clientX - el.offsetLeft;
+                    var disY = eventType[0].indexOf('touch') > -1 ? e.changedTouches[0].clientY - el.offsetTop : e.clientY - el.offsetTop;
+                    scope.onMouseMove(el, config, disX, disY,eventType);
+                    scope.onMouseUp(el, element, config,eventType);
                 };
             }
         }
@@ -372,20 +380,21 @@
     * params@5:当前拖动元素右偏移量
     */
 
-    ewDrag.prototype.onMouseMove = function (el, option, disX, disY) {
+    ewDrag.prototype.onMouseMove = function (el, option, disX, disY,eventType) {
         var pos = this.getCss(el, 'position');
-        document.onmousemove = function (e) {
+        document['on' + eventType[1]] = function (e) {
             var moveX,moveY,limitX,limitY;
+            var clientX = eventType[0].indexOf('touch') > -1 ? e.changedTouches[0].clientX : e.clientX,
+                clientY = eventType[0].indexOf('touch') > -1 ? e.changedTouches[0].clientY : e.clientY;
             el.style.margin = 0;
-            if (isStat(pos)) {
-                el.style.position = 'absolute';
-            }
+            // 由于相对定位影响因素太多，暂时修改成绝对定位，后期再考虑相对定位情况
+            el.style.position = 'absolute';
             if (option.moveCB) {
                 option.moveCB();
             }
             if(isDeepArray(option.grid) && option.grid.length > 0 && option.grid.length <= 2){
-                var curX = e.clientX - disX,gridX = parseInt(option.grid[0]),
-                    curY = e.clientY - disY,gridY = parseInt(option.grid[1]);
+                var curX = clientX - disX,gridX = parseInt(option.grid[0]),
+                    curY = clientY - disY,gridY = parseInt(option.grid[1]);
                if(!isNaN(gridX)){
                     moveX = gridX * (parseInt(curX / gridX));
                }
@@ -393,8 +402,8 @@
                     moveY = gridY * (parseInt(curY / gridY));
                }
             }else{
-                moveX = e.clientX - disX;
-                moveY = e.clientY - disY;
+                moveX = clientX - disX;
+                moveY = clientY - disY;
             }
             limitX = option.width - el.offsetWidth;
             limitY = option.height - el.offsetHeight;
@@ -424,26 +433,6 @@
 
     ewDrag.prototype.moveLeft = function (el, option, moveX, limitX) {
         var left = moveX <= 0 && option.isWindow ? 0 : moveX >= limitX && option.isWindow ? limitX : moveX;
-        var defaultLeft = parseInt(this.getCss(el, 'left')),
-            allLeft = 0,
-            isRelative = isRel(this.getCss(el, 'position'));
-        var children = option.el.parentElement.children;
-        var elIndex = ewObjToArray(children).indexOf(el);
-        var pl_m = parseInt(this.getCss(el.parentElement, 'margin-left'));
-        if (elIndex > 0 && defaultLeft && isRelative && children) {
-            for (var k = 0; k < elIndex; k++) {
-               var child = children[k];
-                if(this.getCss(child,'width') && isIB(this.getCss(child,'display')) && parseInt(this.getCss(child,'height')) > 0){
-                    allLeft += children[k].offsetWidth;
-                }
-            }
-            if (!option.scopeEl) allLeft += pl_m;
-            // 行内块元素之间的默认间距是否6px有待考究
-            if (isIB(this.getCss(el,'display'))) allLeft += 6 * elIndex;
-            left = left - allLeft;
-        } else if (isRelative && !option.scopeEl) {
-            left = left - pl_m;
-        }
         el.style.left =  left + 'px';
     }
     /*
@@ -455,20 +444,7 @@
     */
 
     ewDrag.prototype.moveTop = function (el, option, moveY, limitY) {
-        var isRelative = isRel(this.getCss(el, 'position'));
-        var pt_m = parseInt(this.getCss(el.parentElement, 'margin-top'));
-        var top = moveY <= 0 && option.isWindow ? 0 : moveY >= limitY && option.isWindow ? limitY : moveY;
-        var children = el.parentElement.children,elIndex;
-        for(var c = 0,len = children.length;c < len;c++){
-            if(children[c].children.length <= 0){
-                elIndex = c > 0 ? c - 1 : c + 1;
-            }
-        }
-        if (isRelative && pt_m && !option.scopeEl) {
-            top = top - pt_m;
-        }else if(isNumber(elIndex) && ewObjToArray(children).indexOf(el) === elIndex && option.scopeEl){
-            top = top - el.offsetWidth - 2 + pt_m;
-        }    
+        var top = moveY <= 0 && option.isWindow ? 0 : moveY >= limitY && option.isWindow ? limitY : moveY; 
         el.style.top = top + 'px';
     }
     /*
@@ -522,13 +498,13 @@
     * params@2:配置对象
     */
 
-    ewDrag.prototype.onMouseUp = function (el, element, option) {
-        document.onmouseup = function () {
+    ewDrag.prototype.onMouseUp = function (el, element, option,eventType) {
+        document['on' + eventType[2]] = function () {
             // 结束回调
             if (option.endCB) {
                 option.endCB();
             }
-            document.onmousemove = document.onmouseup = null;
+            document['on' + eventType[1]]  = document['on' + eventType[2]]  = null;
             // 鼠标光标还原 
             element.style.cursor = '';
             // 还原位置
