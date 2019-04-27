@@ -58,3 +58,5 @@ CDN:https://www.unpkg.com/ew-drag@1.0.4/release/ewDrag.min.js
    如果是在`vue`中使用，最好在`mounted`周期中实例化
    
 ```
+
+更多详情参阅文档官网介绍[ewDrag](http://eveningwater.com/ewDrag/);
