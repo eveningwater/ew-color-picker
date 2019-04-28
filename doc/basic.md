@@ -5,10 +5,10 @@
 
 ```
 
-安装的时候确保已经安装了`node.js`。然后安装完成之后，在`release`目录下找到`bundle.js`,然后在页面中通过`script`标签引入。
+安装的时候确保已经安装了`node.js`。然后安装完成之后，在`release`目录下找到`ewDrag.min.js`,然后在页面中通过`script`标签引入。
 
 ```
-  <script src="/release/bundle.js"></script>
+  <script src="/release/ewDrag.min.js"></script>
 
 ```
 
@@ -22,7 +22,7 @@
 其中`option`为一个自定义的配置对象，后续会解释有哪些配置，我们也可以直接传一个`DOM元素`的`id`或`class`字符串，又或者直接传入一个`DOM`元素也行。一个简单的示例代码如下:
 
 ```
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>

@@ -28,6 +28,14 @@
     function isUndefined(value) {
         return typeof value === 'undefined';
     }
+      /*
+    * 功能:判断是否是一个函数
+    * params@1:值
+    */
+
+   function isFunction(fn) {
+    return typeof fn === 'function';
+}
 
     /*
     * 功能:判断是否是一个对象
@@ -155,8 +163,8 @@
             designEl,
             disabledButton;
         // 默认配置
-        if (isStr(option)) {
-            el = this.getDOM(option);
+        if (isStr(option) || isDom(option)) {
+            el = isStr(option) ? this.getDOM(option) : option;
             config = {
                 width: window.innerWidth,
                 height: window.innerHeight,
@@ -171,12 +179,12 @@
                 width: option.width || window.innerWidth,
                 height: option.height || window.innerHeight,
                 scopeEl: option.scopeEl || null,
-                isWindow: typeof option.isWindow !== "undefined" ? option.isWindow : true,
+                isWindow: !isUndefined(option.isWindow) ? option.isWindow : true,
                 origin: option.origin || false,
                 designEl: designEl,
-                startCB: typeof option.startCB === 'function' ? option.startCB : null,
-                moveCB: typeof option.moveCB === 'function' ? option.moveCB : null,
-                endCB: typeof option.endCB === 'function' ? option.endCB : null,
+                startCB: isFunction(option.startCB) ? option.startCB : null,
+                moveCB: isFunction(option.moveCB) ? option.moveCB : null,
+                endCB: isFunction(option.endCB) ? option.endCB : null,
                 dragDisabled: option.dragDisabled || false,
                 disabledButton: disabledButton || null,
                 grid:option.grid || []
@@ -473,7 +481,6 @@
     * 功能:还原top偏移量
     * params@1:元素
     */
-
     ewDrag.prototype.restoreY = function (el) {
         var timer = null;
         var speed = parseInt(el.style.top);
@@ -530,3 +537,6 @@
     }
     return ewDrag;
 }));
+// 打印键盘
+console.log((_=>[..."`1234567890-=~~QWERTYUIOP[]\\~ASDFGHJKL;'~~ZXCVBNM,./~"].map(x=>(o+=`/${b='_'.repeat(w=x<y?2:' 667699'[x=["BS","TAB","CAPS","ENTER"][p++]||'SHIFT',p])}\\|`,m+=y+(x+'    ').slice(0,w)+y+y,n+=y+b+y+y,l+=' __'+b)[73]&&(k.push(l,m,n,o),l='',m=n=o=y),m=n=o=y='|',p=l=k=[])&&k.join`
+`)())
