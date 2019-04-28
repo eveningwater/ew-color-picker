@@ -46,7 +46,7 @@
 
 ## cdn引入
 
-CDN:https://www.unpkg.com/ew-drag@1.0.4/release/ewDrag.min.js
+CDN:https://www.unpkg.com/ew-drag@1.0.5/release/ewDrag.min.js
 
 ## 在组件中使用
 
