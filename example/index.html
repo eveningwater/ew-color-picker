@@ -82,6 +82,7 @@
             dragDisabled: false,//是否禁止拖动元素
             origin: false,//拖动后还原位置
             grid: [50, 50],//网格拖动
+            ani_transition:'transition:all .1s linear',//动画过渡效果
             startCB: function () {
                 // console.log('拖动开始时',this)
             },//拖动开始回调
@@ -101,6 +102,9 @@
             dragDisabled: false,//是否禁止拖动元素
             origin: false,//拖动后还原位置
             grid: [50, 50],//网格拖动
+            ani_transition:{
+                'transition':'all .1s linear'
+            },
             startCB: function () {
                 // console.log('拖动开始时',this)
             },//拖动开始回调

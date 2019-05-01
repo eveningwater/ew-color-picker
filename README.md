@@ -34,7 +34,8 @@
       moveCB:function(){},//拖动时回调
       endCB:function(){},//拖动结束时回调
       dragDisabled:true,//或false，是否禁止拖拽
-      disabledButton:'.btn'//或document.getElementByClassName('btn'),//点击按钮禁止或启用拖拽
+      disabledButton:'.btn',//或document.getElementByClassName('btn'),//点击按钮禁止或启用拖拽
+      ani_transition:'transition:all .1s linear',//动画过渡效果或者以对象形式{'transition':'all .1s linear'}
       grid:[50,50] //网格规范拖动
   });
   //其中el和scopeEl的值也可以是传成字符串,如el:'.demo',scopeEl:'.box'
