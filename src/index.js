@@ -1,4 +1,7 @@
-
+/**
+ * 
+ *  
+ */
 (function (global, factory) {
     typeof s === 'object' && typeof module !== 'undefined' ? module.s = factory() : typeof define === 'function' && define.amd ?
         define(factory) : (global = global || self, global.ewDrag = factory());
@@ -28,14 +31,14 @@
     function isUndefined(value) {
         return typeof value === 'undefined';
     }
-      /*
-    * 功能:判断是否是一个函数
-    * params@1:值
-    */
+    /*
+  * 功能:判断是否是一个函数
+  * params@1:值
+  */
 
-   function isFunction(fn) {
-    return typeof fn === 'function';
-}
+    function isFunction(fn) {
+        return typeof fn === 'function';
+    }
 
     /*
     * 功能:判断是否是一个对象
@@ -104,7 +107,7 @@
     * 功能:判断是否是一个DOM元素
     * params@1:元素
     */
-    function isDom(el){
+    function isDom(el) {
         return typeof HTMLElement === 'object' ? el instanceof HTMLElement : el && typeof el === 'object' && el.nodeType === 1 && typeof el.nodeName === 'string';
     }
     /*
@@ -150,6 +153,42 @@
     function deepCloneObjByJSON(obj) {
         return JSON.parse(JSON.stringify(obj));
     }
+    /*
+    * 功能:深度克隆对象
+    * params@1:对象
+    */
+    var deepCloneObjByRecursion = (function f(obj) {
+        if (!isShallowObject(obj)) return;
+        var cloneObj = isDeepArray(obj) ? [] : {};
+        for (var k in obj) {
+            cloneObj[k] = isShallowObject(obj[k]) ? f(obj[k]) : obj[k];
+        }
+        return cloneObj;
+    })
+    /*
+    * 功能:将CSS对象转成CSStext字符串
+    * 参数:css对象
+    */
+    function cssObjToStr(obj) {
+        if (!isShallowObject(obj)) return;
+        // 将大写字母换成短横线加小写字母
+
+        var cssStr = '';
+        for (var key in obj) {
+            cssStr += keba(key) + ':' + obj[key] + ';';
+        }
+        return cssStr;
+    }
+    /*
+    * 功能:将大写字母换成短横线加小写字母
+    * 参数:字符串
+    */
+    function keba(str) {
+        if (!isStr(str)) return;
+        return str.replace(/A-Z/g, function (w) {
+            return '-' + w.toLowerCase();
+        })
+    }
     var configArr = [];
     /*
     * 功能:构造函数
@@ -181,13 +220,14 @@
                 scopeEl: option.scopeEl || null,
                 isWindow: !isUndefined(option.isWindow) ? option.isWindow : true,
                 origin: option.origin || false,
-                designEl: designEl,
+                designEl: designEl || null,
                 startCB: isFunction(option.startCB) ? option.startCB : null,
                 moveCB: isFunction(option.moveCB) ? option.moveCB : null,
                 endCB: isFunction(option.endCB) ? option.endCB : null,
                 dragDisabled: option.dragDisabled || false,
                 disabledButton: disabledButton || null,
-                grid:option.grid || []
+                grid: option.grid || [],
+                ani_transition: isStr(option.ani_transition) || isDeepObject(option.ani_transition) ? option.ani_transition : null
             };
             // 限制拖拽
             if (config.scopeEl) {
@@ -202,9 +242,7 @@
         configArr.push(config);
         this.config = configArr;
         this.beforeInit(el, config);
-        if (disabledButton) {
-            this.clickDisable(disabledButton, el, config);
-        }
+        if (disabledButton)this.clickDisable(disabledButton, el, config);
         return this;
     }
     /*
@@ -223,8 +261,7 @@
             else if (sType === ".") {
                 selector = document.getElementsByClassName(identTxt);
             }
-        }
-        else {
+        }else {
             selector = document.getElementsByTagName(ident);
         }
         return selector;
@@ -256,7 +293,7 @@
                     })
                 } else if (dragEl.length > 0) {
                     scope.config[0].dragDisabled = !scope.config[0].dragDisabled;
-                    ewObjToArray(dragEl).forEach((drag) => {
+                    ewObjToArray(dragEl).forEach(function (drag) {
                         scope.beforeInit(drag, scope.config[0]);
                     })
                 } else {
@@ -327,6 +364,7 @@
     */
 
     ewDrag.prototype.onMouseDown = function (option) {
+        // 指定拖拽区域的元素
         if (isDom(option.designEl)) {
             if (option.designEl.length > 0) {
                 var _this = this;
@@ -349,32 +387,35 @@
         } else {
             mouseDown(this, option.el, option.el, option);
         }
+        // 添加光标样式
         function setCursor() {
             this.style.cursor = 'move';
         }
+        // 移除光标样式
         function deleteCursor() {
             this.style.cursor = '';
         }
         function mouseDown(scope, el, element, config) {
-            var eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart','touchmove','touchend'] : ['mousedown','mousemove','mouseup'];
+            // 判断是移动端还是PC端
+            var eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
             // 禁用拖拽
             if (config.dragDisabled) {
                 element.removeEventListener('mouseenter', setCursor);
                 element.removeEventListener('mouseleave', deleteCursor);
                 element['on' + eventType[0]] = null;
                 document['on' + eventType[1]] = document['on' + eventType[2]] = null;
-
             } else {
                 element.addEventListener('mouseenter', setCursor);
                 element.addEventListener('mouseleave', deleteCursor);
                 element['on' + eventType[0]] = function (e) {
-                    if (config.startCB) {
-                        config.startCB();
-                    }
+                    // 拖动开始时回调
+                    if (config.startCB)config.startCB();
+                    // 添加过渡效果
+                    if (config.ani_transition)el.style.cssText += isStr(config.ani_transition) && config.ani_transition.indexOf('transition') > -1 ? config.ani_transition : (cssObjToStr(config.ani_transition)).indexOf('transition') > -1 ? cssObjToStr(config.ani_transition) : '';
                     var disX = eventType[0].indexOf('touch') > -1 ? e.changedTouches[0].clientX - el.offsetLeft : e.clientX - el.offsetLeft;
                     var disY = eventType[0].indexOf('touch') > -1 ? e.changedTouches[0].clientY - el.offsetTop : e.clientY - el.offsetTop;
-                    scope.onMouseMove(el, config, disX, disY,eventType);
-                    scope.onMouseUp(el, element, config,eventType);
+                    scope.onMouseMove(el, config, disX, disY, eventType);
+                    scope.onMouseUp(el, element, config, eventType);
                 };
             }
         }
@@ -387,29 +428,24 @@
     * params@4:当前拖动元素左偏移量
     * params@5:当前拖动元素右偏移量
     */
-
-    ewDrag.prototype.onMouseMove = function (el, option, disX, disY,eventType) {
+    ewDrag.prototype.onMouseMove = function (el, option, disX, disY, eventType) {
         var pos = this.getCss(el, 'position');
         document['on' + eventType[1]] = function (e) {
-            var moveX,moveY,limitX,limitY;
+            var moveX, moveY, limitX, limitY;
             var clientX = eventType[0].indexOf('touch') > -1 ? e.changedTouches[0].clientX : e.clientX,
                 clientY = eventType[0].indexOf('touch') > -1 ? e.changedTouches[0].clientY : e.clientY;
             el.style.margin = 0;
             // 由于相对定位影响因素太多，暂时修改成绝对定位，后期再考虑相对定位情况
-            el.style.position = 'absolute';
-            if (option.moveCB) {
-                option.moveCB();
-            }
-            if(isDeepArray(option.grid) && option.grid.length > 0 && option.grid.length <= 2){
-                var curX = clientX - disX,gridX = parseInt(option.grid[0]),
-                    curY = clientY - disY,gridY = parseInt(option.grid[1]);
-               if(!isNaN(gridX)){
-                    moveX = gridX * (parseInt(curX / gridX));
-               }
-               if(!isNaN(gridY)){
-                    moveY = gridY * (parseInt(curY / gridY));
-               }
-            }else{
+            if(!isAbs(pos))el.style.position = 'absolute';
+            // 移动时回调
+            if (option.moveCB)option.moveCB();
+            // 网格
+            if (isDeepArray(option.grid) && option.grid.length && option.grid.length <= 2) {
+                var curX = clientX - disX, gridX = parseInt(option.grid[0]),
+                    curY = clientY - disY, gridY = parseInt(option.grid[1]);
+                if (!isNaN(gridX))moveX = gridX * (parseInt(curX / gridX));
+                if (!isNaN(gridY))moveY = gridY * (parseInt(curY / gridY));
+            } else {
                 moveX = clientX - disX;
                 moveY = clientY - disY;
             }
@@ -441,7 +477,7 @@
 
     ewDrag.prototype.moveLeft = function (el, option, moveX, limitX) {
         var left = moveX <= 0 && option.isWindow ? 0 : moveX >= limitX && option.isWindow ? limitX : moveX;
-        el.style.left =  left + 'px';
+        el.style.left = left + 'px';
     }
     /*
     * 功能:top偏移量
@@ -452,7 +488,7 @@
     */
 
     ewDrag.prototype.moveTop = function (el, option, moveY, limitY) {
-        var top = moveY <= 0 && option.isWindow ? 0 : moveY >= limitY && option.isWindow ? limitY : moveY; 
+        var top = moveY <= 0 && option.isWindow ? 0 : moveY >= limitY && option.isWindow ? limitY : moveY;
         el.style.top = top + 'px';
     }
     /*
@@ -505,13 +541,11 @@
     * params@2:配置对象
     */
 
-    ewDrag.prototype.onMouseUp = function (el, element, option,eventType) {
+    ewDrag.prototype.onMouseUp = function (el, element, option, eventType) {
         document['on' + eventType[2]] = function () {
             // 结束回调
-            if (option.endCB) {
-                option.endCB();
-            }
-            document['on' + eventType[1]]  = document['on' + eventType[2]]  = null;
+            if (option.endCB)option.endCB();
+            document['on' + eventType[1]] = document['on' + eventType[2]] = null;
             // 鼠标光标还原 
             element.style.cursor = '';
             // 还原位置
@@ -532,11 +566,6 @@
             }
         }.bind(this);
     };
-    if(!window.ewDrag){
-        window.ewDrag = ewDrag;
-    }
+    if (!window.ewDrag)window.ewDrag = ewDrag;
     return ewDrag;
 }));
-// 打印键盘
-console.log((_=>[..."`1234567890-=~~QWERTYUIOP[]\\~ASDFGHJKL;'~~ZXCVBNM,./~"].map(x=>(o+=`/${b='_'.repeat(w=x<y?2:' 667699'[x=["BS","TAB","CAPS","ENTER"][p++]||'SHIFT',p])}\\|`,m+=y+(x+'    ').slice(0,w)+y+y,n+=y+b+y+y,l+=' __'+b)[73]&&(k.push(l,m,n,o),l='',m=n=o=y),m=n=o=y='|',p=l=k=[])&&k.join`
-`)())
