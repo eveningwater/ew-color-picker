@@ -1,7 +1,7 @@
 {
-  "name": "ew-drag",
-  "version": "1.0.1",
-  "description": "一个基于原生js而封装的拖拽插件",
+  "name": "ewplugins",
+  "version": "1.0.6",
+  "description": "一个基于原生js而封装的插件集合",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -13,15 +13,15 @@
     "url": "git+https://github.com/eveningwater/ew-drag.git"
   },
   "keywords": [
-    "ewdrag",
+    "ewplugins",
     "plugin"
   ],
   "author": "eveningwater",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/eveningwater/ew-drag/issues"
+    "url": "https://github.com/eveningwater/ewplugins/issues"
   },
-  "homepage": "https://github.com/eveningwater/ew-drag#readme",
+  "homepage": "https://github.com/eveningwater/ewplugins#readme",
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
