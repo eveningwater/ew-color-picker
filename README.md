@@ -76,4 +76,4 @@ CDN:https://www.unpkg.com/ewplugins@1.0.6/release/ewPlugins.min.js
    
 ```
 
-更多详情参阅文档官网介绍[ewPlugins](http://eveningwater.com/ewDrag/);
+更多详情参阅文档官网介绍[ewPlugins](http://eveningwater.com/ewplugins/);
