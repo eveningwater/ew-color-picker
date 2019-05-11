@@ -1,27 +1,27 @@
-# ew-drag
+# ewplugins
 
-一个基于原生js而封装的拖拽插件,支持移动端和PC端拖拽。
+一个基于原生js而封装的插件集合，目前包含创建自适应的文本输入框，拖拽（支持移动端和PC端）的插件，颜色选择器插件正在添加中。
 
 ## 安装与使用
 
 ### 安装
 ```
-  npm install ew-drag --save-dev
+  npm install ewplugins --save-dev
 
 ```
 ### 引入
 
 ```
-  <script src="./release/ewDrag.min.js"></script>
+  <script src="./release/ewPlugins.min.js"></script>
   
 ```
 
-然后允许默认配置与自定义配置，代码如下:
+拖拽插件配置如下:
 
 ```
   //自定义配置
   //参数为插件的配置对象
-  var drag = new ewDrag({
+  var drag = new ewPlugins('drag',{
       el: document.getElementsByClassName('demo'),//拖动元素
       designEL:'.title',//或document.getElementByClassName('title),//指定拖拽区域
       isWindow: true,//是否限制在浏览器可见窗口内,如果为false，超出后出现滚动条
@@ -40,24 +40,40 @@
   });
   //其中el和scopeEl的值也可以是传成字符串,如el:'.demo',scopeEl:'.box'
   //默认配置(传入拖拽元素的dom对象或者获取dom对象的字符串)
-  var drag = new ewDrag('.demo');
-  //或var drag = new ewDrag(document.getElementByClassName('demo'))
+  var drag = new ewPlugins('drag','.demo');
+  //或var drag = new ewPlugins('drag',document.getElementByClassName('demo'))
 
 ```
+  创建一个自适应文本框插件如下:
 
+```
+  //自定义配置
+  var text = new ewPlugins('textarea',{
+      el:'.demo',//如果指定了此项，则后面两项无效，指定此项就表示要将某个元素转换成自适应文本元素，也可以传document.getElementByClassName('demo')
+      mode:"auto",//创建的是textarea元素还是普通元素,auto或notAuto,auto即textarea元素，否则就是div元素
+      container:".box" //或document.getElementByClassName(box)需要添加自适应文本元素的元素
+  })
+  //默认配置
+  var text = new ewPlugins('textarea','.demo');
+  或 var text = new ewPlugins('textarea','auto');
+  或 var text = new ewPlugins('textarea',document.getElementByClassName('demo'));
+  //也可以不用传第二个参数
+  var text = new ewPlugins('textarea')
+
+```
 ## cdn引入
 
-CDN:https://www.unpkg.com/ew-drag@1.0.5/release/ewDrag.min.js
+CDN:https://www.unpkg.com/ewplugins@1.0.6/release/ewPlugins.min.js
 
 ## 在组件中使用
 
 ```
-   import ewDrag from 'ew-drag'
+   import ewPlugins from 'ewplugins'
 
-   var drag = new ewDrag(option);//option为配置对象，详情见前述
+   var pluginName = new ewPlugins(type,option);//type为指定插件的类型，option为配置对象，详情见前述
 
    如果是在`vue`中使用，最好在`mounted`周期中实例化
    
 ```
 
-更多详情参阅文档官网介绍[ewDrag](http://eveningwater.com/ewDrag/);
+更多详情参阅文档官网介绍[ewPlugins](http://eveningwater.com/ewDrag/);

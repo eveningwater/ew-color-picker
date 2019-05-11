@@ -2,7 +2,7 @@ module.exports = {
     entry: './src/index.js',
     output: {
         path: __dirname,
-        filename: './release/ewDrag.min.js'
+        filename: './release/ewPlugins.min.js'
     },
     module: {
         rules: [{
