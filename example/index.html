@@ -54,12 +54,11 @@
 </head>
 
 <body>
-    <div class="box">
+    <div class="box" id="box">
         <div class="demo onlyX">
             <div class="title">1</div>
         </div>
         <div class="demo onlyY">
-            <i class="far fa-wifi-2"></i>
             <!-- <div class="title">2</div> -->
         </div>
         <div class="demo">
@@ -71,9 +70,9 @@
     end:<div class="end">0</div>
     <div class="btn1">点击开启或关闭拖拽1</div>
     <div class="btn2">点击开启或关闭拖拽2</div>
-    <script src="../src/index.js"></script>
+    <script src="../release/ewPlugins.min.js"></script>
     <script>
-        var drag1 = new ewDrag({
+        var drag1 = new ewPlugins('drag',{
             el: '.onlyX',//拖动元素
             scopeEl: '.box',//限制拖动范围元素
             disabledButton: '.btn1',//禁用按钮
@@ -93,28 +92,13 @@
                 // console.log('拖动结束时',this)
             },//拖动结束时回调
         });
-        var drag2= new ewDrag({
-            el: '.onlyY',//拖动元素
-            scopeEl: '.box',//限制拖动范围元素
-            disabledButton: '.btn1',//禁用按钮
-            designEl: '',//允许拖拽区域元素
-            // axis:"y",//x轴或y轴拖动
-            dragDisabled: false,//是否禁止拖动元素
-            origin: false,//拖动后还原位置
-            grid: [50, 50],//网格拖动
-            ani_transition:{
-                'transition':'all .1s linear'
-            },
-            startCB: function () {
-                // console.log('拖动开始时',this)
-            },//拖动开始回调
-            moveCB: function () {
-                // console.log('拖动时',this)
-            },//拖动时回调
-            endCB: function () {
-                // console.log('拖动结束时',this)
-            },//拖动结束时回调
-        });
+        var text = new ewPlugins('textarea',{
+            mode:"auto",
+            container:".box"
+        })
+        // var text = new ewPlugins('textarea');
+        // var text = new ewPlugins('textarea','auto');
+        // var text = new ewPlugins('textarea','.demo');
     </script>
 </body>
 
