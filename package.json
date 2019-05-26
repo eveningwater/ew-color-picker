@@ -1,6 +1,6 @@
 {
   "name": "ewplugins",
-  "version": "1.0.6",
+  "version": "1.0.9",
   "description": "一个基于原生js而封装的插件集合",
   "main": "src/index.js",
   "scripts": {
@@ -28,8 +28,11 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-latest": "^6.24.1",
+    "css-loader": "^2.1.1",
     "gitbook-cli": "^2.3.2",
     "http-server": "^0.11.1",
+    "raw-loader": "^2.0.0",
+    "style-loader": "^0.23.1",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0"
   },

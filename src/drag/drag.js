@@ -1,7 +1,31 @@
 
-import { ewError, isStr, ewAssign, ewObjToArray, isDeepObject, isDeepArray, getCss, getDom,isDom,isUndefined,isFunction,cssObjToStr,isAbs } from './util'
+import { ewError, isStr, ewAssign, ewObjToArray, isDeepObject, isDeepArray, getCss, getDom,isDom,isUndefined,isFunction,cssObjToStr,isAbs,eventType } from '../util/util'
 
 var configArr = [];
+
+/*
+   * 功能:还原位置
+   * params@1:元素，与还原属性名
+*/
+
+function restore(el,prop,spd){
+    var timer = null;
+    var speed = parseInt(el.style[prop]);
+    let reduceSpeed = !isNaN(spd) && spd > 0 && spd <= speed ? spd : 50;
+    el.style.transition = prop + ' .3s ease-out .1s';
+    var clearValue = function () {
+        speed -= reduceSpeed;
+        el.style[prop] = speed + 'px';
+        if (timer && speed <= 0) {
+            el.style[prop] = '';
+            clearTimeout(timer);
+        }
+        else {
+            timer = setTimeout(clearValue, 100)
+        }
+    }
+    clearValue();
+}
 
 /*
    * 功能:构造函数
@@ -50,7 +74,7 @@ function ewDrag(option) {
         }
         if (option.axis) config.axis = option.axis;
     } else {
-        return;
+        return ewError('you should pass a string param or an object param!');
     }
     configArr.push(config);
     this.config = configArr;
@@ -58,27 +82,6 @@ function ewDrag(option) {
     if (disabledButton) this.clickDisable(disabledButton, el, config);
     return this;
 }
-/*
-* 功能:获取dom元素
-* params@1:元素字符串
-*/
-
-ewDrag.prototype.getDOM = function (ident) {
-    var selector,
-        sType = ident.slice(0, 1),
-        identTxt = ident.slice(1);
-    if (/^[#\.]/.test(sType)) {
-        if (sType === "#") {
-            selector = document.getElementById(identTxt);
-        }
-        else if (sType === ".") {
-            selector = document.getElementsByClassName(identTxt);
-        }
-    } else {
-        selector = document.getElementsByTagName(ident);
-    }
-    return selector;
-};
 /*
 * 功能:点击禁用
 * params@1:禁用属性
@@ -199,8 +202,6 @@ ewDrag.prototype.onMouseDown = function (option) {
         this.style.cursor = '';
     }
     function mouseDown(scope, el, element, config) {
-        // 判断是移动端还是PC端
-        var eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
         // 禁用拖拽
         if (config.dragDisabled) {
             element.removeEventListener('mouseenter', setCursor);
@@ -298,43 +299,16 @@ ewDrag.prototype.moveTop = function (el, option, moveY, limitY) {
 * 功能:还原left偏移量
 * params@1:元素
 */
-
-ewDrag.prototype.restoreX = function (el) {
-    var timer = null;
-    var speed = parseInt(el.style.left);
-    el.style.transition = 'left .3s ease-out .1s';
-    var clearValue = function () {
-        speed -= 50;
-        if (timer && speed <= 0) {
-            el.style.left = '';
-            clearTimeout(timer);
-        }
-        else {
-            timer = setTimeout(clearValue, 100)
-        }
-    }
-    clearValue();
+ewDrag.prototype.restoreX = function (el,spd) {
+    restore(el,'left',spd);
 }
 
 /*
 * 功能:还原top偏移量
 * params@1:元素
 */
-ewDrag.prototype.restoreY = function (el) {
-    var timer = null;
-    var speed = parseInt(el.style.top);
-    el.style.transition = 'left .3s ease-out .1s';
-    var clearValue = function () {
-        speed -= 50;
-        if (timer && speed <= 0) {
-            el.style.top = '';
-            clearTimeout(timer);
-        }
-        else {
-            timer = setTimeout(clearValue, 100)
-        }
-    }
-    clearValue();
+ewDrag.prototype.restoreY = function (el,spd) {
+    restore(el,'top',spd);
 }
 
 /*
@@ -355,15 +329,15 @@ ewDrag.prototype.onMouseUp = function (el, element, option, eventType) {
         if (option.origin) {
             if (option.axis) {
                 if (option.axis.toLowerCase().indexOf('x') > -1) {
-                    this.restoreX(el);
+                    this.restoreX(el,option.originSpeed);
                 } else if (option.axis.toLowerCase().indexOf('y') > -1) {
-                    this.restoreY(el);
+                    this.restoreY(el,option.originSpeed);
                 } else {
                     throw ewError('a Invalid value of axis!');
                 }
             } else {
-                this.restoreX(el);
-                this.restoreY(el);
+                this.restoreX(el,option.originSpeed);
+                this.restoreY(el,option.originSpeed);
             }
             el.style.cssText = 'margin:0;position:"";';
         }
