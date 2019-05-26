@@ -195,22 +195,33 @@ export function keba(str) {
 */
 
 export function getCss(el, prop) {
-    return el.currentStyle ? el.currentStyle[prop] : window.getComputedStyle(el, null)[prop];
+    var getStyle = el.currentStyle ? function (prop) {
+        var propName = el.currentStyle[prop];
+        if (propName.indexOf('height') > -1 && propName.search(/px/i) > -1) {
+            var rect = el.getBoundingClientRect;
+            return rect.bottom - rect.top - parseInt(getStyle('padding-bottom')) - parseInt(getStyle('padding-top')) + 'px';
+        }
+    } : function (prop) {
+        return window.getComputedStyle(el, null)[prop];
+    };
+    return getStyle(prop);
 };
 /*
-* 功能:动画汉书
+* 功能:动画函数
 */
 export function requestAnimationFrame() {
-    if (window) {
-        return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || (function (callback) {
-            return window.setTimeout(callback, 6000 / 60);
-        })()
-    }
-
+    window.requestAnimationFrame = (function () {
+        return window.requestAnimationFrame || window.webkitRequestAnimationFrame
+            || window.mozRequestAnimationFrame || window.msRequestAnimationFrame
+            || window.oRequestAnimationFrame || function (callback) {
+                return window.setTimeout(callback, 1000 / 60);
+            }
+    })();
+}
 /*
 * 功能:获取dom元素
 * params@1:元素字符串
-*/}
+*/
 export const getDom = function (ident) {
     var selector,
         sType = ident.slice(0, 1),
@@ -227,3 +238,33 @@ export const getDom = function (ident) {
     }
     return selector;
 };
+//the event
+export const eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
+/*
+* 功能:创建一个dom元素
+* params@1:元素标签名
+*/
+export function createElement(tag) {
+    return document.createElement(tag);
+}
+/*
+* 功能:为元素添加一个类名
+* params@1:元素与类名
+*/
+export function addClass(el, className) {
+    return el.classList.add(className);
+}
+/*
+* 功能:复制一个元素
+* params@1:元素
+*/
+export function clone(el) {
+    return el.cloneNode(true);
+}
+/*
+* 功能:事件
+* params@1:事件名，回调函数
+*/
+export function addEvent(el,eventName, callback) {
+    el.addEventListener ? el.addEventListener(eventName, callback, false) : el.attachEvent('on' + eventName, callback);
+}

@@ -30,6 +30,7 @@
       height: 400//限制拖动元素范围高，则不能将isWindow属性设置为false
       axis:"x" //或"y",限制在X轴或者y轴拖动
       origin:true, //或false,是否在拖动之后还原位置
+       originSpeed:100,//还原速度,不超过拖拽的偏移量
       startCB:function(){},//拖动开始回调
       moveCB:function(){},//拖动时回调
       endCB:function(){},//拖动结束时回调
@@ -63,7 +64,7 @@
 ```
 ## cdn引入
 
-CDN:https://www.unpkg.com/ewplugins@1.0.6/release/ewPlugins.min.js
+CDN:https://www.unpkg.com/ewplugins@1.0.8/release/ewPlugins.min.js
 
 ## 在组件中使用
 

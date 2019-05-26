@@ -43,7 +43,7 @@
     <div class="drag"></div>
     <script src="/ewPlugins.min.js"></script>
     <script>
-        var drag = new ewPlugins('.drag');
+        var drag = new ewPlugins('drag','.drag');
         <!-- 创建一个自适应textarea元素 -->
         var textarea = new ewPlugins('textarea','auto');
     </script>

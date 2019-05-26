@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>textarea demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+        .box {
+            width: 400px;
+            height: 400px;
+            margin: 20px;
+            background-color: #999999;
+            position: relative;
+            /* font-size: 0; */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box" id="box"></div>
+    <script src="../release/ewPlugins.min.js"></script>
+    <script>
+        var text = new ewPlugins('textarea',{
+            mode:"auto",
+            container:".box"
+        })
+        // var text = new ewPlugins('textarea');
+        // var text = new ewPlugins('textarea','auto');
+        // var text = new ewPlugins('textarea','.demo');
+    </script>
+</body>
+
+</html>
