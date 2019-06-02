@@ -1,6 +1,6 @@
 # ewplugins
 
-一个基于原生js而封装的插件集合，目前包含创建自适应的文本输入框，拖拽（支持移动端和PC端）的插件，颜色选择器插件正在添加中。
+一个基于原生js而封装的插件集合，目前包含创建自适应的文本输入框，拖拽（支持移动端和PC端）的插件，颜色选择器插件逐步完善中。
 
 ## 安装与使用
 
@@ -30,7 +30,7 @@
       height: 400//限制拖动元素范围高，则不能将isWindow属性设置为false
       axis:"x" //或"y",限制在X轴或者y轴拖动
       origin:true, //或false,是否在拖动之后还原位置
-       originSpeed:100,//还原速度,不超过拖拽的偏移量
+      originSpeed:100,//还原速度,不超过拖拽的偏移量
       startCB:function(){},//拖动开始回调
       moveCB:function(){},//拖动时回调
       endCB:function(){},//拖动结束时回调
@@ -62,9 +62,18 @@
   var text = new ewPlugins('textarea')
 
 ```
+   颜色选择器插件如下(功能待完善中):
+
+```
+   //目前仅完成了默认配置
+   var color = new ewPlugins('colorpicker','.demo');
+   或 var color = new ewPlugins('colorpicker',document.getElementByClassName('demo'));
+
+
+```
 ## cdn引入
 
-CDN:https://www.unpkg.com/ewplugins@1.0.8/release/ewPlugins.min.js
+CDN:https://www.unpkg.com/ewplugins@1.1.0/release/ewPlugins.min.js
 
 ## 在组件中使用
 
