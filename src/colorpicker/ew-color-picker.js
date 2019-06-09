@@ -1,4 +1,4 @@
-import { eventType, isDeepObject, ewError, getDom, isStr, isDom, createElement, addClass, clone } from '../util/util'
+import { eventType, isDeepObject, ewError, getDom, isStr, isDom, createElement, addClass, clone,deepCloneObjByJSON } from '../util/util'
 import { colorHexToRgba, colorRgbaToHex, colorHsbaToRgba } from './color'
 import style from './css';
 import ani from './animation';
@@ -15,7 +15,7 @@ function setCss(el, prop, value) {
 }
 function openPicker(scope) {
     scope.pickerFlag = !scope.pickerFlag;
-    scope.config.defaultColor = '#ff0000';
+    scope.config.defaultColor = colorRgbaToHex(colorHsbaToRgba(scope.hsba));
     if (scope.pickerFlag) scope.render(scope.config);
     openAndClose(scope);
 }
@@ -42,13 +42,13 @@ function onClearColor(scope) {
     scope.pickerFlag = !scope.pickerFlag;
     scope.render(scope.config);
     openAndClose(scope);
-    scope.config.clear(this);
+    scope.config.clear(scope);
 }
 function onSureColor(scope) {
     scope.pickerFlag = false;
     openAndClose(scope);
     changeElementColor(scope);
-    scope.config.sure(this);
+    scope.config.sure(scope);
 }
 function changeCursorColor(scope, left, top, panelWidth, panelHeight) {
     setCss(scope.pickerCursor, 'left', left + 'px');
@@ -92,7 +92,13 @@ function ewColorPicker(config) {
             predefineColor: [],
             disabled: false,
             defaultColor: "",
-            openPickerAni: "height"
+            openPickerAni: "height",
+            sure:function(){
+                
+            },
+            clear:function(){
+                
+            }
         }
         if (el.length) {
             let i = 0;
@@ -161,8 +167,34 @@ ewColorPicker.prototype.render = function (config) {
     this.startMain(config);
 }
 ewColorPicker.prototype.startMain = function (config) {
+    let scope = this;
+    this.box = getELByClass('ew-color-picker-box');
+    this.arrowRight = getELByClass('ew-color-picker-arrow-right');
+    this.pickerPanel = getELByClass('ew-color-panel');
+    this.pickerCursor = getELByClass('ew-color-cursor');
+    this.pickerInput = getELByClass('ew-color-input');
+    this.pickerClear = getELByClass('ew-color-clear');
+    this.pickerSure = getELByClass('ew-color-sure');
+    this.hueBar = getELByClass('ew-color-slider-bar');
+    this.hueThumb = getELByClass('ew-color-slider-thumb');
+    this.picker = getELByClass('ew-color-picker');
+    this.slider = getELByClass('ew-color-slider');
+    this.pickerInput.value = config.defaultColor;
+    const panelWidth = this.pickerPanel.offsetWidth;
+    const panelHeight = this.pickerPanel.offsetHeight;
+    const sliderBarHeight = this.hueBar.offsetHeight,
+    sliderBarRect = this.hueBar.getBoundingClientRect();
     if (this.config.defaultColor) {
-
+        setCss(this.arrowRight, 'border-top-color', colorHsbaToRgba(this.hsba));
+        let l = parseInt(this.hsba.s * panelWidth / 100),
+            t = parseInt(panelHeight - this.hsba.b * panelHeight / 100),
+            ty = parseInt(this.hsba.h * sliderBarHeight / 360);
+        setCss(this.pickerCursor, 'left', l + 'px');
+        setCss(this.pickerCursor, 'top', t + 'px');
+        setCss(this.hueThumb,'top',ty + 'px');
+        const _hsba = deepCloneObjByJSON(this.hsba);
+        _hsba.s = _hsba.b = 100;
+        setCss(this.pickerPanel,'background',colorRgbaToHex(colorHsbaToRgba(_hsba)));
     } else {
         this.hsba = {
             h: 0,
@@ -171,31 +203,18 @@ ewColorPicker.prototype.startMain = function (config) {
             a: 1
         }
     }
-    let scope = this;
-    this.box = getELByClass('ew-color-picker-box');
-    this.arrowRight = getELByClass('ew-color-picker-arrow-right');
     //
-    this.picker = getELByClass('ew-color-picker');
     if (config.openPickerAni.indexOf('height') > -1) {
         this.picker.style.display = 'none';
     } else {
         this.picker.style.opacity = 0;
     }
-    this.slider = getELByClass('ew-color-slider');
     if (!config.alpha) {
         this.slider.style.width = '14px';
         this.picker.style.minWidth = '300px';
     } else {
         this.alphaBar = getELByClass('ew-alpha-slider-bar');
     }
-    this.pickerPanel = getELByClass('ew-color-panel');
-    this.pickerCursor = getELByClass('ew-color-cursor');
-    this.pickerInput = getELByClass('ew-color-input');
-    this.pickerClear = getELByClass('ew-color-clear');
-    this.pickerSure = getELByClass('ew-color-sure');
-    this.hueBar = getELByClass('ew-color-slider-bar');
-    this.hueThumb = getELByClass('ew-color-slider-thumb');
-    this.pickerInput.value = config.defaultColor;
     this.pickerInput.addEventListener('input', function () {
         onInputColor(scope);
     }, false);
@@ -212,18 +231,18 @@ ewColorPicker.prototype.startMain = function (config) {
         onClickPanel(scope, event);
     }, false)
     this.bindEvent(this.pickerCursor, function (scope, el, x, y) {
-        const panelWidth = scope.pickerPanel.offsetWidth;
-        const panelHeight = scope.pickerPanel.offsetHeight;
         const left = x >= panelWidth - 1 ? panelWidth : x <= 0 ? 0 : x;
         const top = y >= panelHeight - 2 ? panelHeight : y <= 0 ? 0 : y;
         changeCursorColor(scope, left, top, panelWidth, panelHeight)
     }, false);
     this.bindEvent(this.hueThumb,function(scope,el,x,y){
-        const sliderBarHeight = scope.hueBar.offsetHeight,sliderBarRect = scope.hueBar.getBoundingClientRect();
         let sliderthumbY = Math.max(0, Math.min(y - sliderBarRect.y, sliderBarHeight));
         setCss(el,'top',sliderthumbY + 'px');
-        scope.hsba.h = parseInt(360 * sliderthumbY / sliderBarHeight);
-        setCss(scope.pickerPanel,'background',colorRgbaToHex(colorHsbaToRgba(scope.hsba)));
+        let _hsba = deepCloneObjByJSON(scope.hsba);
+        _hsba.s = 100;
+        _hsba.b = 100;
+        scope.hsba.h = _hsba.h = parseInt(360 * sliderthumbY / sliderBarHeight);
+        setCss(scope.pickerPanel,'background',colorRgbaToHex(colorHsbaToRgba(_hsba)));
         changeElementColor(scope);
     },false)
 }

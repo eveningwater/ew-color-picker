@@ -73,7 +73,7 @@
 ```
 ## cdn引入
 
-CDN:https://www.unpkg.com/ewplugins@1.1.0/release/ewPlugins.min.js
+CDN:https://www.unpkg.com/ewplugins@1.1.1/release/ewPlugins.min.js
 
 ## 在组件中使用
 
