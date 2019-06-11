@@ -74,9 +74,9 @@
     left: 0;
     bottom: 0;
 }
-.ew-alpha-slider-bg{
+/* .ew-alpha-slider-bg{
     background:linear-gradient(to top,rgba(255,0,0,0) 0%,rgba(255,0,0,1) 100%);
-}
+} */
 .ew-color-slider-thumb,.ew-alpha-slider-thumb {
     position: absolute;
     cursor: pointer;
@@ -120,7 +120,7 @@
     background-color: #ffffff;
     display: inline-block;
     box-sizing: border-box;
-    padding: 0 15px;
+    padding: 0 5px;
     transition: border-color .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     border-radius: 5px;
     outline: none;

@@ -59,10 +59,14 @@ function changeCursorColor(scope, left, top, panelWidth, panelHeight) {
     scope.hsba.b = b > 100 ? 100 : b < 0 ? 0 : b;
     changeElementColor(scope);
 }
-function changeElementColor(scope){
+function changeElementColor(scope,isAlpha){
     setCss(scope.box, 'background', colorHsbaToRgba(scope.hsba));
     setCss(scope.arrowRight, 'border-top-color', colorHsbaToRgba(scope.hsba));
-    scope.pickerInput.value = colorRgbaToHex(colorHsbaToRgba(scope.hsba));
+    if(isAlpha || scope.config.alpha){
+        scope.pickerInput.value = colorHsbaToRgba(scope.hsba);
+    }else{
+        scope.pickerInput.value = colorRgbaToHex(colorHsbaToRgba(scope.hsba));
+    }
 }
 function resetElementColor(scope,color){
     setCss(scope.box, 'background', color);
@@ -87,7 +91,7 @@ function ewColorPicker(config) {
         let el = isDom(config) ? config : getDom(config);
         this.config = {
             hue: true,
-            alpha: false,
+            alpha: true,
             size: "normal",
             predefineColor: [],
             disabled: false,
@@ -184,6 +188,11 @@ ewColorPicker.prototype.startMain = function (config) {
     const panelHeight = this.pickerPanel.offsetHeight;
     const sliderBarHeight = this.hueBar.offsetHeight,
     sliderBarRect = this.hueBar.getBoundingClientRect();
+    if (config.openPickerAni.indexOf('height') > -1) {
+        this.picker.style.display = 'none';
+    } else {
+        this.picker.style.opacity = 0;
+    }
     if (this.config.defaultColor) {
         setCss(this.arrowRight, 'border-top-color', colorHsbaToRgba(this.hsba));
         let l = parseInt(this.hsba.s * panelWidth / 100),
@@ -203,17 +212,23 @@ ewColorPicker.prototype.startMain = function (config) {
             a: 1
         }
     }
-    //
-    if (config.openPickerAni.indexOf('height') > -1) {
-        this.picker.style.display = 'none';
-    } else {
-        this.picker.style.opacity = 0;
-    }
     if (!config.alpha) {
         this.slider.style.width = '14px';
         this.picker.style.minWidth = '300px';
     } else {
         this.alphaBar = getELByClass('ew-alpha-slider-bar');
+        this.alphaBarBg = getELByClass('ew-alpha-slider-bg');
+        this.alphaBarThumb = getELByClass('ew-alpha-slider-thumb');
+        const _hsba = deepCloneObjByJSON(this.hsba);
+        _hsba.s = _hsba.b = 100;
+        setCss(this.alphaBarBg,'background','linear-gradient(to top,'+ colorHsbaToRgba(_hsba,0)+' 0%,'+ colorHsbaToRgba(_hsba) +' 100%)')
+        this.bindEvent(this.alphaBarThumb,function(scope,el,x,y){
+            let alphathumbY = Math.max(0, Math.min(y - sliderBarRect.y, sliderBarHeight));
+            setCss(scope.alphaBarThumb,'top',alphathumbY + 'px');
+            const alpha = ((sliderBarHeight - alphathumbY <= 0 ? 0 : sliderBarHeight - alphathumbY) / sliderBarHeight);
+            scope.hsba.a =  alpha >= 1 ? 1 : alpha.toFixed(2);
+            changeElementColor(scope,true);
+        },false)
     }
     this.pickerInput.addEventListener('input', function () {
         onInputColor(scope);

@@ -40,7 +40,7 @@ export const colorRgbaToHex = function (rgba) {
     }
 }
 //hsba to rgba
-export const colorHsbaToRgba = function (hsba) {
+export const colorHsbaToRgba = function (hsba,alpha) {
     var r, g, b, a = hsba.a;//rgba(r,g,b,a)
     var h = Math.round(hsba.h), s = Math.round(hsba.s * 255 / 100), v = Math.round(hsba.b * 255 / 100);//hsv(h,s,v)
     if (s === 0) {
@@ -65,5 +65,6 @@ export const colorHsbaToRgba = function (hsba) {
             r = g = b = 0;
         }
     }
+    if(alpha >= 0 || alpha <= 1)a = alpha;
     return 'rgba(' + Math.round(r) + ',' + Math.round(g) + ',' + Math.round(b) + ',' + a + ')';
 }
