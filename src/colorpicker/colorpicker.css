@@ -8,9 +8,9 @@
     z-index: 10;
     padding: 7px;
     background-color: #ffffff;
-    max-height: 215px;
     /* left: 10px;
     top: 10px; */
+    display: none;
 }
 
 .ew-color-picker .ew-color-picker-content:after {
@@ -176,9 +176,34 @@
     border-color: #4096ef;
     color: #4096ef;
 }
+.ew-pre-define-color-container{
+    width: 280px;
+    font-size: 12px;
+    margin-top: 8px;
+}
+.ew-pre-define-color-container:after{
+    content: "";
+    visibility: hidden;
+    clear: both;
+    display: block;
+    height: 0;
+}
+.ew-pre-define-color{
+    float: left;
+    margin: 0 0 8px 8px;
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.ew-pre-define-color:nth-child(10n+1){
+    margin-left: 0;
+}
+.ew-pre-define-color:hover,
+.ew-pre-define-color:active{
+    opacity: .8;
+}
 .ew-color-picker-box{
-    width: 40px;
-    height: 40px;
     border: 1px solid #dcdee2;
     color: #535353;
     outline: none;
@@ -191,6 +216,10 @@
     cursor: pointer;
     font-size: 14px;
     transition: border-color  .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.ew-color-picker-box-disabled{
+    background-color: #999999;
+    cursor: not-allowed;
 }
 .ew-color-picker-arrow,.ew-color-picker-no{
     width: 20px;

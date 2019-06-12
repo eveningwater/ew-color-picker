@@ -104,11 +104,13 @@ const ani = (function () {
     function fadeIn(element, time) {
         element.style.transition = "opacity" + time + " ms";
         if (!getCss(element, 'opactiy') || !parseInt(getCss(element, 'opactiy')) <= 0) {
+            element.style.display = "none";
             let curAlpha = 0;
             element.style.opacity = 0;
             let addAlpha = 1 * 100 / (time / 10);
             var timer = setInterval(function () {
                 curAlpha += addAlpha;
+                element.style.display = "block";
                 element.style.opacity = (curAlpha / 100).toFixed(2);
                 if (curAlpha >= 100) {
                     clearInterval(timer);
@@ -135,6 +137,7 @@ const ani = (function () {
         if (!getCss(element, 'opactiy') || !parseInt(getCss(element, 'opactiy')) >= 1) {
             let curAlpha = 100;
             element.style.opacity = 1;
+            element.style.display = "block";
             let reduceAlpha = 1 * 100 / (time / 10);
             var timer = setInterval(function () {
                 curAlpha -= reduceAlpha;
@@ -142,6 +145,7 @@ const ani = (function () {
                 if (curAlpha <= 0) {
                     clearInterval(timer);
                     element.style.opacity = 0;
+                    element.style.display = "none";
                     if (
                         element.TimerManage &&
                         element.TimerManage.constructor === TimerManager
