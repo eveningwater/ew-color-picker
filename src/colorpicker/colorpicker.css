@@ -1,5 +1,5 @@
 .ew-color-picker {
-    min-width: 312px;
+    min-width: 320px;
     position: absolute;
     box-sizing: content-box;
     border: 1px solid #ebeeff;
@@ -63,6 +63,7 @@
     height: 100%;
     position: relative;
     float: left;
+    cursor: pointer;
 }
 .ew-alpha-slider-wrapper{
     background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGUlEQVQYV2M4gwH+YwCGIasIUwhT25BVBADtzYNYrHvv4gAAAABJRU5ErkJggg==");
@@ -202,6 +203,9 @@
 .ew-pre-define-color:hover,
 .ew-pre-define-color:active{
     opacity: .8;
+}
+.ew-pre-define-color-active{
+    box-shadow: 0 0 3px 2px #409eff;
 }
 .ew-color-picker-box{
     border: 1px solid #dcdee2;
