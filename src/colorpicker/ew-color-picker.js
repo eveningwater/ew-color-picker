@@ -43,8 +43,12 @@ function openAndClose(scope) {
         }
     }
 }
-function onInputColor(scope) {
-    console.log(scope)
+function onInputColor(scope,value) {
+    const color = colorRgbaToHsba(colorToRgb(value));
+    if(!color.h && !color.s && !color.h && !color.a)return;
+    scope.hsba = color;
+    setDefaultValue(scope,scope.panelWidth,scope.panelHeight);
+    changeElementColor(scope)
 }
 function onClearColor(scope) {
     scope.config.defaultColor = '';
@@ -311,8 +315,8 @@ ewColorPicker.prototype.startMain = function (config) {
         }, false)
     }
     //输入框输入事件
-    this.pickerInput.addEventListener('blur', function () {
-        onInputColor(scope);
+    this.pickerInput.addEventListener('blur', function (event) {
+        onInputColor(scope,event.target.value);
     }, false);
     //清空按钮事件
     this.pickerClear.addEventListener('click', function () {
