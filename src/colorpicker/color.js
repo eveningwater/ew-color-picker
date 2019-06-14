@@ -68,3 +68,59 @@ export const colorHsbaToRgba = function (hsba,alpha) {
     if(alpha >= 0 || alpha <= 1)a = alpha;
     return 'rgba(' + Math.round(r) + ',' + Math.round(g) + ',' + Math.round(b) + ',' + a + ')';
 }
+//rgba to hsba
+export function colorRgbaToHsba(rgba){
+    const rgbaArr = rgba.slice(rgba.indexOf('(') + 1,rgba.lastIndexOf(')')).split(',');
+    let a = rgbaArr.length < 4 ? 1 : Number(rgbaArr[3]);
+    let r = Number(rgbaArr[0]) / 255,
+        g = Number(rgbaArr[1]) / 255,
+        b = Number(rgbaArr[2]) / 255;
+    let h,s,v;
+    let min = Math.min(r,g,b);
+    let max = v = Math.max(r,g,b);
+    let l = (min + max) / 2;
+    let diff = max - min;
+
+    if(max === min){
+        h = 0;
+    }else{
+        switch(max){
+            case r:
+                h = (g - b) / diff + (g < b ? 6 : 0);
+                break;
+            case g:
+                h = 2.0 + (b - r) / diff;
+                break;
+            case b:
+                h = 4.0 + (r - g) / diff;
+                break;
+        }
+        h = Math.round(h * 60);
+    }
+
+    if(max === 0){
+        s = 0;
+    }else{
+        s = 1 - min / max;
+    }
+    s = Math.round(s * 100);
+    v = Math.round(v * 100);
+    return {
+        h:h,
+        s:s,
+        b:v,
+        a:a
+    }
+}
+/* 
+* 任意色值（甚至是CSS颜色关键字）转换为RGB颜色的方法
+* 此方法IE9+浏览器支持，基于DOM特性实现 
+*/
+export function colorToRgb(color) {
+    var div = document.createElement('div');
+    div.style.backgroundColor = color;
+    document.body.appendChild(div);
+    var c = window.getComputedStyle(div).backgroundColor;    
+    document.body.removeChild(div);
+    return c;
+};

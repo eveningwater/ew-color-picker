@@ -1,5 +1,5 @@
 
-import { ewError,isStr,isUndefined } from './util/util';
+import { ewError,isStr } from './util/util';
 import drag from './drag/drag';
 import textarea from './textarea/autotextarea'
 import ewColorPicker from './colorpicker/ew-color-picker'
@@ -10,7 +10,7 @@ import ewColorPicker from './colorpicker/ew-color-picker'
 }(this, function () {
     'use strict';
     function ewPlugins(type,config){
-        if(!isStr(type))throw ewError('you should pass a string params,sush as drag,textarea！')
+        if(!isStr(type))throw ewError('you should pass a string params,sush as drag,textarea,colorpicker！')
         switch(type){
             case 'drag':
                 return new drag(config);

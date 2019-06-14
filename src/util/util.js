@@ -255,6 +255,13 @@ export function addClass(el, className) {
     return el.classList.add(className);
 }
 /*
+* 功能:为元素移除一个类名
+* params@1:元素与类名
+*/
+export function removeClass(el, className) {
+    return el.classList.remove(className);
+}
+/*
 * 功能:复制一个元素
 * params@1:元素
 */

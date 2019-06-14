@@ -1,5 +1,5 @@
-import { eventType, isDeepObject, ewError, getDom, isStr, isDom, createElement, addClass, clone, deepCloneObjByJSON, isFunction, isNumber, isDeepArray, getCss, ewObjToArray } from '../util/util'
-import { colorHexToRgba, colorRgbaToHex, colorHsbaToRgba } from './color'
+import { eventType, isDeepObject, ewError, getDom, isStr, isDom, addClass, removeClass, deepCloneObjByJSON, isFunction, isNumber, isDeepArray, getCss, ewObjToArray } from '../util/util'
+import { colorToRgb, colorRgbaToHex, colorHsbaToRgba, colorRgbaToHsba } from './color'
 import style from './css';
 import ani from './animation';
 
@@ -26,6 +26,7 @@ function openPicker(scope) {
     scope.config.defaultColor = scope.config.alpha ? colorHsbaToRgba(scope.hsba) : colorRgbaToHex(colorHsbaToRgba(scope.hsba));
     if (scope.pickerFlag) scope.render(scope.config);
     openAndClose(scope);
+    setDefaultValue(scope,scope.panelWidth,scope.panelHeight);
 }
 function openAndClose(scope) {
     if (scope.config.openPickerAni.indexOf('height') > -1) {
@@ -56,7 +57,8 @@ function onSureColor(scope) {
     scope.pickerFlag = false;
     openAndClose(scope);
     changeElementColor(scope);
-    scope.config.sure(scope);
+    const result = scope.config.alpha ? colorHsbaToRgba(scope.hsba) : colorRgbaToHex(colorHsbaToRgba(scope.hsba));
+    scope.config.sure(result,scope);
 }
 function changeCursorColor(scope, left, top, panelWidth, panelHeight) {
     setCss(scope.pickerCursor, 'left', left + 'px');
@@ -76,11 +78,6 @@ function changeElementColor(scope, isAlpha) {
         scope.pickerInput.value = colorRgbaToHex(colorHsbaToRgba(scope.hsba));
     }
 }
-function resetElementColor(scope, color) {
-    setCss(scope.box, 'background', color);
-    setCss(scope.arrowRight, 'border-top-color', color);
-    scope.pickerInput.value = "";
-}
 function onClickPanel(scope, eve) {
     if (eve.target !== scope.pickerCursor) {
         //临界值处理
@@ -95,6 +92,7 @@ function onClickPanel(scope, eve) {
 }
 function ewColorPicker(config) {
     this.pickerFlag = false;
+    //如果第二个参数传的是字符串，或DOM对象，则初始化默认的配置
     if (isStr(config) || isDom(config)) {
         let el = isDom(config) ? config : getDom(config);
         this.config = {
@@ -123,7 +121,8 @@ function ewColorPicker(config) {
             this.config.el = el;
             this.init(this.config);
         }
-    } else if (isDeepObject(config) && (isStr(config.el) || isDom(config.el))) {
+    } //如果是对象，则自定义配置，自定义配置选项如下:
+    else if (isDeepObject(config) && (isStr(config.el) || isDom(config.el))) {
         const el = isDom(config.el) ? config.el : getDom(config.el);
         this.config = {
             hue: config.hue || true,
@@ -157,11 +156,14 @@ function ewColorPicker(config) {
     return config;
 }
 ewColorPicker.prototype.init = function (config) {
+    //渲染选择器
     this.render(config);
+    //添加样式
     document.getElementsByTagName('head')[0].appendChild(style);
 }
 ewColorPicker.prototype.render = function (config) {
     let b_width, b_height, predefineColorHTML = '';
+    //自定义颜色选择器的类型
     if (isStr(config.size)) {
         switch (config.size) {
             case 'normal':
@@ -183,21 +185,26 @@ ewColorPicker.prototype.render = function (config) {
     } else {
         return ewError('the value must be a string which is one of the normal,medium,small,mini,or must be an object and need to contain width or height property!')
     }
+    //设置预定义颜色
     if (isDeepArray(config.predefineColor) && config.predefineColor.length) {
         config.predefineColor.map((color) => {
-            predefineColorHTML += `<div class="ew-pre-define-color" style="background:${color};"></div>`
+            predefineColorHTML += `<div class="ew-pre-define-color" style="background:${color};" tabIndex=0></div>`
         })
     }
+    //打开颜色选择器的方框
     const colorBox = config.defaultColor ? `<div class="ew-color-picker-arrow">
         <div class="ew-color-picker-arrow-left"></div>
         <div class="ew-color-picker-arrow-right"></div>
     </div>` : `<div class="ew-color-picker-no">X</div>`;
+    //透明度
     const alphaBar = config.alpha ? `<div class="ew-alpha-slider-bar">
     <div class="ew-alpha-slider-wrapper"></div>
     <div class="ew-alpha-slider-bg"></div>
     <div class="ew-alpha-slider-thumb"></div>
     </div>` : '';
+    //自定义颜色
     const predefineHTML = predefineColorHTML ? `<div class="ew-pre-define-color-container">${predefineColorHTML}</div>` : '';
+    //颜色选择器
     let html = `<div class="ew-color-picker-box ${config.disabled ? 'ew-color-picker-box-disabled' : ''}" tabindex="0" style="background:${config.defaultColor};width:${b_width};height:${b_height}">
                 ${ colorBox}
             </div>
@@ -212,9 +219,7 @@ ewColorPicker.prototype.render = function (config) {
                     <div class="ew-color-panel" style="background:red;">
                         <div class="ew-color-white-panel"></div>
                         <div class="ew-color-black-panel"></div>
-                        <div class="ew-color-cursor">
-                            <div></div>
-                        </div>
+                        <div class="ew-color-cursor"></div>
                     </div>
                 </div>
                 <div class="ew-color-dropbtns">
@@ -231,6 +236,7 @@ ewColorPicker.prototype.render = function (config) {
 }
 ewColorPicker.prototype.startMain = function (config) {
     let scope = this;
+    //获取颜色选择器的一些操作元素
     this.box = getELByClass(this.config.el, 'ew-color-picker-box');
     this.arrowRight = getELByClass(this.config.el, 'ew-color-picker-arrow-right');
     this.pickerPanel = getELByClass(this.config.el, 'ew-color-panel');
@@ -242,9 +248,14 @@ ewColorPicker.prototype.startMain = function (config) {
     this.hueThumb = getELByClass(this.config.el, 'ew-color-slider-thumb');
     this.picker = getELByClass(this.config.el, 'ew-color-picker');
     this.slider = getELByClass(this.config.el, 'ew-color-slider');
-    this.pickerInput.value = config.defaultColor;
-    const panelWidth = parseInt(getCss(this.pickerPanel, 'width'));
-    const panelHeight = parseInt(getCss(this.pickerPanel, 'height'));
+    this.hsba = this.config.defaultColor ? colorRgbaToHsba(colorToRgb(this.config.defaultColor)) : {
+        h: 0,
+        s: 100,
+        b: 100,
+        a: 1
+    };
+    const panelWidth = this.panelWidth = parseInt(getCss(this.pickerPanel, 'width'));
+    const panelHeight = this.panelHeight = parseInt(getCss(this.pickerPanel, 'height'));
     //计算偏差
     var elem = config.el;
     var top = elem.offsetTop;
@@ -259,45 +270,30 @@ ewColorPicker.prototype.startMain = function (config) {
     //预定义颜色
     this.preDefineItem = getELByClass(this.config.el, 'ew-pre-define-color', true);
     if (this.preDefineItem.length) {
+        //点击预定义颜色
         ewObjToArray(this.preDefineItem).map((item) => {
             item.addEventListener('click', function (event) {
                 ewObjToArray(this.parentElement.children).forEach((child) => {
-                    child.classList.remove('ew-pre-define-color-active');
+                    removeClass(child,'ew-pre-define-color-active')
                 })
-                this.classList.add('ew-pre-define-color-active');
-                console.log(getCss(event.target, 'background-color'))
+                addClass(event.target,'ew-pre-define-color-active');
+                let pColor = colorRgbaToHsba(getCss(event.target, 'background-color'));
+                scope.hsba = pColor;
+                changeElementColor(scope);
+                setDefaultValue(scope,panelWidth,panelHeight);
+            }, false)
+            item.addEventListener('blur', function (event) {
+                removeClass(event.target,'ew-pre-define-color-active')
             }, false)
         })
-    } else {
-        this.preDefineItem[0].addEventListener('click', function (event) {
-
-        }, false)
     }
+    //颜色选择器打开的动画初始设置
     if (config.openPickerAni.indexOf('height') > -1) {
         this.picker.style.display = 'none';
     } else {
         this.picker.style.opacity = 0;
     }
-    if (this.config.defaultColor) {
-        setCss(this.arrowRight, 'border-top-color', colorHsbaToRgba(this.hsba));
-        const sliderBarHeight = this.hueBar.offsetHeight;
-        let l = parseInt(this.hsba.s * panelWidth / 100),
-            t = parseInt(panelHeight - this.hsba.b * panelHeight / 100),
-            ty = parseInt(this.hsba.h * sliderBarHeight / 360);
-        setCss(this.pickerCursor, 'left', l + 'px');
-        setCss(this.pickerCursor, 'top', t + 'px');
-        setCss(this.hueThumb, 'top', ty + 'px');
-        const _hsba = deepCloneObjByJSON(this.hsba);
-        _hsba.s = _hsba.b = 100;
-        setCss(this.pickerPanel, 'background', colorRgbaToHex(colorHsbaToRgba(_hsba)));
-    } else {
-        this.hsba = {
-            h: 0,
-            s: 100,
-            b: 100,
-            a: 1
-        }
-    }
+    //是否开启透明度
     if (!config.alpha) {
         this.slider.style.width = '14px';
         this.picker.style.minWidth = '300px';
@@ -315,36 +311,66 @@ ewColorPicker.prototype.startMain = function (config) {
             changeAlpha(scope, event.y)
         }, false)
     }
-    this.pickerInput.addEventListener('input', function () {
+    //输入框输入事件
+    this.pickerInput.addEventListener('blur', function () {
         onInputColor(scope);
     }, false);
+    //清空按钮事件
     this.pickerClear.addEventListener('click', function () {
         onClearColor(scope);
     }, false);
+    //确认按钮事件
     this.pickerSure.addEventListener('click', function () {
         onSureColor(scope);
     })
+    //是否禁止打开选择器面板，未禁止则点击可打开
     if (!config.disabled) {
         this.box.addEventListener('click', function () {
             openPicker(scope);
         }, false);
     }
+    //颜色面板点击事件
     this.pickerPanel.addEventListener('click', function (event) {
         onClickPanel(scope, event);
     }, false)
+    //颜色面板拖拽元素拖拽事件
     this.bindEvent(this.pickerCursor, function (scope, el, x, y) {
         const left = Math.max(0, Math.min(x - scope.pancelLeft, panelWidth));
         const top = Math.max(0, Math.min(y - scope.pancelTop, panelHeight));
-        changeCursorColor(scope, left, top, panelWidth, panelHeight)
+        changeCursorColor(scope, left + 4, top + 4, panelWidth, panelHeight)
     }, false);
+    //hue的点击事件
     this.hueBar.addEventListener('click', function (event) {
         changeHue(scope, event.y)
     }, false)
+    //hue 轨道的拖拽事件
     this.bindEvent(this.hueThumb, function (scope, el, x, y) {
         changeHue(scope, y);
     }, false)
 }
-
+function setDefaultValue(context,panelWidth,panelHeight){
+    context.pickerInput.value = context.config.alpha ? colorHsbaToRgba(context.hsba) : colorRgbaToHex(colorHsbaToRgba(context.hsba));
+    if(context.arrowRight){
+        setCss(context.arrowRight, 'border-top-color', colorHsbaToRgba(context.hsba));
+    }
+    const sliderBarHeight = context.hueBar.offsetHeight || 180;
+    let l = parseInt(context.hsba.s * panelWidth / 100),
+        t = parseInt(panelHeight - context.hsba.b * panelHeight / 100),
+        ty = parseInt(context.hsba.h * sliderBarHeight / 360);
+    setCss(context.pickerCursor, 'left', l + 4 + 'px');
+    setCss(context.pickerCursor, 'top', t + 4 + 'px');
+    setCss(context.hueThumb, 'top', ty + 'px');
+    //颜色面板颜色
+    const _hsba = deepCloneObjByJSON(context.hsba);
+    _hsba.s = _hsba.b = 100;
+    setCss(context.pickerPanel, 'background', colorRgbaToHex(colorHsbaToRgba(_hsba)));
+    //改变透明度
+    if(context.config.alpha){
+        const al_t = sliderBarHeight - context.hsba.a * sliderBarHeight;
+        setCss(context.alphaBarThumb, 'top', al_t + 'px');
+    }
+}
+//改变色调的方法
 function changeHue(context, y) {
     const sliderBarHeight = context.hueBar.offsetHeight,
         sliderBarRect = context.hueBar.getBoundingClientRect();
@@ -357,7 +383,7 @@ function changeHue(context, y) {
     setCss(context.pickerPanel, 'background', colorRgbaToHex(colorHsbaToRgba(_hsba)));
     changeElementColor(context);
 }
-
+//改变透明度的方法
 function changeAlpha(context, y) {
     const alphaBarHeight = context.hueBar.offsetHeight,
         alphaBarRect = context.hueBar.getBoundingClientRect();
@@ -367,6 +393,7 @@ function changeAlpha(context, y) {
     context.hsba.a = alpha >= 1 ? 1 : alpha.toFixed(2);
     changeElementColor(context, true);
 }
+//事件的绑定
 ewColorPicker.prototype.bindEvent = function (el, callback, bool) {
     let context = this;
     const callResult = function (event) {
