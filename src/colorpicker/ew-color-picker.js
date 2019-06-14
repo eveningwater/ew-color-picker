@@ -280,6 +280,7 @@ ewColorPicker.prototype.startMain = function (config) {
                 let pColor = colorRgbaToHsba(getCss(event.target, 'background-color'));
                 scope.hsba = pColor;
                 changeElementColor(scope);
+                changeAlphaBar(scope);
                 setDefaultValue(scope,panelWidth,panelHeight);
             }, false)
             item.addEventListener('blur', function (event) {
@@ -301,9 +302,7 @@ ewColorPicker.prototype.startMain = function (config) {
         this.alphaBar = getELByClass(this.config.el, 'ew-alpha-slider-bar');
         this.alphaBarBg = getELByClass(this.config.el, 'ew-alpha-slider-bg');
         this.alphaBarThumb = getELByClass(this.config.el, 'ew-alpha-slider-thumb');
-        const _hsba = deepCloneObjByJSON(this.hsba);
-        _hsba.s = _hsba.b = 100;
-        setCss(this.alphaBarBg, 'background', 'linear-gradient(to top,' + colorHsbaToRgba(_hsba, 0) + ' 0%,' + colorHsbaToRgba(_hsba) + ' 100%)')
+        changeAlphaBar(this)
         this.bindEvent(this.alphaBarThumb, function (scope, el, x, y) {
             changeAlpha(scope, y)
         }, false);
@@ -348,6 +347,11 @@ ewColorPicker.prototype.startMain = function (config) {
         changeHue(scope, y);
     }, false)
 }
+function changeAlphaBar(scope){
+    const _hsba = deepCloneObjByJSON(scope.hsba);
+    _hsba.s = _hsba.b = 100;
+    setCss(scope.alphaBarBg, 'background', 'linear-gradient(to top,' + colorHsbaToRgba(_hsba, 0) + ' 0%,' + colorHsbaToRgba(_hsba) + ' 100%)')
+}
 function setDefaultValue(context,panelWidth,panelHeight){
     context.pickerInput.value = context.config.alpha ? colorHsbaToRgba(context.hsba) : colorRgbaToHex(colorHsbaToRgba(context.hsba));
     if(context.arrowRight){
@@ -382,6 +386,7 @@ function changeHue(context, y) {
     context.hsba.h = _hsba.h = parseInt(360 * sliderthumbY / sliderBarHeight);
     setCss(context.pickerPanel, 'background', colorRgbaToHex(colorHsbaToRgba(_hsba)));
     changeElementColor(context);
+    changeAlphaBar(context);
 }
 //改变透明度的方法
 function changeAlpha(context, y) {
