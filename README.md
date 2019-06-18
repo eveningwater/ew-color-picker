@@ -62,11 +62,11 @@
   var text = new ewPlugins('textarea')
 
 ```
-```
-   颜色选择器插件如下:
+
+颜色选择器插件如下:
 
 ```
-   //目默认配置
+   //默认配置
    var color = new ewPlugins('colorpicker','.demo');
    或 var color = new ewPlugins('colorpicker',document.getElementByClassName('demo'));
    //自定义配置
@@ -90,11 +90,13 @@
   })
 
 ```
+
 ## cdn引入
 
 CDN:https://www.unpkg.com/ewplugins@1.2.1/release/ewPlugins.min.js
 
 ## 在组件中使用
+
 
 ```
    import ewPlugins from 'ewplugins'
