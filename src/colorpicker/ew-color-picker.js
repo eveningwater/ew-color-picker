@@ -21,10 +21,10 @@ function getELByClass(el, prop, isIndex) {
 function setCss(el, prop, value) {
     el.style[prop] = value;
 }
-function openPicker(scope) {
+function openPicker(el,scope) {
     scope.pickerFlag = !scope.pickerFlag;
     scope.config.defaultColor = scope.config.alpha ? colorHsbaToRgba(scope.hsba) : colorRgbaToHex(colorHsbaToRgba(scope.hsba));
-    if (scope.pickerFlag) scope.render(scope.config);
+    if (scope.pickerFlag) scope.render(el,scope.config);
     openAndClose(scope);
     setDefaultValue(scope,scope.panelWidth,scope.panelHeight);
 }
@@ -50,10 +50,10 @@ function onInputColor(scope,value) {
     setDefaultValue(scope,scope.panelWidth,scope.panelHeight);
     changeElementColor(scope)
 }
-function onClearColor(scope) {
+function onClearColor(el,scope) {
     scope.config.defaultColor = '';
     scope.pickerFlag = !scope.pickerFlag;
-    scope.render(scope.config);
+    scope.render(el,scope.config);
     openAndClose(scope);
     scope.config.clear(scope);
 }
@@ -115,15 +115,12 @@ function ewColorPicker(config) {
             }
         }
         if (el.length) {
-            let i = 0;
-            while (i < el.length) {
-                this.config.el = el[i];
-                this.init(this.config);
-                i++;
+            let i = -1;
+            while (++i < el.length) {
+                this.init(el[i],this.config);
             }
         } else {
-            this.config.el = el;
-            this.init(this.config);
+            this.init(el,this.config);
         }
     } //如果是对象，则自定义配置，自定义配置选项如下:
     else if (isDeepObject(config) && (isStr(config.el) || isDom(config.el))) {
@@ -142,13 +139,11 @@ function ewColorPicker(config) {
         if (el.length) {
             let i = 0;
             while (i < el.length) {
-                this.config.el = el[i];
-                this.init(this.config);
+                this.init(el[i],this.config);
                 i++;
             }
         } else {
-            this.config.el = el;
-            this.init(this.config);
+            this.init(el,this.config);
         }
     } else {
         if (isDeepObject(config)) {
@@ -159,13 +154,13 @@ function ewColorPicker(config) {
     }
     return config;
 }
-ewColorPicker.prototype.init = function (config) {
+ewColorPicker.prototype.init = function (bindElement,config) {
     //渲染选择器
-    this.render(config);
+    this.render(bindElement,config);
     //添加样式
     document.getElementsByTagName('head')[0].appendChild(style);
 }
-ewColorPicker.prototype.render = function (config) {
+ewColorPicker.prototype.render = function (element,config) {
     let b_width, b_height, predefineColorHTML = '';
     //自定义颜色选择器的类型
     if (isStr(config.size)) {
@@ -235,23 +230,23 @@ ewColorPicker.prototype.render = function (config) {
                 </div>
                 ${predefineHTML}
             </div>`;
-    config.el.innerHTML = html;
-    this.startMain(config);
+    element.innerHTML = html;
+    this.startMain(element,config);
 }
-ewColorPicker.prototype.startMain = function (config) {
+ewColorPicker.prototype.startMain = function (ele,config) {
     let scope = this;
     //获取颜色选择器的一些操作元素
-    this.box = getELByClass(this.config.el, 'ew-color-picker-box');
-    this.arrowRight = getELByClass(this.config.el, 'ew-color-picker-arrow-right');
-    this.pickerPanel = getELByClass(this.config.el, 'ew-color-panel');
-    this.pickerCursor = getELByClass(this.config.el, 'ew-color-cursor');
-    this.pickerInput = getELByClass(this.config.el, 'ew-color-input');
-    this.pickerClear = getELByClass(this.config.el, 'ew-color-clear');
-    this.pickerSure = getELByClass(this.config.el, 'ew-color-sure');
-    this.hueBar = getELByClass(this.config.el, 'ew-color-slider-bar');
-    this.hueThumb = getELByClass(this.config.el, 'ew-color-slider-thumb');
-    this.picker = getELByClass(this.config.el, 'ew-color-picker');
-    this.slider = getELByClass(this.config.el, 'ew-color-slider');
+    this.box = getELByClass(ele, 'ew-color-picker-box');
+    this.arrowRight = getELByClass(ele, 'ew-color-picker-arrow-right');
+    this.pickerPanel = getELByClass(ele, 'ew-color-panel');
+    this.pickerCursor = getELByClass(ele, 'ew-color-cursor');
+    this.pickerInput = getELByClass(ele, 'ew-color-input');
+    this.pickerClear = getELByClass(ele, 'ew-color-clear');
+    this.pickerSure = getELByClass(ele, 'ew-color-sure');
+    this.hueBar = getELByClass(ele, 'ew-color-slider-bar');
+    this.hueThumb = getELByClass(ele, 'ew-color-slider-thumb');
+    this.picker = getELByClass(ele, 'ew-color-picker');
+    this.slider = getELByClass(ele, 'ew-color-slider');
     this.hsba = this.config.defaultColor ? colorRgbaToHsba(colorToRgb(this.config.defaultColor)) : {
         h: 0,
         s: 100,
@@ -261,7 +256,7 @@ ewColorPicker.prototype.startMain = function (config) {
     const panelWidth = this.panelWidth = parseInt(getCss(this.pickerPanel, 'width'));
     const panelHeight = this.panelHeight = parseInt(getCss(this.pickerPanel, 'height'));
     //计算偏差
-    var elem = config.el;
+    var elem = ele;
     var top = elem.offsetTop;
     var left = elem.offsetLeft;
     while (elem.offsetParent) {
@@ -270,9 +265,9 @@ ewColorPicker.prototype.startMain = function (config) {
         elem = elem.offsetParent;
     }
     this.pancelLeft = left;
-    this.pancelTop = top + config.el.offsetHeight;
+    this.pancelTop = top + ele.offsetHeight;
     //预定义颜色
-    this.preDefineItem = getELByClass(this.config.el, 'ew-pre-define-color', true);
+    this.preDefineItem = getELByClass(ele, 'ew-pre-define-color', true);
     if (this.preDefineItem.length) {
         //点击预定义颜色
         ewObjToArray(this.preDefineItem).map((item) => {
@@ -303,9 +298,9 @@ ewColorPicker.prototype.startMain = function (config) {
         this.slider.style.width = '14px';
         this.picker.style.minWidth = '300px';
     } else {
-        this.alphaBar = getELByClass(this.config.el, 'ew-alpha-slider-bar');
-        this.alphaBarBg = getELByClass(this.config.el, 'ew-alpha-slider-bg');
-        this.alphaBarThumb = getELByClass(this.config.el, 'ew-alpha-slider-thumb');
+        this.alphaBar = getELByClass(ele, 'ew-alpha-slider-bar');
+        this.alphaBarBg = getELByClass(ele, 'ew-alpha-slider-bg');
+        this.alphaBarThumb = getELByClass(ele, 'ew-alpha-slider-thumb');
         changeAlphaBar(this)
         this.bindEvent(this.alphaBarThumb, function (scope, el, x, y) {
             changeAlpha(scope, y)
@@ -320,7 +315,7 @@ ewColorPicker.prototype.startMain = function (config) {
     }, false);
     //清空按钮事件
     this.pickerClear.addEventListener('click', function () {
-        onClearColor(scope);
+        onClearColor(ele,scope);
     }, false);
     //确认按钮事件
     this.pickerSure.addEventListener('click', function () {
@@ -329,7 +324,7 @@ ewColorPicker.prototype.startMain = function (config) {
     //是否禁止打开选择器面板，未禁止则点击可打开
     if (!config.disabled) {
         this.box.addEventListener('click', function () {
-            openPicker(scope);
+            openPicker(ele,scope);
         }, false);
     }
     //颜色面板点击事件
@@ -354,6 +349,7 @@ ewColorPicker.prototype.startMain = function (config) {
 function changeAlphaBar(scope){
     const _hsba = deepCloneObjByJSON(scope.hsba);
     _hsba.s = _hsba.b = 100;
+    if(!scope.alphaBarBg)return;
     setCss(scope.alphaBarBg, 'background', 'linear-gradient(to top,' + colorHsbaToRgba(_hsba, 0) + ' 0%,' + colorHsbaToRgba(_hsba) + ' 100%)')
 }
 function setDefaultValue(context,panelWidth,panelHeight){

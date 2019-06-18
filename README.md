@@ -62,18 +62,37 @@
   var text = new ewPlugins('textarea')
 
 ```
-   颜色选择器插件如下(功能待完善中):
+```
+   颜色选择器插件如下:
 
 ```
-   //目前仅完成了默认配置
+   //目默认配置
    var color = new ewPlugins('colorpicker','.demo');
    或 var color = new ewPlugins('colorpicker',document.getElementByClassName('demo'));
-
+   //自定义配置
+   var color = new ewPlugins('colorpicker',{
+      el:'.demo2',//绑定选择器的dom元素
+      alpha:true,//是否开启透明度
+      size:{
+          width:100,
+          height:50
+      },//颜色选择器类型，有四个字符串值normal,medium,small,mini或者一个对象自定义宽高
+      predefineColor:['#223456','rgba(122,35,77,.5)'],//预定义颜色是一个数组
+      disabled:false,//是否禁止开启选择器面板
+      defaultColor:'#eeff22',//默认颜色
+      openPickerAni:'opacity',//或者'height'，开启颜色选择器面板的动画
+      sure:function(color){
+          console.log(color);
+      },//点击确定按钮的回调
+      clear:function(){
+          console.log(this)
+      }//点击清空按钮的回调
+  })
 
 ```
 ## cdn引入
 
-CDN:https://www.unpkg.com/ewplugins@1.1.1/release/ewPlugins.min.js
+CDN:https://www.unpkg.com/ewplugins@1.2.1/release/ewPlugins.min.js
 
 ## 在组件中使用
 
