@@ -193,7 +193,7 @@ ewColorPicker.prototype.render = function (element,config) {
     //打开颜色选择器的方框
     const colorBox = config.defaultColor ? `<div class="ew-color-picker-arrow">
         <div class="ew-color-picker-arrow-left"></div>
-        <div class="ew-color-picker-arrow-right"></div>
+        <div class="ew-color-picker-arrow-right" style="border-top-color:${ config.defaultColor }"></div>
     </div>` : `<div class="ew-color-picker-no">X</div>`;
     //透明度
     const alphaBar = config.alpha ? `<div class="ew-alpha-slider-bar">
