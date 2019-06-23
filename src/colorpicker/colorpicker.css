@@ -196,6 +196,7 @@
     border-radius: 4px;
     cursor: pointer;
     outline: none;
+    border: 1px solid #9b979b;
 }
 .ew-pre-define-color:nth-child(10n+1){
     margin-left: 0;
