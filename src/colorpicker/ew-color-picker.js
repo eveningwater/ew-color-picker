@@ -55,7 +55,7 @@ function onClearColor(el,scope) {
     scope.pickerFlag = !scope.pickerFlag;
     scope.render(el,scope.config);
     openAndClose(scope);
-    scope.config.clear(scope);
+    scope.config.clear(scope.defaultColor,scope);
 }
 function onSureColor(scope) {
     scope.pickerFlag = false;
@@ -152,7 +152,7 @@ function ewColorPicker(config) {
             return ewError('you should pass a param that it must be a string or a dom element!')
         }
     }
-    return config;
+    return this;
 }
 ewColorPicker.prototype.init = function (bindElement,config) {
     //渲染选择器

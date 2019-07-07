@@ -275,3 +275,16 @@ export function clone(el) {
 export function addEvent(el,eventName, callback) {
     el.addEventListener ? el.addEventListener(eventName, callback, false) : el.attachEvent('on' + eventName, callback);
 }
+/*
+* 功能:是否是数组的某一项
+* params@1:数组，匹配项
+*/
+export function oneOf(arr,every){
+    if(!isDeepArray(arr))return;
+    arr.map((a) => {
+        if(every === a){
+            return true;
+        }
+    })
+    return false;
+}

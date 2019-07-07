@@ -1,5 +1,5 @@
 
-import { cssObjToStr,isDom,isDeepObject,ewError,getDom,isStr,isUndefined,isNull,getCss,addEvent } from '../util/util'
+import { cssObjToStr,isDom,isDeepObject,ewError,getDom,isStr,isUndefined,isNull,getCss,addEvent,oneOf } from '../util/util'
 
 const defaultTextAreaStyle = {
     'width':'auto',
@@ -19,8 +19,8 @@ function ewAutoTextArea(option) {
             let el = isStr(option.el) ? getDom(option.el) : option.el;
             this.editextArea(el);
         }else{
-            let flag = this.isModeUndefined(option.mode) && !this.isModeAuto(option.mode) && !this.isModeNotAuto(option.mode);
-            if(flag)throw ewError('you should pass a string param that called mode and mode is auto or notAuto!');
+            const modeArr = ['auto','notAuto'];
+            if(!isStr(option.mode) || !oneOf(modeArr,option.mode))throw ewError('you should pass a string param that called mode and mode is auto or notAuto!');
             let container = isStr(option.container) ? getDom(option.container) : isDom(option.container) ? option.container : null;
             this.addTextArea(container,this.createEleAuto(option.mode));
         }
@@ -68,27 +68,6 @@ ewAutoTextArea.prototype.addTextArea = function(parent,child){
     }else{
         document.body.appendChild(child)
     }
-}
-/**
-* function:judege the type
-* params: the type string
-*/
-ewAutoTextArea.prototype.isModeUndefined = function(str){
-    return !isStr(str);
-}
-/**
-* function:judege the type
-* params: the type string
-*/
-ewAutoTextArea.prototype.isModeAuto = function(str){
-    return str.indexOf('auto') > -1;
-}
-/**
-* function:judege the type
-* params: the type string
-*/
-ewAutoTextArea.prototype.isModeNotAuto = function(str){
-    return str.indexOf('notAuto') > -1;
 }
 /**
 * function:set a auto tag

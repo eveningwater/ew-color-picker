@@ -69,6 +69,14 @@
    //默认配置
    var color = new ewPlugins('colorpicker','.demo');
    或 var color = new ewPlugins('colorpicker',document.getElementByClassName('demo'));
+   //点击确定
+   color.config.sure = function(color){
+       //返回颜色值
+   }
+   //点击取消
+   color.config.clear = function(defaultColor){
+     //返回默认颜色值
+   }
    //自定义配置
    var color = new ewPlugins('colorpicker',{
       el:'.demo2',//绑定选择器的dom元素
@@ -93,7 +101,7 @@
 
 ## cdn引入
 
-CDN:https://www.unpkg.com/ewplugins@1.2.3/release/ewPlugins.min.js
+CDN:https://www.unpkg.com/ewplugins@1.2.4/release/ewPlugins.min.js
 
 ## 在组件中使用
 
