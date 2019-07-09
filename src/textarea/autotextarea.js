@@ -14,12 +14,12 @@ const defaultTextAreaStyle = {
     "background":"#fff"
 }
 function ewAutoTextArea(option) {
+    const modeArr = ['auto','notAuto'];
     if(isDeepObject(option)){
         if(option.el){
             let el = isStr(option.el) ? getDom(option.el) : option.el;
             this.editextArea(el);
         }else{
-            const modeArr = ['auto','notAuto'];
             if(!isStr(option.mode) || !oneOf(modeArr,option.mode))throw ewError('you should pass a string param that called mode and mode is auto or notAuto!');
             let container = isStr(option.container) ? getDom(option.container) : isDom(option.container) ? option.container : null;
             this.addTextArea(container,this.createEleAuto(option.mode));
@@ -27,7 +27,7 @@ function ewAutoTextArea(option) {
     }else{
         if(isUndefined(option) || isNull(option)){
             this.addTextArea(null,this.createEleAuto('notAuto'))
-        }else if(this.isModeAuto(option) || this.isModeNotAuto(option)){
+        }else if(oneOf(option.mode)){
             this.addTextArea(null,this.createEleAuto(option))
         }else{
             let el = isStr(option) ? getDom(option) : option;
@@ -90,7 +90,7 @@ ewAutoTextArea.prototype.createEleAuto = function(type){
     let autoContent = function(el){
         this.autoTextArea(el);
     }.bind(this);
-    if(this.isModeAuto(type)){
+    if(type.indexOf('auto') > -1){
         tag = document.createElement('textarea');
         setTimeout(autoContent(tag),0);
     }else{

@@ -55,7 +55,7 @@ function onClearColor(el,scope) {
     scope.pickerFlag = !scope.pickerFlag;
     scope.render(el,scope.config);
     openAndClose(scope);
-    scope.config.clear(scope.defaultColor,scope);
+    scope.config.clear(scope.config.defaultColor,scope);
 }
 function onSureColor(scope) {
     scope.pickerFlag = false;

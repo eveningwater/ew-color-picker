@@ -281,10 +281,11 @@ export function addEvent(el,eventName, callback) {
 */
 export function oneOf(arr,every){
     if(!isDeepArray(arr))return;
+    let result = false;
     arr.map((a) => {
         if(every === a){
-            return true;
+            result = true;
         }
     })
-    return false;
+    return result;
 }
