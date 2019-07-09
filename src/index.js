@@ -11,7 +11,7 @@ import ewColorPicker from './colorpicker/ew-color-picker'
     'use strict';
     function ewPlugins(type,config){
         const typeArr = ['drag','textarea','colorpicker'];
-        if(!isStr(type) || oneOf(typeArr,type))throw ewError('you should pass a string params,sush as drag,textarea,colorpicker！')
+        if(!isStr(type) || !oneOf(typeArr,type))throw ewError('you should pass a string params,sush as drag,textarea,colorpicker！')
         switch(type){
             case 'drag':
                 return new drag(config);

@@ -1,6 +1,6 @@
 # ewplugins
 
-一个基于原生js而封装的插件集合，目前包含创建自适应的文本输入框，拖拽（支持移动端和PC端）的插件，颜色选择器插件逐步完善中。
+一个基于原生js而封装的插件集合，目前包含创建自适应的文本输入框，拖拽（支持移动端和PC端）的插件，颜色选择器插件,其它插件逐步添加中。
 
 ## 安装与使用
 
@@ -101,7 +101,7 @@
 
 ## cdn引入
 
-CDN:https://www.unpkg.com/ewplugins@1.2.4/release/ewPlugins.min.js
+CDN:https://www.unpkg.com/ewplugins@1.2.6/release/ewPlugins.min.js
 
 ## 在组件中使用
 
