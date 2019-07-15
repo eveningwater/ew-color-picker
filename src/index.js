@@ -3,6 +3,7 @@ import { ewError,isStr,oneOf } from './util/util';
 import drag from './drag/drag';
 import textarea from './textarea/autotextarea'
 import ewColorPicker from './colorpicker/ew-color-picker'
+import ewDatePicker from './datepicker/datepicker'
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() : typeof define === 'function' && define.amd ?
@@ -21,6 +22,9 @@ import ewColorPicker from './colorpicker/ew-color-picker'
                 break;
             case 'colorpicker':
                 return new ewColorPicker(config);
+                break;
+            case 'datepicker':
+                return new ewDatePicker(config);
                 break;
         }
         return this;
