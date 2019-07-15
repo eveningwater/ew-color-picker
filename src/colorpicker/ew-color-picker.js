@@ -1,7 +1,7 @@
 import { eventType, isDeepObject, ewError, getDom, isStr, isDom, addClass, removeClass, deepCloneObjByJSON, isFunction, isNumber, isDeepArray, getCss, ewObjToArray } from '../util/util'
 import { colorToRgb, colorRgbaToHex, colorHsbaToRgba, colorRgbaToHsba } from './color'
 import style from './css';
-import ani from './animation';
+import ani from '../util/animation';
 
 function getELByClass(el, prop, isIndex) {
     if (!isIndex) {
@@ -177,10 +177,13 @@ ewColorPicker.prototype.render = function (element,config) {
             case 'mini':
                 b_width = b_height = '28px';
                 break;
+            default:
+                b_width = b_height = '40px';
+                break;
         }
     } else if (isDeepObject(config.size)) {
-        b_width = config.size.width && isNumber(config.size.width) ? config.size.width + 'px' : isStr(config.size.width) ? parseInt(config.size.width) + 'px' : '40px';
-        b_height = config.size.height && isNumber(config.size.height) ? config.size.height + 'px' : isStr(config.size.height) ? parseInt(config.size.height) : '40px';
+        b_width = config.size.width && isNumber(config.size.width) ? parseInt(config.size.width) + 'px' : '40px';
+        b_height = config.size.height && isNumber(config.size.height) ? parseInt(config.size.height) : '40px';
     } else {
         return ewError('the value must be a string which is one of the normal,medium,small,mini,or must be an object and need to contain width or height property!')
     }
