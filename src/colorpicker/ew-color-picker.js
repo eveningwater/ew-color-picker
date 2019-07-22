@@ -183,7 +183,7 @@ ewColorPicker.prototype.render = function (element,config) {
         }
     } else if (isDeepObject(config.size)) {
         b_width = config.size.width && isNumber(config.size.width) ? parseInt(config.size.width) + 'px' : '40px';
-        b_height = config.size.height && isNumber(config.size.height) ? parseInt(config.size.height) : '40px';
+        b_height = config.size.height && isNumber(config.size.height) ? parseInt(config.size.height) + 'px' : '40px';
     } else {
         return ewError('the value must be a string which is one of the normal,medium,small,mini,or must be an object and need to contain width or height property!')
     }
@@ -259,9 +259,9 @@ ewColorPicker.prototype.startMain = function (ele,config) {
     const panelWidth = this.panelWidth = parseInt(getCss(this.pickerPanel, 'width'));
     const panelHeight = this.panelHeight = parseInt(getCss(this.pickerPanel, 'height'));
     //计算偏差
-    var elem = ele;
-    var top = elem.offsetTop;
-    var left = elem.offsetLeft;
+    let elem = ele;
+    let top = elem.offsetTop;
+    let left = elem.offsetLeft;
     while (elem.offsetParent) {
         top += elem.offsetParent.offsetTop;
         left += elem.offsetParent.offsetLeft;
