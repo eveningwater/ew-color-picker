@@ -1,6 +1,6 @@
 {
   "name": "ewplugins",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "一个基于原生js而封装的插件集合",
   "main": "src/index.js",
   "scripts": {
