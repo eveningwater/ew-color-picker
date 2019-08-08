@@ -1,9 +1,10 @@
 
 import { ewError,isStr,oneOf } from './util/util';
-import drag from './drag/drag';
-import textarea from './textarea/autotextarea'
+import ewDrag from './drag/drag';
+import ewTextArea from './textarea/autotextarea'
 import ewColorPicker from './colorpicker/ew-color-picker'
 import ewDatePicker from './datepicker/datepicker'
+import ewSelect from './select/select'
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() : typeof define === 'function' && define.amd ?
@@ -11,20 +12,23 @@ import ewDatePicker from './datepicker/datepicker'
 }(this, function () {
     'use strict';
     function ewPlugins(type,config){
-        const typeArr = ['drag','textarea','colorpicker'];
-        if(!isStr(type) || !oneOf(typeArr,type))throw ewError('you should pass a string params,sush as drag,textarea,colorpicker！')
+        const typeArr = ['drag','textarea','colorpicker','select','datepicker'];
+        if(!isStr(type) || !oneOf(typeArr,type))throw ewError('you should pass a string params,sush as drag,textarea,colorpicker,select,datepicker！')
         switch(type){
             case 'drag':
-                return new drag(config);
+                return new ewDrag(config);
                 break;
             case 'textarea':
-                return new textarea(config);
+                return new ewTextArea(config);
                 break;
             case 'colorpicker':
                 return new ewColorPicker(config);
                 break;
             case 'datepicker':
                 return new ewDatePicker(config);
+                break;
+            case 'select':
+                return new ewSelect(config);
                 break;
         }
         return this;

@@ -94,14 +94,21 @@
       },//点击确定按钮的回调
       clear:function(){
           console.log(this)
-      }//点击清空按钮的回调
+      },//点击清空按钮的回调
+      openPicker:function(scope){
+         if(scope.pickerFlag){
+             console.log('打开颜色选择器')
+         }else{
+             console.log('关闭颜色选择器')
+         }
+      }//点击色块事件回调
   })
 
 ```
 
 ## cdn引入
 
-CDN:https://www.unpkg.com/ewplugins@1.2.8/release/ewPlugins.min.js
+CDN:https://www.unpkg.com/ewplugins@1.2.9/release/ewPlugins.min.js
 
 ## 在组件中使用
 
