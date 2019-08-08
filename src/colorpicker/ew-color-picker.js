@@ -27,7 +27,7 @@ function openPicker(el,scope) {
     if (scope.pickerFlag) scope.render(el,scope.config);
     openAndClose(scope);
     setDefaultValue(scope,scope.panelWidth,scope.panelHeight);
-    scope.config.openPicker(scope);
+    scope.config.openPicker(el,scope);
 }
 function openAndClose(scope) {
     if (scope.config.openPickerAni.indexOf('height') > -1) {
