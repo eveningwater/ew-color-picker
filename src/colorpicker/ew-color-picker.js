@@ -27,6 +27,7 @@ function openPicker(el,scope) {
     if (scope.pickerFlag) scope.render(el,scope.config);
     openAndClose(scope);
     setDefaultValue(scope,scope.panelWidth,scope.panelHeight);
+    scope.config.openPicker(scope);
 }
 function openAndClose(scope) {
     if (scope.config.openPickerAni.indexOf('height') > -1) {
@@ -112,7 +113,8 @@ function ewColorPicker(config) {
             },
             clear: function () {
 
-            }
+            },
+            openPicker:function(){}
         }
         if (el.length) {
             let i = -1;
@@ -134,7 +136,8 @@ function ewColorPicker(config) {
             defaultColor: config.defaultColor || "",
             openPickerAni: config.openPickerAni || "height",
             sure: isFunction(config.sure) ? config.sure : null,
-            clear: isFunction(config.clear) ? config.clear : null
+            clear: isFunction(config.clear) ? config.clear : null,
+            openPicker:isFunction(config.openPicker) ? config.openPicker : null
         }
         if (el.length) {
             let i = 0;

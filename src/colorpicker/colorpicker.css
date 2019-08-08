@@ -11,6 +11,7 @@
     /* left: 10px;
     top: 10px; */
     display: none;
+    text-align: left;
 }
 
 .ew-color-picker .ew-color-picker-content:after {
@@ -263,6 +264,6 @@
 .ew-color-picker-arrow-left{
     border-top: 10px solid #fff;
 }
-.ew-color-picker-arrow-right{
+/* .ew-color-picker-arrow-right{
     border-top: 10px solid #ff0000;
-}
+} */

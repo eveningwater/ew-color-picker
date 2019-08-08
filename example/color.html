@@ -32,6 +32,13 @@
             },
             clear:function(){
                 console.log(this)
+            },
+            openPicker:function(scope){
+                if(scope.pickerFlag){
+                    console.log('打开颜色选择器')
+                }else{
+                    console.log('关闭颜色选择器')
+                }
             }
         })
     </script>

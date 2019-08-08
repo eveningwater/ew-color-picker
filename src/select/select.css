@@ -1,0 +1,72 @@
+.list{
+    width: 100%;
+    height: 25px;
+    line-height: 25px;
+    padding-left: 5px;
+    border: 1px solid #535353;
+    border-radius: 4px;
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+    position: relative;
+    outline: none;
+    transition: all .2s ease-in-out;
+}
+.list:focus{
+    border-color: #1393f5;
+    box-shadow: 0 2px 3px rgba(0,0,0,.3);
+}
+.list:after{
+    content:"";
+    position: absolute;
+    top: 10px;
+    right: 5px;
+    width: 0;
+    height: 0;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #535353 transparent transparent transparent;
+}
+.rotateY:after{
+    top: 5px;
+    border-color: transparent transparent  #535353 transparent;
+}
+.list > .list-item-container{
+    position: absolute;
+    top: 26px;
+    left: 0;
+    width: 100%;
+    min-height: 30px;
+    z-index:999;
+    background-color: #fff;
+    padding: 5px;
+    box-sizing: border-box;
+    box-shadow: 0 1px 5px rgba(0,0,0,.3);
+}
+.list > .list-item-container .list-item{
+    width: 100%;
+    height: 25px;
+    line-height: 25px;
+    text-align: left;
+    padding-left: 5px;
+    color: #535353;
+    margin-top: 5px;
+}
+.list > .list-item-container .list-item:first-child{
+    margin-top: 0;
+}
+.list > .list-item-container .list-item:hover,
+.list > .list-item-container .list-item:active{
+    background-color: #f2f2f2;
+}
+.list:before{
+    content:attr(placeholder);
+    color: #9e9e9e;
+    font-size: 14px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    line-height: 25px;
+    padding-left: 15px;
+}
