@@ -122,4 +122,4 @@ CDN:https://www.unpkg.com/ewplugins@1.2.9/release/ewPlugins.min.js
    
 ```
 
-更多详情参阅文档官网介绍[ewPlugins](http://eveningwater.com/ewplugins/);
+更多详情参阅文档官网介绍[ewPlugins](https://www.eveningwater.com/ewplugins/);
