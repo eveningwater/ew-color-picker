@@ -108,7 +108,7 @@
 
 ## cdn引入
 
-CDN:https://www.unpkg.com/ewplugins@1.3.0/release/ewPlugins.min.js
+CDN:https://www.unpkg.com/ewplugins@1.3.1/release/ewPlugins.min.js
 
 ## 在组件中使用
 
