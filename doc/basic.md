@@ -19,7 +19,7 @@
 
 ```
 
-其中`type`,为指定的插件类型，目前仅有`[drag,textarea]`两个值，后期会加入更多的插件,`option`为一个自定义的配置对象，后续会解释有哪些配置，我们也可以直接传一个`DOM元素`的`id`或`class`字符串，又或者直接传入一个`DOM`元素也行。一个简单的示例代码如下:
+其中`type`,为指定的插件类型，目前仅有`[drag,textarea,'colorpicker']`三个值，后期会加入更多的插件,`option`为一个自定义的配置对象，后续会解释有哪些配置，我们也可以直接传一个`DOM元素`的`id`或`class`字符串，又或者直接传入一个`DOM`元素也行。一个简单的示例代码如下:
 
 ```
 <!DOCTYPE html>
@@ -41,11 +41,14 @@
 
 <body>
     <div class="drag"></div>
+    <div class="demo"></div>
     <script src="/ewPlugins.min.js"></script>
     <script>
         var drag = new ewPlugins('drag','.drag');
         <!-- 创建一个自适应textarea元素 -->
         var textarea = new ewPlugins('textarea','auto');
+        <!-- 创建一个颜色选择器 -->
+        var color = new ewPlugins('colorpicker','.demo');
     </script>
 </body>
 
@@ -147,6 +150,8 @@
 
 9.`clear`:值为一个函数。该值表示点击清空按钮触发的事件回调。
 
+10.`openPicker`:值为一个函数。该值表示点击色块打开或者关闭所触发的事件回调。
+
 一个比较完整的配置选项如下:
 
 ```
@@ -166,7 +171,14 @@
       },//点击确定按钮的回调
       clear:function(){
           console.log(this)
-      }//点击清空按钮的回调
+      },//点击清空按钮的回调
+      openPicker:function(){
+          if(scope.pickerFlag){
+             console.log('打开颜色选择器')
+          }else{
+              console.log('关闭颜色选择器')
+          }
+      },//打开或者关闭色块的回调
   })
   
 ```
