@@ -231,7 +231,8 @@ function ewColorPicker(config) {
             openPickerAni: "height",
             sure: function () { },
             clear: function () { },
-            openPicker: function () { }
+            openPicker: function () { },
+            isLog:true
         }
         if (el.length) {
             let i = -1;
@@ -254,7 +255,8 @@ function ewColorPicker(config) {
             openPickerAni: config.openPickerAni || "height",
             sure: isFunction(config.sure) ? config.sure : null,
             clear: isFunction(config.clear) ? config.clear : null,
-            openPicker: isFunction(config.openPicker) ? config.openPicker : null
+            openPicker: isFunction(config.openPicker) ? config.openPicker : null,
+            isLog:config.isLog || true
         }
         if (el.length) {
             let i = 0;
@@ -275,6 +277,7 @@ function ewColorPicker(config) {
     return this;
 }
 ewColorPicker.prototype.init = function (bindElement, config) {
+    if(config.isLog)consoleInfo();
     //渲染选择器
     this.render(bindElement, config);
     //添加样式

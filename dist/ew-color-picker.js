@@ -530,6 +530,10 @@
      return animation;
    }();
 
+   const consoleInfo = function () {
+     console.log(`%c ew-color-picker@1.3.9 %c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+   };
+
    /**
     * 获取元素的子元素
     * @param {*} el 
@@ -791,7 +795,8 @@
          openPickerAni: "height",
          sure: function () {},
          clear: function () {},
-         openPicker: function () {}
+         openPicker: function () {},
+         isLog: true
        };
 
        if (el.length) {
@@ -816,7 +821,8 @@
            openPickerAni: config.openPickerAni || "height",
            sure: isFunction(config.sure) ? config.sure : null,
            clear: isFunction(config.clear) ? config.clear : null,
-           openPicker: isFunction(config.openPicker) ? config.openPicker : null
+           openPicker: isFunction(config.openPicker) ? config.openPicker : null,
+           isLog: config.isLog || true
          };
 
          if (el.length) {
@@ -841,7 +847,8 @@
    }
 
    ewColorPicker.prototype.init = function (bindElement, config) {
-     //渲染选择器
+     if (config.isLog) consoleInfo(); //渲染选择器
+
      this.render(bindElement, config); //添加样式
 
      getDom('head')[0].appendChild(style);

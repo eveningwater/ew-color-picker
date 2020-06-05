@@ -54,14 +54,15 @@
          }else{
              console.log('关闭颜色选择器')
          }
-      }//点击色块事件回调
+      },//点击色块事件回调
+      isLog:false //是否开启打印信息,默认是true如果不指定该值的话
   })
 
 ```
 
 ## cdn引入
 
-CDN:https://www.unpkg.com/ew-color-picker@1.3.8/dist/ew-color-picker.min.js
+CDN:https://www.unpkg.com/ew-color-picker@1.3.9/dist/ew-color-picker.min.js
 
 ## 在组件中使用
 
