@@ -107,7 +107,7 @@ export function isAbs(str) {
 * params@1:元素
 */
 export function isDom(el) {
-    return typeof HTMLElement === 'object' ? el instanceof HTMLElement : el && typeof el === 'object' && el.nodeType === 1 && typeof el.nodeName === 'string' || el instanceof HTMLCollection || el instanceof NodeList;
+    return isShallowObject(HTMLElement) ? el instanceof HTMLElement : el && isShallowObject(el) && el.nodeType === 1 && isStr(el.nodeName) || el instanceof HTMLCollection || el instanceof NodeList;
 }
 /*
 * 功能:合并对象
@@ -174,7 +174,7 @@ export function cssObjToStr(obj) {
 
     var cssStr = '';
     for (var key in obj) {
-        cssStr += keba(key) + ':' + obj[key] + ';';
+        cssStr += getKebabCase(key) + ':' + obj[key] + ';';
     }
     return cssStr;
 }
@@ -182,7 +182,7 @@ export function cssObjToStr(obj) {
 * 功能:将大写字母换成短横线加小写字母
 * 参数:字符串
 */
-export function keba(str) {
+export function getKebabCase(str) {
     if (!isStr(str)) return;
     return str.replace(/A-Z/g, function (w) {
         return '-' + w.toLowerCase();
@@ -222,7 +222,7 @@ export function requestAnimationFrame() {
 * 功能:获取dom元素
 * params@1:元素字符串
 */
-export const getDom = function (ident) {
+export function getDom(ident) {
     var selector,
         sType = ident.slice(0, 1),
         identTxt = ident.slice(1);
@@ -239,7 +239,7 @@ export const getDom = function (ident) {
     return selector;
 };
 //the event
-export const eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
+export var eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
 /*
 * 功能:创建一个dom元素
 * params@1:元素标签名

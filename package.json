@@ -1,40 +1,32 @@
 {
-  "name": "ewplugins",
-  "version": "1.3.1",
-  "description": "一个基于原生js而封装的插件集合",
+  "name": "ew-color-picker",
+  "version": "1.3.8",
+  "description": "一个基于原生js而封装的颜色选择器",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "release": "webpack",
-    "example": "http-server -p 8080"
+    "build": "rollup -c",
+    "test":"jest"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eveningwater/ewplugins.git"
+    "url": "git+https://github.com/eveningwater/ew-color-picker.git"
   },
   "keywords": [
-    "ewplugins",
+    "ew-color-picker",
     "plugin"
   ],
   "author": "eveningwater",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/eveningwater/ewplugins/issues"
+    "url": "https://github.com/eveningwater/ew-color-picker/issues"
   },
-  "homepage": "https://github.com/eveningwater/ewplugins#readme",
+  "homepage": "https://github.com/eveningwater/ew-color-picker#readme",
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.5",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-latest": "^6.24.1",
-    "css-loader": "^2.1.1",
-    "gitbook-cli": "^2.3.2",
-    "http-server": "^0.11.1",
-    "raw-loader": "^2.0.0",
-    "style-loader": "^0.23.1",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.3.0"
+    "@babel/core": "^7.10.2",
+    "rollup": "^2.13.1",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-postcss": "^3.1.2",
+    "rollup-plugin-terser": "^6.1.0"
   },
   "dependencies": {
     "user": "0.0.0"
