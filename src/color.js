@@ -1,5 +1,5 @@
 //hex to rgba
-export const colorHexToRgba = function (hex, alpha) {
+export function colorHexToRgba(hex, alpha) {
     let a = alpha || 1, regx = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/, hColor = hex.toLowerCase(), hLen = hex.length, rgbaColor = [];
     if (hex && regx.test(hColor)) {
         //the hex length may be 4 or 7,contained the symbol of #
@@ -20,7 +20,7 @@ export const colorHexToRgba = function (hex, alpha) {
     }
 }
 // rgba to hex
-export const colorRgbaToHex = function (rgba) {
+export function colorRgbaToHex(rgba) {
     var hexObject = { 10: 'A', 11: 'B', 12: 'C', 13: 'D', 14: 'E', 15: 'F' },
         hexColor = function (value) {
             value = Math.min(Math.round(value), 255);
@@ -40,7 +40,7 @@ export const colorRgbaToHex = function (rgba) {
     }
 }
 //hsba to rgba
-export const colorHsbaToRgba = function (hsba,alpha) {
+export function colorHsbaToRgba(hsba,alpha) {
     var r, g, b, a = hsba.a;//rgba(r,g,b,a)
     var h = Math.round(hsba.h), s = Math.round(hsba.s * 255 / 100), v = Math.round(hsba.b * 255 / 100);//hsv(h,s,v)
     if (s === 0) {

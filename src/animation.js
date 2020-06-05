@@ -1,4 +1,4 @@
-import { getCss } from '../util/util'
+import { getCss } from './util'
 const ani = (function () {
     var animation = {};
     // the constructed function,timeManager,as such that's a manager about managing the setInterval
@@ -9,8 +9,7 @@ const ani = (function () {
     }
     // if the element can't has the property of TimerManage what represented the constructor function,repeated creating a constructed function
     TimerManager.makeTimerManage = function (element) {
-        if (
-            !element.TimerManage ||
+        if (!element.TimerManage ||
             element.TimerManage.constructor !== TimerManager
         ) {
             element.TimerManage = new TimerManager();
@@ -103,17 +102,19 @@ const ani = (function () {
     }
     function fadeIn(element, time) {
         element.style.transition = "opacity" + time + " ms";
-        if (!getCss(element, 'opactiy') || !parseInt(getCss(element, 'opactiy')) <= 0) {
+        if (!Number(getCss(element, 'opacity')) || !parseInt(getCss(element, 'opacity')) <= 0) {
             element.style.display = "none";
-            let curAlpha = 0;
             element.style.opacity = 0;
+            let curAlpha = 0;
             let addAlpha = 1 * 100 / (time / 10);
-            var timer = setInterval(function () {
+            let timer = null;
+            let handleFade = function () {
                 curAlpha += addAlpha;
-                element.style.display = "block";
+                if(element.style.display === 'none')element.style.display = "block";
                 element.style.opacity = (curAlpha / 100).toFixed(2);
                 if (curAlpha >= 100) {
-                    clearInterval(timer);
+                    
+                    if(timer)clearTimeout(timer);
                     element.style.opacity = 1;
                     if (
                         element.TimerManage &&
@@ -121,8 +122,11 @@ const ani = (function () {
                     ) {
                         element.TimerManage.next();
                     }
+                }else{
+                    timer = setTimeout(handleFade,10);
                 }
-            }, 10);
+            }
+            handleFade();
         } else {
             if (
                 element.TimerManage &&
@@ -134,16 +138,17 @@ const ani = (function () {
     }
     function fadeOut(element, time) {
         element.style.transition = "opacity" + time + " ms";
-        if (!getCss(element, 'opactiy') || !parseInt(getCss(element, 'opactiy')) >= 1) {
+        if (parseInt(getCss(element, 'opacity')) >= 1) {
             let curAlpha = 100;
             element.style.opacity = 1;
             element.style.display = "block";
             let reduceAlpha = 1 * 100 / (time / 10);
-            var timer = setInterval(function () {
+            let timer = null;
+            let handleFade = function () {
                 curAlpha -= reduceAlpha;
                 element.style.opacity = (curAlpha / 100).toFixed(2);
                 if (curAlpha <= 0) {
-                    clearInterval(timer);
+                    if(timer)clearTimeout(timer);
                     element.style.opacity = 0;
                     element.style.display = "none";
                     if (
@@ -152,8 +157,11 @@ const ani = (function () {
                     ) {
                         element.TimerManage.next();
                     }
+                }else{
+                    timer = setTimeout(handleFade,10);
                 }
-            }, 10);
+            }
+            handleFade();
         } else {
             if (
                 element.TimerManage &&
