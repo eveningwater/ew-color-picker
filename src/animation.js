@@ -1,13 +1,11 @@
-import { getCss } from './util'
+import { getCss } from './util';
 const ani = (function () {
     var animation = {};
-    // the constructed function,timeManager,as such that's a manager about managing the setInterval
     function TimerManager() {
         this.timers = [];
         this.args = [];
         this.isTimerRun = false;
     }
-    // if the element can't has the property of TimerManage what represented the constructor function,repeated creating a constructed function
     TimerManager.makeTimerManage = function (element) {
         if (!element.TimerManage ||
             element.TimerManage.constructor !== TimerManager
@@ -15,13 +13,11 @@ const ani = (function () {
             element.TimerManage = new TimerManager();
         }
     };
-    // That's order to create the method what add the timer
     TimerManager.prototype.add = function (timer, args) {
         this.timers.push(timer);
         this.args.push(args);
         this.timerRun();
     };
-    // called the method is order to run the timer by ordering
     TimerManager.prototype.timerRun = function () {
         if (!this.isTimerRun) {
             var timer = this.timers.shift(),
@@ -32,7 +28,6 @@ const ani = (function () {
             }
         }
     };
-    // let it run the next timer
     TimerManager.prototype.next = function () {
         this.isTimerRun = false;
         this.timerRun();
@@ -110,11 +105,11 @@ const ani = (function () {
             let timer = null;
             let handleFade = function () {
                 curAlpha += addAlpha;
-                if(element.style.display === 'none')element.style.display = "block";
+                if (element.style.display === 'none') element.style.display = "block";
                 element.style.opacity = (curAlpha / 100).toFixed(2);
                 if (curAlpha >= 100) {
-                    
-                    if(timer)clearTimeout(timer);
+
+                    if (timer) clearTimeout(timer);
                     element.style.opacity = 1;
                     if (
                         element.TimerManage &&
@@ -122,8 +117,8 @@ const ani = (function () {
                     ) {
                         element.TimerManage.next();
                     }
-                }else{
-                    timer = setTimeout(handleFade,10);
+                } else {
+                    timer = setTimeout(handleFade, 10);
                 }
             }
             handleFade();
@@ -148,7 +143,7 @@ const ani = (function () {
                 curAlpha -= reduceAlpha;
                 element.style.opacity = (curAlpha / 100).toFixed(2);
                 if (curAlpha <= 0) {
-                    if(timer)clearTimeout(timer);
+                    if (timer) clearTimeout(timer);
                     element.style.opacity = 0;
                     element.style.display = "none";
                     if (
@@ -157,8 +152,8 @@ const ani = (function () {
                     ) {
                         element.TimerManage.next();
                     }
-                }else{
-                    timer = setTimeout(handleFade,10);
+                } else {
+                    timer = setTimeout(handleFade, 10);
                 }
             }
             handleFade();
@@ -171,13 +166,11 @@ const ani = (function () {
             }
         }
     }
-    // the interface about slideUp method
     animation.slideUp = function (element) {
         TimerManager.makeTimerManage(element);
         element.TimerManage.add(slideUp, arguments);
         return this;
     };
-    // the interface about slideDown method
     animation.slideDown = function (element) {
         TimerManager.makeTimerManage(element);
         element.TimerManage.add(slideDown, arguments);

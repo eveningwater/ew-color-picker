@@ -70,6 +70,35 @@
      return isShallowObject(HTMLElement) ? el instanceof HTMLElement : el && isShallowObject(el) && el.nodeType === 1 && isStr(el.nodeName) || el instanceof HTMLCollection || el instanceof NodeList;
    }
    /*
+   * 功能:合并对象
+   * params@1:源数据对象
+   * params@2~...:多个对象
+   */
+
+   function ewAssign(target, args) {
+     if (target === null) return;
+
+     if (Object.assign) {
+       return Object.assign(target, args);
+     } else {
+       var _ = Object(target);
+
+       for (var j = 1; j < arguments.length; j++) {
+         var source = arguments[j];
+
+         if (source) {
+           for (var key in source) {
+             if (Object.prototype.hasOwnProperty.call(source, key)) {
+               _[key] = source[key];
+             }
+           }
+         }
+       }
+
+       return _;
+     }
+   }
+   /*
    * 功能:错误函数
    * params@1:字符串
    */
@@ -82,9 +111,16 @@
    * params@1:对象
    */
 
-   function deepCloneObjByJSON(obj) {
-     return JSON.parse(JSON.stringify(obj));
-   }
+   const deepCloneObjByRecursion = function f(obj) {
+     if (!isShallowObject(obj)) return;
+     let cloneObj = isDeepArray(obj) ? [] : {};
+
+     for (var k in obj) {
+       cloneObj[k] = isShallowObject(obj[k]) ? f(obj[k]) : obj[k];
+     }
+
+     return cloneObj;
+   };
    /*
    * 功能:获取css属性值
    * params@1:元素对象
@@ -129,14 +165,6 @@
 
    var eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
    /*
-   * 功能:创建一个dom元素
-   * params@1:元素标签名
-   */
-
-   function createElement(tag) {
-     return document.createElement(tag);
-   }
-   /*
    * 功能:为元素添加一个类名
    * params@1:元素与类名
    */
@@ -153,7 +181,15 @@
      return el.classList.remove(className);
    }
 
-   //hex to rgba
+   /**
+    * hex to rgba
+    * @param {*} hex 
+    * @param {*} alpha 
+    */
+   /**
+    * rgba to hex
+    * @param {*} rgba 
+    */
 
    function colorRgbaToHex(rgba) {
      var hexObject = {
@@ -184,7 +220,12 @@
        });
        return value + color;
      }
-   } //hsba to rgba
+   }
+   /**
+    * hsba to rgba
+    * @param {*} hsba 
+    * @param {*} alpha 
+    */
 
    function colorHsbaToRgba(hsba, alpha) {
      var r,
@@ -237,7 +278,11 @@
 
      if (alpha >= 0 || alpha <= 1) a = alpha;
      return 'rgba(' + Math.round(r) + ',' + Math.round(g) + ',' + Math.round(b) + ',' + a + ')';
-   } //rgba to hsba
+   }
+   /**
+    * rgba to hsba
+    * @param {*} rgba 
+    */
 
    function colorRgbaToHsba(rgba) {
      const rgbaArr = rgba.slice(rgba.indexOf('(') + 1, rgba.lastIndexOf(')')).split(',');
@@ -288,6 +333,7 @@
    /* 
    * 任意色值（甚至是CSS颜色关键字）转换为RGB颜色的方法
    * 此方法IE9+浏览器支持，基于DOM特性实现 
+   * @param {*} color 
    */
 
    function colorToRgb(color) {
@@ -299,62 +345,26 @@
      return c;
    }
 
-   function styleInject(css, ref) {
-     if ( ref === void 0 ) ref = {};
-     var insertAt = ref.insertAt;
-
-     if (!css || typeof document === 'undefined') { return; }
-
-     var head = document.head || document.getElementsByTagName('head')[0];
-     var style = document.createElement('style');
-     style.type = 'text/css';
-
-     if (insertAt === 'top') {
-       if (head.firstChild) {
-         head.insertBefore(style, head.firstChild);
-       } else {
-         head.appendChild(style);
-       }
-     } else {
-       head.appendChild(style);
-     }
-
-     if (style.styleSheet) {
-       style.styleSheet.cssText = css;
-     } else {
-       style.appendChild(document.createTextNode(css));
-     }
-   }
-
-   var css_248z = ".ew-color-picker {\r\n    min-width: 320px;\r\n    position: absolute;\r\n    box-sizing: content-box;\r\n    border: 1px solid #ebeeff;\r\n    box-shadow: 0 4px 15px rgba(0, 0, 0, .2);\r\n    border-radius: 5px;\r\n    z-index: 10;\r\n    padding: 7px;\r\n    background-color: #ffffff;\r\n    display: none;\r\n    text-align: left;\r\n}\r\n\r\n.ew-color-picker .ew-color-picker-content:after {\r\n    content: \"\";\r\n    display: table;\r\n    clear: both;\r\n}\r\n\r\n.ew-color-picker-content {\r\n    margin-bottom: 6px;\r\n}\r\n\r\n.ew-color-panel {\r\n    position: relative;\r\n    width: 280px;\r\n    height: 180px;\r\n    cursor: pointer;\r\n}\r\n\r\n.ew-color-white-panel,\r\n.ew-color-black-panel {\r\n    position: absolute;\r\n    left: 0;\r\n    right: 0;\r\n    top: 0;\r\n    bottom: 0;\r\n}\r\n\r\n.ew-color-white-panel {\r\n    background: linear-gradient(90deg, #fff, hsla(0, 0%, 100%, 0));\r\n}\r\n\r\n.ew-color-black-panel {\r\n    background: linear-gradient(0deg, #000, transparent);\r\n}\r\n\r\n.ew-color-slider {\r\n    width: 27px;\r\n    height: 180px;\r\n    position: relative;\r\n    float: right;\r\n    box-sizing: border-box;\r\n}\r\n.ew-color-slider-bar {\r\n    background: linear-gradient(180deg, #f00 0, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00);\r\n    margin-left: 3px;\r\n}\r\n.ew-alpha-slider-bar,.ew-color-slider-bar{\r\n    width: 12px;\r\n    height: 100%;\r\n    position: relative;\r\n    float: left;\r\n    cursor: pointer;\r\n}\r\n.ew-alpha-slider-wrapper{\r\n    background: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGUlEQVQYV2M4gwH+YwCGIasIUwhT25BVBADtzYNYrHvv4gAAAABJRU5ErkJggg==\");\r\n}\r\n.ew-alpha-slider-bg,.ew-alpha-slider-wrapper{\r\n    position: absolute;\r\n    right: 0;\r\n    top: 0;\r\n    left: 0;\r\n    bottom: 0;\r\n}\r\n.ew-color-slider-thumb,.ew-alpha-slider-thumb {\r\n    position: absolute;\r\n    cursor: pointer;\r\n    box-sizing: border-box;\r\n    left: 0;\r\n    top: 0;\r\n    width: 12px;\r\n    height: 4px;\r\n    border-radius: 1px;\r\n    background: #fff;\r\n    border: 1px solid #f0f0f0;\r\n    box-shadow: 0 0 2px rgba(0, 0, 0, .6);\r\n}\r\n\r\n.ew-color-cursor{\r\n    position: absolute;\r\n    left: 100%;\r\n    top: 0%;\r\n    cursor: default;\r\n    width: 4px;\r\n    height: 4px;\r\n    transform: translate(-2px, -2px);\r\n    border-radius: 50%;\r\n    box-shadow: 0 0 0 3px #fff,\r\n        inset 0 0 2px 2px rgba(0, 0, 0, .4),\r\n        0 0 2px 3px rgba(0, 0, 0, .5);\r\n    transform: translate(-6px,-6px)\r\n}\r\n\r\n.ew-color-dropbtns {\r\n    margin-top: 6px;\r\n    position: relative;\r\n}\r\n\r\n.ew-color-input {\r\n    width: 160px;\r\n    height: 28px;\r\n    line-height: 28px;\r\n    border: 1px solid #dcdfe6;\r\n    background-color: #ffffff;\r\n    display: inline-block;\r\n    box-sizing: border-box;\r\n    padding: 0 5px;\r\n    transition: border-color .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);\r\n    border-radius: 5px;\r\n    outline: none;\r\n}\r\n\r\n.ew-color-input:focus {\r\n    border-color: #239fe6;\r\n}\r\n\r\n.ew-color-dropbtn {\r\n    display: inline-block;\r\n    padding: 5px 15px;\r\n    font-size: 12px;\r\n    border-radius: 3px;\r\n    cursor: pointer;\r\n    text-align: center;\r\n    transition: .1s;\r\n    font-weight: 500;\r\n    outline: none;\r\n    box-sizing: border-box;\r\n    margin: 0;\r\n    white-space: nowrap;\r\n    color: #606266;\r\n    border: 1px solid #dcdfe6;\r\n}\r\n\r\n.ew-color-dropbtngroup {\r\n    position: absolute;\r\n    right: 0;\r\n    top: 1px;\r\n}\r\n\r\n.ew-color-clear {\r\n    color: #4096ef;\r\n    border-color: transparent;\r\n    background-color: transparent;\r\n    padding-left: 0;\r\n    padding-right: 0;\r\n}\r\n\r\n.ew-color-clear:hover,\r\n.ew-color-clear:active {\r\n    color: #66b1ff;\r\n}\r\n\r\n.ew-color-sure {\r\n    background-color: #ffffff;\r\n    margin-left: 10px;\r\n}\r\n\r\n.ew-color-sure:hover,\r\n.ew-color-sure:active {\r\n    border-color: #4096ef;\r\n    color: #4096ef;\r\n}\r\n.ew-pre-define-color-container{\r\n    width: 280px;\r\n    font-size: 12px;\r\n    margin-top: 8px;\r\n}\r\n.ew-pre-define-color-container:after{\r\n    content: \"\";\r\n    visibility: hidden;\r\n    clear: both;\r\n    display: block;\r\n    height: 0;\r\n}\r\n.ew-pre-define-color{\r\n    float: left;\r\n    margin: 0 0 8px 8px;\r\n    width: 20px;\r\n    height: 20px;\r\n    border-radius: 4px;\r\n    cursor: pointer;\r\n    outline: none;\r\n    border: 1px solid #9b979b;\r\n}\r\n.ew-pre-define-color:nth-child(10n+1){\r\n    margin-left: 0;\r\n}\r\n.ew-pre-define-color:hover,\r\n.ew-pre-define-color:active{\r\n    opacity: .8;\r\n}\r\n.ew-pre-define-color-active{\r\n    box-shadow: 0 0 3px 2px #409eff;\r\n}\r\n.ew-color-picker-box{\r\n    border: 1px solid #dcdee2;\r\n    color: #535353;\r\n    outline: none;\r\n    display: inline-block;\r\n    background-color: #ffffff;\r\n    position: relative;\r\n    border-radius: 4px;\r\n    padding: 4px 7px;\r\n    line-height: 1.5;\r\n    cursor: pointer;\r\n    font-size: 14px;\r\n    transition: border-color  .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);\r\n}\r\n.ew-color-picker-box-disabled{\r\n    background-color: #999999;\r\n    cursor: not-allowed;\r\n}\r\n.ew-color-picker-arrow,.ew-color-picker-no{\r\n    width: 20px;\r\n    height: 20px;\r\n    position: absolute;\r\n    left: 0;\r\n    top: 0;\r\n    bottom: 0;\r\n    right: 0;\r\n    margin: auto;\r\n    z-index: 3;\r\n}\r\n.ew-color-picker-no{\r\n    width: 40px;\r\n    height: 40px;\r\n    font-size: 12px;\r\n    text-align: center;\r\n    line-height: 40px;\r\n    color: #5e535f;\r\n    border: 1px solid #5e535f;\r\n    border-radius: 2px;\r\n}\r\n.ew-color-picker-arrow-left,.ew-color-picker-arrow-right{\r\n    width: 0;\r\n    height: 0;\r\n    position: absolute;\r\n    left: 50%;\r\n    top: 50%;\r\n    transform: translate(-50%,-50%);\r\n    z-index: 5;\r\n    overflow: hidden;\r\n    border-bottom: 10px transparent dashed;\r\n    border-left: 10px transparent dashed;\r\n    border-right: 10px transparent dashed;\r\n    border-top: 10px #fff solid;\r\n}\r\n.ew-color-picker-arrow-left{\r\n    border-top: 10px solid #fff;\r\n}";
-   styleInject(css_248z);
-
-   const style = createElement('style');
-   style.textContent = css_248z;
-
    const ani = function () {
-     var animation = {}; // the constructed function,timeManager,as such that's a manager about managing the setInterval
+     var animation = {};
 
      function TimerManager() {
        this.timers = [];
        this.args = [];
        this.isTimerRun = false;
-     } // if the element can't has the property of TimerManage what represented the constructor function,repeated creating a constructed function
-
+     }
 
      TimerManager.makeTimerManage = function (element) {
        if (!element.TimerManage || element.TimerManage.constructor !== TimerManager) {
          element.TimerManage = new TimerManager();
        }
-     }; // That's order to create the method what add the timer
-
+     };
 
      TimerManager.prototype.add = function (timer, args) {
        this.timers.push(timer);
        this.args.push(args);
        this.timerRun();
-     }; // called the method is order to run the timer by ordering
-
+     };
 
      TimerManager.prototype.timerRun = function () {
        if (!this.isTimerRun) {
@@ -366,8 +376,7 @@
            timer(args[0], args[1]);
          }
        }
-     }; // let it run the next timer
-
+     };
 
      TimerManager.prototype.next = function () {
        this.isTimerRun = false;
@@ -499,15 +508,13 @@
            element.TimerManage.next();
          }
        }
-     } // the interface about slideUp method
-
+     }
 
      animation.slideUp = function (element) {
        TimerManager.makeTimerManage(element);
        element.TimerManage.add(slideUp, arguments);
        return this;
-     }; // the interface about slideDown method
-
+     };
 
      animation.slideDown = function (element) {
        TimerManager.makeTimerManage(element);
@@ -531,8 +538,38 @@
    }();
 
    const consoleInfo = function () {
-     console.log(`%c ew-color-picker@1.3.9 %c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+     console.log(`%c ew-color-picker@1.4.0 %c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
    };
+
+   function styleInject(css, ref) {
+     if ( ref === void 0 ) ref = {};
+     var insertAt = ref.insertAt;
+
+     if (!css || typeof document === 'undefined') { return; }
+
+     var head = document.head || document.getElementsByTagName('head')[0];
+     var style = document.createElement('style');
+     style.type = 'text/css';
+
+     if (insertAt === 'top') {
+       if (head.firstChild) {
+         head.insertBefore(style, head.firstChild);
+       } else {
+         head.appendChild(style);
+       }
+     } else {
+       head.appendChild(style);
+     }
+
+     if (style.styleSheet) {
+       style.styleSheet.cssText = css;
+     } else {
+       style.appendChild(document.createTextNode(css));
+     }
+   }
+
+   var css_248z = ".ew-color-picker {\r\n    min-width: 320px;\r\n    position: absolute;\r\n    box-sizing: content-box;\r\n    border: 1px solid #ebeeff;\r\n    box-shadow: 0 4px 15px rgba(0, 0, 0, .2);\r\n    border-radius: 5px;\r\n    z-index: 10;\r\n    padding: 7px;\r\n    background-color: #ffffff;\r\n    display: none;\r\n    text-align: left;\r\n}\r\n\r\n.ew-color-picker .ew-color-picker-content:after {\r\n    content: \"\";\r\n    display: table;\r\n    clear: both;\r\n}\r\n\r\n.ew-color-picker-content {\r\n    margin-bottom: 6px;\r\n}\r\n\r\n.ew-color-panel {\r\n    position: relative;\r\n    width: 280px;\r\n    height: 180px;\r\n    cursor: pointer;\r\n}\r\n\r\n.ew-color-white-panel,\r\n.ew-color-black-panel {\r\n    position: absolute;\r\n    left: 0;\r\n    right: 0;\r\n    top: 0;\r\n    bottom: 0;\r\n}\r\n\r\n.ew-color-white-panel {\r\n    background: linear-gradient(90deg, #fff, hsla(0, 0%, 100%, 0));\r\n}\r\n\r\n.ew-color-black-panel {\r\n    background: linear-gradient(0deg, #000, transparent);\r\n}\r\n\r\n.ew-color-slider {\r\n    width: 27px;\r\n    height: 180px;\r\n    position: relative;\r\n    float: right;\r\n    box-sizing: border-box;\r\n}\r\n.ew-color-slider-bar {\r\n    background: linear-gradient(180deg, #f00 0, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00);\r\n    margin-left: 3px;\r\n}\r\n.ew-alpha-slider-bar,.ew-color-slider-bar{\r\n    width: 12px;\r\n    height: 100%;\r\n    position: relative;\r\n    float: left;\r\n    cursor: pointer;\r\n}\r\n.ew-alpha-slider-wrapper{\r\n    background: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGUlEQVQYV2M4gwH+YwCGIasIUwhT25BVBADtzYNYrHvv4gAAAABJRU5ErkJggg==\");\r\n}\r\n.ew-alpha-slider-bg,.ew-alpha-slider-wrapper{\r\n    position: absolute;\r\n    right: 0;\r\n    top: 0;\r\n    left: 0;\r\n    bottom: 0;\r\n}\r\n.ew-color-slider-thumb,.ew-alpha-slider-thumb {\r\n    position: absolute;\r\n    cursor: pointer;\r\n    box-sizing: border-box;\r\n    left: 0;\r\n    top: 0;\r\n    width: 12px;\r\n    height: 4px;\r\n    border-radius: 1px;\r\n    background: #fff;\r\n    border: 1px solid #f0f0f0;\r\n    box-shadow: 0 0 2px rgba(0, 0, 0, .6);\r\n}\r\n\r\n.ew-color-cursor{\r\n    position: absolute;\r\n    left: 100%;\r\n    top: 0%;\r\n    cursor: default;\r\n    width: 4px;\r\n    height: 4px;\r\n    transform: translate(-2px, -2px);\r\n    border-radius: 50%;\r\n    box-shadow: 0 0 0 3px #fff,\r\n        inset 0 0 2px 2px rgba(0, 0, 0, .4),\r\n        0 0 2px 3px rgba(0, 0, 0, .5);\r\n    transform: translate(-6px,-6px)\r\n}\r\n\r\n.ew-color-dropbtns {\r\n    margin-top: 6px;\r\n    position: relative;\r\n}\r\n\r\n.ew-color-input {\r\n    width: 160px;\r\n    height: 28px;\r\n    line-height: 28px;\r\n    border: 1px solid #dcdfe6;\r\n    background-color: #ffffff;\r\n    display: inline-block;\r\n    box-sizing: border-box;\r\n    padding: 0 5px;\r\n    transition: border-color .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);\r\n    border-radius: 5px;\r\n    outline: none;\r\n}\r\n\r\n.ew-color-input:focus {\r\n    border-color: #239fe6;\r\n}\r\n\r\n.ew-color-dropbtn {\r\n    display: inline-block;\r\n    padding: 5px 15px;\r\n    font-size: 12px;\r\n    border-radius: 3px;\r\n    cursor: pointer;\r\n    text-align: center;\r\n    transition: .1s;\r\n    font-weight: 500;\r\n    outline: none;\r\n    box-sizing: border-box;\r\n    margin: 0;\r\n    white-space: nowrap;\r\n    color: #606266;\r\n    border: 1px solid #dcdfe6;\r\n}\r\n\r\n.ew-color-dropbtngroup {\r\n    position: absolute;\r\n    right: 0;\r\n    top: 1px;\r\n}\r\n\r\n.ew-color-clear {\r\n    color: #4096ef;\r\n    border-color: transparent;\r\n    background-color: transparent;\r\n    padding-left: 0;\r\n    padding-right: 0;\r\n}\r\n\r\n.ew-color-clear:hover,\r\n.ew-color-clear:active {\r\n    color: #66b1ff;\r\n}\r\n\r\n.ew-color-sure {\r\n    background-color: #ffffff;\r\n    margin-left: 10px;\r\n}\r\n\r\n.ew-color-sure:hover,\r\n.ew-color-sure:active {\r\n    border-color: #4096ef;\r\n    color: #4096ef;\r\n}\r\n.ew-pre-define-color-container{\r\n    width: 280px;\r\n    font-size: 12px;\r\n    margin-top: 8px;\r\n}\r\n.ew-pre-define-color-container:after{\r\n    content: \"\";\r\n    visibility: hidden;\r\n    clear: both;\r\n    display: block;\r\n    height: 0;\r\n}\r\n.ew-pre-define-color{\r\n    float: left;\r\n    margin: 0 0 8px 8px;\r\n    width: 20px;\r\n    height: 20px;\r\n    border-radius: 4px;\r\n    cursor: pointer;\r\n    outline: none;\r\n    border: 1px solid #9b979b;\r\n}\r\n.ew-pre-define-color:nth-child(10n+1){\r\n    margin-left: 0;\r\n}\r\n.ew-pre-define-color:hover,\r\n.ew-pre-define-color:active{\r\n    opacity: .8;\r\n}\r\n.ew-pre-define-color-active{\r\n    box-shadow: 0 0 3px 2px #409eff;\r\n}\r\n.ew-color-picker-box{\r\n    border: 1px solid #dcdee2;\r\n    color: #535353;\r\n    outline: none;\r\n    display: inline-block;\r\n    background-color: #ffffff;\r\n    position: relative;\r\n    border-radius: 4px;\r\n    padding: 4px 7px;\r\n    line-height: 1.5;\r\n    cursor: pointer;\r\n    font-size: 14px;\r\n    transition: border-color  .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);\r\n}\r\n.ew-color-picker-box-disabled{\r\n    background-color: #c4c2c2;\r\n    cursor: not-allowed;\r\n}\r\n.ew-color-picker-arrow,.ew-color-picker-no{\r\n    width: 20px;\r\n    height: 20px;\r\n    position: absolute;\r\n    left: 0;\r\n    top: 0;\r\n    bottom: 0;\r\n    right: 0;\r\n    margin: auto;\r\n    z-index: 3;\r\n}\r\n.ew-color-picker-no{\r\n    width: 40px;\r\n    height: 40px;\r\n    font-size: 12px;\r\n    text-align: center;\r\n    line-height: 40px;\r\n    color: #5e535f;\r\n    border: 1px solid #5e535f;\r\n    border-radius: 2px;\r\n}\r\n.ew-color-picker-arrow-left,.ew-color-picker-arrow-right{\r\n    width: 0;\r\n    height: 0;\r\n    position: absolute;\r\n    left: 50%;\r\n    top: 50%;\r\n    transform: translate(-50%,-50%);\r\n    z-index: 5;\r\n    overflow: hidden;\r\n    border-bottom: 10px transparent dashed;\r\n    border-left: 10px transparent dashed;\r\n    border-right: 10px transparent dashed;\r\n    border-top: 10px #fff solid;\r\n}\r\n.ew-color-picker-arrow-left{\r\n    border-top: 10px solid #fff;\r\n}";
+   styleInject(css_248z);
 
    /**
     * 获取元素的子元素
@@ -707,7 +744,7 @@
 
 
    function changeAlphaBar(scope) {
-     const _hsba = deepCloneObjByJSON(scope.hsba);
+     const _hsba = deepCloneObjByRecursion(scope.hsba);
 
      _hsba.s = _hsba.b = 100;
      if (!scope.alphaBarBg) return;
@@ -728,6 +765,10 @@
        setCss(context.arrowRight, 'border-top-color', colorHsbaToRgba(context.hsba));
      }
 
+     if (context.config.defaultColor) {
+       context.box.style.background = context.config.defaultColor;
+     }
+
      const sliderBarHeight = context.hueBar.offsetHeight || 180;
      let l = parseInt(context.hsba.s * panelWidth / 100),
          t = parseInt(panelHeight - context.hsba.b * panelHeight / 100),
@@ -736,7 +777,7 @@
      setCss(context.pickerCursor, 'top', t + 4 + 'px');
      setCss(context.hueThumb, 'top', ty + 'px'); //颜色面板颜色
 
-     const _hsba = deepCloneObjByJSON(context.hsba);
+     const _hsba = deepCloneObjByRecursion(context.hsba);
 
      _hsba.s = _hsba.b = 100;
      setCss(context.pickerPanel, 'background', colorRgbaToHex(colorHsbaToRgba(_hsba))); //改变透明度
@@ -754,7 +795,7 @@
      let sliderthumbY = Math.max(0, Math.min(y - sliderBarRect.y, sliderBarHeight));
      setCss(context.hueThumb, 'top', sliderthumbY + 'px');
 
-     let _hsba = deepCloneObjByJSON(context.hsba);
+     let _hsba = deepCloneObjByRecursion(context.hsba);
 
      _hsba.s = 100;
      _hsba.b = 100;
@@ -781,23 +822,24 @@
 
 
    function ewColorPicker(config) {
-     this.pickerFlag = false; //如果第二个参数传的是字符串，或DOM对象，则初始化默认的配置
+     this.pickerFlag = false;
+     const defaultConfig = {
+       hue: true,
+       alpha: false,
+       size: "normal",
+       predefineColor: [],
+       disabled: false,
+       defaultColor: "",
+       openPickerAni: "height",
+       sure: function () {},
+       clear: function () {},
+       openPicker: function () {},
+       isLog: true
+     }; //如果第二个参数传的是字符串，或DOM对象，则初始化默认的配置
 
      if (isStr(config) || isDom(config)) {
        let el = isDom(config) ? config : getDom(config);
-       this.config = {
-         hue: true,
-         alpha: false,
-         size: "normal",
-         predefineColor: [],
-         disabled: false,
-         defaultColor: "",
-         openPickerAni: "height",
-         sure: function () {},
-         clear: function () {},
-         openPicker: function () {},
-         isLog: true
-       };
+       this.config = defaultConfig;
 
        if (el.length) {
          let i = -1;
@@ -811,19 +853,7 @@
      } //如果是对象，则自定义配置，自定义配置选项如下:
      else if (isDeepObject(config) && (isStr(config.el) || isDom(config.el))) {
          const el = isDom(config.el) ? config.el : getDom(config.el);
-         this.config = {
-           hue: config.hue || true,
-           alpha: config.alpha || false,
-           size: config.size || "normal",
-           predefineColor: config.predefineColor || [],
-           disabled: config.disabled || false,
-           defaultColor: config.defaultColor || "",
-           openPickerAni: config.openPickerAni || "height",
-           sure: isFunction(config.sure) ? config.sure : null,
-           clear: isFunction(config.clear) ? config.clear : null,
-           openPicker: isFunction(config.openPicker) ? config.openPicker : null,
-           isLog: config.isLog || true
-         };
+         this.config = ewAssign(defaultConfig, config);
 
          if (el.length) {
            let i = 0;
@@ -849,9 +879,7 @@
    ewColorPicker.prototype.init = function (bindElement, config) {
      if (config.isLog) consoleInfo(); //渲染选择器
 
-     this.render(bindElement, config); //添加样式
-
-     getDom('head')[0].appendChild(style);
+     this.render(bindElement, config);
    };
 
    ewColorPicker.prototype.render = function (element, config) {
@@ -909,7 +937,7 @@
 
      const predefineHTML = predefineColorHTML ? `<div class="ew-pre-define-color-container">${predefineColorHTML}</div>` : ''; //颜色选择器
 
-     let html = `<div class="ew-color-picker-box ${config.disabled ? 'ew-color-picker-box-disabled' : ''}" tabindex="0" style="background:${config.defaultColor};width:${b_width};height:${b_height}">
+     let html = `<div class="ew-color-picker-box${config.disabled ? ' ew-color-picker-box-disabled' : ''}" tabindex="0" style="width:${b_width};height:${b_height};${config.defaultColor ? 'background:' + config.defaultColor : ''}">
                 ${colorBox}
             </div>
             <div class="ew-color-picker">

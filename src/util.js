@@ -15,22 +15,6 @@ export function isStr(str) {
 }
 
 /*
-* 功能:判断是否是一个undefined
-* params@1:值
-*/
-
-export function isUndefined(value) {
-    return typeof value === 'undefined';
-}
-/*
-* 功能:判断是否是一个null
-* params@1:值
-*/
-
-export function isNull(value) {
-    return value === null;
-}
-/*
 * 功能:判断是否是一个函数
 * params@1:值
 */
@@ -73,34 +57,6 @@ export function ewObjToArray(obj) {
     if (obj && obj.length) {
         return Array.prototype.slice.call(obj);
     }
-}
-/*
-* 功能:是否是行内块元素
-* params@1:字符串
-*/
-export function isIB(str) {
-    return str.indexOf('inline-block') > -1;
-}
-/*
-* 功能:是否是默认定位
-* params@1:字符串
-*/
-export function isStat(str) {
-    return str.indexOf('static') > -1;
-}
-/*
-* 功能:是否是相对定位
-* params@1:字符串
-*/
-export function isRel(str) {
-    return str.indexOf('relative') > -1;
-}
-/*
-* 功能:是否是绝对定位
-* params@1:字符串
-*/
-export function isAbs(str) {
-    return str.indexOf('absolute') > -1;
 }
 /*
 * 功能:判断是否是一个DOM元素
@@ -207,18 +163,6 @@ export function getCss(el, prop) {
     return getStyle(prop);
 };
 /*
-* 功能:动画函数
-*/
-export function requestAnimationFrame() {
-    window.requestAnimationFrame = (function () {
-        return window.requestAnimationFrame || window.webkitRequestAnimationFrame
-            || window.mozRequestAnimationFrame || window.msRequestAnimationFrame
-            || window.oRequestAnimationFrame || function (callback) {
-                return window.setTimeout(callback, 1000 / 60);
-            }
-    })();
-}
-/*
 * 功能:获取dom元素
 * params@1:元素字符串
 */
@@ -241,13 +185,6 @@ export function getDom(ident) {
 //the event
 export var eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
 /*
-* 功能:创建一个dom元素
-* params@1:元素标签名
-*/
-export function createElement(tag) {
-    return document.createElement(tag);
-}
-/*
 * 功能:为元素添加一个类名
 * params@1:元素与类名
 */
@@ -260,32 +197,4 @@ export function addClass(el, className) {
 */
 export function removeClass(el, className) {
     return el.classList.remove(className);
-}
-/*
-* 功能:复制一个元素
-* params@1:元素
-*/
-export function clone(el) {
-    return el.cloneNode(true);
-}
-/*
-* 功能:事件
-* params@1:事件名，回调函数
-*/
-export function addEvent(el,eventName, callback) {
-    el.addEventListener ? el.addEventListener(eventName, callback, false) : el.attachEvent('on' + eventName, callback);
-}
-/*
-* 功能:是否是数组的某一项
-* params@1:数组，匹配项
-*/
-export function oneOf(arr,every){
-    if(!isDeepArray(arr))return;
-    let result = false;
-    arr.map((a) => {
-        if(every === a){
-            result = true;
-        }
-    })
-    return result;
 }

@@ -5,15 +5,13 @@
 ## 安装与使用
 
 ### 安装
-```
+```js
   npm install ewColorPicker --save-dev
-
 ```
 ### 引入
 
 ```js
   <script src="./dist/ewColorPicker.min.js"></script>
-  
 ```
 
 颜色选择器插件如下:
@@ -62,7 +60,7 @@
 
 ## cdn引入
 
-CDN:https://www.unpkg.com/ew-color-picker@1.3.9/dist/ew-color-picker.min.js
+CDN:https://www.unpkg.com/ew-color-picker@1.4.0/dist/ew-color-picker.min.js
 
 ## 在组件中使用
 
@@ -70,7 +68,6 @@ CDN:https://www.unpkg.com/ew-color-picker@1.3.9/dist/ew-color-picker.min.js
 ```js
    import ewColorPicker from 'ewColorPicker'
    var pluginName = new ewColorPicker(option);//option为配置对象，详情见前述
-
 ```
 
 更多详情参阅文档官网介绍[ewColorPicker](https://www.eveningwater.com/ewColorPicker/);
