@@ -60,7 +60,10 @@
 
 ## cdn引入
 
-CDN:https://www.unpkg.com/ew-color-picker@1.4.0/dist/ew-color-picker.min.js
+CDN:
+```js
+https://www.unpkg.com/ew-color-picker@1.4.0/dist/ew-color-picker.min.js
+```
 
 ## 在组件中使用
 
@@ -70,4 +73,5 @@ CDN:https://www.unpkg.com/ew-color-picker@1.4.0/dist/ew-color-picker.min.js
    var pluginName = new ewColorPicker(option);//option为配置对象，详情见前述
 ```
 
-更多详情参阅文档官网介绍[ewColorPicker](https://www.eveningwater.com/ewColorPicker/);
+[在线示例](https://www.eveningwater.com/ewColorPicker/example/color.html)
+[在vue中使用的在线示例](https://eveningwater.com/ewColorPicker/example/vue-color-demo/)
