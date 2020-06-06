@@ -1,8 +1,8 @@
-import { eventType, isDeepObject, ewError, getDom, isStr, isDom, addClass, removeClass, deepCloneObjByJSON, isFunction, isNumber, isDeepArray, getCss, ewObjToArray } from './util'
+import { eventType, isDeepObject, ewError, getDom, isStr, isDom, addClass, removeClass, deepCloneObjByRecursion, isFunction, isNumber, isDeepArray, getCss, ewObjToArray, ewAssign } from './util'
 import { colorToRgb, colorRgbaToHex, colorHsbaToRgba, colorRgbaToHsba } from './color'
-import style from './css';
 import ani from './animation';
 import { consoleInfo } from './console';
+import './color-picker.css';
 
 /**
  * 获取元素的子元素
@@ -116,7 +116,7 @@ function changeCursorColor(scope, left, top, panelWidth, panelHeight) {
     const b = parseInt(100 * (panelHeight - top) / panelHeight);
     //需要减去本身的宽高来做判断
     scope.hsba.s = (s + 4) > 100 ? 100 : (s - 4) < 0 ? 0 : s;
-    scope.hsba.b = (b + 4) > 100 ? 100 : (b - 4)< 0 ? 0 : b;
+    scope.hsba.b = (b + 4) > 100 ? 100 : (b - 4) < 0 ? 0 : b;
     changeElementColor(scope);
 }
 /**
@@ -155,7 +155,7 @@ function onClickPanel(scope, eve) {
  * @param {*} scope 
  */
 function changeAlphaBar(scope) {
-    const _hsba = deepCloneObjByJSON(scope.hsba);
+    const _hsba = deepCloneObjByRecursion(scope.hsba);
     _hsba.s = _hsba.b = 100;
     if (!scope.alphaBarBg) return;
     setCss(scope.alphaBarBg, 'background', 'linear-gradient(to top,' + colorHsbaToRgba(_hsba, 0) + ' 0%,' + colorHsbaToRgba(_hsba) + ' 100%)')
@@ -171,6 +171,9 @@ function setDefaultValue(context, panelWidth, panelHeight) {
     if (context.arrowRight) {
         setCss(context.arrowRight, 'border-top-color', colorHsbaToRgba(context.hsba));
     }
+    if(context.config.defaultColor){
+        context.box.style.background = context.config.defaultColor;
+    }
     const sliderBarHeight = context.hueBar.offsetHeight || 180;
     let l = parseInt(context.hsba.s * panelWidth / 100),
         t = parseInt(panelHeight - context.hsba.b * panelHeight / 100),
@@ -179,7 +182,7 @@ function setDefaultValue(context, panelWidth, panelHeight) {
     setCss(context.pickerCursor, 'top', t + 4 + 'px');
     setCss(context.hueThumb, 'top', ty + 'px');
     //颜色面板颜色
-    const _hsba = deepCloneObjByJSON(context.hsba);
+    const _hsba = deepCloneObjByRecursion(context.hsba);
     _hsba.s = _hsba.b = 100;
     setCss(context.pickerPanel, 'background', colorRgbaToHex(colorHsbaToRgba(_hsba)));
     //改变透明度
@@ -194,7 +197,7 @@ function changeHue(context, y) {
         sliderBarRect = context.hueBar.getBoundingClientRect();
     let sliderthumbY = Math.max(0, Math.min(y - sliderBarRect.y, sliderBarHeight));
     setCss(context.hueThumb, 'top', sliderthumbY + 'px');
-    let _hsba = deepCloneObjByJSON(context.hsba);
+    let _hsba = deepCloneObjByRecursion(context.hsba);
     _hsba.s = 100;
     _hsba.b = 100;
     context.hsba.h = _hsba.h = parseInt(360 * sliderthumbY / sliderBarHeight);
@@ -218,22 +221,23 @@ function changeAlpha(context, y) {
  */
 function ewColorPicker(config) {
     this.pickerFlag = false;
+    const defaultConfig = {
+        hue: true,
+        alpha: false,
+        size: "normal",
+        predefineColor: [],
+        disabled: false,
+        defaultColor: "",
+        openPickerAni: "height",
+        sure: function () { },
+        clear: function () { },
+        openPicker: function () { },
+        isLog: true
+    }
     //如果第二个参数传的是字符串，或DOM对象，则初始化默认的配置
     if (isStr(config) || isDom(config)) {
         let el = isDom(config) ? config : getDom(config);
-        this.config = {
-            hue: true,
-            alpha: false,
-            size: "normal",
-            predefineColor: [],
-            disabled: false,
-            defaultColor: "",
-            openPickerAni: "height",
-            sure: function () { },
-            clear: function () { },
-            openPicker: function () { },
-            isLog:true
-        }
+        this.config = defaultConfig;
         if (el.length) {
             let i = -1;
             while (++i < el.length) {
@@ -245,19 +249,7 @@ function ewColorPicker(config) {
     } //如果是对象，则自定义配置，自定义配置选项如下:
     else if (isDeepObject(config) && (isStr(config.el) || isDom(config.el))) {
         const el = isDom(config.el) ? config.el : getDom(config.el);
-        this.config = {
-            hue: config.hue || true,
-            alpha: config.alpha || false,
-            size: config.size || "normal",
-            predefineColor: config.predefineColor || [],
-            disabled: config.disabled || false,
-            defaultColor: config.defaultColor || "",
-            openPickerAni: config.openPickerAni || "height",
-            sure: isFunction(config.sure) ? config.sure : null,
-            clear: isFunction(config.clear) ? config.clear : null,
-            openPicker: isFunction(config.openPicker) ? config.openPicker : null,
-            isLog:config.isLog || true
-        }
+        this.config = ewAssign(defaultConfig, config);
         if (el.length) {
             let i = 0;
             while (i < el.length) {
@@ -277,11 +269,9 @@ function ewColorPicker(config) {
     return this;
 }
 ewColorPicker.prototype.init = function (bindElement, config) {
-    if(config.isLog)consoleInfo();
+    if (config.isLog) consoleInfo();
     //渲染选择器
     this.render(bindElement, config);
-    //添加样式
-    getDom('head')[0].appendChild(style);
 }
 ewColorPicker.prototype.render = function (element, config) {
     let b_width, b_height, predefineColorHTML = '';
@@ -330,7 +320,7 @@ ewColorPicker.prototype.render = function (element, config) {
     //自定义颜色
     const predefineHTML = predefineColorHTML ? `<div class="ew-pre-define-color-container">${predefineColorHTML}</div>` : '';
     //颜色选择器
-    let html = `<div class="ew-color-picker-box ${config.disabled ? 'ew-color-picker-box-disabled' : ''}" tabindex="0" style="background:${config.defaultColor};width:${b_width};height:${b_height}">
+    let html = `<div class="ew-color-picker-box${config.disabled ? ' ew-color-picker-box-disabled' : ''}" tabindex="0" style="width:${b_width};height:${b_height};${ config.defaultColor ? 'background:' + config.defaultColor : ''}">
                 ${ colorBox}
             </div>
             <div class="ew-color-picker">
@@ -495,7 +485,7 @@ ewColorPicker.prototype.bindEvent = function (el, callback, bool) {
         document.addEventListener(eventType[2], upfn, { capture: false, once: false, passive: false, useCapture: false, wantsUntrusted: false });
     }, { capture: false, once: false, passive: false, useCapture: false, wantsUntrusted: false })
 }
-if(!window.ewColorPicker){
+if (!window.ewColorPicker) {
     window.ewColorPicker = ewColorPicker;
 }
 export default ewColorPicker;

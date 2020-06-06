@@ -1,4 +1,8 @@
-//hex to rgba
+/**
+ * hex to rgba
+ * @param {*} hex 
+ * @param {*} alpha 
+ */
 export function colorHexToRgba(hex, alpha) {
     let a = alpha || 1, regx = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/, hColor = hex.toLowerCase(), hLen = hex.length, rgbaColor = [];
     if (hex && regx.test(hColor)) {
@@ -19,7 +23,10 @@ export function colorHexToRgba(hex, alpha) {
         return hColor;
     }
 }
-// rgba to hex
+/**
+ * rgba to hex
+ * @param {*} rgba 
+ */
 export function colorRgbaToHex(rgba) {
     var hexObject = { 10: 'A', 11: 'B', 12: 'C', 13: 'D', 14: 'E', 15: 'F' },
         hexColor = function (value) {
@@ -39,7 +46,11 @@ export function colorRgbaToHex(rgba) {
         return value + color;
     }
 }
-//hsba to rgba
+/**
+ * hsba to rgba
+ * @param {*} hsba 
+ * @param {*} alpha 
+ */
 export function colorHsbaToRgba(hsba,alpha) {
     var r, g, b, a = hsba.a;//rgba(r,g,b,a)
     var h = Math.round(hsba.h), s = Math.round(hsba.s * 255 / 100), v = Math.round(hsba.b * 255 / 100);//hsv(h,s,v)
@@ -68,7 +79,10 @@ export function colorHsbaToRgba(hsba,alpha) {
     if(alpha >= 0 || alpha <= 1)a = alpha;
     return 'rgba(' + Math.round(r) + ',' + Math.round(g) + ',' + Math.round(b) + ',' + a + ')';
 }
-//rgba to hsba
+/**
+ * rgba to hsba
+ * @param {*} rgba 
+ */
 export function colorRgbaToHsba(rgba){
     const rgbaArr = rgba.slice(rgba.indexOf('(') + 1,rgba.lastIndexOf(')')).split(',');
     let a = rgbaArr.length < 4 ? 1 : Number(rgbaArr[3]);
@@ -115,6 +129,7 @@ export function colorRgbaToHsba(rgba){
 /* 
 * 任意色值（甚至是CSS颜色关键字）转换为RGB颜色的方法
 * 此方法IE9+浏览器支持，基于DOM特性实现 
+* @param {*} color 
 */
 export function colorToRgb(color) {
     var div = document.createElement('div');

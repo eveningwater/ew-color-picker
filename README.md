@@ -11,14 +11,14 @@
 ```
 ### 引入
 
-```
+```js
   <script src="./dist/ewColorPicker.min.js"></script>
   
 ```
 
 颜色选择器插件如下:
 
-```
+```js
    //默认配置
    var color = new ewColorPicker('.demo');
    或 var color = new ewColorPicker(document.getElementByClassName('demo'));
@@ -67,7 +67,7 @@ CDN:https://www.unpkg.com/ew-color-picker@1.3.9/dist/ew-color-picker.min.js
 ## 在组件中使用
 
 
-```
+```js
    import ewColorPicker from 'ewColorPicker'
    var pluginName = new ewColorPicker(option);//option为配置对象，详情见前述
 

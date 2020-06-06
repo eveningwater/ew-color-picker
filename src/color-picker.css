@@ -219,7 +219,7 @@
     transition: border-color  .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .ew-color-picker-box-disabled{
-    background-color: #999999;
+    background-color: #c4c2c2;
     cursor: not-allowed;
 }
 .ew-color-picker-arrow,.ew-color-picker-no{
