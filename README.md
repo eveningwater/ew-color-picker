@@ -1,4 +1,4 @@
-# ewColorPicker
+# ew-color-picker
 
 一个基于原生js而封装的颜色选择器插件。
 
@@ -6,13 +6,13 @@
 
 ### 安装
 ```
-  npm install ewColorPicker --save-dev
+  npm install ew-color-picker --save-dev
 
 ```
 ### 引入
 
 ```js
-  <script src="./dist/ewColorPicker.min.js"></script>
+  <script src="./dist/ew-color-picker.min.js"></script>
   
 ```
 
