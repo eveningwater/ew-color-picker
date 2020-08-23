@@ -75,3 +75,4 @@ https://www.unpkg.com/ew-color-picker@1.4.0/dist/ew-color-picker.min.js
 
 [在线示例](https://www.eveningwater.com/ewColorPicker/example/color.html)
 [在vue中使用的在线示例](https://eveningwater.com/ewColorPicker/example/vue-color-demo/)
+[在react中使用的在线示例](https://eveningwater.com/ewColorPicker/example/react-color-demo/)
