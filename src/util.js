@@ -97,7 +97,7 @@ export function ewAssign(target, args) {
 */
 
 export function ewError(str) {
-    return new Error(str);
+    return console.error('[ewColorPicker warn]\n' + new Error(str));
 }
 
 /*
