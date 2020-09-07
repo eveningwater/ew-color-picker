@@ -104,7 +104,7 @@
    */
 
    function ewError(str) {
-     return new Error(str);
+     return console.error('[ewColorPicker warn]\n' + new Error(str));
    }
    /*
    * 功能:深度克隆对象
@@ -568,7 +568,7 @@
      }
    }
 
-   var css_248z = ".ew-color-picker {\r\n    min-width: 320px;\r\n    position: absolute;\r\n    box-sizing: content-box;\r\n    border: 1px solid #ebeeff;\r\n    box-shadow: 0 4px 15px rgba(0, 0, 0, .2);\r\n    border-radius: 5px;\r\n    z-index: 10;\r\n    padding: 7px;\r\n    background-color: #ffffff;\r\n    display: none;\r\n    text-align: left;\r\n}\r\n\r\n.ew-color-picker .ew-color-picker-content:after {\r\n    content: \"\";\r\n    display: table;\r\n    clear: both;\r\n}\r\n\r\n.ew-color-picker-content {\r\n    margin-bottom: 6px;\r\n}\r\n\r\n.ew-color-panel {\r\n    position: relative;\r\n    width: 280px;\r\n    height: 180px;\r\n    cursor: pointer;\r\n}\r\n\r\n.ew-color-white-panel,\r\n.ew-color-black-panel {\r\n    position: absolute;\r\n    left: 0;\r\n    right: 0;\r\n    top: 0;\r\n    bottom: 0;\r\n}\r\n\r\n.ew-color-white-panel {\r\n    background: linear-gradient(90deg, #fff, hsla(0, 0%, 100%, 0));\r\n}\r\n\r\n.ew-color-black-panel {\r\n    background: linear-gradient(0deg, #000, transparent);\r\n}\r\n\r\n.ew-color-slider {\r\n    width: 27px;\r\n    height: 180px;\r\n    position: relative;\r\n    float: right;\r\n    box-sizing: border-box;\r\n}\r\n.ew-color-slider-bar {\r\n    background: linear-gradient(180deg, #f00 0, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00);\r\n    margin-left: 3px;\r\n}\r\n.ew-alpha-slider-bar,.ew-color-slider-bar{\r\n    width: 12px;\r\n    height: 100%;\r\n    position: relative;\r\n    float: left;\r\n    cursor: pointer;\r\n}\r\n.ew-alpha-slider-wrapper{\r\n    background: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGUlEQVQYV2M4gwH+YwCGIasIUwhT25BVBADtzYNYrHvv4gAAAABJRU5ErkJggg==\");\r\n}\r\n.ew-alpha-slider-bg,.ew-alpha-slider-wrapper{\r\n    position: absolute;\r\n    right: 0;\r\n    top: 0;\r\n    left: 0;\r\n    bottom: 0;\r\n}\r\n.ew-color-slider-thumb,.ew-alpha-slider-thumb {\r\n    position: absolute;\r\n    cursor: pointer;\r\n    box-sizing: border-box;\r\n    left: 0;\r\n    top: 0;\r\n    width: 12px;\r\n    height: 4px;\r\n    border-radius: 1px;\r\n    background: #fff;\r\n    border: 1px solid #f0f0f0;\r\n    box-shadow: 0 0 2px rgba(0, 0, 0, .6);\r\n}\r\n\r\n.ew-color-cursor{\r\n    position: absolute;\r\n    left: 100%;\r\n    top: 0%;\r\n    cursor: default;\r\n    width: 4px;\r\n    height: 4px;\r\n    transform: translate(-2px, -2px);\r\n    border-radius: 50%;\r\n    box-shadow: 0 0 0 3px #fff,\r\n        inset 0 0 2px 2px rgba(0, 0, 0, .4),\r\n        0 0 2px 3px rgba(0, 0, 0, .5);\r\n    transform: translate(-6px,-6px)\r\n}\r\n\r\n.ew-color-dropbtns {\r\n    margin-top: 6px;\r\n    position: relative;\r\n}\r\n\r\n.ew-color-input {\r\n    width: 160px;\r\n    height: 28px;\r\n    line-height: 28px;\r\n    border: 1px solid #dcdfe6;\r\n    background-color: #ffffff;\r\n    display: inline-block;\r\n    box-sizing: border-box;\r\n    padding: 0 5px;\r\n    transition: border-color .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);\r\n    border-radius: 5px;\r\n    outline: none;\r\n}\r\n\r\n.ew-color-input:focus {\r\n    border-color: #239fe6;\r\n}\r\n\r\n.ew-color-dropbtn {\r\n    display: inline-block;\r\n    padding: 5px 15px;\r\n    font-size: 12px;\r\n    border-radius: 3px;\r\n    cursor: pointer;\r\n    text-align: center;\r\n    transition: .1s;\r\n    font-weight: 500;\r\n    outline: none;\r\n    box-sizing: border-box;\r\n    margin: 0;\r\n    white-space: nowrap;\r\n    color: #606266;\r\n    border: 1px solid #dcdfe6;\r\n}\r\n\r\n.ew-color-dropbtngroup {\r\n    position: absolute;\r\n    right: 0;\r\n    top: 1px;\r\n}\r\n\r\n.ew-color-clear {\r\n    color: #4096ef;\r\n    border-color: transparent;\r\n    background-color: transparent;\r\n    padding-left: 0;\r\n    padding-right: 0;\r\n}\r\n\r\n.ew-color-clear:hover,\r\n.ew-color-clear:active {\r\n    color: #66b1ff;\r\n}\r\n\r\n.ew-color-sure {\r\n    background-color: #ffffff;\r\n    margin-left: 10px;\r\n}\r\n\r\n.ew-color-sure:hover,\r\n.ew-color-sure:active {\r\n    border-color: #4096ef;\r\n    color: #4096ef;\r\n}\r\n.ew-pre-define-color-container{\r\n    width: 280px;\r\n    font-size: 12px;\r\n    margin-top: 8px;\r\n}\r\n.ew-pre-define-color-container:after{\r\n    content: \"\";\r\n    visibility: hidden;\r\n    clear: both;\r\n    display: block;\r\n    height: 0;\r\n}\r\n.ew-pre-define-color{\r\n    float: left;\r\n    margin: 0 0 8px 8px;\r\n    width: 20px;\r\n    height: 20px;\r\n    border-radius: 4px;\r\n    cursor: pointer;\r\n    outline: none;\r\n    border: 1px solid #9b979b;\r\n}\r\n.ew-pre-define-color:nth-child(10n+1){\r\n    margin-left: 0;\r\n}\r\n.ew-pre-define-color:hover,\r\n.ew-pre-define-color:active{\r\n    opacity: .8;\r\n}\r\n.ew-pre-define-color-active{\r\n    box-shadow: 0 0 3px 2px #409eff;\r\n}\r\n.ew-color-picker-box{\r\n    border: 1px solid #dcdee2;\r\n    color: #535353;\r\n    outline: none;\r\n    display: inline-block;\r\n    background-color: #ffffff;\r\n    position: relative;\r\n    border-radius: 4px;\r\n    padding: 4px 7px;\r\n    line-height: 1.5;\r\n    cursor: pointer;\r\n    font-size: 14px;\r\n    transition: border-color  .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);\r\n}\r\n.ew-color-picker-box-disabled{\r\n    background-color: #c4c2c2;\r\n    cursor: not-allowed;\r\n}\r\n.ew-color-picker-arrow,.ew-color-picker-no{\r\n    width: 20px;\r\n    height: 20px;\r\n    position: absolute;\r\n    left: 0;\r\n    top: 0;\r\n    bottom: 0;\r\n    right: 0;\r\n    margin: auto;\r\n    z-index: 3;\r\n}\r\n.ew-color-picker-no{\r\n    width: 40px;\r\n    height: 40px;\r\n    font-size: 12px;\r\n    text-align: center;\r\n    line-height: 40px;\r\n    color: #5e535f;\r\n    border: 1px solid #5e535f;\r\n    border-radius: 2px;\r\n}\r\n.ew-color-picker-arrow-left,.ew-color-picker-arrow-right{\r\n    width: 0;\r\n    height: 0;\r\n    position: absolute;\r\n    left: 50%;\r\n    top: 50%;\r\n    transform: translate(-50%,-50%);\r\n    z-index: 5;\r\n    overflow: hidden;\r\n    border-bottom: 10px transparent dashed;\r\n    border-left: 10px transparent dashed;\r\n    border-right: 10px transparent dashed;\r\n    border-top: 10px #fff solid;\r\n}\r\n.ew-color-picker-arrow-left{\r\n    border-top: 10px solid #fff;\r\n}";
+   var css_248z = ".ew-color-picker {\r\n    min-width: 320px;\r\n    position: absolute;\r\n    box-sizing: content-box;\r\n    border: 1px solid #ebeeff;\r\n    box-shadow: 0 4px 15px rgba(0, 0, 0, .2);\r\n    border-radius: 5px;\r\n    z-index: 10;\r\n    padding: 7px;\r\n    background-color: #ffffff;\r\n    display: none;\r\n    text-align: left;\r\n}\r\n\r\n.ew-color-picker .ew-color-picker-content:after {\r\n    content: \"\";\r\n    display: table;\r\n    clear: both;\r\n}\r\n\r\n.ew-color-picker-content {\r\n    margin-bottom: 6px;\r\n}\r\n\r\n.ew-color-panel {\r\n    position: relative;\r\n    width: 280px;\r\n    height: 180px;\r\n    cursor: pointer;\r\n}\r\n\r\n.ew-color-white-panel,\r\n.ew-color-black-panel {\r\n    position: absolute;\r\n    left: 0;\r\n    right: 0;\r\n    top: 0;\r\n    bottom: 0;\r\n}\r\n\r\n.ew-color-white-panel {\r\n    background: linear-gradient(90deg, #fff, hsla(0, 0%, 100%, 0));\r\n}\r\n\r\n.ew-color-black-panel {\r\n    background: linear-gradient(0deg, #000, transparent);\r\n}\r\n\r\n.ew-color-slider {\r\n    width: 27px;\r\n    height: 180px;\r\n    position: relative;\r\n    float: right;\r\n    box-sizing: border-box;\r\n}\r\n.ew-color-slider-bar {\r\n    background: linear-gradient(180deg, #f00 0, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00);\r\n    margin-left: 3px;\r\n}\r\n.ew-alpha-slider-bar,.ew-color-slider-bar{\r\n    width: 12px;\r\n    height: 100%;\r\n    position: relative;\r\n    float: left;\r\n    cursor: pointer;\r\n}\r\n.ew-alpha-slider-wrapper{\r\n    background: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGUlEQVQYV2M4gwH+YwCGIasIUwhT25BVBADtzYNYrHvv4gAAAABJRU5ErkJggg==\");\r\n}\r\n.ew-alpha-slider-bg,.ew-alpha-slider-wrapper{\r\n    position: absolute;\r\n    right: 0;\r\n    top: 0;\r\n    left: 0;\r\n    bottom: 0;\r\n}\r\n.ew-color-slider-thumb,.ew-alpha-slider-thumb {\r\n    position: absolute;\r\n    cursor: pointer;\r\n    box-sizing: border-box;\r\n    left: 0;\r\n    top: 0;\r\n    width: 12px;\r\n    height: 4px;\r\n    border-radius: 1px;\r\n    background: #fff;\r\n    border: 1px solid #f0f0f0;\r\n    box-shadow: 0 0 2px rgba(0, 0, 0, .6);\r\n}\r\n\r\n.ew-color-cursor{\r\n    position: absolute;\r\n    left: 100%;\r\n    top: 0%;\r\n    cursor: default;\r\n    width: 4px;\r\n    height: 4px;\r\n    transform: translate(-2px, -2px);\r\n    border-radius: 50%;\r\n    box-shadow: 0 0 0 3px #fff,\r\n        inset 0 0 2px 2px rgba(0, 0, 0, .4),\r\n        0 0 2px 3px rgba(0, 0, 0, .5);\r\n    transform: translate(-6px,-6px)\r\n}\r\n\r\n.ew-color-dropbtns {\r\n    margin-top: 6px;\r\n    position: relative;\r\n}\r\n\r\n.ew-color-input {\r\n    width: 160px;\r\n    height: 28px;\r\n    line-height: 28px;\r\n    border: 1px solid #dcdfe6;\r\n    background-color: #ffffff;\r\n    display: inline-block;\r\n    box-sizing: border-box;\r\n    padding: 0 5px;\r\n    transition: border-color .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);\r\n    border-radius: 5px;\r\n    outline: none;\r\n}\r\n\r\n.ew-color-input:focus {\r\n    border-color: #239fe6;\r\n}\r\n\r\n.ew-color-dropbtn {\r\n    display: inline-block;\r\n    padding: 5px 15px;\r\n    font-size: 12px;\r\n    border-radius: 3px;\r\n    cursor: pointer;\r\n    text-align: center;\r\n    transition: .1s;\r\n    font-weight: 500;\r\n    outline: none;\r\n    box-sizing: border-box;\r\n    margin: 0;\r\n    white-space: nowrap;\r\n    color: #606266;\r\n    border: 1px solid #dcdfe6;\r\n}\r\n\r\n.ew-color-dropbtngroup {\r\n    position: absolute;\r\n    right: 0;\r\n    top: 1px;\r\n}\r\n\r\n.ew-color-clear {\r\n    color: #4096ef;\r\n    border-color: transparent;\r\n    background-color: transparent;\r\n    padding-left: 0;\r\n    padding-right: 0;\r\n}\r\n\r\n.ew-color-clear:hover,\r\n.ew-color-clear:active {\r\n    color: #66b1ff;\r\n}\r\n\r\n.ew-color-sure {\r\n    background-color: #ffffff;\r\n    margin-left: 10px;\r\n}\r\n\r\n.ew-color-sure:hover,\r\n.ew-color-sure:active {\r\n    border-color: #4096ef;\r\n    color: #4096ef;\r\n}\r\n.ew-pre-define-color-container{\r\n    width: 280px;\r\n    font-size: 12px;\r\n    margin-top: 8px;\r\n}\r\n.ew-pre-define-color-container:after{\r\n    content: \"\";\r\n    visibility: hidden;\r\n    clear: both;\r\n    display: block;\r\n    height: 0;\r\n}\r\n.ew-pre-define-color{\r\n    float: left;\r\n    margin: 0 0 8px 8px;\r\n    width: 20px;\r\n    height: 20px;\r\n    border-radius: 4px;\r\n    cursor: pointer;\r\n    outline: none;\r\n    border: 1px solid #9b979b;\r\n}\r\n.ew-pre-define-color:nth-child(10n+1){\r\n    margin-left: 0;\r\n}\r\n.ew-pre-define-color:hover,\r\n.ew-pre-define-color:active{\r\n    opacity: .8;\r\n}\r\n.ew-pre-define-color-active{\r\n    box-shadow: 0 0 3px 2px #409eff;\r\n}\r\n.ew-color-picker-box{\r\n    border: 1px solid #dcdee2;\r\n    color: #535353;\r\n    outline: none;\r\n    display: inline-block;\r\n    background-color: #ffffff;\r\n    position: relative;\r\n    border-radius: 4px;\r\n    padding: 4px 7px;\r\n    line-height: 1.5;\r\n    cursor: pointer;\r\n    font-size: 14px;\r\n    transition: border-color  .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);\r\n}\r\n.ew-color-picker-box-disabled{\r\n    background-color: #c4c2c2;\r\n    cursor: not-allowed;\r\n}\r\n.ew-color-picker-arrow,.ew-color-picker-no{\r\n    width: 20px;\r\n    height: 20px;\r\n    position: absolute;\r\n    left: 0;\r\n    top: 0;\r\n    bottom: 0;\r\n    right: 0;\r\n    margin: auto;\r\n    z-index: 3;\r\n}\r\n.ew-color-picker-no{\r\n    width: 40px;\r\n    height: 40px;\r\n    font-size: 20px;\r\n    text-align: center;\r\n    line-height: 40px;\r\n    color: #5e535f;\r\n    border: 1px solid #5e535f;\r\n    border-radius: 2px;\r\n}\r\n.ew-color-picker-arrow-left,.ew-color-picker-arrow-right{\r\n    width: 0;\r\n    height: 0;\r\n    position: absolute;\r\n    left: 50%;\r\n    top: 50%;\r\n    transform: translate(-50%,-50%);\r\n    z-index: 5;\r\n    overflow: hidden;\r\n    border-bottom: 10px transparent dashed;\r\n    border-left: 10px transparent dashed;\r\n    border-right: 10px transparent dashed;\r\n    border-top: 10px #fff solid;\r\n}\r\n.ew-color-picker-arrow-left{\r\n    border-top: 10px solid #fff;\r\n}";
    styleInject(css_248z);
 
    /**
@@ -614,7 +614,7 @@
    function openPicker(el, scope) {
      scope.pickerFlag = !scope.pickerFlag;
      scope.config.defaultColor = scope.config.alpha ? colorHsbaToRgba(scope.hsba) : colorRgbaToHex(colorHsbaToRgba(scope.hsba));
-     if (scope.pickerFlag) scope.render(el, scope.config);
+     scope.render(el, scope.config);
      openAndClose(scope);
      setDefaultValue(scope, scope.panelWidth, scope.panelHeight);
      if (isFunction(scope.config.openPicker)) scope.config.openPicker(el, scope);
@@ -626,19 +626,17 @@
 
 
    function openAndClose(scope) {
-     if (scope.config.openPickerAni.indexOf('height') > -1) {
-       if (scope.pickerFlag) {
-         ani.slideDown(scope.picker, 400);
-       } else {
-         ani.slideUp(scope.picker, 400);
-       }
-     } else {
-       if (scope.pickerFlag) {
-         ani.fadeIn(scope.picker, 400);
-       } else {
-         ani.fadeOut(scope.picker, 400);
-       }
-     }
+     const expression = isStr(scope.config.openPickerAni) && scope.config.openPickerAni.indexOf('height') > -1;
+
+     let open = function () {
+       return expression ? ani.slideDown(scope.picker, 400) : ani.fadeIn(scope.picker, 400);
+     };
+
+     let close = function () {
+       return expression ? ani.slideUp(scope.picker, 400) : ani.fadeOut(scope.picker, 400);
+     };
+
+     return scope.pickerFlag ? open() : close();
    }
    /**
     * 输入颜色的转换
@@ -662,11 +660,20 @@
 
 
    function onClearColor(el, scope) {
+     onRenderColorPicker(el, scope);
+     openAndClose(scope);
+     scope.config.clear(scope.config.defaultColor, scope);
+   }
+   /**
+    * 重新渲染
+    * @param {*} scope 
+    */
+
+
+   function onRenderColorPicker(el, scope) {
      scope.config.defaultColor = '';
      scope.pickerFlag = !scope.pickerFlag;
      scope.render(el, scope.config);
-     openAndClose(scope);
-     scope.config.clear(scope.config.defaultColor, scope);
    }
    /**
     * 确定
@@ -697,8 +704,8 @@
      const s = parseInt(100 * left / panelWidth);
      const b = parseInt(100 * (panelHeight - top) / panelHeight); //需要减去本身的宽高来做判断
 
-     scope.hsba.s = s + 4 > 100 ? 100 : s - 4 < 0 ? 0 : s;
-     scope.hsba.b = b + 4 > 100 ? 100 : b - 4 < 0 ? 0 : b;
+     scope.hsba.s = s > 100 ? 100 : s < 0 ? 0 : s;
+     scope.hsba.b = b > 100 ? 100 : b < 0 ? 0 : b;
      changeElementColor(scope);
    }
    /**
@@ -734,7 +741,7 @@
        const panelHeight = scope.pickerPanel.offsetHeight;
        const left = moveX >= panelWidth - 1 ? panelWidth : moveX <= 0 ? 0 : moveX;
        const top = moveY >= panelHeight - 2 ? panelHeight : moveY <= 0 ? 0 : moveY;
-       changeCursorColor(scope, left, top, panelWidth, panelHeight);
+       changeCursorColor(scope, left + 4, top + 4, panelWidth, panelHeight);
      }
    }
    /**
@@ -760,15 +767,8 @@
 
    function setDefaultValue(context, panelWidth, panelHeight) {
      context.pickerInput.value = context.config.alpha ? colorHsbaToRgba(context.hsba) : colorRgbaToHex(colorHsbaToRgba(context.hsba));
-
-     if (context.arrowRight) {
-       setCss(context.arrowRight, 'border-top-color', colorHsbaToRgba(context.hsba));
-     }
-
-     if (context.config.defaultColor) {
-       context.box.style.background = context.config.defaultColor;
-     }
-
+     if (context.arrowRight) setCss(context.arrowRight, 'border-top-color', context.pickerInput.value);
+     if (context.box) context.box.style.background = context.pickerInput.value;
      const sliderBarHeight = context.hueBar.offsetHeight || 180;
      let l = parseInt(context.hsba.s * panelWidth / 100),
          t = parseInt(panelHeight - context.hsba.b * panelHeight / 100),
@@ -792,14 +792,13 @@
    function changeHue(context, y) {
      const sliderBarHeight = context.hueBar.offsetHeight,
            sliderBarRect = context.hueBar.getBoundingClientRect();
-     let sliderthumbY = Math.max(0, Math.min(y - sliderBarRect.y, sliderBarHeight));
-     setCss(context.hueThumb, 'top', sliderthumbY + 'px');
+     let sliderThumbY = Math.max(0, Math.min(y - sliderBarRect.y, sliderBarHeight));
+     setCss(context.hueThumb, 'top', sliderThumbY + 'px');
 
      let _hsba = deepCloneObjByRecursion(context.hsba);
 
-     _hsba.s = 100;
-     _hsba.b = 100;
-     context.hsba.h = _hsba.h = parseInt(360 * sliderthumbY / sliderBarHeight);
+     _hsba.s = _hsba.b = 100;
+     context.hsba.h = _hsba.h = parseInt(360 * sliderThumbY / sliderBarHeight);
      setCss(context.pickerPanel, 'background', colorRgbaToHex(colorHsbaToRgba(_hsba)));
      changeElementColor(context);
      changeAlphaBar(context);
@@ -809,9 +808,9 @@
    function changeAlpha(context, y) {
      const alphaBarHeight = context.hueBar.offsetHeight,
            alphaBarRect = context.hueBar.getBoundingClientRect();
-     let alphathumbY = Math.max(0, Math.min(y - alphaBarRect.y, alphaBarHeight));
-     setCss(context.alphaBarThumb, 'top', alphathumbY + 'px');
-     const alpha = (alphaBarHeight - alphathumbY <= 0 ? 0 : alphaBarHeight - alphathumbY) / alphaBarHeight;
+     let alphaThumbY = Math.max(0, Math.min(y - alphaBarRect.y, alphaBarHeight));
+     setCss(context.alphaBarThumb, 'top', alphaThumbY + 'px');
+     const alpha = (alphaBarHeight - alphaThumbY <= 0 ? 0 : alphaBarHeight - alphaThumbY) / alphaBarHeight;
      context.hsba.a = alpha >= 1 ? 1 : alpha.toFixed(2);
      changeElementColor(context, true);
    }
@@ -927,7 +926,7 @@
      const colorBox = config.defaultColor ? `<div class="ew-color-picker-arrow" style="width:${b_width};height:${b_height};">
         <div class="ew-color-picker-arrow-left"></div>
         <div class="ew-color-picker-arrow-right" style="border-top-color:${config.defaultColor}"></div>
-    </div>` : `<div class="ew-color-picker-no" style="width:${b_width};height:${b_height};line-height:${b_height};">X</div>`; //透明度
+    </div>` : `<div class="ew-color-picker-no" style="width:${b_width};height:${b_height};line-height:${b_height};">&times;</div>`; //透明度
 
      const alphaBar = config.alpha ? `<div class="ew-alpha-slider-bar">
     <div class="ew-alpha-slider-wrapper"></div>
@@ -1000,8 +999,8 @@
        elem = elem.offsetParent;
      }
 
-     this.pancelLeft = left;
-     this.pancelTop = top + ele.offsetHeight; //预定义颜色
+     this.panelLeft = left;
+     this.panelTop = top + ele.offsetHeight; //预定义颜色
 
      this.preDefineItem = getELByClass(ele, 'ew-pre-define-color', true);
 
@@ -1074,8 +1073,8 @@
      }, false); //颜色面板拖拽元素拖拽事件
 
      this.bindEvent(this.pickerCursor, function (scope, el, x, y) {
-       const left = Math.max(0, Math.min(x - scope.pancelLeft, panelWidth));
-       const top = Math.max(0, Math.min(y - scope.pancelTop, panelHeight));
+       const left = Math.max(0, Math.min(x - scope.panelLeft, panelWidth));
+       const top = Math.max(0, Math.min(y - scope.panelTop, panelHeight));
        changeCursorColor(scope, left + 4, top + 4, panelWidth, panelHeight);
      }, false); //hue的点击事件
 
@@ -1102,20 +1101,20 @@
      };
 
      el.addEventListener(eventType[0], function (ev) {
-       const movefn = function (e) {
+       const moveFn = function (e) {
          e.preventDefault();
          callResult(e);
        };
 
-       const upfn = function () {
-         document.removeEventListener(eventType[1], movefn, {
+       const upFn = function () {
+         document.removeEventListener(eventType[1], moveFn, {
            capture: false,
            once: false,
            passive: false,
            useCapture: false,
            wantsUntrusted: false
          });
-         document.removeEventListener(eventType[2], upfn, {
+         document.removeEventListener(eventType[2], upFn, {
            capture: false,
            once: false,
            passive: false,
@@ -1124,14 +1123,14 @@
          });
        };
 
-       document.addEventListener(eventType[1], movefn, {
+       document.addEventListener(eventType[1], moveFn, {
          capture: false,
          once: false,
          passive: false,
          useCapture: false,
          wantsUntrusted: false
        });
-       document.addEventListener(eventType[2], upfn, {
+       document.addEventListener(eventType[2], upFn, {
          capture: false,
          once: false,
          passive: false,

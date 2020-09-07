@@ -1,4 +1,4 @@
-import { eventType, isDeepObject, ewError, getDom, isStr, isDom, addClass, removeClass, deepCloneObjByRecursion, isFunction, isNumber, isDeepArray, getCss, ewObjToArray, ewAssign } from './util'
+import { eventType, isDeepObject,ewError, getDom, isStr, isDom, addClass, removeClass, deepCloneObjByRecursion, isFunction, isNumber, isDeepArray, getCss, ewObjToArray, ewAssign } from './util'
 import { colorToRgb, colorRgbaToHex, colorHsbaToRgba, colorRgbaToHsba } from './color'
 import ani from './animation';
 import { consoleInfo } from './console';
@@ -42,29 +42,24 @@ function setCss(el, prop, value) {
 function openPicker(el, scope) {
     scope.pickerFlag = !scope.pickerFlag;
     scope.config.defaultColor = scope.config.alpha ? colorHsbaToRgba(scope.hsba) : colorRgbaToHex(colorHsbaToRgba(scope.hsba));
-    if (scope.pickerFlag) scope.render(el, scope.config);
+    scope.render(el, scope.config);
     openAndClose(scope);
     setDefaultValue(scope, scope.panelWidth, scope.panelHeight);
-    if (isFunction(scope.config.openPicker)) scope.config.openPicker(el, scope);
+    if (isFunction(scope.config.openPicker))scope.config.openPicker(el, scope);
 }
 /**
  * 打开和关闭
  * @param {*} scope 
  */
 function openAndClose(scope) {
-    if (scope.config.openPickerAni.indexOf('height') > -1) {
-        if (scope.pickerFlag) {
-            ani.slideDown(scope.picker, 400);
-        } else {
-            ani.slideUp(scope.picker, 400);
-        }
-    } else {
-        if (scope.pickerFlag) {
-            ani.fadeIn(scope.picker, 400);
-        } else {
-            ani.fadeOut(scope.picker, 400);
-        }
+    const expression = isStr(scope.config.openPickerAni) && scope.config.openPickerAni.indexOf('height') > -1;
+    let open = function(){
+        return expression ? ani.slideDown(scope.picker, 400) : ani.fadeIn(scope.picker, 400);
     }
+    let close = function(){
+        return expression ? ani.slideUp(scope.picker, 400) : ani.fadeOut(scope.picker, 400);
+    }
+    return scope.pickerFlag ? open() : close();
 }
 /**
  * 输入颜色的转换
@@ -84,11 +79,18 @@ function onInputColor(scope, value) {
  * @param {*} scope 
  */
 function onClearColor(el, scope) {
+    onRenderColorPicker(el,scope);
+    openAndClose(scope);
+    scope.config.clear(scope.config.defaultColor, scope);
+}
+/**
+ * 重新渲染
+ * @param {*} scope 
+ */
+function onRenderColorPicker(el,scope){
     scope.config.defaultColor = '';
     scope.pickerFlag = !scope.pickerFlag;
     scope.render(el, scope.config);
-    openAndClose(scope);
-    scope.config.clear(scope.config.defaultColor, scope);
 }
 /**
  * 确定
@@ -115,8 +117,8 @@ function changeCursorColor(scope, left, top, panelWidth, panelHeight) {
     const s = parseInt(100 * left / panelWidth);
     const b = parseInt(100 * (panelHeight - top) / panelHeight);
     //需要减去本身的宽高来做判断
-    scope.hsba.s = (s + 4) > 100 ? 100 : (s - 4) < 0 ? 0 : s;
-    scope.hsba.b = (b + 4) > 100 ? 100 : (b - 4) < 0 ? 0 : b;
+    scope.hsba.s = s > 100 ? 100 : s < 0 ? 0 : s;
+    scope.hsba.b = b > 100 ? 100 : b < 0 ? 0 : b;
     changeElementColor(scope);
 }
 /**
@@ -147,7 +149,7 @@ function onClickPanel(scope, eve) {
         const panelHeight = scope.pickerPanel.offsetHeight;
         const left = moveX >= panelWidth - 1 ? panelWidth : moveX <= 0 ? 0 : moveX;
         const top = moveY >= panelHeight - 2 ? panelHeight : moveY <= 0 ? 0 : moveY;
-        changeCursorColor(scope, left, top, panelWidth, panelHeight)
+        changeCursorColor(scope, left+4, top+4, panelWidth, panelHeight)
     }
 }
 /**
@@ -168,12 +170,8 @@ function changeAlphaBar(scope) {
  */
 function setDefaultValue(context, panelWidth, panelHeight) {
     context.pickerInput.value = context.config.alpha ? colorHsbaToRgba(context.hsba) : colorRgbaToHex(colorHsbaToRgba(context.hsba));
-    if (context.arrowRight) {
-        setCss(context.arrowRight, 'border-top-color', colorHsbaToRgba(context.hsba));
-    }
-    if(context.config.defaultColor){
-        context.box.style.background = context.config.defaultColor;
-    }
+    if (context.arrowRight)setCss(context.arrowRight, 'border-top-color',context.pickerInput.value);
+    if(context.box)context.box.style.background = context.pickerInput.value;
     const sliderBarHeight = context.hueBar.offsetHeight || 180;
     let l = parseInt(context.hsba.s * panelWidth / 100),
         t = parseInt(panelHeight - context.hsba.b * panelHeight / 100),
@@ -195,12 +193,11 @@ function setDefaultValue(context, panelWidth, panelHeight) {
 function changeHue(context, y) {
     const sliderBarHeight = context.hueBar.offsetHeight,
         sliderBarRect = context.hueBar.getBoundingClientRect();
-    let sliderthumbY = Math.max(0, Math.min(y - sliderBarRect.y, sliderBarHeight));
-    setCss(context.hueThumb, 'top', sliderthumbY + 'px');
+    let sliderThumbY = Math.max(0, Math.min(y - sliderBarRect.y, sliderBarHeight));
+    setCss(context.hueThumb, 'top', sliderThumbY + 'px');
     let _hsba = deepCloneObjByRecursion(context.hsba);
-    _hsba.s = 100;
-    _hsba.b = 100;
-    context.hsba.h = _hsba.h = parseInt(360 * sliderthumbY / sliderBarHeight);
+    _hsba.s = _hsba.b = 100;
+    context.hsba.h = _hsba.h = parseInt(360 * sliderThumbY / sliderBarHeight);
     setCss(context.pickerPanel, 'background', colorRgbaToHex(colorHsbaToRgba(_hsba)));
     changeElementColor(context);
     changeAlphaBar(context);
@@ -209,9 +206,9 @@ function changeHue(context, y) {
 function changeAlpha(context, y) {
     const alphaBarHeight = context.hueBar.offsetHeight,
         alphaBarRect = context.hueBar.getBoundingClientRect();
-    let alphathumbY = Math.max(0, Math.min(y - alphaBarRect.y, alphaBarHeight));
-    setCss(context.alphaBarThumb, 'top', alphathumbY + 'px');
-    const alpha = ((alphaBarHeight - alphathumbY <= 0 ? 0 : alphaBarHeight - alphathumbY) / alphaBarHeight);
+    let alphaThumbY = Math.max(0, Math.min(y - alphaBarRect.y, alphaBarHeight));
+    setCss(context.alphaBarThumb, 'top', alphaThumbY + 'px');
+    const alpha = ((alphaBarHeight - alphaThumbY <= 0 ? 0 : alphaBarHeight - alphaThumbY) / alphaBarHeight);
     context.hsba.a = alpha >= 1 ? 1 : alpha.toFixed(2);
     changeElementColor(context, true);
 }
@@ -310,7 +307,7 @@ ewColorPicker.prototype.render = function (element, config) {
     const colorBox = config.defaultColor ? `<div class="ew-color-picker-arrow" style="width:${b_width};height:${b_height};">
         <div class="ew-color-picker-arrow-left"></div>
         <div class="ew-color-picker-arrow-right" style="border-top-color:${ config.defaultColor}"></div>
-    </div>` : `<div class="ew-color-picker-no" style="width:${b_width};height:${b_height};line-height:${b_height};">X</div>`;
+    </div>` : `<div class="ew-color-picker-no" style="width:${b_width};height:${b_height};line-height:${b_height};">&times;</div>`;
     //透明度
     const alphaBar = config.alpha ? `<div class="ew-alpha-slider-bar">
     <div class="ew-alpha-slider-wrapper"></div>
@@ -380,8 +377,8 @@ ewColorPicker.prototype.startMain = function (ele, config) {
         left += elem.offsetParent.offsetLeft;
         elem = elem.offsetParent;
     }
-    this.pancelLeft = left;
-    this.pancelTop = top + ele.offsetHeight;
+    this.panelLeft = left;
+    this.panelTop = top + ele.offsetHeight;
     //预定义颜色
     this.preDefineItem = getELByClass(ele, 'ew-pre-define-color', true);
     if (this.preDefineItem.length) {
@@ -449,9 +446,9 @@ ewColorPicker.prototype.startMain = function (ele, config) {
     }, false)
     //颜色面板拖拽元素拖拽事件
     this.bindEvent(this.pickerCursor, function (scope, el, x, y) {
-        const left = Math.max(0, Math.min(x - scope.pancelLeft, panelWidth));
-        const top = Math.max(0, Math.min(y - scope.pancelTop, panelHeight));
-        changeCursorColor(scope, left + 4, top + 4, panelWidth, panelHeight)
+        const left = Math.max(0, Math.min(x - scope.panelLeft, panelWidth));
+        const top = Math.max(0, Math.min(y - scope.panelTop, panelHeight));
+        changeCursorColor(scope, left+4, top+4, panelWidth, panelHeight)
     }, false);
     //hue的点击事件
     this.hueBar.addEventListener('click', function (event) {
@@ -473,16 +470,16 @@ ewColorPicker.prototype.bindEvent = function (el, callback, bool) {
         bool ? callback(context, context.moveX, context.moveY) : callback(context, el, context.moveX, context.moveY);
     }
     el.addEventListener(eventType[0], function (ev) {
-        const movefn = function (e) {
+        const moveFn = function (e) {
             e.preventDefault();
             callResult(e);
         }
-        const upfn = function () {
-            document.removeEventListener(eventType[1], movefn, { capture: false, once: false, passive: false, useCapture: false, wantsUntrusted: false });
-            document.removeEventListener(eventType[2], upfn, { capture: false, once: false, passive: false, useCapture: false, wantsUntrusted: false });
+        const upFn = function () {
+            document.removeEventListener(eventType[1], moveFn, { capture: false, once: false, passive: false, useCapture: false, wantsUntrusted: false });
+            document.removeEventListener(eventType[2], upFn, { capture: false, once: false, passive: false, useCapture: false, wantsUntrusted: false });
         }
-        document.addEventListener(eventType[1], movefn, { capture: false, once: false, passive: false, useCapture: false, wantsUntrusted: false });
-        document.addEventListener(eventType[2], upfn, { capture: false, once: false, passive: false, useCapture: false, wantsUntrusted: false });
+        document.addEventListener(eventType[1], moveFn, { capture: false, once: false, passive: false, useCapture: false, wantsUntrusted: false });
+        document.addEventListener(eventType[2], upFn, { capture: false, once: false, passive: false, useCapture: false, wantsUntrusted: false });
     }, { capture: false, once: false, passive: false, useCapture: false, wantsUntrusted: false })
 }
 if (!window.ewColorPicker) {
