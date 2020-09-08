@@ -103,7 +103,7 @@
     transform: translate(-6px,-6px)
 }
 
-.ew-color-dropbtns {
+.ew-color-drop-container {
     margin-top: 6px;
     position: relative;
 }
@@ -126,7 +126,7 @@
     border-color: #239fe6;
 }
 
-.ew-color-dropbtn {
+.ew-color-drop-btn {
     display: inline-block;
     padding: 5px 15px;
     font-size: 12px;
@@ -143,7 +143,7 @@
     border: 1px solid #dcdfe6;
 }
 
-.ew-color-dropbtngroup {
+.ew-color-drop-btn-group {
     position: absolute;
     right: 0;
     top: 1px;
@@ -219,7 +219,7 @@
     transition: border-color  .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .ew-color-picker-box-disabled{
-    background-color: #c4c2c2;
+    background-color: #ebe7e7;
     cursor: not-allowed;
 }
 .ew-color-picker-arrow,.ew-color-picker-no{
@@ -240,23 +240,25 @@
     text-align: center;
     line-height: 40px;
     color: #5e535f;
-    border: 1px solid #5e535f;
+    border: 1px solid #e2dfe2;
     border-radius: 2px;
 }
+.ew-color-picker-arrow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .ew-color-picker-arrow-left,.ew-color-picker-arrow-right{
-    width: 0;
-    height: 0;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%,-50%);
-    z-index: 5;
-    overflow: hidden;
-    border-bottom: 10px transparent dashed;
-    border-left: 10px transparent dashed;
-    border-right: 10px transparent dashed;
-    border-top: 10px #fff solid;
+    width: 12px;
+    height: 1px;
+    background-color: #fff;
+    display: inline-block;
+    position: relative;
 }
 .ew-color-picker-arrow-left{
-    border-top: 10px solid #fff;
+    transform:rotate(45deg);
+}
+.ew-color-picker-arrow-right {
+    transform: rotate(-45deg);
+    right: 3px;
 }
