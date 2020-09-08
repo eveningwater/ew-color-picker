@@ -54,9 +54,7 @@ export function isDeepArray(obj) {
 * params@1:类数组对象
 */
 export function ewObjToArray(obj) {
-    if (obj && obj.length) {
-        return Array.prototype.slice.call(obj);
-    }
+    if (isShallowObject(obj)) return Array.prototype.slice.call(obj);
 }
 /*
 * 功能:判断是否是一个DOM元素

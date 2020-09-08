@@ -57,9 +57,7 @@
    */
 
    function ewObjToArray(obj) {
-     if (obj && obj.length) {
-       return Array.prototype.slice.call(obj);
-     }
+     if (isShallowObject(obj)) return Array.prototype.slice.call(obj);
    }
    /*
    * 功能:判断是否是一个DOM元素
@@ -568,8 +566,21 @@
      }
    }
 
-   var css_248z = ".ew-color-picker {\r\n    min-width: 320px;\r\n    position: absolute;\r\n    box-sizing: content-box;\r\n    border: 1px solid #ebeeff;\r\n    box-shadow: 0 4px 15px rgba(0, 0, 0, .2);\r\n    border-radius: 5px;\r\n    z-index: 10;\r\n    padding: 7px;\r\n    background-color: #ffffff;\r\n    display: none;\r\n    text-align: left;\r\n}\r\n\r\n.ew-color-picker .ew-color-picker-content:after {\r\n    content: \"\";\r\n    display: table;\r\n    clear: both;\r\n}\r\n\r\n.ew-color-picker-content {\r\n    margin-bottom: 6px;\r\n}\r\n\r\n.ew-color-panel {\r\n    position: relative;\r\n    width: 280px;\r\n    height: 180px;\r\n    cursor: pointer;\r\n}\r\n\r\n.ew-color-white-panel,\r\n.ew-color-black-panel {\r\n    position: absolute;\r\n    left: 0;\r\n    right: 0;\r\n    top: 0;\r\n    bottom: 0;\r\n}\r\n\r\n.ew-color-white-panel {\r\n    background: linear-gradient(90deg, #fff, hsla(0, 0%, 100%, 0));\r\n}\r\n\r\n.ew-color-black-panel {\r\n    background: linear-gradient(0deg, #000, transparent);\r\n}\r\n\r\n.ew-color-slider {\r\n    width: 27px;\r\n    height: 180px;\r\n    position: relative;\r\n    float: right;\r\n    box-sizing: border-box;\r\n}\r\n.ew-color-slider-bar {\r\n    background: linear-gradient(180deg, #f00 0, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00);\r\n    margin-left: 3px;\r\n}\r\n.ew-alpha-slider-bar,.ew-color-slider-bar{\r\n    width: 12px;\r\n    height: 100%;\r\n    position: relative;\r\n    float: left;\r\n    cursor: pointer;\r\n}\r\n.ew-alpha-slider-wrapper{\r\n    background: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGUlEQVQYV2M4gwH+YwCGIasIUwhT25BVBADtzYNYrHvv4gAAAABJRU5ErkJggg==\");\r\n}\r\n.ew-alpha-slider-bg,.ew-alpha-slider-wrapper{\r\n    position: absolute;\r\n    right: 0;\r\n    top: 0;\r\n    left: 0;\r\n    bottom: 0;\r\n}\r\n.ew-color-slider-thumb,.ew-alpha-slider-thumb {\r\n    position: absolute;\r\n    cursor: pointer;\r\n    box-sizing: border-box;\r\n    left: 0;\r\n    top: 0;\r\n    width: 12px;\r\n    height: 4px;\r\n    border-radius: 1px;\r\n    background: #fff;\r\n    border: 1px solid #f0f0f0;\r\n    box-shadow: 0 0 2px rgba(0, 0, 0, .6);\r\n}\r\n\r\n.ew-color-cursor{\r\n    position: absolute;\r\n    left: 100%;\r\n    top: 0%;\r\n    cursor: default;\r\n    width: 4px;\r\n    height: 4px;\r\n    transform: translate(-2px, -2px);\r\n    border-radius: 50%;\r\n    box-shadow: 0 0 0 3px #fff,\r\n        inset 0 0 2px 2px rgba(0, 0, 0, .4),\r\n        0 0 2px 3px rgba(0, 0, 0, .5);\r\n    transform: translate(-6px,-6px)\r\n}\r\n\r\n.ew-color-dropbtns {\r\n    margin-top: 6px;\r\n    position: relative;\r\n}\r\n\r\n.ew-color-input {\r\n    width: 160px;\r\n    height: 28px;\r\n    line-height: 28px;\r\n    border: 1px solid #dcdfe6;\r\n    background-color: #ffffff;\r\n    display: inline-block;\r\n    box-sizing: border-box;\r\n    padding: 0 5px;\r\n    transition: border-color .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);\r\n    border-radius: 5px;\r\n    outline: none;\r\n}\r\n\r\n.ew-color-input:focus {\r\n    border-color: #239fe6;\r\n}\r\n\r\n.ew-color-dropbtn {\r\n    display: inline-block;\r\n    padding: 5px 15px;\r\n    font-size: 12px;\r\n    border-radius: 3px;\r\n    cursor: pointer;\r\n    text-align: center;\r\n    transition: .1s;\r\n    font-weight: 500;\r\n    outline: none;\r\n    box-sizing: border-box;\r\n    margin: 0;\r\n    white-space: nowrap;\r\n    color: #606266;\r\n    border: 1px solid #dcdfe6;\r\n}\r\n\r\n.ew-color-dropbtngroup {\r\n    position: absolute;\r\n    right: 0;\r\n    top: 1px;\r\n}\r\n\r\n.ew-color-clear {\r\n    color: #4096ef;\r\n    border-color: transparent;\r\n    background-color: transparent;\r\n    padding-left: 0;\r\n    padding-right: 0;\r\n}\r\n\r\n.ew-color-clear:hover,\r\n.ew-color-clear:active {\r\n    color: #66b1ff;\r\n}\r\n\r\n.ew-color-sure {\r\n    background-color: #ffffff;\r\n    margin-left: 10px;\r\n}\r\n\r\n.ew-color-sure:hover,\r\n.ew-color-sure:active {\r\n    border-color: #4096ef;\r\n    color: #4096ef;\r\n}\r\n.ew-pre-define-color-container{\r\n    width: 280px;\r\n    font-size: 12px;\r\n    margin-top: 8px;\r\n}\r\n.ew-pre-define-color-container:after{\r\n    content: \"\";\r\n    visibility: hidden;\r\n    clear: both;\r\n    display: block;\r\n    height: 0;\r\n}\r\n.ew-pre-define-color{\r\n    float: left;\r\n    margin: 0 0 8px 8px;\r\n    width: 20px;\r\n    height: 20px;\r\n    border-radius: 4px;\r\n    cursor: pointer;\r\n    outline: none;\r\n    border: 1px solid #9b979b;\r\n}\r\n.ew-pre-define-color:nth-child(10n+1){\r\n    margin-left: 0;\r\n}\r\n.ew-pre-define-color:hover,\r\n.ew-pre-define-color:active{\r\n    opacity: .8;\r\n}\r\n.ew-pre-define-color-active{\r\n    box-shadow: 0 0 3px 2px #409eff;\r\n}\r\n.ew-color-picker-box{\r\n    border: 1px solid #dcdee2;\r\n    color: #535353;\r\n    outline: none;\r\n    display: inline-block;\r\n    background-color: #ffffff;\r\n    position: relative;\r\n    border-radius: 4px;\r\n    padding: 4px 7px;\r\n    line-height: 1.5;\r\n    cursor: pointer;\r\n    font-size: 14px;\r\n    transition: border-color  .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);\r\n}\r\n.ew-color-picker-box-disabled{\r\n    background-color: #c4c2c2;\r\n    cursor: not-allowed;\r\n}\r\n.ew-color-picker-arrow,.ew-color-picker-no{\r\n    width: 20px;\r\n    height: 20px;\r\n    position: absolute;\r\n    left: 0;\r\n    top: 0;\r\n    bottom: 0;\r\n    right: 0;\r\n    margin: auto;\r\n    z-index: 3;\r\n}\r\n.ew-color-picker-no{\r\n    width: 40px;\r\n    height: 40px;\r\n    font-size: 20px;\r\n    text-align: center;\r\n    line-height: 40px;\r\n    color: #5e535f;\r\n    border: 1px solid #5e535f;\r\n    border-radius: 2px;\r\n}\r\n.ew-color-picker-arrow-left,.ew-color-picker-arrow-right{\r\n    width: 0;\r\n    height: 0;\r\n    position: absolute;\r\n    left: 50%;\r\n    top: 50%;\r\n    transform: translate(-50%,-50%);\r\n    z-index: 5;\r\n    overflow: hidden;\r\n    border-bottom: 10px transparent dashed;\r\n    border-left: 10px transparent dashed;\r\n    border-right: 10px transparent dashed;\r\n    border-top: 10px #fff solid;\r\n}\r\n.ew-color-picker-arrow-left{\r\n    border-top: 10px solid #fff;\r\n}";
+   var css_248z = ".ew-color-picker {\r\n    min-width: 320px;\r\n    position: absolute;\r\n    box-sizing: content-box;\r\n    border: 1px solid #ebeeff;\r\n    box-shadow: 0 4px 15px rgba(0, 0, 0, .2);\r\n    border-radius: 5px;\r\n    z-index: 10;\r\n    padding: 7px;\r\n    background-color: #ffffff;\r\n    display: none;\r\n    text-align: left;\r\n}\r\n\r\n.ew-color-picker .ew-color-picker-content:after {\r\n    content: \"\";\r\n    display: table;\r\n    clear: both;\r\n}\r\n\r\n.ew-color-picker-content {\r\n    margin-bottom: 6px;\r\n}\r\n\r\n.ew-color-panel {\r\n    position: relative;\r\n    width: 280px;\r\n    height: 180px;\r\n    cursor: pointer;\r\n}\r\n\r\n.ew-color-white-panel,\r\n.ew-color-black-panel {\r\n    position: absolute;\r\n    left: 0;\r\n    right: 0;\r\n    top: 0;\r\n    bottom: 0;\r\n}\r\n\r\n.ew-color-white-panel {\r\n    background: linear-gradient(90deg, #fff, hsla(0, 0%, 100%, 0));\r\n}\r\n\r\n.ew-color-black-panel {\r\n    background: linear-gradient(0deg, #000, transparent);\r\n}\r\n\r\n.ew-color-slider {\r\n    width: 27px;\r\n    height: 180px;\r\n    position: relative;\r\n    float: right;\r\n    box-sizing: border-box;\r\n}\r\n.ew-color-slider-bar {\r\n    background: linear-gradient(180deg, #f00 0, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00);\r\n    margin-left: 3px;\r\n}\r\n.ew-alpha-slider-bar,.ew-color-slider-bar{\r\n    width: 12px;\r\n    height: 100%;\r\n    position: relative;\r\n    float: left;\r\n    cursor: pointer;\r\n}\r\n.ew-alpha-slider-wrapper{\r\n    background: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGUlEQVQYV2M4gwH+YwCGIasIUwhT25BVBADtzYNYrHvv4gAAAABJRU5ErkJggg==\");\r\n}\r\n.ew-alpha-slider-bg,.ew-alpha-slider-wrapper{\r\n    position: absolute;\r\n    right: 0;\r\n    top: 0;\r\n    left: 0;\r\n    bottom: 0;\r\n}\r\n.ew-color-slider-thumb,.ew-alpha-slider-thumb {\r\n    position: absolute;\r\n    cursor: pointer;\r\n    box-sizing: border-box;\r\n    left: 0;\r\n    top: 0;\r\n    width: 12px;\r\n    height: 4px;\r\n    border-radius: 1px;\r\n    background: #fff;\r\n    border: 1px solid #f0f0f0;\r\n    box-shadow: 0 0 2px rgba(0, 0, 0, .6);\r\n}\r\n\r\n.ew-color-cursor{\r\n    position: absolute;\r\n    left: 100%;\r\n    top: 0%;\r\n    cursor: default;\r\n    width: 4px;\r\n    height: 4px;\r\n    transform: translate(-2px, -2px);\r\n    border-radius: 50%;\r\n    box-shadow: 0 0 0 3px #fff,\r\n        inset 0 0 2px 2px rgba(0, 0, 0, .4),\r\n        0 0 2px 3px rgba(0, 0, 0, .5);\r\n    transform: translate(-6px,-6px)\r\n}\r\n\r\n.ew-color-drop-container {\r\n    margin-top: 6px;\r\n    position: relative;\r\n}\r\n\r\n.ew-color-input {\r\n    width: 160px;\r\n    height: 28px;\r\n    line-height: 28px;\r\n    border: 1px solid #dcdfe6;\r\n    background-color: #ffffff;\r\n    display: inline-block;\r\n    box-sizing: border-box;\r\n    padding: 0 5px;\r\n    transition: border-color .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);\r\n    border-radius: 5px;\r\n    outline: none;\r\n}\r\n\r\n.ew-color-input:focus {\r\n    border-color: #239fe6;\r\n}\r\n\r\n.ew-color-drop-btn {\r\n    display: inline-block;\r\n    padding: 5px 15px;\r\n    font-size: 12px;\r\n    border-radius: 3px;\r\n    cursor: pointer;\r\n    text-align: center;\r\n    transition: .1s;\r\n    font-weight: 500;\r\n    outline: none;\r\n    box-sizing: border-box;\r\n    margin: 0;\r\n    white-space: nowrap;\r\n    color: #606266;\r\n    border: 1px solid #dcdfe6;\r\n}\r\n\r\n.ew-color-drop-btn-group {\r\n    position: absolute;\r\n    right: 0;\r\n    top: 1px;\r\n}\r\n\r\n.ew-color-clear {\r\n    color: #4096ef;\r\n    border-color: transparent;\r\n    background-color: transparent;\r\n    padding-left: 0;\r\n    padding-right: 0;\r\n}\r\n\r\n.ew-color-clear:hover,\r\n.ew-color-clear:active {\r\n    color: #66b1ff;\r\n}\r\n\r\n.ew-color-sure {\r\n    background-color: #ffffff;\r\n    margin-left: 10px;\r\n}\r\n\r\n.ew-color-sure:hover,\r\n.ew-color-sure:active {\r\n    border-color: #4096ef;\r\n    color: #4096ef;\r\n}\r\n.ew-pre-define-color-container{\r\n    width: 280px;\r\n    font-size: 12px;\r\n    margin-top: 8px;\r\n}\r\n.ew-pre-define-color-container:after{\r\n    content: \"\";\r\n    visibility: hidden;\r\n    clear: both;\r\n    display: block;\r\n    height: 0;\r\n}\r\n.ew-pre-define-color{\r\n    float: left;\r\n    margin: 0 0 8px 8px;\r\n    width: 20px;\r\n    height: 20px;\r\n    border-radius: 4px;\r\n    cursor: pointer;\r\n    outline: none;\r\n    border: 1px solid #9b979b;\r\n}\r\n.ew-pre-define-color:nth-child(10n+1){\r\n    margin-left: 0;\r\n}\r\n.ew-pre-define-color:hover,\r\n.ew-pre-define-color:active{\r\n    opacity: .8;\r\n}\r\n.ew-pre-define-color-active{\r\n    box-shadow: 0 0 3px 2px #409eff;\r\n}\r\n.ew-color-picker-box{\r\n    border: 1px solid #dcdee2;\r\n    color: #535353;\r\n    outline: none;\r\n    display: inline-block;\r\n    background-color: #ffffff;\r\n    position: relative;\r\n    border-radius: 4px;\r\n    padding: 4px 7px;\r\n    line-height: 1.5;\r\n    cursor: pointer;\r\n    font-size: 14px;\r\n    transition: border-color  .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);\r\n}\r\n.ew-color-picker-box-disabled{\r\n    background-color: #ebe7e7;\r\n    cursor: not-allowed;\r\n}\r\n.ew-color-picker-arrow,.ew-color-picker-no{\r\n    width: 20px;\r\n    height: 20px;\r\n    position: absolute;\r\n    left: 0;\r\n    top: 0;\r\n    bottom: 0;\r\n    right: 0;\r\n    margin: auto;\r\n    z-index: 3;\r\n}\r\n.ew-color-picker-no{\r\n    width: 40px;\r\n    height: 40px;\r\n    font-size: 20px;\r\n    text-align: center;\r\n    line-height: 40px;\r\n    color: #5e535f;\r\n    border: 1px solid #e2dfe2;\r\n    border-radius: 2px;\r\n}\r\n.ew-color-picker-arrow {\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n}\r\n.ew-color-picker-arrow-left,.ew-color-picker-arrow-right{\r\n    width: 12px;\r\n    height: 1px;\r\n    background-color: #fff;\r\n    display: inline-block;\r\n    position: relative;\r\n}\r\n.ew-color-picker-arrow-left{\r\n    transform:rotate(45deg);\r\n}\r\n.ew-color-picker-arrow-right {\r\n    transform: rotate(-45deg);\r\n    right: 3px;\r\n}";
    styleInject(css_248z);
+
+   const ERROR_VARIABLE = {
+     PICKER_OBJECT_CONFIG_ERROR: 'you should pass a param which is el and el must be a string or a dom element!',
+     PICKER_CONFIG_ERROR: 'you should pass a param that it must be a string or a dom element!',
+     DOM_OBJECT_ERROR: 'can not find the element by el property,make sure to pass a correct value!',
+     DOM_ERROR: 'can not find the element,make sure to pass a correct param!',
+     CONFIG_SIZE_ERROR: 'the value must be a string which is one of the normal,medium,small,mini,or must be an object and need to contain width or height property!'
+   };
+   const PICKER_OBJECT_CONFIG_ERROR = ERROR_VARIABLE.PICKER_OBJECT_CONFIG_ERROR;
+   const PICKER_CONFIG_ERROR = ERROR_VARIABLE.PICKER_CONFIG_ERROR;
+   const DOM_OBJECT_ERROR = ERROR_VARIABLE.DOM_OBJECT_ERROR;
+   const DOM_ERROR = ERROR_VARIABLE.DOM_ERROR;
+   const CONFIG_SIZE_ERROR = ERROR_VARIABLE.CONFIG_SIZE_ERROR;
 
    /**
     * 获取元素的子元素
@@ -579,19 +590,7 @@
     */
 
    function getELByClass(el, prop, isIndex) {
-     if (!isIndex) {
-       if (document.querySelector) {
-         return el.querySelector('.' + prop);
-       } else {
-         return el.getElementsByClassName(prop)[0];
-       }
-     } else {
-       if (document.querySelectorAll) {
-         return el.querySelectorAll('.' + prop);
-       } else {
-         return el.getElementsByClassName(prop);
-       }
-     }
+     return !isIndex ? el.querySelector ? el.querySelector('.' + prop) : el.getElementsByClassName(prop)[0] : el.querySelectorAll ? el.querySelectorAll('.' + prop) : el.getElementsByClassName(prop);
    }
    /**
     * 设置css样式
@@ -767,7 +766,6 @@
 
    function setDefaultValue(context, panelWidth, panelHeight) {
      context.pickerInput.value = context.config.alpha ? colorHsbaToRgba(context.hsba) : colorRgbaToHex(colorHsbaToRgba(context.hsba));
-     if (context.arrowRight) setCss(context.arrowRight, 'border-top-color', context.pickerInput.value);
      if (context.box) context.box.style.background = context.pickerInput.value;
      const sliderBarHeight = context.hueBar.offsetHeight || 180;
      let l = parseInt(context.hsba.s * panelWidth / 100),
@@ -823,7 +821,6 @@
    function ewColorPicker(config) {
      this.pickerFlag = false;
      const defaultConfig = {
-       hue: true,
        alpha: false,
        size: "normal",
        predefineColor: [],
@@ -837,47 +834,34 @@
      }; //如果第二个参数传的是字符串，或DOM对象，则初始化默认的配置
 
      if (isStr(config) || isDom(config)) {
-       let el = isDom(config) ? config : getDom(config);
        this.config = defaultConfig;
-
-       if (el.length) {
-         let i = -1;
-
-         while (++i < el.length) {
-           this.init(el[i], this.config);
-         }
-       } else {
-         this.init(el, this.config);
-       }
+       this.beforeInit(config, this.config, DOM_ERROR);
      } //如果是对象，则自定义配置，自定义配置选项如下:
      else if (isDeepObject(config) && (isStr(config.el) || isDom(config.el))) {
-         const el = isDom(config.el) ? config.el : getDom(config.el);
          this.config = ewAssign(defaultConfig, config);
-
-         if (el.length) {
-           let i = 0;
-
-           while (i < el.length) {
-             this.init(el[i], this.config);
-             i++;
-           }
-         } else {
-           this.init(el, this.config);
-         }
+         this.beforeInit(config.el, this.config, DOM_OBJECT_ERROR);
        } else {
-         if (isDeepObject(config)) {
-           return ewError('you should pass a param which is el and el must be a string or a dom element!');
-         } else {
-           return ewError('you should pass a param that it must be a string or a dom element!');
-         }
+         const errorText = isDeepObject(config) ? PICKER_OBJECT_CONFIG_ERROR : PICKER_CONFIG_ERROR;
+         return ewError(errorText);
        }
 
      return this;
    }
 
-   ewColorPicker.prototype.init = function (bindElement, config) {
-     if (config.isLog) consoleInfo(); //渲染选择器
+   ewColorPicker.prototype.beforeInit = function (element, config, errorText) {
+     if (config.isLog) consoleInfo();
 
+     if (isDom(element)) {
+       this.init(element, config);
+     } else if (ewObjToArray(getDom(element)).length) {
+       ewObjToArray(getDom(element)).forEach(item => this.init(item, config));
+     } else {
+       return ewError(errorText);
+     }
+   };
+
+   ewColorPicker.prototype.init = function (bindElement, config) {
+     //渲染选择器
      this.render(bindElement, config);
    };
 
@@ -912,7 +896,7 @@
        b_width = config.size.width && isNumber(config.size.width) ? parseInt(config.size.width) + 'px' : '40px';
        b_height = config.size.height && isNumber(config.size.height) ? parseInt(config.size.height) + 'px' : '40px';
      } else {
-       return ewError('the value must be a string which is one of the normal,medium,small,mini,or must be an object and need to contain width or height property!');
+       return ewError(CONFIG_SIZE_ERROR);
      } //设置预定义颜色
 
 
@@ -925,43 +909,43 @@
 
      const colorBox = config.defaultColor ? `<div class="ew-color-picker-arrow" style="width:${b_width};height:${b_height};">
         <div class="ew-color-picker-arrow-left"></div>
-        <div class="ew-color-picker-arrow-right" style="border-top-color:${config.defaultColor}"></div>
+        <div class="ew-color-picker-arrow-right"></div>
     </div>` : `<div class="ew-color-picker-no" style="width:${b_width};height:${b_height};line-height:${b_height};">&times;</div>`; //透明度
 
      const alphaBar = config.alpha ? `<div class="ew-alpha-slider-bar">
     <div class="ew-alpha-slider-wrapper"></div>
     <div class="ew-alpha-slider-bg"></div>
     <div class="ew-alpha-slider-thumb"></div>
-    </div>` : ''; //自定义颜色
+    </div>` : ''; // hue
 
-     const predefineHTML = predefineColorHTML ? `<div class="ew-pre-define-color-container">${predefineColorHTML}</div>` : ''; //颜色选择器
+     const hueBar = `<div class="ew-color-slider-bar"><div class="ew-color-slider-thumb"></div></div>`; //自定义颜色
 
-     let html = `<div class="ew-color-picker-box${config.disabled ? ' ew-color-picker-box-disabled' : ''}" tabindex="0" style="width:${b_width};height:${b_height};${config.defaultColor ? 'background:' + config.defaultColor : ''}">
-                ${colorBox}
+     const predefineHTML = predefineColorHTML ? `<div class="ew-pre-define-color-container">${predefineColorHTML}</div>` : ''; // 禁用类名
+
+     const boxDisabledClassName = config.disabled ? 'ew-color-picker-box-disabled' : ''; // 盒子样式
+
+     const boxStyle = `width:${b_width};height:${b_height};${config.defaultColor ? 'background:' + config.defaultColor : ''}`; //颜色选择器
+
+     let html = `
+        <div class="ew-color-picker-box ${boxDisabledClassName}" tabindex="0" style="${boxStyle}">${colorBox}</div>
+        <div class="ew-color-picker">
+            <div class="ew-color-picker-content">
+                <div class="ew-color-slider">${alphaBar}${hueBar}</div>
+                <div class="ew-color-panel" style="background:red;">
+                    <div class="ew-color-white-panel"></div>
+                    <div class="ew-color-black-panel"></div>
+                    <div class="ew-color-cursor"></div>
+                </div>
             </div>
-            <div class="ew-color-picker">
-                <div class="ew-color-picker-content">
-                    <div class="ew-color-slider">
-                        ${alphaBar}
-                        <div class="ew-color-slider-bar">
-                            <div class="ew-color-slider-thumb"></div>
-                        </div>
-                    </div>
-                    <div class="ew-color-panel" style="background:red;">
-                        <div class="ew-color-white-panel"></div>
-                        <div class="ew-color-black-panel"></div>
-                        <div class="ew-color-cursor"></div>
-                    </div>
+            <div class="ew-color-drop-container">
+                <input type="text" class="ew-color-input">
+                <div class="ew-color-drop-btn-group">
+                    <button class="ew-color-clear ew-color-drop-btn">清空</button>
+                    <button class="ew-color-sure ew-color-drop-btn">确定</button>
                 </div>
-                <div class="ew-color-dropbtns">
-                    <input type="text" class="ew-color-input">
-                    <div class="ew-color-dropbtngroup">
-                        <button class="ew-color-clear ew-color-dropbtn">清空</button>
-                        <button class="ew-color-sure ew-color-dropbtn">确定</button>
-                    </div>
-                </div>
-                ${predefineHTML}
-            </div>`;
+            </div>
+            ${predefineHTML}
+        </div>`;
      element.innerHTML = html;
      this.startMain(element, config);
    };
@@ -1092,7 +1076,14 @@
 
 
    ewColorPicker.prototype.bindEvent = function (el, callback, bool) {
-     let context = this;
+     const context = this;
+     const event_param = {
+       capture: false,
+       once: false,
+       passive: false,
+       useCapture: false,
+       wantsUntrusted: false
+     };
 
      const callResult = function (event) {
        context.moveX = eventType[0].indexOf('touch') > -1 ? event.changedTouches[0].clientX : event.clientX;
@@ -1100,50 +1091,20 @@
        bool ? callback(context, context.moveX, context.moveY) : callback(context, el, context.moveX, context.moveY);
      };
 
-     el.addEventListener(eventType[0], function (ev) {
+     el.addEventListener(eventType[0], function () {
        const moveFn = function (e) {
          e.preventDefault();
          callResult(e);
        };
 
        const upFn = function () {
-         document.removeEventListener(eventType[1], moveFn, {
-           capture: false,
-           once: false,
-           passive: false,
-           useCapture: false,
-           wantsUntrusted: false
-         });
-         document.removeEventListener(eventType[2], upFn, {
-           capture: false,
-           once: false,
-           passive: false,
-           useCapture: false,
-           wantsUntrusted: false
-         });
+         document.removeEventListener(eventType[1], moveFn, event_param);
+         document.removeEventListener(eventType[2], upFn, event_param);
        };
 
-       document.addEventListener(eventType[1], moveFn, {
-         capture: false,
-         once: false,
-         passive: false,
-         useCapture: false,
-         wantsUntrusted: false
-       });
-       document.addEventListener(eventType[2], upFn, {
-         capture: false,
-         once: false,
-         passive: false,
-         useCapture: false,
-         wantsUntrusted: false
-       });
-     }, {
-       capture: false,
-       once: false,
-       passive: false,
-       useCapture: false,
-       wantsUntrusted: false
-     });
+       document.addEventListener(eventType[1], moveFn, event_param);
+       document.addEventListener(eventType[2], upFn, event_param);
+     }, event_param);
    };
 
    if (!window.ewColorPicker) {
