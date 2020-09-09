@@ -34,6 +34,7 @@
    var color = new ewColorPicker({
       el:'.demo2',//绑定选择器的dom元素
       alpha:true,//是否开启透明度
+      hue:true,//是否开启色调
       size:{
           width:100,
           height:50
@@ -62,7 +63,7 @@
 
 ## cdn引入
 
-CDN:https://www.unpkg.com/ew-color-picker@1.4.2/dist/ew-color-picker.min.js
+CDN:https://www.unpkg.com/ew-color-picker@1.4.3/dist/ew-color-picker.min.js
 
 ## 在组件中使用
 
