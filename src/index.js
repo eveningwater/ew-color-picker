@@ -3,7 +3,7 @@ import { colorToRgb, colorRgbaToHex, colorHsbaToRgba, colorRgbaToHsba } from './
 import ani from './animation';
 import { consoleInfo } from './console';
 import './color-picker.css';
-import { PICKER_OBJECT_CONFIG_ERROR, PICKER_CONFIG_ERROR, DOM_OBJECT_ERROR, DOM_ERROR, CONFIG_SIZE_ERROR, DOM_NOT_ERROR, NOT_DOM_ELEMENTS,PREDEFINE_COLOR_ERROR } from './error';
+import { PICKER_OBJECT_CONFIG_ERROR, PICKER_CONFIG_ERROR, DOM_OBJECT_ERROR, DOM_ERROR, CONFIG_SIZE_ERROR, DOM_NOT_ERROR, NOT_DOM_ELEMENTS, PREDEFINE_COLOR_ERROR } from './error';
 /**
  * 构造函数
  * @param {*} config 
@@ -11,7 +11,7 @@ import { PICKER_OBJECT_CONFIG_ERROR, PICKER_CONFIG_ERROR, DOM_OBJECT_ERROR, DOM_
 function ewColorPicker(config) {
     this.pickerFlag = false;
     const defaultConfig = {
-        hue:true,
+        hue: true,
         alpha: false,
         size: "normal",
         predefineColor: [],
@@ -47,13 +47,14 @@ ewColorPicker.prototype.beforeInit = function (element, config, errorText) {
         }
         return false;
     }
-    if (isDom(element)) {
-        if (!isNotDom(element)) this.init(element, config);
-    } else if (ewObjToArray(getDom(element)).length) {
-        ewObjToArray(getDom(element)).forEach(item => {
-            if (!isNotDom(item)) this.init(item, config);
-        });
-    } else {
+    const ele = isDom(element) ? element : isStr(element) ? getDom(element) : null;
+    if(ele){
+        if(ele.length){
+            ewObjToArray(ele).forEach(item => {if (!isNotDom(item)) this.init(item, config);});
+        }else{
+            if (!isNotDom(ele)) this.init(ele, config);
+        }
+    }else{
         return ewError(errorText);
     }
 }
@@ -93,12 +94,12 @@ ewColorPicker.prototype.render = function (element, config) {
     let predefineColorHTML = '';
     //设置预定义颜色
     if (isDeepArray(config.predefineColor)) {
-        if(config.predefineColor.length){
+        if (config.predefineColor.length) {
             config.predefineColor.map((color) => {
                 predefineColorHTML += `<div class="ew-pre-define-color" style="background:${color};" tabIndex=0></div>`;
             });
         }
-    }else {
+    } else {
         return ewError(PREDEFINE_COLOR_ERROR);
     }
     //打开颜色选择器的方框
@@ -208,7 +209,7 @@ ewColorPicker.prototype.startMain = function (ele, config) {
     const pickerWidth = !config.alpha && !config.hue ? 280 : !config.alpha || !config.hue ? 300 : 320;
     this.slider.style.width = sliderWidth + 'px';
     this.picker.style.minWidth = pickerWidth + 'px';
-    if(config.alpha){
+    if (config.alpha) {
         this.alphaBar = getELByClass(ele, 'ew-alpha-slider-bar');
         this.alphaBarBg = getELByClass(ele, 'ew-alpha-slider-bg');
         this.alphaBarThumb = getELByClass(ele, 'ew-alpha-slider-thumb');
@@ -419,7 +420,7 @@ function onClickPanel(scope, eve) {
  * 克隆颜色对象
  * @param {*} color 
  */
-function cloneColor(color){
+function cloneColor(color) {
     const newColor = deepCloneObjByRecursion(color);
     newColor.s = newColor.b = 100;
     return newColor;
@@ -442,7 +443,7 @@ function setDefaultValue(context, panelWidth, panelHeight) {
     context.pickerInput.value = context.config.alpha ? colorHsbaToRgba(context.hsba) : colorRgbaToHex(colorHsbaToRgba(context.hsba));
     if (context.box) context.box.style.background = context.pickerInput.value;
     let sliderBarHeight = 0;
-    if(context.config.hue){
+    if (context.config.hue) {
         sliderBarHeight = context.hueBar.offsetHeight || 180;
         let ty = parseInt(context.hsba.h * sliderBarHeight / 360);
         setCss(context.hueThumb, 'top', ty + 'px');
@@ -455,7 +456,7 @@ function setDefaultValue(context, panelWidth, panelHeight) {
     setCss(context.pickerPanel, 'background', colorRgbaToHex(colorHsbaToRgba(cloneColor(context.hsba))));
     //改变透明度
     if (context.config.alpha) {
-        if(!context.config.hue)sliderBarHeight = context.alphaBar.offsetHeight || 180;
+        if (!context.config.hue) sliderBarHeight = context.alphaBar.offsetHeight || 180;
         const al_t = sliderBarHeight - context.hsba.a * sliderBarHeight;
         setCss(context.alphaBarThumb, 'top', al_t + 'px');
     }
