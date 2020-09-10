@@ -4,14 +4,14 @@
  * @param {*} alpha 
  */
 export function colorHexToRgba(hex, alpha) {
-    let a = alpha || 1, regx = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/, hColor = hex.toLowerCase(), hLen = hex.length, rgbaColor = [];
-    if (hex && regx.test(hColor)) {
+    let a = alpha || 1, colorRegExp = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/, hColor = hex.toLowerCase(), hLen = hex.length, rgbaColor = [];
+    if (hex && colorRegExp.test(hColor)) {
         //the hex length may be 4 or 7,contained the symbol of #
         if (hLen === 4) {
             let hSixColor = '#';
             for (let i = 0; i < hLen; i++) {
                 let sColor = hColor.slice(i, i + 1);
-                hSixColor += sColor.cancat(sColor);
+                hSixColor += sColor.concat(sColor);
             }
             hColor = hSixColor;
         }
@@ -37,7 +37,6 @@ export function colorRgbaToHex(rgba) {
     var value = '#';
     if (/rgba?/.test(rgba)) {
         var values = rgba.replace(/rgba?\(/, '').replace(/\)/, '').replace(/[\s+]/g, '').split(','), color = '';
-        var alpha = values[3] || 1;
         values.map(function (value, index) {
             if (index <= 2) {
                 color += hexColor(value);
