@@ -535,7 +535,7 @@
    }();
 
    const consoleInfo = function () {
-     console.log(`%c ew-color-picker@1.4.4 %c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+     console.log(`%c ew-color-picker@1.4.5 %c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
    };
 
    function styleInject(css, ref) {
@@ -634,12 +634,16 @@
        return false;
      };
 
-     if (isDom(element)) {
-       if (!isNotDom(element)) this.init(element, config);
-     } else if (ewObjToArray(getDom(element)).length) {
-       ewObjToArray(getDom(element)).forEach(item => {
-         if (!isNotDom(item)) this.init(item, config);
-       });
+     const ele = isDom(element) ? element : isStr(element) ? getDom(element) : null;
+
+     if (ele) {
+       if (ele.length) {
+         ewObjToArray(ele).forEach(item => {
+           if (!isNotDom(item)) this.init(item, config);
+         });
+       } else {
+         if (!isNotDom(ele)) this.init(ele, config);
+       }
      } else {
        return ewError(errorText);
      }
