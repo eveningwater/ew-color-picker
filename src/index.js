@@ -3,7 +3,7 @@ import { colorToRgb, colorRgbaToHex, colorHsbaToRgba, colorRgbaToHsba } from './
 import ani from './animation';
 import { consoleInfo } from './console';
 import './color-picker.css';
-import { PICKER_OBJECT_CONFIG_ERROR, PICKER_CONFIG_ERROR, DOM_OBJECT_ERROR, DOM_ERROR, CONFIG_SIZE_ERROR, DOM_NOT_ERROR, NOT_DOM_ELEMENTS, PREDEFINE_COLOR_ERROR } from './error';
+import { ERROR_VARIABLE,NOT_DOM_ELEMENTS } from './error';
 /**
  * 构造函数
  * @param {*} config 
@@ -26,13 +26,13 @@ function ewColorPicker(config) {
     //如果第二个参数传的是字符串，或DOM对象，则初始化默认的配置
     if (isStr(config) || isDom(config)) {
         this.config = defaultConfig;
-        this.beforeInit(config, this.config, DOM_ERROR);
+        this.beforeInit(config, this.config, ERROR_VARIABLE.DOM_ERROR);
     } //如果是对象，则自定义配置，自定义配置选项如下:
     else if (isDeepObject(config) && (isStr(config.el) || isDom(config.el))) {
         this.config = ewAssign(defaultConfig, config);
-        this.beforeInit(config.el, this.config, DOM_OBJECT_ERROR);
+        this.beforeInit(config.el, this.config, ERROR_VARIABLE.DOM_OBJECT_ERROR);
     } else {
-        const errorText = isDeepObject(config) ? PICKER_OBJECT_CONFIG_ERROR : PICKER_CONFIG_ERROR;
+        const errorText = isDeepObject(config) ? ERROR_VARIABLE.PICKER_OBJECT_CONFIG_ERROR : ERROR_VARIABLE.PICKER_CONFIG_ERROR;
         return ewError(errorText);
     }
     return this;
@@ -42,7 +42,7 @@ ewColorPicker.prototype.beforeInit = function (element, config, errorText) {
     // 不能是哪些标签元素
     const isNotDom = function (ele) {
         if (NOT_DOM_ELEMENTS.indexOf(ele.tagName.toLowerCase()) > -1) {
-            ewError(DOM_NOT_ERROR);
+            ewError(ERROR_VARIABLE.DOM_NOT_ERROR);
             return true;
         }
         return false;
@@ -52,6 +52,7 @@ ewColorPicker.prototype.beforeInit = function (element, config, errorText) {
         if(ele.length){
             ewObjToArray(ele).forEach(item => {if (!isNotDom(item)) this.init(item, config);});
         }else{
+            if(!ele.tagName)return ewError(errorText);
             if (!isNotDom(ele)) this.init(ele, config);
         }
     }else{
@@ -83,7 +84,7 @@ ewColorPicker.prototype.init = function (bindElement, config) {
         b_width = config.size.width && isNumber(config.size.width) ? parseInt(config.size.width) + 'px' : '40px';
         b_height = config.size.height && isNumber(config.size.height) ? parseInt(config.size.height) + 'px' : '40px';
     } else {
-        return ewError(CONFIG_SIZE_ERROR);
+        return ewError(ERROR_VARIABLE.CONFIG_SIZE_ERROR);
     }
     this.b_width = b_width;
     this.b_height = b_height;
@@ -100,7 +101,7 @@ ewColorPicker.prototype.render = function (element, config) {
             });
         }
     } else {
-        return ewError(PREDEFINE_COLOR_ERROR);
+        return ewError(ERROR_VARIABLE.PREDEFINE_COLOR_ERROR);
     }
     //打开颜色选择器的方框
     const colorBox = config.defaultColor ? `<div class="ew-color-picker-arrow" style="width:${this.b_width};height:${this.b_height};">
