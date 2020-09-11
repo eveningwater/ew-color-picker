@@ -535,7 +535,7 @@
    }();
 
    const consoleInfo = function () {
-     console.log(`%c ew-color-picker@1.4.5 %c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+     console.log(`%c ew-color-picker@1.4.6 %c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
    };
 
    function styleInject(css, ref) {
@@ -578,13 +578,6 @@
      DOM_NOT_ERROR: 'Do not pass these elements: ' + NOT_DOM_ELEMENTS.join(',') + ' as a param,pass the correct element such as div!',
      PREDEFINE_COLOR_ERROR: 'PredefineColor is a array that is need to contain color value!'
    };
-   const PICKER_OBJECT_CONFIG_ERROR = ERROR_VARIABLE.PICKER_OBJECT_CONFIG_ERROR;
-   const PICKER_CONFIG_ERROR = ERROR_VARIABLE.PICKER_CONFIG_ERROR;
-   const DOM_OBJECT_ERROR = ERROR_VARIABLE.DOM_OBJECT_ERROR;
-   const DOM_ERROR = ERROR_VARIABLE.DOM_ERROR;
-   const CONFIG_SIZE_ERROR = ERROR_VARIABLE.CONFIG_SIZE_ERROR;
-   const DOM_NOT_ERROR = ERROR_VARIABLE.DOM_NOT_ERROR;
-   const PREDEFINE_COLOR_ERROR = ERROR_VARIABLE.PREDEFINE_COLOR_ERROR;
 
    /**
     * 构造函数
@@ -609,13 +602,13 @@
 
      if (isStr(config) || isDom(config)) {
        this.config = defaultConfig;
-       this.beforeInit(config, this.config, DOM_ERROR);
+       this.beforeInit(config, this.config, ERROR_VARIABLE.DOM_ERROR);
      } //如果是对象，则自定义配置，自定义配置选项如下:
      else if (isDeepObject(config) && (isStr(config.el) || isDom(config.el))) {
          this.config = ewAssign(defaultConfig, config);
-         this.beforeInit(config.el, this.config, DOM_OBJECT_ERROR);
+         this.beforeInit(config.el, this.config, ERROR_VARIABLE.DOM_OBJECT_ERROR);
        } else {
-         const errorText = isDeepObject(config) ? PICKER_OBJECT_CONFIG_ERROR : PICKER_CONFIG_ERROR;
+         const errorText = isDeepObject(config) ? ERROR_VARIABLE.PICKER_OBJECT_CONFIG_ERROR : ERROR_VARIABLE.PICKER_CONFIG_ERROR;
          return ewError(errorText);
        }
 
@@ -627,7 +620,7 @@
 
      const isNotDom = function (ele) {
        if (NOT_DOM_ELEMENTS.indexOf(ele.tagName.toLowerCase()) > -1) {
-         ewError(DOM_NOT_ERROR);
+         ewError(ERROR_VARIABLE.DOM_NOT_ERROR);
          return true;
        }
 
@@ -642,6 +635,7 @@
            if (!isNotDom(item)) this.init(item, config);
          });
        } else {
+         if (!ele.tagName) return ewError(errorText);
          if (!isNotDom(ele)) this.init(ele, config);
        }
      } else {
@@ -678,7 +672,7 @@
        b_width = config.size.width && isNumber(config.size.width) ? parseInt(config.size.width) + 'px' : '40px';
        b_height = config.size.height && isNumber(config.size.height) ? parseInt(config.size.height) + 'px' : '40px';
      } else {
-       return ewError(CONFIG_SIZE_ERROR);
+       return ewError(ERROR_VARIABLE.CONFIG_SIZE_ERROR);
      }
 
      this.b_width = b_width;
@@ -697,7 +691,7 @@
          });
        }
      } else {
-       return ewError(PREDEFINE_COLOR_ERROR);
+       return ewError(ERROR_VARIABLE.PREDEFINE_COLOR_ERROR);
      } //打开颜色选择器的方框
 
 
