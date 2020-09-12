@@ -6,6 +6,7 @@ import ewColorPicker from 'ew-color-picker';
 class ColorPicker extends React.Component {
     constructor(props){
       super(props);
+      this.state = {};
     }
     componentDidMount(){
       new ewColorPicker({
