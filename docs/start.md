@@ -63,7 +63,7 @@
 
 CDN:
 ```js
-https://www.unpkg.com/ew-color-picker@1.4.6/dist/ew-color-picker.min.js
+https://www.unpkg.com/ew-color-picker@1.4.8/dist/ew-color-picker.min.js
 ```
 
 ## 在组件中使用

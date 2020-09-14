@@ -384,8 +384,8 @@ function onSureColor(scope) {
 function changeCursorColor(scope, left, top, panelWidth, panelHeight) {
     setCss(scope.pickerCursor, 'left', left + 'px');
     setCss(scope.pickerCursor, 'top', top + 'px');
-    const s = parseInt(100 * left / panelWidth);
-    const b = parseInt(100 * (panelHeight - top) / panelHeight);
+    const s = parseInt(100 * (left - 4) / panelWidth);
+    const b = parseInt(100 * (panelHeight - (top - 4)) / panelHeight);
     //需要减去本身的宽高来做判断
     scope.hsba.s = s > 100 ? 100 : s < 0 ? 0 : s;
     scope.hsba.b = b > 100 ? 100 : b < 0 ? 0 : b;
