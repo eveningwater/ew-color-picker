@@ -534,8 +534,60 @@
      return animation;
    }();
 
+   var name = "ew-color-picker";
+   var version = "1.4.7";
+   var description = "一个基于原生js而封装的颜色选择器";
+   var main = "src/index.js";
+   var scripts = {
+   	build: "rollup -c",
+   	test: "jest",
+   	doc: "vuepress dev docs/.",
+   	"doc-build": "vuepress build docs/."
+   };
+   var repository = {
+   	type: "git",
+   	url: "git+https://github.com/eveningwater/ew-color-picker.git"
+   };
+   var keywords = [
+   	"ew-color-picker",
+   	"plugin"
+   ];
+   var author = "eveningwater";
+   var license = "ISC";
+   var bugs = {
+   	url: "https://github.com/eveningwater/ew-color-picker/issues"
+   };
+   var homepage = "https://github.com/eveningwater/ew-color-picker#readme";
+   var devDependencies = {
+   	"@babel/core": "^7.10.2",
+   	"@rollup/plugin-json": "^4.1.0",
+   	rollup: "^2.13.1",
+   	"rollup-plugin-babel": "^4.4.0",
+   	"rollup-plugin-postcss": "^3.1.2",
+   	"rollup-plugin-terser": "^6.1.0",
+   	vuepress: "^1.5.0"
+   };
+   var dependencies = {
+   	user: "0.0.0"
+   };
+   var json = {
+   	name: name,
+   	version: version,
+   	description: description,
+   	main: main,
+   	scripts: scripts,
+   	repository: repository,
+   	keywords: keywords,
+   	author: author,
+   	license: license,
+   	bugs: bugs,
+   	homepage: homepage,
+   	devDependencies: devDependencies,
+   	dependencies: dependencies
+   };
+
    const consoleInfo = function () {
-     console.log(`%c ew-color-picker@1.4.6 %c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+     console.log(`%c ew-color-picker@${json.version}%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
    };
 
    function styleInject(css, ref) {
@@ -1017,8 +1069,8 @@
    function changeCursorColor(scope, left, top, panelWidth, panelHeight) {
      setCss(scope.pickerCursor, 'left', left + 'px');
      setCss(scope.pickerCursor, 'top', top + 'px');
-     const s = parseInt(100 * left / panelWidth);
-     const b = parseInt(100 * (panelHeight - top) / panelHeight); //需要减去本身的宽高来做判断
+     const s = parseInt(100 * (left - 4) / panelWidth);
+     const b = parseInt(100 * (panelHeight - (top - 4)) / panelHeight); //需要减去本身的宽高来做判断
 
      scope.hsba.s = s > 100 ? 100 : s < 0 ? 0 : s;
      scope.hsba.b = b > 100 ? 100 : b < 0 ? 0 : b;
