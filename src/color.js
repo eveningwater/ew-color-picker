@@ -15,8 +15,8 @@ export function colorHexToRgba(hex, alpha) {
             }
             hColor = hSixColor;
         }
-        for (let j = 0, len = hColor.length; j < len; j++) {
-            rgbaColor.push(parseInt('0X' + hColor.slice(j, j + 2)));
+        for (let j = 1, len = hColor.length; j < len; j += 2) {
+            rgbaColor.push(parseInt('0X' + hColor.slice(j, j + 2),16));
         }
         return "rgba(" + rgbaColor.join(",") + ',' + a + ")";
     } else {
@@ -46,13 +46,13 @@ export function colorRgbaToHex(rgba) {
     }
 }
 /**
- * hsba to rgba
- * @param {*} hsba 
+ * hsb to rgba
+ * @param {*} hsb 
  * @param {*} alpha 
  */
-export function colorHsbaToRgba(hsba,alpha) {
-    var r, g, b, a = hsba.a;//rgba(r,g,b,a)
-    var h = Math.round(hsba.h), s = Math.round(hsba.s * 255 / 100), v = Math.round(hsba.b * 255 / 100);//hsv(h,s,v)
+export function colorHsbToRgba(hsb,alpha) {
+    var r, g, b, a = hsb.a;//rgba(r,g,b,a)
+    var h = Math.round(hsb.h), s = Math.round(hsb.s * 255 / 100), v = Math.round(hsb.b * 255 / 100);//hsv(h,s,v)
     if (s === 0) {
         r = g = b = v;
     } else {
@@ -79,10 +79,10 @@ export function colorHsbaToRgba(hsba,alpha) {
     return 'rgba(' + Math.round(r) + ',' + Math.round(g) + ',' + Math.round(b) + ',' + a + ')';
 }
 /**
- * rgba to hsba
+ * rgba to hsb
  * @param {*} rgba 
  */
-export function colorRgbaToHsba(rgba){
+export function colorRgbaToHsb(rgba){
     const rgbaArr = rgba.slice(rgba.indexOf('(') + 1,rgba.lastIndexOf(')')).split(',');
     let a = rgbaArr.length < 4 ? 1 : Number(rgbaArr[3]);
     let r = Number(rgbaArr[0]) / 255,
@@ -91,7 +91,6 @@ export function colorRgbaToHsba(rgba){
     let h,s,v;
     let min = Math.min(r,g,b);
     let max = v = Math.max(r,g,b);
-    let l = (min + max) / 2;
     let diff = max - min;
 
     if(max === min){

@@ -14,13 +14,13 @@
     <div class="demo2"></div>
     <div class="demo2"></div>
     <div class="demo3"></div>
-    <!-- <script src="../dist/ew-color-picker.js"></script> -->
-    <script src="https://www.unpkg.com/ew-color-picker@1.4.8/dist/ew-color-picker.min.js"></script>
+    <script src="../dist/ew-color-picker.js"></script>
+    <!-- <script src="https://www.unpkg.com/ew-color-picker@1.4.8/dist/ew-color-picker.min.js"></script> -->
     <script>
         var color1 = new ewColorPicker('.demo1');
         var color2 = new ewColorPicker({
             el:'.demo2',
-            alpha:true,
+            alpha:false,
             size:{
                 width:100,
                 height:50
@@ -36,7 +36,7 @@
                 console.log(this)
             },
             openPicker:function(){
-                console.log(this);
+                // console.log(this);
             },
             isLog:true
         });
