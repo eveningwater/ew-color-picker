@@ -1,81 +1,32 @@
-/*
-   * 功能:判断是否是一个数值
-   * params@1:字符串
-*/
-export function isNumber(str) {
-    return typeof str === 'number';
+export let addMethod = function(instance,method,func){
+    instance.prototype[method] = func;
+    return instance;
 }
-/*
-* 功能:判断是否是一个字符串
-* params@1:字符串
-*/
-
-export function isStr(str) {
-    return typeof str === 'string';
+const util = Object.create(null);
+const _toString = Object.prototype.toString;
+['Number','String','Function'].forEach(type => util['is' + type] = function(value){
+    return typeof value === type.toLowerCase();
+});
+util.addMethod = addMethod;
+['Object','Array','RegExp'].forEach(type => util['isDeep' + type] = function(value){
+    return _toString.call(value).slice(8,-1).toLowerCase() === type.toLowerCase();
+});
+util.isShallowObject = function(value){
+    return typeof value === 'object' && !util.isNull(value);
 }
-
-/*
-* 功能:判断是否是一个函数
-* params@1:值
-*/
-
-export function isFunction(fn) {
-    return typeof fn === 'function';
+util['ewObjToArray'] = function(value){
+    return util.isShallowObject(value) ? Array.prototype.slice.call(value) : value;
 }
-
-/*
-* 功能:判断是否是一个对象
-* params@1:对象
-*/
-
-export function isShallowObject(obj) {
-    return obj !== null && typeof obj === 'object';
-};
-/*
-* 功能:判断是否是一个对象
-* params@1:对象
-*/
-
-export function isDeepObject(obj) {
-    return Object.prototype.toString.call(obj) === "[object Object]";
-};
-
-/*
-* 功能:判断是否是一个数组
-* params@1:对象
-*/
-
-export function isDeepArray(obj) {
-    return Object.prototype.toString.call(obj) === "[object Array]";
-};
-
-/*
-* 功能:将类数组对象转换成数组
-* params@1:类数组对象
-*/
-export function ewObjToArray(obj) {
-    if (isShallowObject(obj)) return Array.prototype.slice.call(obj);
+util.isNull = function(value){
+    return value === null;
 }
-/*
-* 功能:判断是否是一个DOM元素
-* params@1:元素
-*/
-export function isDom(el) {
-    return isShallowObject(HTMLElement) ? el instanceof HTMLElement : el && isShallowObject(el) && el.nodeType === 1 && isStr(el.nodeName) || el instanceof HTMLCollection || el instanceof NodeList;
-}
-/*
-* 功能:合并对象
-* params@1:源数据对象
-* params@2~...:多个对象
-*/
-
-export function ewAssign(target, args) {
-    if (target === null) return;
+util.ewAssign = function(target,args){
+    if (util.isNull(target)) return;
     if (Object.assign) {
         return Object.assign(target, args);
     } else {
         var _ = Object(target);
-        for (var j = 1; j < arguments.length; j++) {
+        for (var j = 1,len = arguments.length; j < len; j += 1) {
             var source = arguments[j];
             if (source) {
                 for (var key in source) {
@@ -87,68 +38,34 @@ export function ewAssign(target, args) {
         }
         return _;
     }
-};
-
-/*
-* 功能:错误函数
-* params@1:字符串
-*/
-
-export function ewError(str) {
+}
+util.addClass = function(el,className){
+    return el.classList.add(className);
+}
+util.removeClass = function(el,className){
+    return el.classList.remove(className);
+}
+util['setCss'] = function (el, prop, value) {
+    el.style[prop] = value;
+}
+util.isDom = function(el){
+    return util.isShallowObject(HTMLElement) ? el instanceof HTMLElement : el && util.isShallowObject(el) && el.nodeType === 1 && util.isString(el.nodeName) || el instanceof HTMLCollection || el instanceof NodeList;
+}
+util.ewError = function(value){
     return console.error('[ewColorPicker warn]\n' + new Error(str));
 }
-
-/*
-* 功能:深度克隆对象
-* params@1:对象
-*/
-
-export function deepCloneObjByJSON(obj) {
+util.deepCloneObjByJSON = function(obj){
     return JSON.parse(JSON.stringify(obj));
 }
-/*
-* 功能:深度克隆对象
-* params@1:对象
-*/
-export const deepCloneObjByRecursion = (function f(obj) {
-    if (!isShallowObject(obj)) return;
-    let cloneObj = isDeepArray(obj) ? [] : {};
+util.deepCloneObjByRecursion = (function f(obj) {
+    if (!util.isShallowObject(obj)) return;
+    let cloneObj = util.isDeepArray(obj) ? [] : {};
     for (var k in obj) {
-        cloneObj[k] = isShallowObject(obj[k]) ? f(obj[k]) : obj[k];
+        cloneObj[k] = util.isShallowObject(obj[k]) ? f(obj[k]) : obj[k];
     }
     return cloneObj;
-})
-/*
-* 功能:将CSS对象转成CSStext字符串
-* 参数:css对象
-*/
-export function cssObjToStr(obj) {
-    if (!isShallowObject(obj)) return;
-    // 将大写字母换成短横线加小写字母
-
-    var cssStr = '';
-    for (var key in obj) {
-        cssStr += getKebabCase(key) + ':' + obj[key] + ';';
-    }
-    return cssStr;
-}
-/*
-* 功能:将大写字母换成短横线加小写字母
-* 参数:字符串
-*/
-export function getKebabCase(str) {
-    if (!isStr(str)) return;
-    return str.replace(/A-Z/g, function (w) {
-        return '-' + w.toLowerCase();
-    })
-}
-/*
-* 功能:获取css属性值
-* params@1:元素对象
-* params@2:css属性名
-*/
-
-export function getCss(el, prop) {
+});
+util.getCss = function (el, prop) {
     var getStyle = el.currentStyle ? function (prop) {
         var propName = el.currentStyle[prop];
         if (propName.indexOf('height') > -1 && propName.search(/px/i) > -1) {
@@ -160,11 +77,7 @@ export function getCss(el, prop) {
     };
     return getStyle(prop);
 };
-/*
-* 功能:获取dom元素
-* params@1:元素字符串
-*/
-export function getDom(ident) {
+util.getDom = function(ident){
     var selector,
         sType = ident.slice(0, 1),
         identTxt = ident.slice(1);
@@ -179,20 +92,7 @@ export function getDom(ident) {
         selector = document.getElementsByTagName(ident);
     }
     return selector;
-};
+}
 //the event
-export var eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
-/*
-* 功能:为元素添加一个类名
-* params@1:元素与类名
-*/
-export function addClass(el, className) {
-    return el.classList.add(className);
-}
-/*
-* 功能:为元素移除一个类名
-* params@1:元素与类名
-*/
-export function removeClass(el, className) {
-    return el.classList.remove(className);
-}
+util.eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
+export default util;
