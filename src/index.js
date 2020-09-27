@@ -9,6 +9,7 @@ import { ERROR_VARIABLE,NOT_DOM_ELEMENTS } from './error';
  * @param {*} config 
  */
 function ewColorPicker(config) {
+    if(typeof new.target === 'undefined')return util.ewError(ERROR_VARIABLE.CONSTRUCTOR_ERROR);
     const defaultConfig = {
         hue: true,
         alpha: false,

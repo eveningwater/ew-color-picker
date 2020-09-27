@@ -71,7 +71,7 @@
     };
 
     util.ewError = function (value) {
-      return console.error('[ewColorPicker warn]\n' + new Error(str));
+      return console.error('[ewColorPicker warn]\n' + new Error(value));
     };
 
     util.deepCloneObjByJSON = function (obj) {
@@ -418,7 +418,7 @@
     }();
 
     var name = "ew-color-picker";
-    var version = "1.4.9";
+    var version = "1.5.0";
     var description = "一个基于原生js而封装的颜色选择器";
     var main = "src/index.js";
     var scripts = {
@@ -511,7 +511,8 @@
       DOM_ERROR: 'can not find the element,make sure to pass a correct param!',
       CONFIG_SIZE_ERROR: 'the value must be a string which is one of the normal,medium,small,mini,or must be an object and need to contain width or height property!',
       DOM_NOT_ERROR: 'Do not pass these elements: ' + NOT_DOM_ELEMENTS.join(',') + ' as a param,pass the correct element such as div!',
-      PREDEFINE_COLOR_ERROR: 'PredefineColor is a array that is need to contain color value!'
+      PREDEFINE_COLOR_ERROR: 'PredefineColor is a array that is need to contain color value!',
+      CONSTRUCTOR_ERROR: 'ewColorPicker is a constructor and should be called with the new keyword'
     };
 
     /**
@@ -520,6 +521,7 @@
      */
 
     function ewColorPicker(config) {
+      if (typeof new.target === 'undefined') return util.ewError(ERROR_VARIABLE.CONSTRUCTOR_ERROR);
       const defaultConfig = {
         hue: true,
         alpha: false,

@@ -52,7 +52,7 @@ util.isDom = function(el){
     return util.isShallowObject(HTMLElement) ? el instanceof HTMLElement : el && util.isShallowObject(el) && el.nodeType === 1 && util.isString(el.nodeName) || el instanceof HTMLCollection || el instanceof NodeList;
 }
 util.ewError = function(value){
-    return console.error('[ewColorPicker warn]\n' + new Error(str));
+    return console.error('[ewColorPicker warn]\n' + new Error(value));
 }
 util.deepCloneObjByJSON = function(obj){
     return JSON.parse(JSON.stringify(obj));
