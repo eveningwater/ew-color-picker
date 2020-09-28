@@ -212,7 +212,8 @@ const methods = [
                         changeAlphaBar(scope);
                         changeElementColor(scope);
                         // fix the value bug
-                        scope.pickerInput.value = colorRgbaToHex(util.getCss(event.target, 'background-color'));
+                        const setColor =  colorRgbaToHex(util.getCss(event.target, 'background-color'));
+                        scope.pickerInput.value = scope.config.alpha ? colorToRgb(setColor) : setColor;
                     }, false);
                     item.addEventListener('blur', function (event) {
                         util.removeClass(event.target, 'ew-pre-define-color-active');

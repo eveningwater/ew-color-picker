@@ -366,7 +366,7 @@
           let unit = totalHeight / (time / 10);
           if (isDown) util.setCss(element, 'height', '0px');
           let timer = setInterval(() => {
-            currentHeight = isDown ? currentHeight - unit : currentHeight + unit;
+            currentHeight = isDown ? currentHeight + unit : currentHeight - unit;
             util.setCss(element, 'height', currentHeight + 'px');
 
             if (currentHeight >= totalHeight || currentHeight <= 0) {
@@ -418,7 +418,7 @@
     }();
 
     var name = "ew-color-picker";
-    var version = "1.5.0";
+    var version = "1.5.1";
     var description = "一个基于原生js而封装的颜色选择器";
     var main = "src/index.js";
     var scripts = {
@@ -736,7 +736,8 @@
               changeAlphaBar(scope);
               changeElementColor(scope); // fix the value bug
 
-              scope.pickerInput.value = colorRgbaToHex(util.getCss(event.target, 'background-color'));
+              const setColor = colorRgbaToHex(util.getCss(event.target, 'background-color'));
+              scope.pickerInput.value = scope.config.alpha ? colorToRgb(setColor) : setColor;
             }, false);
             item.addEventListener('blur', function (event) {
               util.removeClass(event.target, 'ew-pre-define-color-active');
