@@ -71,7 +71,7 @@ const ani = (function () {
                 let unit = totalHeight / (time / 10);
                 if (isDown)util.setCss(element, 'height', '0px');
                 let timer = setInterval(() => {
-                    currentHeight = isDown ? currentHeight - unit : currentHeight + unit;
+                    currentHeight = isDown ? currentHeight + unit : currentHeight - unit;
                     util.setCss(element, 'height', currentHeight + 'px');
                     if (currentHeight >= totalHeight || currentHeight <= 0) {
                         clearInterval(timer);
