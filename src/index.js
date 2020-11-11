@@ -258,6 +258,7 @@ const methods = [
             if (!config.disabled) {
                 this.box.addEventListener('click', function () {
                     openPicker(ele, scope);
+                    setPickerPosition(scope,left,top);
                 }, false);
             }
             //颜色面板点击事件
@@ -317,7 +318,17 @@ methods.forEach(method => util.addMethod(ewColorPicker,method.name,method.func))
 function getELByClass(el, prop, isIndex) {
     return !isIndex ? el.querySelector ? el.querySelector('.' + prop) : el.getElementsByClassName(prop)[0] : el.querySelectorAll ? el.querySelectorAll('.' + prop) : el.getElementsByClassName(prop);
 }
-
+/**
+ * 设置picker的位置
+ * @param {*} scope 
+ * @param {*} left 
+ * @param {*} top 
+ */
+function setPickerPosition(scope,left,top){
+    let pickerTop = top + parseInt(scope.boxSize.b_height) + 20;
+    util.setCss(scope.picker, 'left', left + 'px');
+    util.setCss(scope.picker, 'top', pickerTop + 'px');
+}
 /**
  * 打开面板
  * @param {*} el 
