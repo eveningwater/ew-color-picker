@@ -135,5 +135,5 @@ export function colorToRgb(color) {
     document.body.appendChild(div);
     var c = window.getComputedStyle(div).backgroundColor;    
     document.body.removeChild(div);
-    return c;
+    return c.slice(0,2) + 'ba' + c.slice(3,c.length - 1) + ', 1)';
 };
