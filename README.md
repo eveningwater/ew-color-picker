@@ -63,7 +63,7 @@
 
 ## cdn引入
 
-CDN:https://www.unpkg.com/ew-color-picker@1.5.2/dist/ew-color-picker.min.js
+CDN:https://www.unpkg.com/ew-color-picker@1.5.3/dist/ew-color-picker.min.js
 
 ## 在组件中使用
 
