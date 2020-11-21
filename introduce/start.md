@@ -63,7 +63,7 @@
 
 CDN:
 ```shell
-  https://www.unpkg.com/ew-color-picker@1.5.2/dist/ew-color-picker.min.js
+  https://www.unpkg.com/ew-color-picker@1.5.3/dist/ew-color-picker.min.js
 ```
 
 ## 在组件中使用
@@ -75,7 +75,7 @@ CDN:
 ```
 > 在线示例
 
-[在线示例](https://www.eveningwater.com/ewColorPicker/example/color.html)
+[在线示例](https://eveningwater.github.io/ew-color-picker/example/color.html)
 
 > 在vue中可以写如下代码:
 
@@ -150,8 +150,9 @@ CDN:
         }
     }).mount("#app")
 ```
-[在vue2.0中使用的在线示例](https://eveningwater.com/ewColorPicker/example/vue-color-demo.html)
-[在vue3.0中使用的在线示例](https://eveningwater.com/ewColorPicker/example/vue-next-color-demo.html)
+
+[在vue2.0中使用的在线示例](https://eveningwater.github.io/ew-color-picker/example/vue-color-demo.html)
+[在vue3.0中使用的在线示例](https://eveningwater.github.io/ew-color-picker/example/vue-next-color-demo.html)
 
 > 在react中可以写如下代码:
 
@@ -243,6 +244,6 @@ CDN:
 ```js
   ReactDOM.render(<ColorPicker />, document.getElementById('#app'));
 ```
-[在react中使用的在线示例](https://eveningwater.com/ewColorPicker/example/react-color-demo.html)
+[在react中使用的在线示例](https://eveningwater.github.io/ew-color-picker/example/react-color-demo.html)
 
 > 说明:在react的工程化如create-react-app以及vue的工程化如vue-cli使用方式同引入式开发差不多的。
