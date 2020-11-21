@@ -6,8 +6,8 @@
   "scripts": {
     "build": "rollup -c",
     "test": "jest",
-    "doc": "vuepress dev docs/.",
-    "doc-build": "vuepress build docs/."
+    "doc": "vuepress dev introduce/.",
+    "doc-build": "vuepress build introduce/."
   },
   "repository": {
     "type": "git",

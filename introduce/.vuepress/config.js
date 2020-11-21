@@ -2,7 +2,7 @@ const navConfig = require('./config/navConfig.js')
 const sidebarConfig = require('./config/sidebarConfig.js')
 
 module.exports = {
-    dest: "./docs/dist",
+    dest: "../docs",
     base: "/ewColorPicker/",
     head: [
         ['link', {

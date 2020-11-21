@@ -1,7 +1,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global = global || self, global['ew-color-picker'] = factory());
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global['ew-color-picker'] = factory());
 }(this, (function () { 'use strict';
 
     let addMethod = function (instance, method, func) {
@@ -424,8 +424,8 @@
     var scripts = {
     	build: "rollup -c",
     	test: "jest",
-    	doc: "vuepress dev docs/.",
-    	"doc-build": "vuepress build docs/."
+    	doc: "vuepress dev introduce/.",
+    	"doc-build": "vuepress build introduce/."
     };
     var repository = {
     	type: "git",
