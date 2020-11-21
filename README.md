@@ -74,4 +74,4 @@ CDN:https://www.unpkg.com/ew-color-picker@1.5.3/dist/ew-color-picker.min.js
 
 ```
 
-更多详情参阅文档官网介绍[ewColorPicker](https://www.eveningwater.com/ewColorPicker/);
+更多详情参阅文档官网介绍[ewColorPicker](https://eveningwater.github.io/ew-color-picker/);
