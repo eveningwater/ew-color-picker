@@ -1,26 +1,16 @@
-export let addMethod = function(instance,method,func){
+export let addMethod = (instance,method,func) => {
     instance.prototype[method] = func;
     return instance;
 }
 const util = Object.create(null);
 const _toString = Object.prototype.toString;
-['Number','String','Function'].forEach(type => util['is' + type] = function(value){
-    return typeof value === type.toLowerCase();
-});
+['Number','String','Function','Undefined'].forEach(type => util['is' + type] = value => typeof value === type.toLowerCase());
 util.addMethod = addMethod;
-['Object','Array','RegExp'].forEach(type => util['isDeep' + type] = function(value){
-    return _toString.call(value).slice(8,-1).toLowerCase() === type.toLowerCase();
-});
-util.isShallowObject = function(value){
-    return typeof value === 'object' && !util.isNull(value);
-}
-util['ewObjToArray'] = function(value){
-    return util.isShallowObject(value) ? Array.prototype.slice.call(value) : value;
-}
-util.isNull = function(value){
-    return value === null;
-}
-util.ewAssign = function(target,args){
+['Object','Array','RegExp'].forEach(type => util['isDeep' + type] = value => _toString.call(value).slice(8,-1).toLowerCase() === type.toLowerCase());
+util.isShallowObject = value => typeof value === 'object' && !util.isNull(value);
+util['ewObjToArray'] = value => util.isShallowObject(value) ? Array.prototype.slice.call(value) : value;
+util.isNull = value => value === null;
+util.ewAssign = (target,args) => {
     if (util.isNull(target)) return;
     if (Object.assign) {
         return Object.assign(target, args);
@@ -39,24 +29,12 @@ util.ewAssign = function(target,args){
         return _;
     }
 }
-util.addClass = function(el,className){
-    return el.classList.add(className);
-}
-util.removeClass = function(el,className){
-    return el.classList.remove(className);
-}
-util['setCss'] = function (el, prop, value) {
-    el.style[prop] = value;
-}
-util.isDom = function(el){
-    return util.isShallowObject(HTMLElement) ? el instanceof HTMLElement : el && util.isShallowObject(el) && el.nodeType === 1 && util.isString(el.nodeName) || el instanceof HTMLCollection || el instanceof NodeList;
-}
-util.ewError = function(value){
-    return console.error('[ewColorPicker warn]\n' + new Error(value));
-}
-util.deepCloneObjByJSON = function(obj){
-    return JSON.parse(JSON.stringify(obj));
-}
+util.addClass = (el,className) => el.classList.add(className);
+util.removeClass = (el,className) => el.classList.remove(className);
+util['setCss'] =  (el, prop, value) => el.style[prop] = value;
+util.isDom = el => util.isShallowObject(HTMLElement) ? el instanceof HTMLElement : el && util.isShallowObject(el) && el.nodeType === 1 && util.isString(el.nodeName) || el instanceof HTMLCollection || el instanceof NodeList;
+util.ewError = value => console.error('[ewColorPicker warn]\n' + new Error(value));
+util.deepCloneObjByJSON = obj => JSON.parse(JSON.stringify(obj));
 util.deepCloneObjByRecursion = (function f(obj) {
     if (!util.isShallowObject(obj)) return;
     let cloneObj = util.isDeepArray(obj) ? [] : {};
@@ -65,7 +43,7 @@ util.deepCloneObjByRecursion = (function f(obj) {
     }
     return cloneObj;
 });
-util.getCss = function (el, prop) {
+util.getCss =  (el, prop) => {
     var getStyle = el.currentStyle ? function (prop) {
         var propName = el.currentStyle[prop];
         if (propName.indexOf('height') > -1 && propName.search(/px/i) > -1) {
@@ -77,22 +55,7 @@ util.getCss = function (el, prop) {
     };
     return getStyle(prop);
 };
-util.getDom = function(ident){
-    var selector,
-        sType = ident.slice(0, 1),
-        identTxt = ident.slice(1);
-    if (/^[#\.]/.test(sType)) {
-        if (sType === "#") {
-            selector = document.getElementById(identTxt);
-        }
-        else if (sType === ".") {
-            selector = document.getElementsByClassName(identTxt);
-        }
-    } else {
-        selector = document.getElementsByTagName(ident);
-    }
-    return selector;
-}
+util.$ = ident => document.querySelector(ident);
 //the event
 util.eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
 export default util;

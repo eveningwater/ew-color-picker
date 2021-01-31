@@ -4,33 +4,23 @@
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global['ew-color-picker'] = factory());
 }(this, (function () { 'use strict';
 
-    let addMethod = function (instance, method, func) {
+    let addMethod = (instance, method, func) => {
       instance.prototype[method] = func;
       return instance;
     };
     const util = Object.create(null);
     const _toString = Object.prototype.toString;
-    ['Number', 'String', 'Function'].forEach(type => util['is' + type] = function (value) {
-      return typeof value === type.toLowerCase();
-    });
+    ['Number', 'String', 'Function', 'Undefined'].forEach(type => util['is' + type] = value => typeof value === type.toLowerCase());
     util.addMethod = addMethod;
-    ['Object', 'Array', 'RegExp'].forEach(type => util['isDeep' + type] = function (value) {
-      return _toString.call(value).slice(8, -1).toLowerCase() === type.toLowerCase();
-    });
+    ['Object', 'Array', 'RegExp'].forEach(type => util['isDeep' + type] = value => _toString.call(value).slice(8, -1).toLowerCase() === type.toLowerCase());
 
-    util.isShallowObject = function (value) {
-      return typeof value === 'object' && !util.isNull(value);
-    };
+    util.isShallowObject = value => typeof value === 'object' && !util.isNull(value);
 
-    util['ewObjToArray'] = function (value) {
-      return util.isShallowObject(value) ? Array.prototype.slice.call(value) : value;
-    };
+    util['ewObjToArray'] = value => util.isShallowObject(value) ? Array.prototype.slice.call(value) : value;
 
-    util.isNull = function (value) {
-      return value === null;
-    };
+    util.isNull = value => value === null;
 
-    util.ewAssign = function (target, args) {
+    util.ewAssign = (target, args) => {
       if (util.isNull(target)) return;
 
       if (Object.assign) {
@@ -54,29 +44,17 @@
       }
     };
 
-    util.addClass = function (el, className) {
-      return el.classList.add(className);
-    };
+    util.addClass = (el, className) => el.classList.add(className);
 
-    util.removeClass = function (el, className) {
-      return el.classList.remove(className);
-    };
+    util.removeClass = (el, className) => el.classList.remove(className);
 
-    util['setCss'] = function (el, prop, value) {
-      el.style[prop] = value;
-    };
+    util['setCss'] = (el, prop, value) => el.style[prop] = value;
 
-    util.isDom = function (el) {
-      return util.isShallowObject(HTMLElement) ? el instanceof HTMLElement : el && util.isShallowObject(el) && el.nodeType === 1 && util.isString(el.nodeName) || el instanceof HTMLCollection || el instanceof NodeList;
-    };
+    util.isDom = el => util.isShallowObject(HTMLElement) ? el instanceof HTMLElement : el && util.isShallowObject(el) && el.nodeType === 1 && util.isString(el.nodeName) || el instanceof HTMLCollection || el instanceof NodeList;
 
-    util.ewError = function (value) {
-      return console.error('[ewColorPicker warn]\n' + new Error(value));
-    };
+    util.ewError = value => console.error('[ewColorPicker warn]\n' + new Error(value));
 
-    util.deepCloneObjByJSON = function (obj) {
-      return JSON.parse(JSON.stringify(obj));
-    };
+    util.deepCloneObjByJSON = obj => JSON.parse(JSON.stringify(obj));
 
     util.deepCloneObjByRecursion = function f(obj) {
       if (!util.isShallowObject(obj)) return;
@@ -89,7 +67,7 @@
       return cloneObj;
     };
 
-    util.getCss = function (el, prop) {
+    util.getCss = (el, prop) => {
       var getStyle = el.currentStyle ? function (prop) {
         var propName = el.currentStyle[prop];
 
@@ -103,23 +81,7 @@
       return getStyle(prop);
     };
 
-    util.getDom = function (ident) {
-      var selector,
-          sType = ident.slice(0, 1),
-          identTxt = ident.slice(1);
-
-      if (/^[#\.]/.test(sType)) {
-        if (sType === "#") {
-          selector = document.getElementById(identTxt);
-        } else if (sType === ".") {
-          selector = document.getElementsByClassName(identTxt);
-        }
-      } else {
-        selector = document.getElementsByTagName(ident);
-      }
-
-      return selector;
-    }; //the event
+    util.$ = ident => document.querySelector(ident); //the event
 
 
     util.eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
@@ -273,12 +235,12 @@
       };
     }
     /* 
-    * 任意色值（甚至是CSS颜色关键字）转换为RGB颜色的方法
+    * 任意色值（甚至是CSS颜色关键字）转换为RGBA颜色的方法
     * 此方法IE9+浏览器支持，基于DOM特性实现 
     * @param {*} color 
     */
 
-    function colorToRgb(color) {
+    function colorToRgba(color) {
       var div = document.createElement('div');
       div.style.backgroundColor = color;
       document.body.appendChild(div);
@@ -287,191 +249,134 @@
       return c.slice(0, 2) + 'ba' + c.slice(3, c.length - 1) + ', 1)';
     }
 
-    const ani = function () {
-      let animation = {};
+    const animation = {};
 
-      function TimerManager() {
-        this.timers = [];
-        this.args = [];
-        this.isTimerRun = false;
+    function TimerManager() {
+      this.timers = [];
+      this.args = [];
+      this.isTimerRun = false;
+    }
+
+    TimerManager.makeTimerManage = function (element) {
+      const elementTimerManage = element.TimerManage;
+
+      if (!elementTimerManage || elementTimerManage.constructor !== TimerManager) {
+        element.TimerManage = new TimerManager();
       }
+    };
 
-      TimerManager.makeTimerManage = function (element) {
-        const elementTimerManage = element.TimerManage;
+    const methods = [{
+      method: "add",
+      func: function (timer, args) {
+        this.timers.push(timer);
+        this.args.push(args);
+        this.timerRun();
+      }
+    }, {
+      method: "timerRun",
+      func: function () {
+        if (!this.isTimerRun) {
+          let timer = this.timers.shift(),
+              args = this.args.shift();
 
-        if (!elementTimerManage || elementTimerManage.constructor !== TimerManager) {
-          element.TimerManage = new TimerManager();
-        }
-      };
-
-      const methods = [{
-        method: "add",
-        func: function (timer, args) {
-          this.timers.push(timer);
-          this.args.push(args);
-          this.timerRun();
-        }
-      }, {
-        method: "timerRun",
-        func: function () {
-          if (!this.isTimerRun) {
-            let timer = this.timers.shift(),
-                args = this.args.shift();
-
-            if (timer && args) {
-              this.isTimerRun = true;
-              timer(args[0], args[1]);
-            }
+          if (timer && args) {
+            this.isTimerRun = true;
+            timer(args[0], args[1]);
           }
         }
-      }, {
-        method: "next",
-        func: function () {
-          this.isTimerRun = false;
-          this.timerRun();
-        }
-      }];
-      methods.forEach(method => util.addMethod(TimerManager, method.method, method.func));
+      }
+    }, {
+      method: "next",
+      func: function () {
+        this.isTimerRun = false;
+        this.timerRun();
+      }
+    }];
+    methods.forEach(method => util.addMethod(TimerManager, method.method, method.func));
 
-      function runNext(element) {
-        const elementTimerManage = element.TimerManage;
+    function runNext(element) {
+      const elementTimerManage = element.TimerManage;
 
-        if (elementTimerManage && elementTimerManage.constructor === TimerManager) {
-          elementTimerManage.next();
-        }
+      if (elementTimerManage && elementTimerManage.constructor === TimerManager) {
+        elementTimerManage.next();
+      }
+    }
+
+    function registerMethods(type, element, time) {
+      let transition = '';
+      let overflow = '';
+
+      if (type.indexOf('slide') > -1) {
+        transition = "height" + time + ' ms';
+        overflow = 'hidden';
+        upAndDown();
+      } else {
+        transition = "opacity" + time + ' ms';
+        overflow = '';
+        inAndOut();
       }
 
-      function registerMethods(type, element, time) {
-        let transition = '';
-        let overflow = '';
+      if (overflow) util.setCss(element, 'overflow', overflow);
+      util.setCss(element, 'transition', transition);
 
-        if (type.indexOf('slide') > -1) {
-          transition = "height" + time + ' ms';
-          overflow = 'hidden';
-          upAndDown();
-        } else {
-          transition = "opacity" + time + ' ms';
-          overflow = '';
-          inAndOut();
-        }
+      function upAndDown() {
+        const isDown = type.toLowerCase().indexOf('down') > -1;
+        if (isDown) util.setCss(element, 'display', 'block');
+        let totalHeight = element.offsetHeight;
+        let currentHeight = isDown ? 0 : totalHeight;
+        let unit = totalHeight / (time / 10);
+        if (isDown) util.setCss(element, 'height', '0px');
+        let timer = setInterval(() => {
+          currentHeight = isDown ? currentHeight + unit : currentHeight - unit;
+          util.setCss(element, 'height', currentHeight + 'px');
 
-        if (overflow) util.setCss(element, 'overflow', overflow);
-        util.setCss(element, 'transition', transition);
+          if (currentHeight >= totalHeight || currentHeight <= 0) {
+            clearInterval(timer);
+            util.setCss(element, 'height', totalHeight + 'px');
+            runNext(element);
+          }
 
-        function upAndDown() {
-          const isDown = type.toLowerCase().indexOf('down') > -1;
-          if (isDown) util.setCss(element, 'display', 'block');
-          let totalHeight = element.offsetHeight;
-          let currentHeight = isDown ? 0 : totalHeight;
-          let unit = totalHeight / (time / 10);
-          if (isDown) util.setCss(element, 'height', '0px');
-          let timer = setInterval(() => {
-            currentHeight = isDown ? currentHeight + unit : currentHeight - unit;
-            util.setCss(element, 'height', currentHeight + 'px');
-
-            if (currentHeight >= totalHeight || currentHeight <= 0) {
-              clearInterval(timer);
-              util.setCss(element, 'height', totalHeight + 'px');
-              runNext(element);
-            }
-
-            if (!isDown && currentHeight <= 0) util.setCss(element, 'display', 'none');
-          }, 10);
-        }
-
-        function inAndOut() {
-          const isIn = type.toLowerCase().indexOf('in') > -1;
-          let timer = null;
-          let unit = 1 * 100 / (time / 10);
-          let curAlpha = isIn ? 0 : 100;
-          util.setCss(element, 'display', isIn ? 'none' : 'block');
-          util.setCss(element, 'opacity', isIn ? 0 : 1);
-
-          let handleFade = function () {
-            curAlpha = isIn ? curAlpha + unit : curAlpha - unit;
-            if (element.style.display === 'none' && isIn) util.setCss(element, 'display', 'block');
-            util.setCss(element, 'opacity', (curAlpha / 100).toFixed(2));
-
-            if (curAlpha >= 100 || curAlpha <= 0) {
-              if (timer) clearTimeout(timer);
-              runNext(element);
-              if (curAlpha <= 0) util.setCss(element, 'display', 'none');
-              util.setCss(element, 'opacity', curAlpha >= 100 ? 1 : 0);
-            } else {
-              timer = setTimeout(handleFade, 10);
-            }
-          };
-
-          handleFade();
-        }
+          if (!isDown && currentHeight <= 0) util.setCss(element, 'display', 'none');
+        }, 10);
       }
 
-      ['slideUp', 'slideDown', 'fadeIn', 'fadeOut'].forEach(method => {
-        animation[method] = function (element) {
-          TimerManager.makeTimerManage(element);
-          element.TimerManage.add(function (element, time) {
-            return registerMethods(method, element, time);
-          }, arguments);
+      function inAndOut() {
+        const isIn = type.toLowerCase().indexOf('in') > -1;
+        let timer = null;
+        let unit = 1 * 100 / (time / 10);
+        let curAlpha = isIn ? 0 : 100;
+        util.setCss(element, 'display', isIn ? 'none' : 'block');
+        util.setCss(element, 'opacity', isIn ? 0 : 1);
+
+        let handleFade = function () {
+          curAlpha = isIn ? curAlpha + unit : curAlpha - unit;
+          if (element.style.display === 'none' && isIn) util.setCss(element, 'display', 'block');
+          util.setCss(element, 'opacity', (curAlpha / 100).toFixed(2));
+
+          if (curAlpha >= 100 || curAlpha <= 0) {
+            if (timer) clearTimeout(timer);
+            runNext(element);
+            if (curAlpha <= 0) util.setCss(element, 'display', 'none');
+            util.setCss(element, 'opacity', curAlpha >= 100 ? 1 : 0);
+          } else {
+            timer = setTimeout(handleFade, 10);
+          }
         };
-      });
-      return animation;
-    }();
 
-    var name = "ew-color-picker";
-    var version = "1.5.2";
-    var description = "一个基于原生js而封装的颜色选择器";
-    var main = "src/index.js";
-    var scripts = {
-    	build: "rollup -c",
-    	test: "jest",
-    	doc: "vuepress dev introduce/.",
-    	"doc-build": "vuepress build introduce/."
-    };
-    var repository = {
-    	type: "git",
-    	url: "git+https://github.com/eveningwater/ew-color-picker.git"
-    };
-    var keywords = [
-    	"ew-color-picker",
-    	"plugin"
-    ];
-    var author = "eveningwater";
-    var license = "ISC";
-    var bugs = {
-    	url: "https://github.com/eveningwater/ew-color-picker/issues"
-    };
-    var homepage = "https://github.com/eveningwater/ew-color-picker#readme";
-    var devDependencies = {
-    	"@babel/core": "^7.10.2",
-    	"@rollup/plugin-json": "^4.1.0",
-    	rollup: "^2.13.1",
-    	"rollup-plugin-babel": "^4.4.0",
-    	"rollup-plugin-postcss": "^3.1.2",
-    	"rollup-plugin-terser": "^6.1.0",
-    	vuepress: "^1.5.0"
-    };
-    var dependencies = {
-    	user: "0.0.0"
-    };
-    var json = {
-    	name: name,
-    	version: version,
-    	description: description,
-    	main: main,
-    	scripts: scripts,
-    	repository: repository,
-    	keywords: keywords,
-    	author: author,
-    	license: license,
-    	bugs: bugs,
-    	homepage: homepage,
-    	devDependencies: devDependencies,
-    	dependencies: dependencies
-    };
+        handleFade();
+      }
+    }
 
-    const consoleInfo = function () {
-      console.log(`%c ew-color-picker@${json.version}%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
-    };
+    ['slideUp', 'slideDown', 'fadeIn', 'fadeOut'].forEach(method => {
+      animation[method] = function (element) {
+        TimerManager.makeTimerManage(element);
+        element.TimerManage.add(function (element, time) {
+          return registerMethods(method, element, time);
+        }, arguments);
+      };
+    });
+
+    const consoleInfo = () => console.log(`%c ew-color-picker@1.5.4%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
     function styleInject(css, ref) {
       if ( ref === void 0 ) ref = {};
@@ -500,7 +405,7 @@
       }
     }
 
-    var css_248z = ".ew-color-picker {\r\n    min-width: 320px;\r\n    position: absolute;\r\n    box-sizing: content-box;\r\n    border: 1px solid #ebeeff;\r\n    box-shadow: 0 4px 15px rgba(0, 0, 0, .2);\r\n    border-radius: 5px;\r\n    z-index: 10;\r\n    padding: 7px;\r\n    background-color: #ffffff;\r\n    display: none;\r\n    text-align: left;\r\n}\r\n\r\n.ew-color-picker .ew-color-picker-content:after {\r\n    content: \"\";\r\n    display: table;\r\n    clear: both;\r\n}\r\n\r\n.ew-color-picker-content {\r\n    margin-bottom: 6px;\r\n}\r\n\r\n.ew-color-panel {\r\n    position: relative;\r\n    width: 280px;\r\n    height: 180px;\r\n    cursor: pointer;\r\n}\r\n\r\n.ew-color-white-panel,\r\n.ew-color-black-panel {\r\n    position: absolute;\r\n    left: 0;\r\n    right: 0;\r\n    top: 0;\r\n    bottom: 0;\r\n}\r\n\r\n.ew-color-white-panel {\r\n    background: linear-gradient(90deg, #fff, hsla(0, 0%, 100%, 0));\r\n}\r\n\r\n.ew-color-black-panel {\r\n    background: linear-gradient(0deg, #000, transparent);\r\n}\r\n\r\n.ew-color-slider {\r\n    width: 27px;\r\n    height: 180px;\r\n    position: relative;\r\n    float: right;\r\n    box-sizing: border-box;\r\n}\r\n.ew-color-slider-bar {\r\n    background: linear-gradient(180deg, #f00 0, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00);\r\n    margin-left: 3px;\r\n}\r\n.ew-alpha-slider-bar,.ew-color-slider-bar{\r\n    width: 12px;\r\n    height: 100%;\r\n    position: relative;\r\n    float: left;\r\n    cursor: pointer;\r\n}\r\n.ew-alpha-slider-wrapper{\r\n    background: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGUlEQVQYV2M4gwH+YwCGIasIUwhT25BVBADtzYNYrHvv4gAAAABJRU5ErkJggg==\");\r\n}\r\n.ew-alpha-slider-bg,.ew-alpha-slider-wrapper{\r\n    position: absolute;\r\n    right: 0;\r\n    top: 0;\r\n    left: 0;\r\n    bottom: 0;\r\n}\r\n.ew-color-slider-thumb,.ew-alpha-slider-thumb {\r\n    position: absolute;\r\n    cursor: pointer;\r\n    box-sizing: border-box;\r\n    left: 0;\r\n    top: 0;\r\n    width: 12px;\r\n    height: 4px;\r\n    border-radius: 1px;\r\n    background: #fff;\r\n    border: 1px solid #f0f0f0;\r\n    box-shadow: 0 0 2px rgba(0, 0, 0, .6);\r\n}\r\n\r\n.ew-color-cursor{\r\n    position: absolute;\r\n    left: 100%;\r\n    top: 0%;\r\n    cursor: default;\r\n    width: 4px;\r\n    height: 4px;\r\n    transform: translate(-2px, -2px);\r\n    border-radius: 50%;\r\n    box-shadow: 0 0 0 3px #fff,\r\n        inset 0 0 2px 2px rgba(0, 0, 0, .4),\r\n        0 0 2px 3px rgba(0, 0, 0, .5);\r\n    transform: translate(-6px,-6px)\r\n}\r\n\r\n.ew-color-drop-container {\r\n    margin-top: 6px;\r\n    position: relative;\r\n}\r\n\r\n.ew-color-input {\r\n    width: 160px;\r\n    height: 28px;\r\n    line-height: 28px;\r\n    border: 1px solid #dcdfe6;\r\n    background-color: #ffffff;\r\n    display: inline-block;\r\n    box-sizing: border-box;\r\n    padding: 0 5px;\r\n    transition: border-color .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);\r\n    border-radius: 5px;\r\n    outline: none;\r\n}\r\n\r\n.ew-color-input:focus {\r\n    border-color: #239fe6;\r\n}\r\n\r\n.ew-color-drop-btn {\r\n    display: inline-block;\r\n    padding: 5px 15px;\r\n    font-size: 12px;\r\n    border-radius: 3px;\r\n    cursor: pointer;\r\n    text-align: center;\r\n    transition: .1s;\r\n    font-weight: 500;\r\n    outline: none;\r\n    box-sizing: border-box;\r\n    margin: 0;\r\n    white-space: nowrap;\r\n    color: #606266;\r\n    border: 1px solid #dcdfe6;\r\n}\r\n\r\n.ew-color-drop-btn-group {\r\n    position: absolute;\r\n    right: 0;\r\n    top: 1px;\r\n}\r\n\r\n.ew-color-clear {\r\n    color: #4096ef;\r\n    border-color: transparent;\r\n    background-color: transparent;\r\n    padding-left: 0;\r\n    padding-right: 0;\r\n}\r\n\r\n.ew-color-clear:hover,\r\n.ew-color-clear:active {\r\n    color: #66b1ff;\r\n}\r\n\r\n.ew-color-sure {\r\n    background-color: #ffffff;\r\n    margin-left: 10px;\r\n}\r\n\r\n.ew-color-sure:hover,\r\n.ew-color-sure:active {\r\n    border-color: #4096ef;\r\n    color: #4096ef;\r\n}\r\n.ew-pre-define-color-container{\r\n    width: 280px;\r\n    font-size: 12px;\r\n    margin-top: 8px;\r\n}\r\n.ew-pre-define-color-container:after{\r\n    content: \"\";\r\n    visibility: hidden;\r\n    clear: both;\r\n    display: block;\r\n    height: 0;\r\n}\r\n.ew-pre-define-color{\r\n    float: left;\r\n    margin: 0 0 8px 8px;\r\n    width: 20px;\r\n    height: 20px;\r\n    border-radius: 4px;\r\n    cursor: pointer;\r\n    outline: none;\r\n    border: 1px solid #9b979b;\r\n}\r\n.ew-pre-define-color:nth-child(10n+1){\r\n    margin-left: 0;\r\n}\r\n.ew-pre-define-color:hover,\r\n.ew-pre-define-color:active{\r\n    opacity: .8;\r\n}\r\n.ew-pre-define-color-active{\r\n    box-shadow: 0 0 3px 2px #409eff;\r\n}\r\n.ew-color-picker-box{\r\n    border: 1px solid #dcdee2;\r\n    color: #535353;\r\n    outline: none;\r\n    display: inline-block;\r\n    background-color: #ffffff;\r\n    position: relative;\r\n    border-radius: 4px;\r\n    padding: 4px 7px;\r\n    line-height: 1.5;\r\n    cursor: pointer;\r\n    font-size: 14px;\r\n    transition: border-color  .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);\r\n}\r\n.ew-color-picker-box-disabled{\r\n    background-color: #ebe7e7;\r\n    cursor: not-allowed;\r\n}\r\n.ew-color-picker-arrow,.ew-color-picker-no{\r\n    width: 20px;\r\n    height: 20px;\r\n    position: absolute;\r\n    left: 0;\r\n    top: 0;\r\n    bottom: 0;\r\n    right: 0;\r\n    margin: auto;\r\n    z-index: 3;\r\n}\r\n.ew-color-picker-no{\r\n    width: 40px;\r\n    height: 40px;\r\n    font-size: 20px;\r\n    text-align: center;\r\n    line-height: 40px;\r\n    color: #5e535f;\r\n    border: 1px solid #e2dfe2;\r\n    border-radius: 2px;\r\n}\r\n.ew-color-picker-arrow {\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n}\r\n.ew-color-picker-arrow-left,.ew-color-picker-arrow-right{\r\n    width: 12px;\r\n    height: 1px;\r\n    background-color: #fff;\r\n    display: inline-block;\r\n    position: relative;\r\n}\r\n.ew-color-picker-arrow-left{\r\n    transform:rotate(45deg);\r\n}\r\n.ew-color-picker-arrow-right {\r\n    transform: rotate(-45deg);\r\n    right: 3px;\r\n}";
+    var css_248z = ".ew-alpha-slider-bg,.ew-alpha-slider-thumb,.ew-alpha-slider-wrapper,.ew-color-black-panel,.ew-color-cursor,.ew-color-drop-btn-group,.ew-color-picker,.ew-color-picker-arrow,.ew-color-picker-no,.ew-color-slider-thumb,.ew-color-white-panel{position:absolute}.ew-alpha-slider-bar,.ew-color-drop-container,.ew-color-panel,.ew-color-picker-arrow-left,.ew-color-picker-arrow-right,.ew-color-picker-box,.ew-color-slider,.ew-color-slider-bar{position:relative}.ew-alpha-slider-thumb,.ew-color-drop-btn,.ew-color-input,.ew-color-slider,.ew-color-slider-thumb{-webkit-box-sizing:border-box;box-sizing:border-box}.ew-alpha-slider-bar,.ew-alpha-slider-thumb,.ew-color-drop-btn,.ew-color-panel,.ew-color-picker-box,.ew-color-slider-bar,.ew-color-slider-thumb,.ew-pre-define-color{cursor:pointer}.ew-color-input,.ew-color-picker,.ew-color-picker-arrow-left,.ew-color-picker-arrow-right,.ew-color-picker-box,.ew-color-sure{background-color:#fff}.ew-color-drop-btn,.ew-color-input,.ew-color-picker-box,.ew-pre-define-color{outline:none}.ew-color-drop-btn,.ew-color-input,.ew-color-picker-arrow-left,.ew-color-picker-arrow-right,.ew-color-picker-box{display:inline-block}.ew-color-picker .ew-color-picker-content:after,.ew-pre-define-color-container:after{content:\"\";display:table;clear:both}.ew-alpha-slider-bar,.ew-color-slider-bar,.ew-pre-define-color{float:left}.ew-color-drop-btn,.ew-color-picker-no{text-align:center}.ew-color-picker{min-width:320px;-webkit-box-sizing:content-box;box-sizing:content-box;border:1px solid #ebeeff;-webkit-box-shadow:0 4px 15px rgba(0,0,0,.2);box-shadow:0 4px 15px rgba(0,0,0,.2);border-radius:5px;z-index:10;padding:7px;display:none;text-align:left}.ew-color-picker-content{margin-bottom:6px}.ew-color-panel{width:280px;height:180px}.ew-alpha-slider-bg,.ew-alpha-slider-wrapper,.ew-color-black-panel,.ew-color-picker-arrow,.ew-color-picker-no,.ew-color-white-panel{left:0;right:0;top:0;bottom:0}.ew-color-white-panel{background:-webkit-gradient(linear,left top,right top,from(#fff),to(hsla(0,0%,100%,0)));background:linear-gradient(90deg,#fff,hsla(0,0%,100%,0))}.ew-color-black-panel{background:-webkit-gradient(linear,left bottom,left top,from(#000),to(transparent));background:linear-gradient(0deg,#000,transparent)}.ew-color-slider{width:27px;height:180px;float:right}.ew-color-slider-bar{background:-webkit-gradient(linear,left top,left bottom,color-stop(0,red),color-stop(17%,#ff0),color-stop(33%,#0f0),color-stop(50%,#0ff),color-stop(67%,#00f),color-stop(83%,#f0f),to(red));background:linear-gradient(180deg,red,#ff0 17%,#0f0 33%,#0ff 50%,#00f 67%,#f0f 83%,red);margin-left:3px}.ew-alpha-slider-bar,.ew-color-slider-bar{width:12px;height:100%}.ew-alpha-slider-wrapper{background:url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGUlEQVQYV2M4gwH+YwCGIasIUwhT25BVBADtzYNYrHvv4gAAAABJRU5ErkJggg==\")}.ew-alpha-slider-thumb,.ew-color-slider-thumb{left:0;top:0;width:12px;height:4px;border-radius:1px;background:#fff;border:1px solid #f0f0f0;-webkit-box-shadow:0 0 2px rgba(0,0,0,.6);box-shadow:0 0 2px rgba(0,0,0,.6)}.ew-color-cursor{left:100%;top:0;cursor:default;width:4px;height:4px;-webkit-transform:translate(-2px,-2px);transform:translate(-2px,-2px);border-radius:50%;-webkit-box-shadow:0 0 0 3px #fff,inset 0 0 2px 2px rgba(0,0,0,.4),0 0 2px 3px rgba(0,0,0,.5);box-shadow:0 0 0 3px #fff,inset 0 0 2px 2px rgba(0,0,0,.4),0 0 2px 3px rgba(0,0,0,.5);-webkit-transform:translate(-6px,-6px);transform:translate(-6px,-6px)}.ew-color-drop-container{margin-top:6px}.ew-color-input{width:160px;height:28px;line-height:28px;border:1px solid #dcdfe6;padding:0 5px;-webkit-transition:border-color .2s cubic-bezier(.175,.885,.32,1.275);transition:border-color .2s cubic-bezier(.175,.885,.32,1.275);border-radius:5px}.ew-color-input:focus{border-color:#239fe6}.ew-color-drop-btn{padding:5px 15px;font-size:12px;border-radius:3px;-webkit-transition:.1s;transition:.1s;font-weight:500;margin:0;white-space:nowrap;color:#606266;border:1px solid #dcdfe6;letter-spacing:1px}.ew-color-drop-btn-group{right:0;top:1px}.ew-color-clear{color:#4096ef;border-color:transparent;background-color:transparent;padding-left:0;padding-right:0}.ew-color-clear:active,.ew-color-clear:hover{color:#66b1ff}.ew-color-sure{margin-left:10px}.ew-color-sure:active,.ew-color-sure:hover{border-color:#4096ef;color:#4096ef}.ew-pre-define-color-container{width:280px;font-size:12px;margin-top:8px}.ew-pre-define-color-container:after{visibility:hidden;height:0}.ew-pre-define-color{margin:0 0 8px 8px;width:20px;height:20px;border-radius:4px;border:1px solid #9b979b}.ew-pre-define-color:nth-child(10n+1){margin-left:0}.ew-pre-define-color:active,.ew-pre-define-color:hover{opacity:.8}.ew-pre-define-color-active{-webkit-box-shadow:0 0 3px 2px #409eff;box-shadow:0 0 3px 2px #409eff}.ew-color-picker-box{border:1px solid #dcdee2;color:#535353;border-radius:4px;padding:4px 7px;line-height:1.5;font-size:14px;-webkit-transition:border-color .2s cubic-bezier(.175,.885,.32,1.275);transition:border-color .2s cubic-bezier(.175,.885,.32,1.275)}.ew-color-picker-box-disabled{background-color:#ebe7e7;cursor:not-allowed}.ew-color-picker-arrow,.ew-color-picker-no{width:20px;height:20px;margin:auto;z-index:3}.ew-color-picker-no{width:40px;height:40px;font-size:20px;line-height:40px;color:#5e535f;border:1px solid #e2dfe2;border-radius:2px}.ew-color-picker-arrow{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center}.ew-color-picker-arrow-left,.ew-color-picker-arrow-right{width:12px;height:1px}.ew-color-picker-arrow-left{-webkit-transform:rotate(45deg);transform:rotate(45deg)}.ew-color-picker-arrow-right{-webkit-transform:rotate(-45deg);transform:rotate(-45deg);right:3px}";
     styleInject(css_248z);
 
     const NOT_DOM_ELEMENTS = ['html', 'head', 'body', 'meta', 'title', 'link', 'style', 'script'];
@@ -521,7 +426,10 @@
      */
 
     function ewColorPicker(config) {
-      if (typeof new.target === 'undefined') return util.ewError(ERROR_VARIABLE.CONSTRUCTOR_ERROR);
+      if (util.isUndefined(new.target)) return util.ewError(ERROR_VARIABLE.CONSTRUCTOR_ERROR); // 一个空函数
+
+      const emptyFun = function () {};
+
       const defaultConfig = {
         hue: true,
         alpha: false,
@@ -530,11 +438,12 @@
         disabled: false,
         defaultColor: "",
         openPickerAni: "height",
-        sure: function () {},
-        clear: function () {},
-        openPicker: function () {},
+        sure: emptyFun,
+        clear: emptyFun,
+        openPicker: emptyFun,
         isLog: true
-      };
+      }; // 盒子宽高
+
       this.boxSize = {
         b_width: null,
         b_height: null
@@ -556,7 +465,7 @@
       return this;
     }
 
-    const methods = [{
+    const methods$1 = [{
       name: "beforeInit",
       func: function (element, config, errorText) {
         if (config.isLog) consoleInfo(); // 不能是哪些标签元素
@@ -570,7 +479,7 @@
           return false;
         };
 
-        const ele = util.isDom(element) ? element : util.isString(element) ? util.getDom(element) : null;
+        const ele = util.isDom(element) ? element : util.isString(element) ? util.$(element) : null;
 
         if (ele) {
           if (ele.length) {
@@ -627,39 +536,42 @@
     }, {
       name: "render",
       func: function (element, config) {
-        let predefineColorHTML = ''; //设置预定义颜色
-
-        if (util.isDeepArray(config.predefineColor)) {
-          if (config.predefineColor.length) {
-            config.predefineColor.map(color => {
-              predefineColorHTML += `<div class="ew-pre-define-color" style="background:${color};" tabIndex=0></div>`;
-            });
-          }
-        } else {
-          return util.ewError(ERROR_VARIABLE.PREDEFINE_COLOR_ERROR);
-        } //打开颜色选择器的方框
-
+        let predefineColorHTML = '',
+            alphaBar = '',
+            hueBar = '',
+            predefineHTML = '',
+            boxDisabledClassName = '';
+        const p_c = config.predefineColor;
+        if (!util.isDeepArray(p_c)) return util.ewError(ERROR_VARIABLE.PREDEFINE_COLOR_ERROR);
+        if (p_c.length) p_c.map(color => predefineColorHTML += `<div class="ew-pre-define-color" style="background:${color};"></div>`); //打开颜色选择器的方框
 
         const colorBox = config.defaultColor ? `<div class="ew-color-picker-arrow" style="width:${this.boxSize.b_width};height:${this.boxSize.b_height};">
                 <div class="ew-color-picker-arrow-left"></div>
                 <div class="ew-color-picker-arrow-right"></div>
             </div>` : `<div class="ew-color-picker-no" style="width:${this.boxSize.b_width};height:${this.boxSize.b_height};line-height:${this.boxSize.b_height};">&times;</div>`; //透明度
 
-        const alphaBar = config.alpha ? `<div class="ew-alpha-slider-bar">
-            <div class="ew-alpha-slider-wrapper"></div>
-            <div class="ew-alpha-slider-bg"></div>
-            <div class="ew-alpha-slider-thumb"></div>
-            </div>` : ''; // hue
+        if (config.alpha) {
+          alphaBar = `<div class="ew-alpha-slider-bar">
+                    <div class="ew-alpha-slider-wrapper"></div>
+                    <div class="ew-alpha-slider-bg"></div>
+                    <div class="ew-alpha-slider-thumb"></div>
+                </div>`;
+        } // hue
 
-        const hueBar = config.hue ? `<div class="ew-color-slider-bar"><div class="ew-color-slider-thumb"></div></div>` : ''; //自定义颜色
 
-        const predefineHTML = predefineColorHTML ? `<div class="ew-pre-define-color-container">${predefineColorHTML}</div>` : ''; // 禁用类名
+        if (config.hue) {
+          hueBar = `<div class="ew-color-slider-bar"><div class="ew-color-slider-thumb"></div></div>`;
+        }
 
-        const boxDisabledClassName = config.disabled ? 'ew-color-picker-box-disabled' : ''; // 盒子样式
+        if (predefineColorHTML) {
+          predefineHTML = `<div class="ew-pre-define-color-container">${predefineColorHTML}</div>`;
+        }
+
+        if (config.disabled) boxDisabledClassName = 'ew-color-picker-box-disabled'; // 盒子样式
 
         const boxStyle = `width:${this.boxSize.b_width};height:${this.boxSize.b_height};${config.defaultColor ? 'background:' + config.defaultColor : ''}`; //颜色选择器
 
-        let html = `
+        const html = `
                 <div class="ew-color-picker-box ${boxDisabledClassName}" tabIndex="0" style="${boxStyle}">${colorBox}</div>
                 <div class="ew-color-picker">
                     <div class="ew-color-picker-content">
@@ -698,7 +610,7 @@
         this.hueThumb = getELByClass(ele, 'ew-color-slider-thumb');
         this.picker = getELByClass(ele, 'ew-color-picker');
         this.slider = getELByClass(ele, 'ew-color-slider');
-        this.hsbColor = this.config.defaultColor ? colorRgbaToHsb(colorToRgb(this.config.defaultColor)) : {
+        this.hsbColor = this.config.defaultColor ? colorRgbaToHsb(colorToRgba(this.config.defaultColor)) : {
           h: 0,
           s: 100,
           b: 100,
@@ -707,9 +619,9 @@
         const panelWidth = this.panelWidth = parseInt(util.getCss(this.pickerPanel, 'width'));
         const panelHeight = this.panelHeight = parseInt(util.getCss(this.pickerPanel, 'height')); //计算偏差
 
-        let elem = ele;
-        let top = elem.offsetTop;
-        let left = elem.offsetLeft;
+        let elem = ele,
+            top = elem.offsetTop,
+            left = elem.offsetLeft;
 
         while (elem.offsetParent) {
           top += elem.offsetParent.offsetTop;
@@ -723,35 +635,27 @@
         this.preDefineItem = getELByClass(ele, 'ew-pre-define-color', true);
 
         if (this.preDefineItem.length) {
-          //点击预定义颜色
-          util.ewObjToArray(this.preDefineItem).map(item => {
-            item.addEventListener('click', function (event) {
-              util.ewObjToArray(this.parentElement.children).forEach(child => {
-                util.removeClass(child, 'ew-pre-define-color-active');
-              });
+          const items = util.ewObjToArray(this.preDefineItem); //点击预定义颜色
+
+          items.map(item => {
+            item.addEventListener('click', event => {
+              items.forEach(child => util.removeClass(child, 'ew-pre-define-color-active'));
               util.addClass(event.target, 'ew-pre-define-color-active');
-              let pColor = colorRgbaToHsb(util.getCss(event.target, 'background-color'));
-              scope.hsbColor = pColor;
+              scope.hsbColor = colorRgbaToHsb(util.getCss(event.target, 'background-color'));
               setDefaultValue(scope, panelWidth, panelHeight);
               changeAlphaBar(scope);
               changeElementColor(scope); // fix the value bug
 
               const setColor = colorRgbaToHex(util.getCss(event.target, 'background-color'));
-              scope.pickerInput.value = scope.config.alpha ? colorToRgb(setColor) : setColor;
+              scope.pickerInput.value = scope.config.alpha ? colorToRgba(setColor) : setColor;
             }, false);
-            item.addEventListener('blur', function (event) {
-              util.removeClass(event.target, 'ew-pre-define-color-active');
-            }, false);
+            item.addEventListener('blur', event => util.removeClass(event.target, 'ew-pre-define-color-active'), false);
           });
         } //颜色选择器打开的动画初始设置
 
 
-        if (config.openPickerAni.indexOf('height') > -1) {
-          this.picker.style.display = 'none';
-        } else {
-          this.picker.style.opacity = 0;
-        }
-
+        const isHeiAni = config.openPickerAni.indexOf('height') > -1;
+        this.picker.style[isHeiAni ? 'display' : 'opacity'] = isHeiAni ? 'none' : 0;
         const sliderWidth = !config.alpha && !config.hue ? 0 : !config.alpha || !config.hue ? 14 : 27;
         const pickerWidth = !config.alpha && !config.hue ? 280 : !config.alpha || !config.hue ? 300 : 320;
         this.slider.style.width = sliderWidth + 'px';
@@ -762,40 +666,22 @@
           this.alphaBarBg = getELByClass(ele, 'ew-alpha-slider-bg');
           this.alphaBarThumb = getELByClass(ele, 'ew-alpha-slider-thumb');
           changeAlphaBar(this);
-          this.bindEvent(this.alphaBarThumb, function (scope, el, x, y) {
-            changeAlpha(scope, y);
-          }, false);
-          this.alphaBar.addEventListener('click', function (event) {
-            changeAlpha(scope, event.y);
-          }, false);
+          this.bindEvent(this.alphaBarThumb, (scope, el, x, y) => changeAlpha(scope, y), false);
+          this.alphaBar.addEventListener('click', event => changeAlpha(scope, event.y), false);
         } //输入框输入事件
 
 
-        this.pickerInput.addEventListener('blur', function (event) {
-          onInputColor(scope, event.target.value);
-        }, false); //清空按钮事件
+        this.pickerInput.addEventListener('blur', event => onInputColor(scope, event.target.value), false); //清空按钮事件
 
-        this.pickerClear.addEventListener('click', function () {
-          onClearColor(ele, scope);
-        }, false); //确认按钮事件
+        this.pickerClear.addEventListener('click', () => onClearColor(ele, scope), false); //确认按钮事件
 
-        this.pickerSure.addEventListener('click', function () {
-          onSureColor(scope);
-        }); //是否禁止打开选择器面板，未禁止则点击可打开
+        this.pickerSure.addEventListener('click', () => onSureColor(scope)); //是否禁止打开选择器面板，未禁止则点击可打开
 
-        if (!config.disabled) {
-          this.box.addEventListener('click', function () {
-            openPicker(ele, scope);
-            setPickerPosition(scope, left, top);
-          }, false);
-        } //颜色面板点击事件
+        if (!config.disabled) this.box.addEventListener('click', () => openPicker(ele, scope), false); //颜色面板点击事件
 
+        this.pickerPanel.addEventListener('click', event => onClickPanel(scope, event), false); //颜色面板拖拽元素拖拽事件
 
-        this.pickerPanel.addEventListener('click', function (event) {
-          onClickPanel(scope, event);
-        }, false); //颜色面板拖拽元素拖拽事件
-
-        this.bindEvent(this.pickerCursor, function (scope, el, x, y) {
+        this.bindEvent(this.pickerCursor, (scope, el, x, y) => {
           const left = Math.max(0, Math.min(x - scope.panelLeft, panelWidth));
           const top = Math.max(0, Math.min(y - scope.panelTop, panelHeight));
           changeCursorColor(scope, left + 4, top + 4, panelWidth, panelHeight);
@@ -803,13 +689,9 @@
 
         if (config.hue) {
           //hue的点击事件
-          this.hueBar.addEventListener('click', function (event) {
-            changeHue(scope, event.y);
-          }, false); //hue 轨道的拖拽事件
+          this.hueBar.addEventListener('click', event => changeHue(scope, event.y), false); //hue 轨道的拖拽事件
 
-          this.bindEvent(this.hueThumb, function (scope, el, x, y) {
-            changeHue(scope, y);
-          }, false);
+          this.bindEvent(this.hueThumb, (scope, el, x, y) => changeHue(scope, y), false);
         }
       }
     }, {
@@ -824,19 +706,19 @@
           wantsUntrusted: false
         };
 
-        const callResult = function (event) {
+        const callResult = event => {
           context.moveX = util.eventType[0].indexOf('touch') > -1 ? event.changedTouches[0].clientX : event.clientX;
           context.moveY = util.eventType[0].indexOf('touch') > -1 ? event.changedTouches[0].clientY : event.clientY;
           bool ? callback(context, context.moveX, context.moveY) : callback(context, el, context.moveX, context.moveY);
         };
 
-        el.addEventListener(util.eventType[0], function () {
-          const moveFn = function (e) {
+        el.addEventListener(util.eventType[0], () => {
+          const moveFn = e => {
             e.preventDefault();
             callResult(e);
           };
 
-          const upFn = function () {
+          const upFn = () => {
             document.removeEventListener(util.eventType[1], moveFn, event_param);
             document.removeEventListener(util.eventType[2], upFn, event_param);
           };
@@ -846,7 +728,7 @@
         }, event_param);
       }
     }];
-    methods.forEach(method => util.addMethod(ewColorPicker, method.name, method.func));
+    methods$1.forEach(method => util.addMethod(ewColorPicker, method.name, method.func));
     /**
      * 获取元素的子元素
      * @param {*} el 
@@ -856,19 +738,6 @@
 
     function getELByClass(el, prop, isIndex) {
       return !isIndex ? el.querySelector ? el.querySelector('.' + prop) : el.getElementsByClassName(prop)[0] : el.querySelectorAll ? el.querySelectorAll('.' + prop) : el.getElementsByClassName(prop);
-    }
-    /**
-     * 设置picker的位置
-     * @param {*} scope 
-     * @param {*} left 
-     * @param {*} top 
-     */
-
-
-    function setPickerPosition(scope, left, top) {
-      let pickerTop = top + parseInt(scope.boxSize.b_height) + 20;
-      util.setCss(scope.picker, 'left', left + 'px');
-      util.setCss(scope.picker, 'top', pickerTop + 'px');
     }
     /**
      * 打开面板
@@ -894,13 +763,9 @@
     function openAndClose(scope) {
       const expression = util.isString(scope.config.openPickerAni) && scope.config.openPickerAni.indexOf('height') > -1;
 
-      let open = function () {
-        return expression ? ani.slideDown(scope.picker, 400) : ani.fadeIn(scope.picker, 400);
-      };
+      const open = () => animation[expression ? 'slideDown' : 'fadeIn'](scope.picker, 200);
 
-      let close = function () {
-        return expression ? ani.slideUp(scope.picker, 400) : ani.fadeOut(scope.picker, 400);
-      };
+      const close = () => animation[expression ? 'slideUp' : 'fadeOut'](scope.picker, 200);
 
       return scope.config.pickerFlag ? open() : close();
     }
@@ -912,7 +777,7 @@
 
 
     function onInputColor(scope, value) {
-      const color = colorRgbaToHsb(colorToRgb(value));
+      const color = colorRgbaToHsb(colorToRgba(value));
       if (!color.h && !color.s && !color.h && !color.a) return;
       scope.hsbColor = color;
       setDefaultValue(scope, scope.panelWidth, scope.panelHeight);
@@ -1036,26 +901,32 @@
 
     function setDefaultValue(context, panelWidth, panelHeight) {
       context.pickerInput.value = context.config.alpha ? colorHsbToRgba(context.hsbColor) : colorRgbaToHex(colorHsbToRgba(context.hsbColor));
-      if (context.box) context.box.style.background = context.pickerInput.value;
       let sliderBarHeight = 0;
+      let l = parseInt(context.hsbColor.s * panelWidth / 100),
+          t = parseInt(panelHeight - context.hsbColor.b * panelHeight / 100);
+      [{
+        el: context.pickerCursor,
+        prop: 'left',
+        value: l + 4 + 'px'
+      }, {
+        el: context.pickerCursor,
+        prop: 'top',
+        value: t + 4 + 'px'
+      }, {
+        el: context.pickerPanel,
+        prop: 'background',
+        value: colorRgbaToHex(colorHsbToRgba(cloneColor(context.hsbColor)))
+      }].forEach(item => util.setCss(item.el, item.prop, item.value));
+      if (context.box) context.box.style.background = context.pickerInput.value;
 
       if (context.config.hue) {
         sliderBarHeight = context.hueBar.offsetHeight || 180;
-        let ty = parseInt(context.hsbColor.h * sliderBarHeight / 360);
-        util.setCss(context.hueThumb, 'top', ty + 'px');
+        util.setCss(context.hueThumb, 'top', parseInt(context.hsbColor.h * sliderBarHeight / 360) + 'px');
       }
-
-      let l = parseInt(context.hsbColor.s * panelWidth / 100),
-          t = parseInt(panelHeight - context.hsbColor.b * panelHeight / 100);
-      util.setCss(context.pickerCursor, 'left', l + 4 + 'px');
-      util.setCss(context.pickerCursor, 'top', t + 4 + 'px'); //颜色面板颜色
-
-      util.setCss(context.pickerPanel, 'background', colorRgbaToHex(colorHsbToRgba(cloneColor(context.hsbColor)))); //改变透明度
 
       if (context.config.alpha) {
         if (!context.config.hue) sliderBarHeight = context.alphaBar.offsetHeight || 180;
-        const al_t = sliderBarHeight - context.hsbColor.a * sliderBarHeight;
-        util.setCss(context.alphaBarThumb, 'top', al_t + 'px');
+        util.setCss(context.alphaBarThumb, 'top', sliderBarHeight - context.hsbColor.a * sliderBarHeight + 'px');
       }
     } //改变色调的方法
 
@@ -1063,7 +934,7 @@
     function changeHue(context, y) {
       const sliderBarHeight = context.hueBar.offsetHeight,
             sliderBarRect = context.hueBar.getBoundingClientRect();
-      let sliderThumbY = Math.max(0, Math.min(y - sliderBarRect.y, sliderBarHeight));
+      const sliderThumbY = Math.max(0, Math.min(y - sliderBarRect.y, sliderBarHeight));
       util.setCss(context.hueThumb, 'top', sliderThumbY + 'px');
       context.hsbColor.h = cloneColor(context.hsbColor).h = parseInt(360 * sliderThumbY / sliderBarHeight);
       util.setCss(context.pickerPanel, 'background', colorRgbaToHex(colorHsbToRgba(cloneColor(context.hsbColor))));
@@ -1075,7 +946,7 @@
     function changeAlpha(context, y) {
       const alphaBarHeight = context.alphaBar.offsetHeight,
             alphaBarRect = context.alphaBar.getBoundingClientRect();
-      let alphaThumbY = Math.max(0, Math.min(y - alphaBarRect.y, alphaBarHeight));
+      const alphaThumbY = Math.max(0, Math.min(y - alphaBarRect.y, alphaBarHeight));
       util.setCss(context.alphaBarThumb, 'top', alphaThumbY + 'px');
       const alpha = (alphaBarHeight - alphaThumbY <= 0 ? 0 : alphaBarHeight - alphaThumbY) / alphaBarHeight;
       context.hsbColor.a = alpha >= 1 ? 1 : alpha.toFixed(2);

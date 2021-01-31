@@ -1,7 +1,8 @@
 const postcss = require('rollup-plugin-postcss');
 const babel = require('rollup-plugin-babel');
 import { terser } from 'rollup-plugin-terser';
-import json from '@rollup/plugin-json';
+import cssNext from 'postcss-cssnext';
+import cssNano from 'cssnano';
 const options = {
     // 产出文件使用 umd 规范（即兼容 amd cjs 和 iife）
     format: 'umd',
@@ -28,9 +29,12 @@ export default [
                 exclude: 'node_modules/**' // only transpile our source code
             }),
             postcss({
-                extensions: ['.css']
-            }),
-            json()
+                extensions: ['.css'],
+                plugins: [
+                    cssNext({ warnForDuplicates: false, }),
+                    cssNano()
+                ]
+            })
         ]
     }
 ]

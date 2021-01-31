@@ -63,7 +63,7 @@
 
 CDN:
 ```shell
-  https://www.unpkg.com/ew-color-picker@1.5.3/dist/ew-color-picker.min.js
+  https://www.unpkg.com/ew-color-picker@1.5.4/dist/ew-color-picker.min.js
 ```
 
 ## 在组件中使用
@@ -134,7 +134,7 @@ CDN:
                 state.backgroundColor = color;
             }
             Vue.onMounted(() => {
-                this.colorPicker = new ewColorPicker({
+                state.colorPicker = new ewColorPicker({
                     el: "#color-picker",
                     size: "mini",
                     isLog: false,

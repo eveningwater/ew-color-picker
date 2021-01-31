@@ -125,11 +125,11 @@ export function colorRgbaToHsb(rgba){
     }
 }
 /* 
-* 任意色值（甚至是CSS颜色关键字）转换为RGB颜色的方法
+* 任意色值（甚至是CSS颜色关键字）转换为RGBA颜色的方法
 * 此方法IE9+浏览器支持，基于DOM特性实现 
 * @param {*} color 
 */
-export function colorToRgb(color) {
+export function colorToRgba(color) {
     var div = document.createElement('div');
     div.style.backgroundColor = color;
     document.body.appendChild(div);
