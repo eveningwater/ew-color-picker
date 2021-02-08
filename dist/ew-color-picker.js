@@ -1,7 +1,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global['ew-color-picker'] = factory());
+    (global = global || self, global['ew-color-picker'] = factory());
 }(this, (function () { 'use strict';
 
     let addMethod = (instance, method, func) => {
@@ -26,13 +26,13 @@
       if (Object.assign) {
         return Object.assign(target, args);
       } else {
-        var _ = Object(target);
+        const _ = Object(target);
 
-        for (var j = 1, len = arguments.length; j < len; j += 1) {
-          var source = arguments[j];
+        for (let j = 1, len = arguments.length; j < len; j += 1) {
+          const source = arguments[j];
 
           if (source) {
-            for (var key in source) {
+            for (let key in source) {
               if (Object.prototype.hasOwnProperty.call(source, key)) {
                 _[key] = source[key];
               }
@@ -60,7 +60,7 @@
       if (!util.isShallowObject(obj)) return;
       let cloneObj = util.isDeepArray(obj) ? [] : {};
 
-      for (var k in obj) {
+      for (let k in obj) {
         cloneObj[k] = util.isShallowObject(obj[k]) ? f(obj[k]) : obj[k];
       }
 
@@ -68,11 +68,11 @@
     };
 
     util.getCss = (el, prop) => {
-      var getStyle = el.currentStyle ? function (prop) {
-        var propName = el.currentStyle[prop];
+      const getStyle = el.currentStyle ? function (prop) {
+        const propName = el.currentStyle[prop];
 
         if (propName.indexOf('height') > -1 && propName.search(/px/i) > -1) {
-          var rect = el.getBoundingClientRect;
+          const rect = el.getBoundingClientRect;
           return rect.bottom - rect.top - parseInt(getStyle('padding-bottom')) - parseInt(getStyle('padding-top')) + 'px';
         }
       } : function (prop) {
@@ -97,7 +97,7 @@
      */
 
     function colorRgbaToHex(rgba) {
-      var hexObject = {
+      const hexObject = {
         10: 'A',
         11: 'B',
         12: 'C',
@@ -105,17 +105,17 @@
         14: 'E',
         15: 'F'
       },
-          hexColor = function (value) {
+            hexColor = function (value) {
         value = Math.min(Math.round(value), 255);
-        var high = Math.floor(value / 16),
-            low = value % 16;
+        const high = Math.floor(value / 16),
+              low = value % 16;
         return '' + (hexObject[high] || high) + (hexObject[low] || low);
       };
 
-      var value = '#';
+      const value = '#';
 
       if (/rgba?/.test(rgba)) {
-        var values = rgba.replace(/rgba?\(/, '').replace(/\)/, '').replace(/[\s+]/g, '').split(','),
+        let values = rgba.replace(/rgba?\(/, '').replace(/\)/, '').replace(/[\s+]/g, '').split(','),
             color = '';
         values.map(function (value, index) {
           if (index <= 2) {
@@ -132,19 +132,19 @@
      */
 
     function colorHsbToRgba(hsb, alpha) {
-      var r,
+      let r,
           g,
           b,
           a = hsb.a; //rgba(r,g,b,a)
 
-      var h = Math.round(hsb.h),
+      let h = Math.round(hsb.h),
           s = Math.round(hsb.s * 255 / 100),
           v = Math.round(hsb.b * 255 / 100); //hsv(h,s,v)
 
       if (s === 0) {
         r = g = b = v;
       } else {
-        var t = v,
+        let t = v,
             p = (255 - s) * v / 255,
             q = (t - p) * (h % 60) / 60;
 
@@ -241,12 +241,18 @@
     */
 
     function colorToRgba(color) {
-      var div = document.createElement('div');
+      const div = document.createElement('div');
       div.style.backgroundColor = color;
       document.body.appendChild(div);
-      var c = window.getComputedStyle(div).backgroundColor;
+      const c = window.getComputedStyle(div).backgroundColor;
       document.body.removeChild(div);
       return c.slice(0, 2) + 'ba' + c.slice(3, c.length - 1) + ', 1)';
+    }
+    function isValidColor(color) {
+      const hexColorRegx = /^#([0-9a-f]{6}|[0-9a-f]{3})$/i;
+      const RGBColorRegx = /^rgb\(([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\)$/i;
+      const RGBAColorRegx = /^rgba\(([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,(1|1.0|0.[0-9])\)$/i;
+      return RGBColorRegx.test(color) || hexColorRegx.test(color) || RGBAColorRegx.test(color);
     }
 
     const animation = {};
@@ -376,7 +382,7 @@
       };
     });
 
-    const consoleInfo = () => console.log(`%c ew-color-picker@1.5.4%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+    const consoleInfo = () => console.log(`%c ew-color-picker@1.5.5%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
     function styleInject(css, ref) {
       if ( ref === void 0 ) ref = {};
@@ -543,7 +549,9 @@
             boxDisabledClassName = '';
         const p_c = config.predefineColor;
         if (!util.isDeepArray(p_c)) return util.ewError(ERROR_VARIABLE.PREDEFINE_COLOR_ERROR);
-        if (p_c.length) p_c.map(color => predefineColorHTML += `<div class="ew-pre-define-color" style="background:${color};"></div>`); //打开颜色选择器的方框
+        if (p_c.length) p_c.map(color => {
+          if (isValidColor(color)) predefineColorHTML += `<div class="ew-pre-define-color" style="background:${color};"></div>`;
+        }); //打开颜色选择器的方框
 
         const colorBox = config.defaultColor ? `<div class="ew-color-picker-arrow" style="width:${this.boxSize.b_width};height:${this.boxSize.b_height};">
                 <div class="ew-color-picker-arrow-left"></div>
@@ -569,7 +577,7 @@
 
         if (config.disabled) boxDisabledClassName = 'ew-color-picker-box-disabled'; // 盒子样式
 
-        const boxStyle = `width:${this.boxSize.b_width};height:${this.boxSize.b_height};${config.defaultColor ? 'background:' + config.defaultColor : ''}`; //颜色选择器
+        const boxStyle = `width:${this.boxSize.b_width};height:${this.boxSize.b_height};${config.defaultColor && !config.disabled ? 'background:' + config.defaultColor : ''}`; //颜色选择器
 
         const html = `
                 <div class="ew-color-picker-box ${boxDisabledClassName}" tabIndex="0" style="${boxStyle}">${colorBox}</div>
