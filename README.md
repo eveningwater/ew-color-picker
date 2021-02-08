@@ -50,7 +50,7 @@
           console.log(defaultColor)
       },//点击清空按钮的回调
       openPicker:function(el,scope){
-         if(scope.pickerFlag){
+         if(scope.config.pickerFlag){
              console.log('打开颜色选择器')
          }else{
              console.log('关闭颜色选择器')
