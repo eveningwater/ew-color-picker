@@ -68,9 +68,9 @@ CDN:
   //压缩版
   https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
   //或者引入指定版本（完整版）
-  https://www.unpkg.com/ew-color-picker@1.5.4/dist/ew-color-picker.js
+  https://www.unpkg.com/ew-color-picker@1.5.5/dist/ew-color-picker.js
   //压缩版
-  https://www.unpkg.com/ew-color-picker@1.5.4/dist/ew-color-picker.min.js
+  https://www.unpkg.com/ew-color-picker@1.5.5/dist/ew-color-picker.min.js
 ```
 
 ## 在组件中使用
