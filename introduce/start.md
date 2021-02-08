@@ -63,6 +63,13 @@
 
 CDN:
 ```shell
+  //完整版,这样始终引入的是最新版本的颜色选择器插件
+  https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.js
+  //压缩版
+  https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
+  //或者引入指定版本（完整版）
+  https://www.unpkg.com/ew-color-picker@1.5.4/dist/ew-color-picker.js
+  //压缩版
   https://www.unpkg.com/ew-color-picker@1.5.4/dist/ew-color-picker.min.js
 ```
 
@@ -74,6 +81,81 @@ CDN:
    var pluginName = new ewColorPicker(option);//option为配置对象，详情见前述
 ```
 > 在线示例
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>color demo</title>
+</head>
+
+<body>
+    <div class="demo1"></div>
+    <div class="demo1"></div>
+    <div class="demo2"></div>
+    <div class="demo2"></div>
+    <div class="demo3"></div>
+    <script src="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js"></script>
+    <script>
+        var color1 = new ewColorPicker({
+            el:".demo1",
+            isLog:false,
+            alpha:true,
+            predefineColor:['#223456','rgba(122,35,77,.5)','rgba(255,255,255,1)']
+        });
+        var color2 = new ewColorPicker({
+            el:'.demo2',
+            alpha:false,
+            size:{
+                width:100,
+                height:50
+            },
+            predefineColor:['#223456','rgba(122,35,77,.5)','rgba(255,255,255,1)',],
+            disabled:false,
+            defaultColor:'#eeff22',
+            openPickerAni:'opacity',
+            sure:function(color){
+                console.log(color);
+            },
+            clear:function(){
+                console.log(this)
+            },
+            openPicker:function(){
+                // console.log(this);
+            },
+            isLog:true
+        });
+        var color3 = new ewColorPicker({
+            el:'.demo3',
+            alpha:true,
+            size:{
+                width:100,
+                height:50
+            },
+            predefineColor:['#223456','rgba(122,35,77,.5)','rgba(255,255,255,1)',],
+            disabled:true,
+            defaultColor:'',
+            openPickerAni:'opacity',
+            sure:function(color){
+                console.log(color);
+            },
+            clear:function(){
+                console.log(this)
+            },
+            openPicker:function(el,scope){
+                console.log(el,scope);
+            },
+            isLog:false
+        })
+    </script>
+</body>
+
+</html>
+```
 
 [在线示例](https://eveningwater.github.io/ew-color-picker/example/color.html)
 
@@ -247,3 +329,7 @@ CDN:
 [在react中使用的在线示例](https://eveningwater.github.io/ew-color-picker/example/react-color-demo.html)
 
 > 说明:在react的工程化如create-react-app以及vue的工程化如vue-cli使用方式同引入式开发差不多的。
+
+还可以封装成一个颜色组件，如在`vue3.0`脚手架的示例[demo](https://github.com/eveningwater/website/blob/master/src/components/ColorPicker.vue)。
+
+

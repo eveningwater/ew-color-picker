@@ -28,15 +28,15 @@ export function colorHexToRgba(hex, alpha) {
  * @param {*} rgba 
  */
 export function colorRgbaToHex(rgba) {
-    var hexObject = { 10: 'A', 11: 'B', 12: 'C', 13: 'D', 14: 'E', 15: 'F' },
+    const hexObject = { 10: 'A', 11: 'B', 12: 'C', 13: 'D', 14: 'E', 15: 'F' },
         hexColor = function (value) {
             value = Math.min(Math.round(value), 255);
-            var high = Math.floor(value / 16), low = value % 16;
+            const high = Math.floor(value / 16), low = value % 16;
             return '' + (hexObject[high] || high) + (hexObject[low] || low);
         }
-    var value = '#';
+    const value = '#';
     if (/rgba?/.test(rgba)) {
-        var values = rgba.replace(/rgba?\(/, '').replace(/\)/, '').replace(/[\s+]/g, '').split(','), color = '';
+        let values = rgba.replace(/rgba?\(/, '').replace(/\)/, '').replace(/[\s+]/g, '').split(','), color = '';
         values.map(function (value, index) {
             if (index <= 2) {
                 color += hexColor(value);
@@ -51,12 +51,12 @@ export function colorRgbaToHex(rgba) {
  * @param {*} alpha 
  */
 export function colorHsbToRgba(hsb,alpha) {
-    var r, g, b, a = hsb.a;//rgba(r,g,b,a)
-    var h = Math.round(hsb.h), s = Math.round(hsb.s * 255 / 100), v = Math.round(hsb.b * 255 / 100);//hsv(h,s,v)
+    let r, g, b, a = hsb.a;//rgba(r,g,b,a)
+    let h = Math.round(hsb.h), s = Math.round(hsb.s * 255 / 100), v = Math.round(hsb.b * 255 / 100);//hsv(h,s,v)
     if (s === 0) {
         r = g = b = v;
     } else {
-        var t = v, p = (255 - s) * v / 255, q = (t - p) * (h % 60) / 60;
+        let t = v, p = (255 - s) * v / 255, q = (t - p) * (h % 60) / 60;
         if (h === 360) {
             r = t; g = b = 0;
         } else if (h < 60) {
@@ -130,10 +130,16 @@ export function colorRgbaToHsb(rgba){
 * @param {*} color 
 */
 export function colorToRgba(color) {
-    var div = document.createElement('div');
+    const div = document.createElement('div');
     div.style.backgroundColor = color;
     document.body.appendChild(div);
-    var c = window.getComputedStyle(div).backgroundColor;    
+    const c = window.getComputedStyle(div).backgroundColor;    
     document.body.removeChild(div);
     return c.slice(0,2) + 'ba' + c.slice(3,c.length - 1) + ', 1)';
 };
+export function isValidColor(color) {
+    const hexColorRegx = /^#([0-9a-f]{6}|[0-9a-f]{3})$/i
+    const RGBColorRegx = /^rgb\(([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\)$/i
+    const RGBAColorRegx = /^rgba\(([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,(1|1.0|0.[0-9])\)$/i
+    return RGBColorRegx.test(color) || hexColorRegx.test(color) || RGBAColorRegx.test(color);
+}

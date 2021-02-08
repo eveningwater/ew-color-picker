@@ -15,11 +15,11 @@ util.ewAssign = (target,args) => {
     if (Object.assign) {
         return Object.assign(target, args);
     } else {
-        var _ = Object(target);
-        for (var j = 1,len = arguments.length; j < len; j += 1) {
-            var source = arguments[j];
+        const _ = Object(target);
+        for (let j = 1,len = arguments.length; j < len; j += 1) {
+            const source = arguments[j];
             if (source) {
-                for (var key in source) {
+                for (let key in source) {
                     if (Object.prototype.hasOwnProperty.call(source, key)) {
                         _[key] = source[key];
                     }
@@ -38,16 +38,16 @@ util.deepCloneObjByJSON = obj => JSON.parse(JSON.stringify(obj));
 util.deepCloneObjByRecursion = (function f(obj) {
     if (!util.isShallowObject(obj)) return;
     let cloneObj = util.isDeepArray(obj) ? [] : {};
-    for (var k in obj) {
+    for (let k in obj) {
         cloneObj[k] = util.isShallowObject(obj[k]) ? f(obj[k]) : obj[k];
     }
     return cloneObj;
 });
 util.getCss =  (el, prop) => {
-    var getStyle = el.currentStyle ? function (prop) {
-        var propName = el.currentStyle[prop];
+    const getStyle = el.currentStyle ? function (prop) {
+        const propName = el.currentStyle[prop];
         if (propName.indexOf('height') > -1 && propName.search(/px/i) > -1) {
-            var rect = el.getBoundingClientRect;
+            const rect = el.getBoundingClientRect;
             return rect.bottom - rect.top - parseInt(getStyle('padding-bottom')) - parseInt(getStyle('padding-top')) + 'px';
         }
     } : function (prop) {

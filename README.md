@@ -46,10 +46,10 @@
       sure:function(color){
           console.log(color);
       },//点击确定按钮的回调
-      clear:function(){
-          console.log(this)
+      clear:function(defaultColor){
+          console.log(defaultColor)
       },//点击清空按钮的回调
-      openPicker:function(scope){
+      openPicker:function(el,scope){
          if(scope.pickerFlag){
              console.log('打开颜色选择器')
          }else{
