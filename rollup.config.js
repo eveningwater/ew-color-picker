@@ -7,7 +7,7 @@ const options = {
     // 产出文件使用 umd 规范（即兼容 amd cjs 和 iife）
     format: 'umd',
     // iife 规范下的全局变量名称
-    name: 'ew-color-picker',
+    name: 'ewColorPicker',
     // 产出的未压缩的文件名
     file: './dist/ew-color-picker.js'
 };

@@ -46,11 +46,11 @@
       sure:function(color){
           console.log(color);
       },//点击确定按钮的回调
-      clear:function(){
-          console.log(this)
+      clear:function(defaultColor){
+          console.log(defaultColor)
       },//点击清空按钮的回调
-      openPicker:function(scope){
-         if(scope.pickerFlag){
+      openPicker:function(el,scope){
+         if(scope.config.pickerFlag){
              console.log('打开颜色选择器')
          }else{
              console.log('关闭颜色选择器')
@@ -63,7 +63,7 @@
 
 ## cdn引入
 
-CDN:https://www.unpkg.com/ew-color-picker@1.5.4/dist/ew-color-picker.min.js
+CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
 
 ## 在组件中使用
 
@@ -75,3 +75,5 @@ CDN:https://www.unpkg.com/ew-color-picker@1.5.4/dist/ew-color-picker.min.js
 ```
 
 更多详情参阅文档官网介绍[ewColorPicker](https://eveningwater.github.io/ew-color-picker/);
+
+> 国内访问速度慢可访问[ewColorPicker](https://eveningwater.gitee.io/ew-color-picker/)

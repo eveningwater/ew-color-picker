@@ -1,5 +1,5 @@
 import util from './util'
-import { colorToRgba, colorRgbaToHex, colorHsbToRgba, colorRgbaToHsb } from './color'
+import { colorToRgba, colorRgbaToHex, colorHsbToRgba, colorRgbaToHsb,isValidColor } from './color'
 import ani from './animation';
 import { consoleInfo } from './console';
 import './ew-color-picker.css';
@@ -112,7 +112,7 @@ const methods = [
             let predefineColorHTML = '',alphaBar = '',hueBar = '',predefineHTML='',boxDisabledClassName='';
             const p_c = config.predefineColor;
             if(!util.isDeepArray(p_c))return util.ewError(ERROR_VARIABLE.PREDEFINE_COLOR_ERROR);
-            if(p_c.length)p_c.map(color => predefineColorHTML += `<div class="ew-pre-define-color" style="background:${color};"></div>`);
+            if(p_c.length)p_c.map(color => {if(isValidColor(color))predefineColorHTML += `<div class="ew-pre-define-color" style="background:${color};"></div>`});
             //打开颜色选择器的方框
             const colorBox = config.defaultColor ? `<div class="ew-color-picker-arrow" style="width:${this.boxSize.b_width};height:${this.boxSize.b_height};">
                 <div class="ew-color-picker-arrow-left"></div>
@@ -135,7 +135,7 @@ const methods = [
             }
             if(config.disabled)boxDisabledClassName = 'ew-color-picker-box-disabled';
             // 盒子样式
-            const boxStyle = `width:${this.boxSize.b_width};height:${this.boxSize.b_height};${config.defaultColor ? 'background:' + config.defaultColor : ''}`;
+            const boxStyle = `width:${this.boxSize.b_width};height:${this.boxSize.b_height};${config.defaultColor && !config.disabled ? 'background:' + config.defaultColor : ''}`;
             //颜色选择器
             const html = `
                 <div class="ew-color-picker-box ${ boxDisabledClassName}" tabIndex="0" style="${boxStyle}">${colorBox}</div>
