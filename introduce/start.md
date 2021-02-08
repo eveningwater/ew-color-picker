@@ -62,7 +62,7 @@
 ## cdn引入
 
 CDN:
-```shell
+```js
   //完整版,这样始终引入的是最新版本的颜色选择器插件
   https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.js
   //压缩版
