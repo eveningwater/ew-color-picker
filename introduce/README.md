@@ -12,3 +12,10 @@ features:
   details: 参数配置几乎涵盖了颜色选择器的所有功能。
 footer: MIT Licensed | Copyright © 2020-present eveningwater
 ---
+
+<h3 style="text-align:center;">一个简单的示例</h3>
+
+<iframe height="500" style="width: 100%;" scrolling="no" title="ew-color-picker" src="https://codepen.io/eveningwater/embed/JjbKagQ?height=265&theme-id=light&default-tab=html,result" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href='https://codepen.io/eveningwater/pen/JjbKagQ'>ew-color-picker</a> by eveningwater
+  (<a href='https://codepen.io/eveningwater'>@eveningwater</a>) on <a href='https://codepen.io'>CodePen</a>.
+</iframe>
