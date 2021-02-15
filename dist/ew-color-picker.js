@@ -81,7 +81,19 @@
       return getStyle(prop);
     };
 
-    util.$ = ident => document.querySelector(ident); //the event
+    util.$ = ident => document.querySelector(ident);
+
+    util["on"] = (element, type, handler, useCapture = false) => {
+      if (element && type && handler) {
+        element.addEventListener(type, handler, useCapture);
+      }
+    };
+
+    util["off"] = (element, type, handler, useCapture = false) => {
+      if (element && type && handler) {
+        element.removeEventListener(type, handler, useCapture);
+      }
+    }; //the event
 
 
     util.eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
@@ -382,7 +394,7 @@
       };
     });
 
-    const consoleInfo = () => console.log(`%c ew-color-picker@1.5.5%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+    const consoleInfo = () => console.log(`%c ew-color-picker@1.5.6%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
     function styleInject(css, ref) {
       if ( ref === void 0 ) ref = {};
@@ -476,7 +488,7 @@
       func: function (element, config, errorText) {
         if (config.isLog) consoleInfo(); // 不能是哪些标签元素
 
-        const isNotDom = function (ele) {
+        const isNotDom = ele => {
           if (NOT_DOM_ELEMENTS.indexOf(ele.tagName.toLowerCase()) > -1) {
             util.ewError(ERROR_VARIABLE.DOM_NOT_ERROR);
             return true;
@@ -497,7 +509,7 @@
             if (!isNotDom(ele)) this.init(ele, config);
           }
         } else {
-          return util.ewError(errorText);
+          util.ewError(errorText);
         }
       }
     }, {
@@ -646,7 +658,7 @@
           const items = util.ewObjToArray(this.preDefineItem); //点击预定义颜色
 
           items.map(item => {
-            item.addEventListener('click', event => {
+            const clickHandler = event => {
               items.forEach(child => util.removeClass(child, 'ew-pre-define-color-active'));
               util.addClass(event.target, 'ew-pre-define-color-active');
               scope.hsbColor = colorRgbaToHsb(util.getCss(event.target, 'background-color'));
@@ -656,8 +668,17 @@
 
               const setColor = colorRgbaToHex(util.getCss(event.target, 'background-color'));
               scope.pickerInput.value = scope.config.alpha ? colorToRgba(setColor) : setColor;
-            }, false);
-            item.addEventListener('blur', event => util.removeClass(event.target, 'ew-pre-define-color-active'), false);
+            };
+
+            const blurHandler = event => util.removeClass(event.target, 'ew-pre-define-color-active');
+
+            [{
+              type: "click",
+              handler: clickHandler
+            }, {
+              type: "blur",
+              handler: blurHandler
+            }].forEach(t => util.on(item, t.type, t.handler));
           });
         } //颜色选择器打开的动画初始设置
 
@@ -674,45 +695,38 @@
           this.alphaBarBg = getELByClass(ele, 'ew-alpha-slider-bg');
           this.alphaBarThumb = getELByClass(ele, 'ew-alpha-slider-thumb');
           changeAlphaBar(this);
-          this.bindEvent(this.alphaBarThumb, (scope, el, x, y) => changeAlpha(scope, y), false);
-          this.alphaBar.addEventListener('click', event => changeAlpha(scope, event.y), false);
+          this.bindEvent(this.alphaBarThumb, (scope, el, x, y) => changeAlpha(scope, y));
+          util.on(this.alphaBar, 'click', event => changeAlpha(scope, event.y));
         } //输入框输入事件
 
 
-        this.pickerInput.addEventListener('blur', event => onInputColor(scope, event.target.value), false); //清空按钮事件
+        util.on(this.pickerInput, 'blur', event => onInputColor(scope, event.target.value)); //清空按钮事件
 
-        this.pickerClear.addEventListener('click', () => onClearColor(ele, scope), false); //确认按钮事件
+        util.on(this.pickerClear, 'click', () => onClearColor(ele, scope)); //确认按钮事件
 
-        this.pickerSure.addEventListener('click', () => onSureColor(scope)); //是否禁止打开选择器面板，未禁止则点击可打开
+        util.on(this.pickerSure, 'click', () => onSureColor(scope)); //是否禁止打开选择器面板，未禁止则点击可打开
 
-        if (!config.disabled) this.box.addEventListener('click', () => openPicker(ele, scope), false); //颜色面板点击事件
+        if (!config.disabled) util.on(this.box, 'click', () => openPicker(ele, scope)); //颜色面板点击事件
 
-        this.pickerPanel.addEventListener('click', event => onClickPanel(scope, event), false); //颜色面板拖拽元素拖拽事件
+        util.on(this.pickerPanel, 'click', event => onClickPanel(scope, event)); //颜色面板拖拽元素拖拽事件
 
         this.bindEvent(this.pickerCursor, (scope, el, x, y) => {
           const left = Math.max(0, Math.min(x - scope.panelLeft, panelWidth));
           const top = Math.max(0, Math.min(y - scope.panelTop, panelHeight));
           changeCursorColor(scope, left + 4, top + 4, panelWidth, panelHeight);
-        }, false);
+        });
 
         if (config.hue) {
           //hue的点击事件
-          this.hueBar.addEventListener('click', event => changeHue(scope, event.y), false); //hue 轨道的拖拽事件
+          util.on(this.hueBar, 'click', event => changeHue(scope, event.y)); //hue 轨道的拖拽事件
 
-          this.bindEvent(this.hueThumb, (scope, el, x, y) => changeHue(scope, y), false);
+          this.bindEvent(this.hueThumb, (scope, el, x, y) => changeHue(scope, y));
         }
       }
     }, {
       name: "bindEvent",
       func: function (el, callback, bool) {
         const context = this;
-        const event_param = {
-          capture: false,
-          once: false,
-          passive: false,
-          useCapture: false,
-          wantsUntrusted: false
-        };
 
         const callResult = event => {
           context.moveX = util.eventType[0].indexOf('touch') > -1 ? event.changedTouches[0].clientX : event.clientX;
@@ -720,20 +734,22 @@
           bool ? callback(context, context.moveX, context.moveY) : callback(context, el, context.moveX, context.moveY);
         };
 
-        el.addEventListener(util.eventType[0], () => {
+        const handler = () => {
           const moveFn = e => {
             e.preventDefault();
             callResult(e);
           };
 
           const upFn = () => {
-            document.removeEventListener(util.eventType[1], moveFn, event_param);
-            document.removeEventListener(util.eventType[2], upFn, event_param);
+            util.off(document, util.eventType[1], moveFn);
+            util.off(document, util.eventType[2], upFn);
           };
 
-          document.addEventListener(util.eventType[1], moveFn, event_param);
-          document.addEventListener(util.eventType[2], upFn, event_param);
-        }, event_param);
+          util.on(document, util.eventType[1], moveFn);
+          util.on(document, util.eventType[2], upFn);
+        };
+
+        util.on(el, util.eventType[0], handler);
       }
     }];
     methods$1.forEach(method => util.addMethod(ewColorPicker, method.name, method.func));
@@ -745,7 +761,7 @@
      */
 
     function getELByClass(el, prop, isIndex) {
-      return !isIndex ? el.querySelector ? el.querySelector('.' + prop) : el.getElementsByClassName(prop)[0] : el.querySelectorAll ? el.querySelectorAll('.' + prop) : el.getElementsByClassName(prop);
+      return !isIndex ? el.querySelector('.' + prop) : el.querySelectorAll('.' + prop);
     }
     /**
      * 打开面板
@@ -959,10 +975,6 @@
       const alpha = (alphaBarHeight - alphaThumbY <= 0 ? 0 : alphaBarHeight - alphaThumbY) / alphaBarHeight;
       context.hsbColor.a = alpha >= 1 ? 1 : alpha.toFixed(2);
       changeElementColor(context, true);
-    }
-
-    if (!window.ewColorPicker) {
-      window.ewColorPicker = ewColorPicker;
     }
 
     return ewColorPicker;
