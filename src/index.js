@@ -1,15 +1,16 @@
 import util from './util'
-import { colorToRgba, colorRgbaToHex, colorHsbToRgba, colorRgbaToHsb,isValidColor } from './color'
+import { colorToRgba, colorRgbaToHex, colorHsbToRgba, colorRgbaToHsb,isValidColor,colorHexToRgba } from './color'
 import ani from './animation';
 import { consoleInfo } from './console';
-import './ew-color-picker.css';
 import { ERROR_VARIABLE,NOT_DOM_ELEMENTS } from './error';
+import './ew-color-picker.css';
 /**
  * 构造函数
  * @param {*} config 
  */
 function ewColorPicker(config) {
     if(util.isUndefined(new.target))return util.ewError(ERROR_VARIABLE.CONSTRUCTOR_ERROR);
+    if(!util.hasCssOrHasStyle('ew-color-picker'))util.ewError(ERROR_VARIABLE.NO_CSS);
     // 一个空函数
     const emptyFun = function(){};
     const defaultConfig = {
@@ -315,7 +316,8 @@ function openAndClose(scope) {
  * @param {*} value 
  */
 function onInputColor(scope, value) {
-    const color = colorRgbaToHsb(colorToRgba(value));
+    if(!isValidColor(value))return;
+    const color = value.indexOf('#') > -1 ? colorRgbaToHsb(colorHexToRgba(value)) : colorRgbaToHsb(value);
     if (!color.h && !color.s && !color.h && !color.a) return;
     scope.hsbColor = color;
     setDefaultValue(scope, scope.panelWidth, scope.panelHeight);

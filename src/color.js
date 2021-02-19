@@ -9,7 +9,7 @@ export function colorHexToRgba(hex, alpha) {
         //the hex length may be 4 or 7,contained the symbol of #
         if (hLen === 4) {
             let hSixColor = '#';
-            for (let i = 0; i < hLen; i++) {
+            for (let i = 1; i < hLen; i++) {
                 let sColor = hColor.slice(i, i + 1);
                 hSixColor += sColor.concat(sColor);
             }
