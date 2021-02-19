@@ -83,6 +83,8 @@
 
     util.$ = ident => document.querySelector(ident);
 
+    util.$$ = ident => document.querySelectorAll(ident);
+
     util["on"] = (element, type, handler, useCapture = false) => {
       if (element && type && handler) {
         element.addEventListener(type, handler, useCapture);
@@ -93,6 +95,25 @@
       if (element && type && handler) {
         element.removeEventListener(type, handler, useCapture);
       }
+    };
+
+    util['hasCssOrHasStyle'] = name => {
+      const elementStyles = util.$$('style');
+      const elementLinks = util.$$('link');
+
+      const hasStyle = (elements, propName) => {
+        if (elements) {
+          for (let i = 0, len = elements.length; i < len; i++) {
+            if (elements[i][propName].indexOf(name) > -1) {
+              return true;
+            }
+          }
+        }
+
+        return false;
+      };
+
+      return hasStyle(elementStyles, 'textContent') || hasStyle(elementLinks, 'href');
     }; //the event
 
 
@@ -103,6 +124,35 @@
      * @param {*} hex 
      * @param {*} alpha 
      */
+    function colorHexToRgba(hex, alpha) {
+      let a = alpha || 1,
+          colorRegExp = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/,
+          hColor = hex.toLowerCase(),
+          hLen = hex.length,
+          rgbaColor = [];
+
+      if (hex && colorRegExp.test(hColor)) {
+        //the hex length may be 4 or 7,contained the symbol of #
+        if (hLen === 4) {
+          let hSixColor = '#';
+
+          for (let i = 1; i < hLen; i++) {
+            let sColor = hColor.slice(i, i + 1);
+            hSixColor += sColor.concat(sColor);
+          }
+
+          hColor = hSixColor;
+        }
+
+        for (let j = 1, len = hColor.length; j < len; j += 2) {
+          rgbaColor.push(parseInt('0X' + hColor.slice(j, j + 2), 16));
+        }
+
+        return "rgba(" + rgbaColor.join(",") + ',' + a + ")";
+      } else {
+        return hColor;
+      }
+    }
     /**
      * rgba to hex
      * @param {*} rgba 
@@ -394,37 +444,7 @@
       };
     });
 
-    const consoleInfo = () => console.log(`%c ew-color-picker@1.5.6%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
-
-    function styleInject(css, ref) {
-      if ( ref === void 0 ) ref = {};
-      var insertAt = ref.insertAt;
-
-      if (!css || typeof document === 'undefined') { return; }
-
-      var head = document.head || document.getElementsByTagName('head')[0];
-      var style = document.createElement('style');
-      style.type = 'text/css';
-
-      if (insertAt === 'top') {
-        if (head.firstChild) {
-          head.insertBefore(style, head.firstChild);
-        } else {
-          head.appendChild(style);
-        }
-      } else {
-        head.appendChild(style);
-      }
-
-      if (style.styleSheet) {
-        style.styleSheet.cssText = css;
-      } else {
-        style.appendChild(document.createTextNode(css));
-      }
-    }
-
-    var css_248z = ".ew-alpha-slider-bg,.ew-alpha-slider-thumb,.ew-alpha-slider-wrapper,.ew-color-black-panel,.ew-color-cursor,.ew-color-drop-btn-group,.ew-color-picker,.ew-color-picker-arrow,.ew-color-picker-no,.ew-color-slider-thumb,.ew-color-white-panel{position:absolute}.ew-alpha-slider-bar,.ew-color-drop-container,.ew-color-panel,.ew-color-picker-arrow-left,.ew-color-picker-arrow-right,.ew-color-picker-box,.ew-color-slider,.ew-color-slider-bar{position:relative}.ew-alpha-slider-thumb,.ew-color-drop-btn,.ew-color-input,.ew-color-slider,.ew-color-slider-thumb{-webkit-box-sizing:border-box;box-sizing:border-box}.ew-alpha-slider-bar,.ew-alpha-slider-thumb,.ew-color-drop-btn,.ew-color-panel,.ew-color-picker-box,.ew-color-slider-bar,.ew-color-slider-thumb,.ew-pre-define-color{cursor:pointer}.ew-color-input,.ew-color-picker,.ew-color-picker-arrow-left,.ew-color-picker-arrow-right,.ew-color-picker-box,.ew-color-sure{background-color:#fff}.ew-color-drop-btn,.ew-color-input,.ew-color-picker-box,.ew-pre-define-color{outline:none}.ew-color-drop-btn,.ew-color-input,.ew-color-picker-arrow-left,.ew-color-picker-arrow-right,.ew-color-picker-box{display:inline-block}.ew-color-picker .ew-color-picker-content:after,.ew-pre-define-color-container:after{content:\"\";display:table;clear:both}.ew-alpha-slider-bar,.ew-color-slider-bar,.ew-pre-define-color{float:left}.ew-color-drop-btn,.ew-color-picker-no{text-align:center}.ew-color-picker{min-width:320px;-webkit-box-sizing:content-box;box-sizing:content-box;border:1px solid #ebeeff;-webkit-box-shadow:0 4px 15px rgba(0,0,0,.2);box-shadow:0 4px 15px rgba(0,0,0,.2);border-radius:5px;z-index:10;padding:7px;display:none;text-align:left}.ew-color-picker-content{margin-bottom:6px}.ew-color-panel{width:280px;height:180px}.ew-alpha-slider-bg,.ew-alpha-slider-wrapper,.ew-color-black-panel,.ew-color-picker-arrow,.ew-color-picker-no,.ew-color-white-panel{left:0;right:0;top:0;bottom:0}.ew-color-white-panel{background:-webkit-gradient(linear,left top,right top,from(#fff),to(hsla(0,0%,100%,0)));background:linear-gradient(90deg,#fff,hsla(0,0%,100%,0))}.ew-color-black-panel{background:-webkit-gradient(linear,left bottom,left top,from(#000),to(transparent));background:linear-gradient(0deg,#000,transparent)}.ew-color-slider{width:27px;height:180px;float:right}.ew-color-slider-bar{background:-webkit-gradient(linear,left top,left bottom,color-stop(0,red),color-stop(17%,#ff0),color-stop(33%,#0f0),color-stop(50%,#0ff),color-stop(67%,#00f),color-stop(83%,#f0f),to(red));background:linear-gradient(180deg,red,#ff0 17%,#0f0 33%,#0ff 50%,#00f 67%,#f0f 83%,red);margin-left:3px}.ew-alpha-slider-bar,.ew-color-slider-bar{width:12px;height:100%}.ew-alpha-slider-wrapper{background:url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGUlEQVQYV2M4gwH+YwCGIasIUwhT25BVBADtzYNYrHvv4gAAAABJRU5ErkJggg==\")}.ew-alpha-slider-thumb,.ew-color-slider-thumb{left:0;top:0;width:12px;height:4px;border-radius:1px;background:#fff;border:1px solid #f0f0f0;-webkit-box-shadow:0 0 2px rgba(0,0,0,.6);box-shadow:0 0 2px rgba(0,0,0,.6)}.ew-color-cursor{left:100%;top:0;cursor:default;width:4px;height:4px;-webkit-transform:translate(-2px,-2px);transform:translate(-2px,-2px);border-radius:50%;-webkit-box-shadow:0 0 0 3px #fff,inset 0 0 2px 2px rgba(0,0,0,.4),0 0 2px 3px rgba(0,0,0,.5);box-shadow:0 0 0 3px #fff,inset 0 0 2px 2px rgba(0,0,0,.4),0 0 2px 3px rgba(0,0,0,.5);-webkit-transform:translate(-6px,-6px);transform:translate(-6px,-6px)}.ew-color-drop-container{margin-top:6px}.ew-color-input{width:160px;height:28px;line-height:28px;border:1px solid #dcdfe6;padding:0 5px;-webkit-transition:border-color .2s cubic-bezier(.175,.885,.32,1.275);transition:border-color .2s cubic-bezier(.175,.885,.32,1.275);border-radius:5px}.ew-color-input:focus{border-color:#239fe6}.ew-color-drop-btn{padding:5px 15px;font-size:12px;border-radius:3px;-webkit-transition:.1s;transition:.1s;font-weight:500;margin:0;white-space:nowrap;color:#606266;border:1px solid #dcdfe6;letter-spacing:1px}.ew-color-drop-btn-group{right:0;top:1px}.ew-color-clear{color:#4096ef;border-color:transparent;background-color:transparent;padding-left:0;padding-right:0}.ew-color-clear:active,.ew-color-clear:hover{color:#66b1ff}.ew-color-sure{margin-left:10px}.ew-color-sure:active,.ew-color-sure:hover{border-color:#4096ef;color:#4096ef}.ew-pre-define-color-container{width:280px;font-size:12px;margin-top:8px}.ew-pre-define-color-container:after{visibility:hidden;height:0}.ew-pre-define-color{margin:0 0 8px 8px;width:20px;height:20px;border-radius:4px;border:1px solid #9b979b}.ew-pre-define-color:nth-child(10n+1){margin-left:0}.ew-pre-define-color:active,.ew-pre-define-color:hover{opacity:.8}.ew-pre-define-color-active{-webkit-box-shadow:0 0 3px 2px #409eff;box-shadow:0 0 3px 2px #409eff}.ew-color-picker-box{border:1px solid #dcdee2;color:#535353;border-radius:4px;padding:4px 7px;line-height:1.5;font-size:14px;-webkit-transition:border-color .2s cubic-bezier(.175,.885,.32,1.275);transition:border-color .2s cubic-bezier(.175,.885,.32,1.275)}.ew-color-picker-box-disabled{background-color:#ebe7e7;cursor:not-allowed}.ew-color-picker-arrow,.ew-color-picker-no{width:20px;height:20px;margin:auto;z-index:3}.ew-color-picker-no{width:40px;height:40px;font-size:20px;line-height:40px;color:#5e535f;border:1px solid #e2dfe2;border-radius:2px}.ew-color-picker-arrow{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center}.ew-color-picker-arrow-left,.ew-color-picker-arrow-right{width:12px;height:1px}.ew-color-picker-arrow-left{-webkit-transform:rotate(45deg);transform:rotate(45deg)}.ew-color-picker-arrow-right{-webkit-transform:rotate(-45deg);transform:rotate(-45deg);right:3px}";
-    styleInject(css_248z);
+    const consoleInfo = () => console.log(`%c ew-color-picker@1.5.7%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
     const NOT_DOM_ELEMENTS = ['html', 'head', 'body', 'meta', 'title', 'link', 'style', 'script'];
     const ERROR_VARIABLE = {
@@ -435,7 +455,8 @@
       CONFIG_SIZE_ERROR: 'the value must be a string which is one of the normal,medium,small,mini,or must be an object and need to contain width or height property!',
       DOM_NOT_ERROR: 'Do not pass these elements: ' + NOT_DOM_ELEMENTS.join(',') + ' as a param,pass the correct element such as div!',
       PREDEFINE_COLOR_ERROR: 'PredefineColor is a array that is need to contain color value!',
-      CONSTRUCTOR_ERROR: 'ewColorPicker is a constructor and should be called with the new keyword'
+      CONSTRUCTOR_ERROR: 'ewColorPicker is a constructor and should be called with the new keyword!',
+      NO_CSS: "You need to add the style, make sure to  import a style file called ew-color-picker.min.css!"
     };
 
     /**
@@ -444,7 +465,8 @@
      */
 
     function ewColorPicker(config) {
-      if (util.isUndefined(new.target)) return util.ewError(ERROR_VARIABLE.CONSTRUCTOR_ERROR); // 一个空函数
+      if (util.isUndefined(new.target)) return util.ewError(ERROR_VARIABLE.CONSTRUCTOR_ERROR);
+      if (!util.hasCssOrHasStyle('ew-color-picker')) util.ewError(ERROR_VARIABLE.NO_CSS); // 一个空函数
 
       const emptyFun = function () {};
 
@@ -801,7 +823,8 @@
 
 
     function onInputColor(scope, value) {
-      const color = colorRgbaToHsb(colorToRgba(value));
+      if (!isValidColor(value)) return;
+      const color = value.indexOf('#') > -1 ? colorRgbaToHsb(colorHexToRgba(value)) : colorRgbaToHsb(value);
       if (!color.h && !color.s && !color.h && !color.a) return;
       scope.hsbColor = color;
       setDefaultValue(scope, scope.panelWidth, scope.panelHeight);
