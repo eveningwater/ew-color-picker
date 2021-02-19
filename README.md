@@ -62,7 +62,8 @@
 ```
 
 ## cdn引入
-
+//样式引入
+CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.css
 CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
 
 ## 在组件中使用
