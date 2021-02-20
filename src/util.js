@@ -67,21 +67,6 @@ util["off"] = (element, type, handler, useCapture = false) => {
         element.removeEventListener(type, handler, useCapture);
     }
 };
-util['hasCssOrHasStyle'] = (name) => {
-    const elementStyles = util.$$('style');
-    const elementLinks = util.$$('link');
-    const hasStyle = (elements,propName) => {
-        if(elements){
-            for(let i = 0,len = elements.length;i < len;i++){
-                if(elements[i][propName].indexOf(name) > -1){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    return hasStyle(elementStyles,'textContent') || hasStyle(elementLinks,'href');
-}
 //the event
 util.eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
 export default util;

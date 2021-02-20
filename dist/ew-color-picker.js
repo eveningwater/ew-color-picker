@@ -95,25 +95,6 @@
       if (element && type && handler) {
         element.removeEventListener(type, handler, useCapture);
       }
-    };
-
-    util['hasCssOrHasStyle'] = name => {
-      const elementStyles = util.$$('style');
-      const elementLinks = util.$$('link');
-
-      const hasStyle = (elements, propName) => {
-        if (elements) {
-          for (let i = 0, len = elements.length; i < len; i++) {
-            if (elements[i][propName].indexOf(name) > -1) {
-              return true;
-            }
-          }
-        }
-
-        return false;
-      };
-
-      return hasStyle(elementStyles, 'textContent') || hasStyle(elementLinks, 'href');
     }; //the event
 
 
@@ -444,7 +425,7 @@
       };
     });
 
-    const consoleInfo = () => console.log(`%c ew-color-picker@1.5.7%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+    const consoleInfo = () => console.log(`%c ew-color-picker@1.5.8%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
     const NOT_DOM_ELEMENTS = ['html', 'head', 'body', 'meta', 'title', 'link', 'style', 'script'];
     const ERROR_VARIABLE = {
@@ -455,8 +436,7 @@
       CONFIG_SIZE_ERROR: 'the value must be a string which is one of the normal,medium,small,mini,or must be an object and need to contain width or height property!',
       DOM_NOT_ERROR: 'Do not pass these elements: ' + NOT_DOM_ELEMENTS.join(',') + ' as a param,pass the correct element such as div!',
       PREDEFINE_COLOR_ERROR: 'PredefineColor is a array that is need to contain color value!',
-      CONSTRUCTOR_ERROR: 'ewColorPicker is a constructor and should be called with the new keyword!',
-      NO_CSS: "You need to add the style, make sure to  import a style file called ew-color-picker.min.css!"
+      CONSTRUCTOR_ERROR: 'ewColorPicker is a constructor and should be called with the new keyword!'
     };
 
     /**
@@ -465,8 +445,7 @@
      */
 
     function ewColorPicker(config) {
-      if (util.isUndefined(new.target)) return util.ewError(ERROR_VARIABLE.CONSTRUCTOR_ERROR);
-      if (!util.hasCssOrHasStyle('ew-color-picker')) util.ewError(ERROR_VARIABLE.NO_CSS); // 一个空函数
+      if (util.isUndefined(new.target)) return util.ewError(ERROR_VARIABLE.CONSTRUCTOR_ERROR); // 一个空函数
 
       const emptyFun = function () {};
 

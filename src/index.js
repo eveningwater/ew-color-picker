@@ -3,14 +3,12 @@ import { colorToRgba, colorRgbaToHex, colorHsbToRgba, colorRgbaToHsb,isValidColo
 import ani from './animation';
 import { consoleInfo } from './console';
 import { ERROR_VARIABLE,NOT_DOM_ELEMENTS } from './error';
-import './ew-color-picker.css';
 /**
  * 构造函数
  * @param {*} config 
  */
 function ewColorPicker(config) {
     if(util.isUndefined(new.target))return util.ewError(ERROR_VARIABLE.CONSTRUCTOR_ERROR);
-    if(!util.hasCssOrHasStyle('ew-color-picker'))util.ewError(ERROR_VARIABLE.NO_CSS);
     // 一个空函数
     const emptyFun = function(){};
     const defaultConfig = {

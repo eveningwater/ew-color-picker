@@ -79,7 +79,9 @@ CDN:
 
 
 ```js
-   import ewColorPicker from 'ewColorPicker'
+   import ewColorPicker from 'ewColorPicker';
+   import "ew-color-picker/dist/ew-color-picker.min.css";
+   import "ew-color-picker/src/ew-color-picker.css";
    var pluginName = new ewColorPicker(option);//option为配置对象，详情见前述
 ```
 > 在线示例
