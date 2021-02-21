@@ -316,7 +316,6 @@ function openAndClose(scope) {
 function onInputColor(scope, value) {
     if(!isValidColor(value))return;
     const color = value.indexOf('#') > -1 ? colorRgbaToHsb(colorHexToRgba(value)) : colorRgbaToHsb(value);
-    if (!color.h && !color.s && !color.h && !color.a) return;
     scope.hsbColor = color;
     setDefaultValue(scope, scope.panelWidth, scope.panelHeight);
     changeElementColor(scope);

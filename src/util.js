@@ -10,7 +10,7 @@ util.addMethod = addMethod;
 util.isShallowObject = value => typeof value === 'object' && !util.isNull(value);
 util['ewObjToArray'] = value => util.isShallowObject(value) ? Array.prototype.slice.call(value) : value;
 util.isNull = value => value === null;
-util.ewAssign = (target, args) => {
+util.ewAssign = function(target, args){
     if (util.isNull(target)) return;
     if (Object.assign) {
         return Object.assign(target, args);
