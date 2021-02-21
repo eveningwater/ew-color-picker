@@ -20,7 +20,7 @@
 
     util.isNull = value => value === null;
 
-    util.ewAssign = (target, args) => {
+    util.ewAssign = function (target, args) {
       if (util.isNull(target)) return;
 
       if (Object.assign) {
@@ -291,11 +291,16 @@
       document.body.removeChild(div);
       return c.slice(0, 2) + 'ba' + c.slice(3, c.length - 1) + ', 1)';
     }
+    /**
+     * 判断是否是合格的颜色值
+     * @param {*} color 
+     */
+
     function isValidColor(color) {
-      const hexColorRegx = /^#([0-9a-f]{6}|[0-9a-f]{3})$/i;
-      const RGBColorRegx = /^rgb\(([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\)$/i;
-      const RGBAColorRegx = /^rgba\(([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,(1|1.0|0.[0-9])\)$/i;
-      return RGBColorRegx.test(color) || hexColorRegx.test(color) || RGBAColorRegx.test(color);
+      const hexColorRegExp = /^#([0-9a-f]{6}|[0-9a-f]{3})$/i;
+      const RGBColorRegExp = /^rgb\(([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\)$/i;
+      const RGBAColorRegExp = /^rgba\(([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,(1|1.0|0.[0-9])\)$/i;
+      return RGBColorRegExp.test(color) || hexColorRegExp.test(color) || RGBAColorRegExp.test(color);
     }
 
     const animation = {};
@@ -425,7 +430,7 @@
       };
     });
 
-    const consoleInfo = () => console.log(`%c ew-color-picker@1.5.8%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+    const consoleInfo = () => console.log(`%c ew-color-picker@1.5.9%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
     const NOT_DOM_ELEMENTS = ['html', 'head', 'body', 'meta', 'title', 'link', 'style', 'script'];
     const ERROR_VARIABLE = {
@@ -804,7 +809,6 @@
     function onInputColor(scope, value) {
       if (!isValidColor(value)) return;
       const color = value.indexOf('#') > -1 ? colorRgbaToHsb(colorHexToRgba(value)) : colorRgbaToHsb(value);
-      if (!color.h && !color.s && !color.h && !color.a) return;
       scope.hsbColor = color;
       setDefaultValue(scope, scope.panelWidth, scope.panelHeight);
       changeElementColor(scope);

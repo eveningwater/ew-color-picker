@@ -137,9 +137,13 @@ export function colorToRgba(color) {
     document.body.removeChild(div);
     return c.slice(0,2) + 'ba' + c.slice(3,c.length - 1) + ', 1)';
 };
+/**
+ * 判断是否是合格的颜色值
+ * @param {*} color 
+ */
 export function isValidColor(color) {
-    const hexColorRegx = /^#([0-9a-f]{6}|[0-9a-f]{3})$/i
-    const RGBColorRegx = /^rgb\(([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\)$/i
-    const RGBAColorRegx = /^rgba\(([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,(1|1.0|0.[0-9])\)$/i
-    return RGBColorRegx.test(color) || hexColorRegx.test(color) || RGBAColorRegx.test(color);
+    const hexColorRegExp = /^#([0-9a-f]{6}|[0-9a-f]{3})$/i;
+    const RGBColorRegExp = /^rgb\(([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\)$/i;
+    const RGBAColorRegExp = /^rgba\(([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,(1|1.0|0.[0-9])\)$/i;
+    return RGBColorRegExp.test(color) || hexColorRegExp.test(color) || RGBAColorRegExp.test(color);
 }
