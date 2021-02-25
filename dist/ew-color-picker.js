@@ -81,9 +81,7 @@
       return getStyle(prop);
     };
 
-    util.$ = ident => document.querySelector(ident);
-
-    util.$$ = ident => document.querySelectorAll(ident);
+    util.$ = ident => document[ident && ident.indexOf('#') > -1 ? 'querySelector' : 'querySelectorAll'](ident);
 
     util["on"] = (element, type, handler, useCapture = false) => {
       if (element && type && handler) {
@@ -95,6 +93,46 @@
       if (element && type && handler) {
         element.removeEventListener(type, handler, useCapture);
       }
+    };
+
+    util["clickOutSide"] = (el, callback) => {
+      const nodes = [el];
+
+      const findNode = node => {
+        const children = node.children;
+        if (!children) return;
+        const childrenArr = util.ewObjToArray(children);
+        childrenArr.forEach(item => nodes.push(item));
+        childrenArr.forEach(item => findNode(item));
+      };
+
+      findNode(el);
+
+      const mouseHandler = event => {
+        setTimeout(() => {
+          const target = event.target;
+          const isInner = nodes.some(item => item.contains(target) || item === target);
+
+          if (!isInner) {
+            callback(target, nodes, mouseHandler);
+          }
+        }, 100);
+      };
+
+      util.on(document, 'mousedown', mouseHandler);
+    };
+
+    util["unBindMouseDown"] = (nodes, mouseHandler) => {
+      if (!util.isDeepArray(nodes)) return;
+      const nodeLen = nodes.length;
+
+      if (nodeLen > 0) {
+        for (let i = 0; i < nodeLen; i++) {
+          nodes.splice(i, 1);
+        }
+      }
+
+      util.off(document, 'mousedown', mouseHandler);
     }; //the event
 
 
@@ -297,10 +335,25 @@
      */
 
     function isValidColor(color) {
-      const hexColorRegExp = /^#([0-9a-f]{6}|[0-9a-f]{3})$/i;
-      const RGBColorRegExp = /^rgb\(([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\)$/i;
-      const RGBAColorRegExp = /^rgba\(([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,([0-9]|[0-9][0-9]|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])\,(1|1.0|0.[0-9])\)$/i;
-      return RGBColorRegExp.test(color) || hexColorRegExp.test(color) || RGBAColorRegExp.test(color);
+      let type = '';
+
+      if (/^rgb\(/.test(color)) {
+        //如果是rgb开头，200-249，250-255，0-199
+        type = "^[rR][gG][Bb][\(]([\\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?)[\\s]*,){2}[\\s]*(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)[\\s]*[\)]{1}$";
+      } else if (/^rgba\(/.test(color)) {
+        //如果是rgba开头，判断0-255:200-249，250-255，0-199 判断0-1：0 1 1.0 0.0-0.9
+        type = "^[rR][gG][Bb][Aa][\(]([\\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?)[\\s]*,){3}[\\s]*(1|1.0|0|0.[0-9]{2})[\\s]*[\)]{1}$";
+      } else if (/^#/.test(color)) {
+        //六位或者三位
+        type = "^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$";
+      } else if (/^hsl\(/.test(color)) {
+        //判断0-360 判断0-100%(0可以没有百分号)
+        type = "^[hH][Ss][Ll][\(]([\\s]*(2[0-9][0-9]|360｜3[0-5][0-9]|[01]?[0-9][0-9]?)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*)[\)]$";
+      } else if (/^hsla\(/.test(color)) {
+        type = "^[hH][Ss][Ll][Aa][\(]([\\s]*(2[0-9][0-9]|360｜3[0-5][0-9]|[01]?[0-9][0-9]?)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*,){2}([\\s]*(1|1.0|0|0.[0-9])[\\s]*)[\)]$";
+      }
+
+      return !!color.match(new RegExp(type));
     }
 
     const animation = {};
@@ -441,7 +494,8 @@
       CONFIG_SIZE_ERROR: 'the value must be a string which is one of the normal,medium,small,mini,or must be an object and need to contain width or height property!',
       DOM_NOT_ERROR: 'Do not pass these elements: ' + NOT_DOM_ELEMENTS.join(',') + ' as a param,pass the correct element such as div!',
       PREDEFINE_COLOR_ERROR: 'PredefineColor is a array that is need to contain color value!',
-      CONSTRUCTOR_ERROR: 'ewColorPicker is a constructor and should be called with the new keyword!'
+      CONSTRUCTOR_ERROR: 'ewColorPicker is a constructor and should be called with the new keyword!',
+      DEFAULT_COLOR_ERROR: 'the "defaultColor" is not a invalid color,make sure to use the correct color!'
     };
 
     /**
@@ -486,6 +540,7 @@
         }
 
       this.config.pickerFlag = false;
+      this.config.colorValue = "";
       return this;
     }
 
@@ -564,7 +619,8 @@
             alphaBar = '',
             hueBar = '',
             predefineHTML = '',
-            boxDisabledClassName = '';
+            boxDisabledClassName = '',
+            boxBackground = '';
         const p_c = config.predefineColor;
         if (!util.isDeepArray(p_c)) return util.ewError(ERROR_VARIABLE.PREDEFINE_COLOR_ERROR);
         if (p_c.length) p_c.map(color => {
@@ -593,9 +649,12 @@
           predefineHTML = `<div class="ew-pre-define-color-container">${predefineColorHTML}</div>`;
         }
 
-        if (config.disabled) boxDisabledClassName = 'ew-color-picker-box-disabled'; // 盒子样式
+        if (config.disabled) boxDisabledClassName = 'ew-color-picker-box-disabled';
+        if (config.defaultColor && !isValidColor(config.defaultColor)) return util.ewError(ERROR_VARIABLE.DEFAULT_COLOR_ERROR);
+        config.colorValue = config.defaultColor;
+        if (!config.disabled && config.colorValue) boxBackground = `background:${config.colorValue}`; // 盒子样式
 
-        const boxStyle = `width:${this.boxSize.b_width};height:${this.boxSize.b_height};${config.defaultColor && !config.disabled ? 'background:' + config.defaultColor : ''}`; //颜色选择器
+        const boxStyle = `width:${this.boxSize.b_width};height:${this.boxSize.b_height};${boxBackground}`; //颜色选择器
 
         const html = `
                 <div class="ew-color-picker-box ${boxDisabledClassName}" tabIndex="0" style="${boxStyle}">${colorBox}</div>
@@ -710,7 +769,7 @@
 
         util.on(this.pickerClear, 'click', () => onClearColor(ele, scope)); //确认按钮事件
 
-        util.on(this.pickerSure, 'click', () => onSureColor(scope)); //是否禁止打开选择器面板，未禁止则点击可打开
+        util.on(this.pickerSure, 'click', () => onSureColor(ele, scope)); //是否禁止打开选择器面板，未禁止则点击可打开
 
         if (!config.disabled) util.on(this.box, 'click', () => openPicker(ele, scope)); //颜色面板点击事件
 
@@ -778,8 +837,7 @@
 
     function openPicker(el, scope) {
       scope.config.pickerFlag = !scope.config.pickerFlag;
-      scope.config.defaultColor = scope.config.alpha ? colorHsbToRgba(scope.hsbColor) : colorRgbaToHex(colorHsbToRgba(scope.hsbColor));
-      scope.render(el, scope.config);
+      onRenderColorPicker(scope.config.defaultColor, scope.config.pickerFlag, el, scope);
       setDefaultValue(scope, scope.panelWidth, scope.panelHeight);
       openAndClose(scope);
       if (util.isFunction(scope.config.openPicker)) scope.config.openPicker(el, scope);
@@ -797,7 +855,18 @@
 
       const close = () => animation[expression ? 'slideUp' : 'fadeOut'](scope.picker, 200);
 
-      return scope.config.pickerFlag ? open() : close();
+      if (scope.config.pickerFlag) {
+        open();
+        util.clickOutSide(scope.picker, (el, nodes, mouseHandler) => {
+          if (scope.box !== el && !scope.box.contains(el)) {
+            close();
+            scope.config.pickerFlag = false;
+            util.unBindMouseDown(nodes, mouseHandler);
+          }
+        });
+      } else {
+        close();
+      }
     }
     /**
      * 输入颜色的转换
@@ -821,20 +890,9 @@
 
 
     function onClearColor(el, scope) {
-      onRenderColorPicker(el, scope);
+      onRenderColorPicker('', false, el, scope);
       openAndClose(scope);
       scope.config.clear(scope.config.defaultColor, scope);
-    }
-    /**
-     * 重新渲染
-     * @param {*} scope 
-     */
-
-
-    function onRenderColorPicker(el, scope) {
-      scope.config.defaultColor = '';
-      scope.config.pickerFlag = !scope.config.pickerFlag;
-      scope.render(el, scope.config);
     }
     /**
      * 确定
@@ -842,12 +900,18 @@
      */
 
 
-    function onSureColor(scope) {
-      scope.config.pickerFlag = false;
+    function onSureColor(el, scope) {
+      const result = scope.config.alpha ? colorHsbToRgba(scope.hsbColor) : colorRgbaToHex(colorHsbToRgba(scope.hsbColor));
+      onRenderColorPicker(result, false, el, scope);
       openAndClose(scope);
       changeElementColor(scope);
-      const result = scope.config.alpha ? colorHsbToRgba(scope.hsbColor) : colorRgbaToHex(colorHsbToRgba(scope.hsbColor));
       scope.config.sure(result, scope);
+    }
+
+    function onRenderColorPicker(color, pickerFlag, el, scope) {
+      scope.config.defaultColor = scope.config.colorValue = color;
+      scope.config.pickerFlag = pickerFlag;
+      scope.render(el, scope.config);
     }
     /**
      * 拖拽
@@ -878,7 +942,6 @@
 
     function changeElementColor(scope, isAlpha) {
       const color = colorHsbToRgba(scope.hsbColor);
-      util.setCss(scope.box, 'background', color);
       scope.pickerInput.value = isAlpha || scope.config.alpha ? color : colorRgbaToHex(color);
     }
     /**
@@ -947,7 +1010,6 @@
         prop: 'background',
         value: colorRgbaToHex(colorHsbToRgba(cloneColor(context.hsbColor)))
       }].forEach(item => util.setCss(item.el, item.prop, item.value));
-      if (context.box) context.box.style.background = context.pickerInput.value;
 
       if (context.config.hue) {
         sliderBarHeight = context.hueBar.offsetHeight || 180;
@@ -955,7 +1017,7 @@
       }
 
       if (context.config.alpha) {
-        if (!context.config.hue) sliderBarHeight = context.alphaBar.offsetHeight || 180;
+        sliderBarHeight = context.alphaBar.offsetHeight || 180;
         util.setCss(context.alphaBarThumb, 'top', sliderBarHeight - context.hsbColor.a * sliderBarHeight + 'px');
       }
     } //改变色调的方法

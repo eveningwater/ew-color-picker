@@ -10,7 +10,7 @@ util.addMethod = addMethod;
 util.isShallowObject = value => typeof value === 'object' && !util.isNull(value);
 util['ewObjToArray'] = value => util.isShallowObject(value) ? Array.prototype.slice.call(value) : value;
 util.isNull = value => value === null;
-util.ewAssign = function(target, args){
+util.ewAssign = function (target, args) {
     if (util.isNull(target)) return;
     if (Object.assign) {
         return Object.assign(target, args);
@@ -55,8 +55,7 @@ util.getCss = (el, prop) => {
     };
     return getStyle(prop);
 };
-util.$ = ident => document.querySelector(ident);
-util.$$ = ident => document.querySelectorAll(ident);
+util.$ = ident => document[ident && ident.indexOf('#') > -1 ? 'querySelector' : 'querySelectorAll'](ident);
 util["on"] = (element, type, handler, useCapture = false) => {
     if (element && type && handler) {
         element.addEventListener(type, handler, useCapture);
@@ -67,6 +66,37 @@ util["off"] = (element, type, handler, useCapture = false) => {
         element.removeEventListener(type, handler, useCapture);
     }
 };
+util["clickOutSide"] = (el, callback) => {
+    const nodes = [el];
+    const findNode = (node) => {
+        const children = node.children;
+        if (!children) return;
+        const childrenArr = util.ewObjToArray(children);
+        childrenArr.forEach(item => nodes.push(item));
+        childrenArr.forEach(item => findNode(item));
+    }
+    findNode(el);
+    const mouseHandler = (event) => {
+        setTimeout(() => {
+            const target = event.target;
+            const isInner = nodes.some(item => item.contains(target) || item === target);
+            if (!isInner) {
+                callback(target, nodes, mouseHandler);
+            }
+        },100)
+    }
+    util.on(document, 'mousedown', mouseHandler);
+}
+util["unBindMouseDown"] = (nodes, mouseHandler) => {
+    if (!util.isDeepArray(nodes)) return;
+    const nodeLen = nodes.length;
+    if (nodeLen > 0) {
+        for (let i = 0; i < nodeLen; i++) {
+            nodes.splice(i, 1);
+        }
+    }
+    util.off(document, 'mousedown', mouseHandler);
+}
 //the event
 util.eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
 export default util;
