@@ -10,7 +10,7 @@
     };
     const util = Object.create(null);
     const _toString = Object.prototype.toString;
-    ['Number', 'String', 'Function', 'Undefined'].forEach(type => util['is' + type] = value => typeof value === type.toLowerCase());
+    ['Number', 'String', 'Function', 'Undefined', 'Boolean'].forEach(type => util['is' + type] = value => typeof value === type.toLowerCase());
     util.addMethod = addMethod;
     ['Object', 'Array', 'RegExp'].forEach(type => util['isDeep' + type] = value => _toString.call(value).slice(8, -1).toLowerCase() === type.toLowerCase());
 
@@ -483,7 +483,7 @@
       };
     });
 
-    const consoleInfo = () => console.log(`%c ew-color-picker@1.5.9%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+    const consoleInfo = () => console.log(`%c ew-color-picker@1.6.2%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
     const NOT_DOM_ELEMENTS = ['html', 'head', 'body', 'meta', 'title', 'link', 'style', 'script'];
     const ERROR_VARIABLE = {
@@ -547,8 +547,7 @@
     const methods$1 = [{
       name: "beforeInit",
       func: function (element, config, errorText) {
-        if (config.isLog) consoleInfo(); // 不能是哪些标签元素
-
+        // 不能是哪些标签元素
         const isNotDom = ele => {
           if (NOT_DOM_ELEMENTS.indexOf(ele.tagName.toLowerCase()) > -1) {
             util.ewError(ERROR_VARIABLE.DOM_NOT_ERROR);
@@ -559,23 +558,23 @@
         };
 
         const ele = util.isDom(element) ? element : util.isString(element) ? util.$(element) : null;
+        if (!ele) return util.ewError(errorText);
 
-        if (ele) {
-          if (ele.length) {
-            util.ewObjToArray(ele).forEach(item => {
-              if (!isNotDom(item)) this.init(item, config);
-            });
-          } else {
-            if (!ele.tagName) return util.ewError(errorText);
-            if (!isNotDom(ele)) this.init(ele, config);
-          }
+        if (ele.length) {
+          util.ewObjToArray(ele).forEach(item => {
+            if (!isNotDom(item)) new ewColorPicker(util.ewAssign(config, {
+              el: item
+            }));
+          });
         } else {
-          util.ewError(errorText);
+          if (!ele.tagName) return util.ewError(errorText);
+          if (!isNotDom(ele)) this.init(ele, config);
         }
       }
     }, {
       name: "init",
       func: function (bindElement, config) {
+        if (config.isLog) consoleInfo();
         let b_width, b_height; //自定义颜色选择器的类型
 
         if (util.isString(config.size)) {
