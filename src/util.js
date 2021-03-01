@@ -4,7 +4,7 @@ export let addMethod = (instance, method, func) => {
 }
 const util = Object.create(null);
 const _toString = Object.prototype.toString;
-['Number', 'String', 'Function', 'Undefined'].forEach(type => util['is' + type] = value => typeof value === type.toLowerCase());
+['Number', 'String', 'Function', 'Undefined', 'Boolean'].forEach(type => util['is' + type] = value => typeof value === type.toLowerCase());
 util.addMethod = addMethod;
 ['Object', 'Array', 'RegExp'].forEach(type => util['isDeep' + type] = value => _toString.call(value).slice(8, -1).toLowerCase() === type.toLowerCase());
 util.isShallowObject = value => typeof value === 'object' && !util.isNull(value);
@@ -83,7 +83,7 @@ util["clickOutSide"] = (el, callback) => {
             if (!isInner) {
                 callback(target, nodes, mouseHandler);
             }
-        },100)
+        }, 100)
     }
     util.on(document, 'mousedown', mouseHandler);
 }

@@ -49,7 +49,6 @@ const methods = [
     {
         name: "beforeInit",
         func: function (element, config, errorText) {
-            if (config.isLog) consoleInfo();
             // 不能是哪些标签元素
             const isNotDom = ele => {
                 if (NOT_DOM_ELEMENTS.indexOf(ele.tagName.toLowerCase()) > -1) {
@@ -59,21 +58,21 @@ const methods = [
                 return false;
             }
             const ele = util.isDom(element) ? element : util.isString(element) ? util.$(element) : null;
-            if (ele) {
-                if (ele.length) {
-                    util.ewObjToArray(ele).forEach(item => { if (!isNotDom(item)) this.init(item, config); });
-                } else {
-                    if (!ele.tagName) return util.ewError(errorText);
-                    if (!isNotDom(ele)) this.init(ele, config);
-                }
+            if (!ele) return util.ewError(errorText);
+            if (ele.length) {
+                util.ewObjToArray(ele).forEach(item => {
+                    if (!isNotDom(item)) new ewColorPicker(util.ewAssign(config, { el: item }));
+                });
             } else {
-                util.ewError(errorText);
+                if (!ele.tagName) return util.ewError(errorText);
+                if (!isNotDom(ele)) this.init(ele, config);
             }
         }
     },
     {
         name: "init",
         func: function (bindElement, config) {
+            if (config.isLog) consoleInfo();
             let b_width, b_height;
             //自定义颜色选择器的类型
             if (util.isString(config.size)) {
@@ -296,7 +295,7 @@ function getELByClass(el, prop, isIndex) {
  */
 function openPicker(el, scope) {
     scope.config.pickerFlag = !scope.config.pickerFlag;
-    onRenderColorPicker(scope.config.defaultColor,scope.config.pickerFlag,el,scope);
+    onRenderColorPicker(scope.config.defaultColor, scope.config.pickerFlag, el, scope);
     setDefaultValue(scope, scope.panelWidth, scope.panelHeight);
     openAndClose(scope);
     if (util.isFunction(scope.config.openPicker)) scope.config.openPicker(el, scope);
@@ -311,8 +310,8 @@ function openAndClose(scope) {
     const close = () => ani[expression ? 'slideUp' : 'fadeOut'](scope.picker, 200);
     if (scope.config.pickerFlag) {
         open();
-        util.clickOutSide(scope.picker, (el,nodes, mouseHandler) => {
-            if(scope.box !== el && !scope.box.contains(el)){
+        util.clickOutSide(scope.picker, (el, nodes, mouseHandler) => {
+            if (scope.box !== el && !scope.box.contains(el)) {
                 close();
                 scope.config.pickerFlag = false;
                 util.unBindMouseDown(nodes, mouseHandler);
@@ -340,7 +339,7 @@ function onInputColor(scope, value) {
  * @param {*} scope 
  */
 function onClearColor(el, scope) {
-    onRenderColorPicker('',false,el,scope);
+    onRenderColorPicker('', false, el, scope);
     openAndClose(scope);
     scope.config.clear(scope.config.defaultColor, scope);
 }
@@ -350,15 +349,15 @@ function onClearColor(el, scope) {
  */
 function onSureColor(el, scope) {
     const result = scope.config.alpha ? colorHsbToRgba(scope.hsbColor) : colorRgbaToHex(colorHsbToRgba(scope.hsbColor));
-    onRenderColorPicker(result,false,el,scope);
+    onRenderColorPicker(result, false, el, scope);
     openAndClose(scope);
     changeElementColor(scope);
     scope.config.sure(result, scope);
 }
-function onRenderColorPicker(color,pickerFlag,el,scope){
+function onRenderColorPicker(color, pickerFlag, el, scope) {
     scope.config.defaultColor = scope.config.colorValue = color;
     scope.config.pickerFlag = pickerFlag;
-    scope.render(el,scope.config);
+    scope.render(el, scope.config);
 }
 /**
  * 拖拽
