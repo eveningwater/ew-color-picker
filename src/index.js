@@ -132,10 +132,10 @@ const methods = [
             if (predefineColorHTML) {
                 predefineHTML = `<div class="ew-pre-define-color-container">${predefineColorHTML}</div>`;
             }
-            if (config.disabled) boxDisabledClassName = 'ew-color-picker-box-disabled';
+            if (config.disabled)boxDisabledClassName = 'ew-color-picker-box-disabled';
             if (config.defaultColor && !isValidColor(config.defaultColor)) return util.ewError(ERROR_VARIABLE.DEFAULT_COLOR_ERROR);
             config.colorValue = config.defaultColor;
-            if (!config.disabled && config.colorValue) boxBackground = `background:${config.colorValue}`;
+            if (!config.disabled && config.colorValue)boxBackground = `background:${config.colorValue}`;
             // 盒子样式
             const boxStyle = `width:${this.boxSize.b_width};height:${this.boxSize.b_height};${boxBackground}`;
             //颜色选择器
@@ -205,12 +205,13 @@ const methods = [
                     const clickHandler = event => {
                         items.forEach(child => util.removeClass(child, 'ew-pre-define-color-active'));
                         util.addClass(event.target, 'ew-pre-define-color-active');
-                        scope.hsbColor = colorRgbaToHsb(util.getCss(event.target, 'background-color'));
+                        const bgColor = util.getCss(event.target, 'background-color');
+                        scope.hsbColor = colorRgbaToHsb(bgColor);
                         setDefaultValue(scope, panelWidth, panelHeight);
                         changeAlphaBar(scope);
                         changeElementColor(scope);
                         // fix the value bug
-                        const setColor = colorRgbaToHex(util.getCss(event.target, 'background-color'));
+                        const setColor = colorRgbaToHex(bgColor);
                         scope.pickerInput.value = scope.config.alpha ? colorToRgba(setColor) : setColor;
                     };
                     const blurHandler = event => util.removeClass(event.target, 'ew-pre-define-color-active');
@@ -218,8 +219,7 @@ const methods = [
                 })
             }
             //颜色选择器打开的动画初始设置
-            const isHeiAni = config.openPickerAni.indexOf('height') > -1;
-            this.picker.style[isHeiAni ? 'display' : 'opacity'] = isHeiAni ? 'none' : 0;
+            this.picker.style[getHeiAni(scope) ? 'display' : 'opacity'] = getHeiAni(scope) ? 'none' : 0;
             const sliderWidth = !config.alpha && !config.hue ? 0 : !config.alpha || !config.hue ? 14 : 27;
             const pickerWidth = !config.alpha && !config.hue ? 280 : !config.alpha || !config.hue ? 300 : 320;
             this.slider.style.width = sliderWidth + 'px';
@@ -240,6 +240,14 @@ const methods = [
             util.on(this.pickerSure, 'click', () => onSureColor(ele, scope));
             //是否禁止打开选择器面板，未禁止则点击可打开
             if (!config.disabled) util.on(this.box, 'click', () => openPicker(ele, scope));
+            // 点击目标区域外关闭颜色选择器面板
+            util.clickOutSide(ele, (nodes, mouseHandler) => {
+                if(scope.config.pickerFlag){
+                    close(getHeiAni(scope),scope.picker);
+                    scope.config.pickerFlag = false;
+                    util.unBindMouseDown(nodes, mouseHandler);
+                }
+            });
             //颜色面板点击事件
             util.on(this.pickerPanel, 'click', event => onClickPanel(scope, event));
             //颜色面板拖拽元素拖拽事件
@@ -301,25 +309,34 @@ function openPicker(el, scope) {
     if (util.isFunction(scope.config.openPicker)) scope.config.openPicker(el, scope);
 }
 /**
+ * 开启颜色选择器
+ * @param {*} expression 
+ * @param {*} picker 
+ */
+function open(expression,picker){
+    return ani[expression ? 'slideDown' : 'fadeIn'](picker, 200);
+}
+/**
+ * 关闭颜色选择器
+ * @param {*} expression 
+ * @param {*} picker 
+ */
+function close(expression,picker){
+    return ani[expression ? 'slideUp' : 'fadeOut'](picker, 200);
+}
+/**
+ * 获取动画类型
+ * @param {*} scope 
+ */
+function getHeiAni(scope){
+   return util.isString(scope.config.openPickerAni) && scope.config.openPickerAni.indexOf('height') > -1
+}
+/**
  * 打开和关闭
  * @param {*} scope 
  */
 function openAndClose(scope) {
-    const expression = util.isString(scope.config.openPickerAni) && scope.config.openPickerAni.indexOf('height') > -1;
-    const open = () => ani[expression ? 'slideDown' : 'fadeIn'](scope.picker, 200);
-    const close = () => ani[expression ? 'slideUp' : 'fadeOut'](scope.picker, 200);
-    if (scope.config.pickerFlag) {
-        open();
-        util.clickOutSide(scope.picker, (el, nodes, mouseHandler) => {
-            if (scope.box !== el && !scope.box.contains(el)) {
-                close();
-                scope.config.pickerFlag = false;
-                util.unBindMouseDown(nodes, mouseHandler);
-            }
-        });
-    } else {
-        close();
-    }
+    scope.config.pickerFlag ? open(getHeiAni(scope),scope.picker) : close(getHeiAni(scope),scope.picker);
 }
 /**
  * 输入颜色的转换
@@ -354,6 +371,13 @@ function onSureColor(el, scope) {
     changeElementColor(scope);
     scope.config.sure(result, scope);
 }
+/**
+ * 重置颜色选择器
+ * @param {*} color 
+ * @param {*} pickerFlag 
+ * @param {*} el 
+ * @param {*} scope 
+ */
 function onRenderColorPicker(color, pickerFlag, el, scope) {
     scope.config.defaultColor = scope.config.colorValue = color;
     scope.config.pickerFlag = pickerFlag;
@@ -457,7 +481,11 @@ function setDefaultValue(context, panelWidth, panelHeight) {
         util.setCss(context.alphaBarThumb, 'top', sliderBarHeight - context.hsbColor.a * sliderBarHeight + 'px');
     }
 }
-//改变色调的方法
+/**
+ * 改变色调
+ * @param {*} context 
+ * @param {*} y 
+ */
 function changeHue(context, y) {
     const sliderBarHeight = context.hueBar.offsetHeight,
         sliderBarRect = context.hueBar.getBoundingClientRect();
@@ -468,7 +496,11 @@ function changeHue(context, y) {
     changeElementColor(context);
     changeAlphaBar(context);
 }
-//改变透明度的方法
+/**
+ * 改变透明度
+ * @param {*} context 
+ * @param {*} y 
+ */
 function changeAlpha(context, y) {
     const alphaBarHeight = context.alphaBar.offsetHeight,
         alphaBarRect = context.alphaBar.getBoundingClientRect();

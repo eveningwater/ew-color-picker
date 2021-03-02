@@ -67,19 +67,7 @@
       return cloneObj;
     };
 
-    util.getCss = (el, prop) => {
-      const getStyle = el.currentStyle ? function (prop) {
-        const propName = el.currentStyle[prop];
-
-        if (propName.indexOf('height') > -1 && propName.search(/px/i) > -1) {
-          const rect = el.getBoundingClientRect;
-          return rect.bottom - rect.top - parseInt(getStyle('padding-bottom')) - parseInt(getStyle('padding-top')) + 'px';
-        }
-      } : function (prop) {
-        return window.getComputedStyle(el, null)[prop];
-      };
-      return getStyle(prop);
-    };
+    util.getCss = (el, prop) => window.getComputedStyle(el, null)[prop];
 
     util.$ = ident => document[ident && ident.indexOf('#') > -1 ? 'querySelector' : 'querySelectorAll'](ident);
 
@@ -96,7 +84,7 @@
     };
 
     util["clickOutSide"] = (el, callback) => {
-      const nodes = [el];
+      const nodes = [];
 
       const findNode = node => {
         const children = node.children;
@@ -109,14 +97,9 @@
       findNode(el);
 
       const mouseHandler = event => {
-        setTimeout(() => {
-          const target = event.target;
-          const isInner = nodes.some(item => item.contains(target) || item === target);
-
-          if (!isInner) {
-            callback(target, nodes, mouseHandler);
-          }
-        }, 100);
+        const target = event.target;
+        if (nodes.some(item => item.className === target.className)) return;
+        callback(nodes, mouseHandler);
       };
 
       util.on(document, 'mousedown', mouseHandler);
@@ -483,7 +466,7 @@
       };
     });
 
-    const consoleInfo = () => console.log(`%c ew-color-picker@1.6.2%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+    const consoleInfo = () => console.log(`%c ew-color-picker@1.6.3%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
     const NOT_DOM_ELEMENTS = ['html', 'head', 'body', 'meta', 'title', 'link', 'style', 'script'];
     const ERROR_VARIABLE = {
@@ -725,12 +708,13 @@
             const clickHandler = event => {
               items.forEach(child => util.removeClass(child, 'ew-pre-define-color-active'));
               util.addClass(event.target, 'ew-pre-define-color-active');
-              scope.hsbColor = colorRgbaToHsb(util.getCss(event.target, 'background-color'));
+              const bgColor = util.getCss(event.target, 'background-color');
+              scope.hsbColor = colorRgbaToHsb(bgColor);
               setDefaultValue(scope, panelWidth, panelHeight);
               changeAlphaBar(scope);
               changeElementColor(scope); // fix the value bug
 
-              const setColor = colorRgbaToHex(util.getCss(event.target, 'background-color'));
+              const setColor = colorRgbaToHex(bgColor);
               scope.pickerInput.value = scope.config.alpha ? colorToRgba(setColor) : setColor;
             };
 
@@ -747,8 +731,7 @@
         } //颜色选择器打开的动画初始设置
 
 
-        const isHeiAni = config.openPickerAni.indexOf('height') > -1;
-        this.picker.style[isHeiAni ? 'display' : 'opacity'] = isHeiAni ? 'none' : 0;
+        this.picker.style[getHeiAni(scope) ? 'display' : 'opacity'] = getHeiAni(scope) ? 'none' : 0;
         const sliderWidth = !config.alpha && !config.hue ? 0 : !config.alpha || !config.hue ? 14 : 27;
         const pickerWidth = !config.alpha && !config.hue ? 280 : !config.alpha || !config.hue ? 300 : 320;
         this.slider.style.width = sliderWidth + 'px';
@@ -770,7 +753,15 @@
 
         util.on(this.pickerSure, 'click', () => onSureColor(ele, scope)); //是否禁止打开选择器面板，未禁止则点击可打开
 
-        if (!config.disabled) util.on(this.box, 'click', () => openPicker(ele, scope)); //颜色面板点击事件
+        if (!config.disabled) util.on(this.box, 'click', () => openPicker(ele, scope)); // 点击目标区域外关闭颜色选择器面板
+
+        util.clickOutSide(ele, (nodes, mouseHandler) => {
+          if (scope.config.pickerFlag) {
+            close(getHeiAni(scope), scope.picker);
+            scope.config.pickerFlag = false;
+            util.unBindMouseDown(nodes, mouseHandler);
+          }
+        }); //颜色面板点击事件
 
         util.on(this.pickerPanel, 'click', event => onClickPanel(scope, event)); //颜色面板拖拽元素拖拽事件
 
@@ -842,30 +833,42 @@
       if (util.isFunction(scope.config.openPicker)) scope.config.openPicker(el, scope);
     }
     /**
+     * 开启颜色选择器
+     * @param {*} expression 
+     * @param {*} picker 
+     */
+
+
+    function open(expression, picker) {
+      return animation[expression ? 'slideDown' : 'fadeIn'](picker, 200);
+    }
+    /**
+     * 关闭颜色选择器
+     * @param {*} expression 
+     * @param {*} picker 
+     */
+
+
+    function close(expression, picker) {
+      return animation[expression ? 'slideUp' : 'fadeOut'](picker, 200);
+    }
+    /**
+     * 获取动画类型
+     * @param {*} scope 
+     */
+
+
+    function getHeiAni(scope) {
+      return util.isString(scope.config.openPickerAni) && scope.config.openPickerAni.indexOf('height') > -1;
+    }
+    /**
      * 打开和关闭
      * @param {*} scope 
      */
 
 
     function openAndClose(scope) {
-      const expression = util.isString(scope.config.openPickerAni) && scope.config.openPickerAni.indexOf('height') > -1;
-
-      const open = () => animation[expression ? 'slideDown' : 'fadeIn'](scope.picker, 200);
-
-      const close = () => animation[expression ? 'slideUp' : 'fadeOut'](scope.picker, 200);
-
-      if (scope.config.pickerFlag) {
-        open();
-        util.clickOutSide(scope.picker, (el, nodes, mouseHandler) => {
-          if (scope.box !== el && !scope.box.contains(el)) {
-            close();
-            scope.config.pickerFlag = false;
-            util.unBindMouseDown(nodes, mouseHandler);
-          }
-        });
-      } else {
-        close();
-      }
+      scope.config.pickerFlag ? open(getHeiAni(scope), scope.picker) : close(getHeiAni(scope), scope.picker);
     }
     /**
      * 输入颜色的转换
@@ -906,6 +909,14 @@
       changeElementColor(scope);
       scope.config.sure(result, scope);
     }
+    /**
+     * 重置颜色选择器
+     * @param {*} color 
+     * @param {*} pickerFlag 
+     * @param {*} el 
+     * @param {*} scope 
+     */
+
 
     function onRenderColorPicker(color, pickerFlag, el, scope) {
       scope.config.defaultColor = scope.config.colorValue = color;
@@ -1019,7 +1030,12 @@
         sliderBarHeight = context.alphaBar.offsetHeight || 180;
         util.setCss(context.alphaBarThumb, 'top', sliderBarHeight - context.hsbColor.a * sliderBarHeight + 'px');
       }
-    } //改变色调的方法
+    }
+    /**
+     * 改变色调
+     * @param {*} context 
+     * @param {*} y 
+     */
 
 
     function changeHue(context, y) {
@@ -1031,7 +1047,12 @@
       util.setCss(context.pickerPanel, 'background', colorRgbaToHex(colorHsbToRgba(cloneColor(context.hsbColor))));
       changeElementColor(context);
       changeAlphaBar(context);
-    } //改变透明度的方法
+    }
+    /**
+     * 改变透明度
+     * @param {*} context 
+     * @param {*} y 
+     */
 
 
     function changeAlpha(context, y) {
