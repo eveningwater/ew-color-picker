@@ -43,18 +43,7 @@ util.deepCloneObjByRecursion = (function f(obj) {
     }
     return cloneObj;
 });
-util.getCss = (el, prop) => {
-    const getStyle = el.currentStyle ? function (prop) {
-        const propName = el.currentStyle[prop];
-        if (propName.indexOf('height') > -1 && propName.search(/px/i) > -1) {
-            const rect = el.getBoundingClientRect;
-            return rect.bottom - rect.top - parseInt(getStyle('padding-bottom')) - parseInt(getStyle('padding-top')) + 'px';
-        }
-    } : function (prop) {
-        return window.getComputedStyle(el, null)[prop];
-    };
-    return getStyle(prop);
-};
+util.getCss = (el, prop) => window.getComputedStyle(el, null)[prop];
 util.$ = ident => document[ident && ident.indexOf('#') > -1 ? 'querySelector' : 'querySelectorAll'](ident);
 util["on"] = (element, type, handler, useCapture = false) => {
     if (element && type && handler) {
@@ -67,7 +56,7 @@ util["off"] = (element, type, handler, useCapture = false) => {
     }
 };
 util["clickOutSide"] = (el, callback) => {
-    const nodes = [el];
+    const nodes = [];
     const findNode = (node) => {
         const children = node.children;
         if (!children) return;
@@ -77,13 +66,9 @@ util["clickOutSide"] = (el, callback) => {
     }
     findNode(el);
     const mouseHandler = (event) => {
-        setTimeout(() => {
-            const target = event.target;
-            const isInner = nodes.some(item => item.contains(target) || item === target);
-            if (!isInner) {
-                callback(target, nodes, mouseHandler);
-            }
-        }, 100)
+        const target = event.target;
+        if(nodes.some(item => item.className === target.className))return;
+        callback(nodes, mouseHandler);
     }
     util.on(document, 'mousedown', mouseHandler);
 }
