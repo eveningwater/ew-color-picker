@@ -22,13 +22,14 @@ function ewColorPicker(config) {
         sure: emptyFun,
         clear: emptyFun,
         openPicker: emptyFun,
-        isLog: true
+        isLog: true,
+        boxSize:{
+            b_width: null,
+            b_height: null
+        },
+        pickerFlag:false,
+        colorValue:""
     }
-    // 盒子宽高
-    this.boxSize = {
-        b_width: null,
-        b_height: null
-    };
     //如果第二个参数传的是字符串，或DOM对象，则初始化默认的配置
     if (util.isString(config) || util.isDom(config)) {
         this.config = defaultConfig;
@@ -41,9 +42,6 @@ function ewColorPicker(config) {
         const errorText = util.isDeepObject(config) ? ERROR_VARIABLE.PICKER_OBJECT_CONFIG_ERROR : ERROR_VARIABLE.PICKER_CONFIG_ERROR;
         return util.ewError(errorText);
     }
-    this.config.pickerFlag = false;
-    this.config.colorValue = "";
-    return this;
 }
 const methods = [
     {
@@ -99,8 +97,8 @@ const methods = [
             } else {
                 return util.ewError(ERROR_VARIABLE.CONFIG_SIZE_ERROR);
             }
-            this.boxSize.b_width = b_width;
-            this.boxSize.b_height = b_height;
+            config.boxSize.b_width = b_width;
+            config.boxSize.b_height = b_height;
             //渲染选择器
             this.render(bindElement, config);
         }
@@ -113,10 +111,10 @@ const methods = [
             if (!util.isDeepArray(p_c)) return util.ewError(ERROR_VARIABLE.PREDEFINE_COLOR_ERROR);
             if (p_c.length) p_c.map(color => { if (isValidColor(color)) predefineColorHTML += `<div class="ew-pre-define-color" style="background:${color};"></div>` });
             //打开颜色选择器的方框
-            const colorBox = config.defaultColor ? `<div class="ew-color-picker-arrow" style="width:${this.boxSize.b_width};height:${this.boxSize.b_height};">
+            const colorBox = config.defaultColor ? `<div class="ew-color-picker-arrow" style="width:${this.config.boxSize.b_width};height:${this.config.boxSize.b_height};">
                 <div class="ew-color-picker-arrow-left"></div>
                 <div class="ew-color-picker-arrow-right"></div>
-            </div>` : `<div class="ew-color-picker-no" style="width:${this.boxSize.b_width};height:${this.boxSize.b_height};line-height:${this.boxSize.b_height};">&times;</div>`;
+            </div>` : `<div class="ew-color-picker-no" style="width:${this.config.boxSize.b_width};height:${this.config.boxSize.b_height};line-height:${this.config.boxSize.b_height};">&times;</div>`;
             //透明度
             if (config.alpha) {
                 alphaBar = `<div class="ew-alpha-slider-bar">
@@ -137,7 +135,7 @@ const methods = [
             config.colorValue = config.defaultColor;
             if (!config.disabled && config.colorValue)boxBackground = `background:${config.colorValue}`;
             // 盒子样式
-            const boxStyle = `width:${this.boxSize.b_width};height:${this.boxSize.b_height};${boxBackground}`;
+            const boxStyle = `width:${config.boxSize.b_width};height:${config.boxSize.b_height};${boxBackground}`;
             //颜色选择器
             const html = `
                 <div class="ew-color-picker-box ${boxDisabledClassName}" tabIndex="0" style="${boxStyle}">${colorBox}</div>
@@ -179,7 +177,7 @@ const methods = [
             this.hueThumb = getELByClass(ele, 'ew-color-slider-thumb');
             this.picker = getELByClass(ele, 'ew-color-picker');
             this.slider = getELByClass(ele, 'ew-color-slider');
-            this.hsbColor = this.config.defaultColor ? colorRgbaToHsb(colorToRgba(this.config.defaultColor)) : {
+            this.hsbColor = config.defaultColor ? colorRgbaToHsb(colorToRgba(config.defaultColor)) : {
                 h: 0,
                 s: 100,
                 b: 100,
@@ -291,10 +289,19 @@ methods.forEach(method => util.addMethod(ewColorPicker, method.name, method.func
  * 获取元素的子元素
  * @param {*} el 
  * @param {*} prop 
- * @param {*} isIndex 
+ * @param {*} bool 
  */
-function getELByClass(el, prop, isIndex) {
-    return !isIndex ? el.querySelector('.' + prop) : el.querySelectorAll('.' + prop);
+function getELByClass(el, prop, bool) {
+    return !bool ? el.querySelector('.' + prop) : el.querySelectorAll('.' + prop);
+}
+/**
+* 克隆颜色对象
+* @param {*} color 
+*/
+function cloneColor(color) {
+    const newColor = util.deepCloneObjByRecursion(color);
+    newColor.s = newColor.b = 100;
+    return newColor;
 }
 /**
  * 打开面板
@@ -392,8 +399,7 @@ function onRenderColorPicker(color, pickerFlag, el, scope) {
  * @param {*} panelHeight 
  */
 function changeCursorColor(scope, left, top, panelWidth, panelHeight) {
-    util.setCss(scope.pickerCursor, 'left', left + 'px');
-    util.setCss(scope.pickerCursor, 'top', top + 'px');
+    util.setSomeCss(scope.pickerCursor,[{ prop:'left',value:left + 'px'},{ prop:'top',value:top + 'px'}])
     const s = parseInt(100 * (left - 4) / panelWidth);
     const b = parseInt(100 * (panelHeight - (top - 4)) / panelHeight);
     //需要减去本身的宽高来做判断
@@ -427,15 +433,7 @@ function onClickPanel(scope, eve) {
         changeCursorColor(scope, left + 4, top + 4, panelWidth, panelHeight)
     }
 }
-/**
- * 克隆颜色对象
- * @param {*} color 
- */
-function cloneColor(color) {
-    const newColor = util.deepCloneObjByRecursion(color);
-    newColor.s = newColor.b = 100;
-    return newColor;
-}
+
 /**
  * 改变透明度
  * @param {*} scope 
