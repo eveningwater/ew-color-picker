@@ -16,6 +16,7 @@ declare namespace ewColorPicker {
     clear?: Function;
     isLog?: boolean;
     openPicker?: Function;
+    changeColor?: Function;
   };
 }
 export type WrapperType = ewColorPicker.WrapperType;
