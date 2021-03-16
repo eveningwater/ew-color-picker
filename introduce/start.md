@@ -6,7 +6,7 @@
 
 ### 安装
 ```js
-  npm install ewColorPicker --save-dev
+  npm install ew-color-picker --save-dev
 ```
 ### 引入
 
@@ -79,7 +79,7 @@ CDN:
 
 
 ```js
-   import ewColorPicker from 'ewColorPicker';
+   import ewColorPicker from 'ew-color-picker';
    import "ew-color-picker/dist/ew-color-picker.min.css";
    import "ew-color-picker/src/ew-color-picker.css";
    var pluginName = new ewColorPicker(option);//option为配置对象，详情见前述
