@@ -28,6 +28,10 @@
    color.config.clear = function(defaultColor){
      //返回默认颜色值
    }
+  //  颜色值改变时触发
+   color.config.changeColor = function(color){
+     console.log(color)
+   }
    //自定义配置
    var color = new ewColorPicker({
       el:'.demo2',//绑定选择器的dom元素
@@ -54,7 +58,10 @@
              console.log('关闭颜色选择器')
          }
       },//点击色块事件回调
-      isLog:false //是否开启打印信息,默认是true如果不指定该值的话
+      isLog:false, //是否开启打印信息,默认是true如果不指定该值的话
+      changeColor:(color) => {
+        console.log('颜色值改变时触发:',color);
+      }
   })
 
 ```
