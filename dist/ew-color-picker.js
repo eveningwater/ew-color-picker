@@ -90,38 +90,19 @@
     };
 
     util["clickOutSide"] = (el, callback) => {
-      const nodes = [];
-
-      const findNode = node => {
-        const children = node.children;
-        if (!children) return;
-        const childrenArr = util.ewObjToArray(children);
-        childrenArr.forEach(item => nodes.push(item));
-        childrenArr.forEach(item => findNode(item));
-      };
-
-      findNode(el);
-
       const mouseHandler = event => {
+        const rect = el.querySelector('.ew-color-picker').getBoundingClientRect();
         const target = event.target;
-        if (nodes.some(item => item.className === target.className)) return;
-        callback(nodes, mouseHandler);
+        if (!target) return;
+        const targetRect = target.getBoundingClientRect();
+        if (targetRect.x >= rect.x && targetRect.y >= rect.y) return;
+        callback();
+        setTimeout(() => {
+          util.off(document, 'mousedown', mouseHandler);
+        });
       };
 
       util.on(document, 'mousedown', mouseHandler);
-    };
-
-    util["unBindMouseDown"] = (nodes, mouseHandler) => {
-      if (!util.isDeepArray(nodes)) return;
-      const nodeLen = nodes.length;
-
-      if (nodeLen > 0) {
-        for (let i = 0; i < nodeLen; i++) {
-          nodes.splice(i, 1);
-        }
-      }
-
-      util.off(document, 'mousedown', mouseHandler);
     }; //the event
 
 
@@ -519,7 +500,8 @@
           b_height: null
         },
         pickerFlag: false,
-        colorValue: ""
+        colorValue: "",
+        changeColor: emptyFun
       }; //如果第二个参数传的是字符串，或DOM对象，则初始化默认的配置
 
       if (util.isString(config) || util.isDom(config)) {
@@ -548,18 +530,13 @@
           return false;
         };
 
-        const ele = util.isDom(element) ? element : util.isString(element) ? util.$(element) : null;
+        let ele = util.isDom(element) ? element : util.isString(element) ? util.$(element) : null;
         if (!ele) return util.ewError(errorText);
+        ele = ele.length ? ele[0] : ele;
+        if (!ele.tagName) return util.ewError(errorText);
 
-        if (ele.length) {
-          util.ewObjToArray(ele).forEach(item => {
-            if (!isNotDom(item)) new ewColorPicker(util.ewAssign(config, {
-              el: item
-            }));
-          });
-        } else {
-          if (!ele.tagName) return util.ewError(errorText);
-          if (!isNotDom(ele)) this.init(ele, config);
+        if (!isNotDom(ele)) {
+          this.init(ele, config);
         }
       }
     }, {
@@ -761,15 +738,8 @@
 
         util.on(this.pickerSure, 'click', () => onSureColor(ele, scope)); //是否禁止打开选择器面板，未禁止则点击可打开
 
-        if (!config.disabled) util.on(this.box, 'click', () => openPicker(ele, scope)); // 点击目标区域外关闭颜色选择器面板
-
-        util.clickOutSide(ele, (nodes, mouseHandler) => {
-          if (scope.config.pickerFlag) {
-            close(getHeiAni(scope), scope.picker);
-            scope.config.pickerFlag = false;
-            util.unBindMouseDown(nodes, mouseHandler);
-          }
-        }); //颜色面板点击事件
+        if (!config.disabled) util.on(this.box, 'click', () => openPicker(ele, scope));
+        handleClickOutSide(ele, config); //颜色面板点击事件
 
         util.on(this.pickerPanel, 'click', event => onClickPanel(scope, event)); //颜色面板拖拽元素拖拽事件
 
@@ -825,6 +795,23 @@
 
     function getELByClass(el, prop, bool) {
       return !bool ? el.querySelector('.' + prop) : el.querySelectorAll('.' + prop);
+    }
+    /**
+     * 点击目标元素之外关闭颜色选择器
+     * @param {*} ele 
+     * @param {*} config 
+     */
+
+
+    function handleClickOutSide(ele, config) {
+      util.clickOutSide(ele, () => {
+        if (config.pickerFlag) {
+          config.pickerFlag = false;
+          close(getHeiAni({
+            config: config
+          }), ele.querySelector('.ew-color-picker'));
+        }
+      });
     }
     /**
     * 克隆颜色对象
@@ -977,6 +964,7 @@
     function changeElementColor(scope, isAlpha) {
       const color = colorHsbToRgba(scope.hsbColor);
       scope.pickerInput.value = isAlpha || scope.config.alpha ? color : colorRgbaToHex(color);
+      if (util.isFunction(scope.config.changeColor)) scope.config.changeColor(scope.pickerInput.value);
     }
     /**
      * 点击面板改变

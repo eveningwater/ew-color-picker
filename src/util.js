@@ -60,32 +60,19 @@ util["off"] = (element, type, handler, useCapture = false) => {
         element.removeEventListener(type, handler, useCapture);
     }
 };
-util["clickOutSide"] = (el, callback) => {
-    const nodes = [];
-    const findNode = (node) => {
-        const children = node.children;
-        if (!children) return;
-        const childrenArr = util.ewObjToArray(children);
-        childrenArr.forEach(item => nodes.push(item));
-        childrenArr.forEach(item => findNode(item));
-    }
-    findNode(el);
+util["clickOutSide"] = (el,callback) => {
     const mouseHandler = (event) => {
+        const rect = el.querySelector('.ew-color-picker').getBoundingClientRect();
         const target = event.target;
-        if(nodes.some(item => item.className === target.className))return;
-        callback(nodes, mouseHandler);
+        if(!target)return;
+        const targetRect = target.getBoundingClientRect();
+        if(targetRect.x >= rect.x && targetRect.y >= rect.y)return;
+        callback();
+        setTimeout(() => {
+            util.off(document,'mousedown',mouseHandler);
+        })
     }
     util.on(document, 'mousedown', mouseHandler);
-}
-util["unBindMouseDown"] = (nodes, mouseHandler) => {
-    if (!util.isDeepArray(nodes)) return;
-    const nodeLen = nodes.length;
-    if (nodeLen > 0) {
-        for (let i = 0; i < nodeLen; i++) {
-            nodes.splice(i, 1);
-        }
-    }
-    util.off(document, 'mousedown', mouseHandler);
 }
 //the event
 util.eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
