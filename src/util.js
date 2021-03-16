@@ -32,6 +32,11 @@ util.ewAssign = function (target, args) {
 util.addClass = (el, className) => el.classList.add(className);
 util.removeClass = (el, className) => el.classList.remove(className);
 util['setCss'] = (el, prop, value) => el.style[prop] = value;
+util.setSomeCss = (el,propValue = []) => {
+    if(propValue.length){
+        propValue.forEach(p => util.setCss(el,p.prop,p.value));
+    }
+}
 util.isDom = el => util.isShallowObject(HTMLElement) ? el instanceof HTMLElement : el && util.isShallowObject(el) && el.nodeType === 1 && util.isString(el.nodeName) || el instanceof HTMLCollection || el instanceof NodeList;
 util.ewError = value => console.error('[ewColorPicker warn]\n' + new Error(value));
 util.deepCloneObjByJSON = obj => JSON.parse(JSON.stringify(obj));

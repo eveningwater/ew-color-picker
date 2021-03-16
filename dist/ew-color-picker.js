@@ -50,6 +50,12 @@
 
     util['setCss'] = (el, prop, value) => el.style[prop] = value;
 
+    util.setSomeCss = (el, propValue = []) => {
+      if (propValue.length) {
+        propValue.forEach(p => util.setCss(el, p.prop, p.value));
+      }
+    };
+
     util.isDom = el => util.isShallowObject(HTMLElement) ? el instanceof HTMLElement : el && util.isShallowObject(el) && el.nodeType === 1 && util.isString(el.nodeName) || el instanceof HTMLCollection || el instanceof NodeList;
 
     util.ewError = value => console.error('[ewColorPicker warn]\n' + new Error(value));
@@ -435,8 +441,13 @@
         let timer = null;
         let unit = 1 * 100 / (time / 10);
         let curAlpha = isIn ? 0 : 100;
-        util.setCss(element, 'display', isIn ? 'none' : 'block');
-        util.setCss(element, 'opacity', isIn ? 0 : 1);
+        util.setSomeCss(element, [{
+          prop: "display",
+          value: isIn ? 'none' : 'block'
+        }, {
+          prop: "opacity",
+          value: isIn ? 0 : 1
+        }]);
 
         let handleFade = function () {
           curAlpha = isIn ? curAlpha + unit : curAlpha - unit;
@@ -466,7 +477,7 @@
       };
     });
 
-    const consoleInfo = () => console.log(`%c ew-color-picker@1.6.3%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+    const consoleInfo = () => console.log(`%c ew-color-picker@1.6.4%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
     const NOT_DOM_ELEMENTS = ['html', 'head', 'body', 'meta', 'title', 'link', 'style', 'script'];
     const ERROR_VARIABLE = {
@@ -502,12 +513,13 @@
         sure: emptyFun,
         clear: emptyFun,
         openPicker: emptyFun,
-        isLog: true
-      }; // 盒子宽高
-
-      this.boxSize = {
-        b_width: null,
-        b_height: null
+        isLog: true,
+        boxSize: {
+          b_width: null,
+          b_height: null
+        },
+        pickerFlag: false,
+        colorValue: ""
       }; //如果第二个参数传的是字符串，或DOM对象，则初始化默认的配置
 
       if (util.isString(config) || util.isDom(config)) {
@@ -521,10 +533,6 @@
           const errorText = util.isDeepObject(config) ? ERROR_VARIABLE.PICKER_OBJECT_CONFIG_ERROR : ERROR_VARIABLE.PICKER_CONFIG_ERROR;
           return util.ewError(errorText);
         }
-
-      this.config.pickerFlag = false;
-      this.config.colorValue = "";
-      return this;
     }
 
     const methods$1 = [{
@@ -589,8 +597,8 @@
           return util.ewError(ERROR_VARIABLE.CONFIG_SIZE_ERROR);
         }
 
-        this.boxSize.b_width = b_width;
-        this.boxSize.b_height = b_height; //渲染选择器
+        config.boxSize.b_width = b_width;
+        config.boxSize.b_height = b_height; //渲染选择器
 
         this.render(bindElement, config);
       }
@@ -609,10 +617,10 @@
           if (isValidColor(color)) predefineColorHTML += `<div class="ew-pre-define-color" style="background:${color};"></div>`;
         }); //打开颜色选择器的方框
 
-        const colorBox = config.defaultColor ? `<div class="ew-color-picker-arrow" style="width:${this.boxSize.b_width};height:${this.boxSize.b_height};">
+        const colorBox = config.defaultColor ? `<div class="ew-color-picker-arrow" style="width:${this.config.boxSize.b_width};height:${this.config.boxSize.b_height};">
                 <div class="ew-color-picker-arrow-left"></div>
                 <div class="ew-color-picker-arrow-right"></div>
-            </div>` : `<div class="ew-color-picker-no" style="width:${this.boxSize.b_width};height:${this.boxSize.b_height};line-height:${this.boxSize.b_height};">&times;</div>`; //透明度
+            </div>` : `<div class="ew-color-picker-no" style="width:${this.config.boxSize.b_width};height:${this.config.boxSize.b_height};line-height:${this.config.boxSize.b_height};">&times;</div>`; //透明度
 
         if (config.alpha) {
           alphaBar = `<div class="ew-alpha-slider-bar">
@@ -636,7 +644,7 @@
         config.colorValue = config.defaultColor;
         if (!config.disabled && config.colorValue) boxBackground = `background:${config.colorValue}`; // 盒子样式
 
-        const boxStyle = `width:${this.boxSize.b_width};height:${this.boxSize.b_height};${boxBackground}`; //颜色选择器
+        const boxStyle = `width:${config.boxSize.b_width};height:${config.boxSize.b_height};${boxBackground}`; //颜色选择器
 
         const html = `
                 <div class="ew-color-picker-box ${boxDisabledClassName}" tabIndex="0" style="${boxStyle}">${colorBox}</div>
@@ -677,7 +685,7 @@
         this.hueThumb = getELByClass(ele, 'ew-color-slider-thumb');
         this.picker = getELByClass(ele, 'ew-color-picker');
         this.slider = getELByClass(ele, 'ew-color-slider');
-        this.hsbColor = this.config.defaultColor ? colorRgbaToHsb(colorToRgba(this.config.defaultColor)) : {
+        this.hsbColor = config.defaultColor ? colorRgbaToHsb(colorToRgba(config.defaultColor)) : {
           h: 0,
           s: 100,
           b: 100,
@@ -812,11 +820,22 @@
      * 获取元素的子元素
      * @param {*} el 
      * @param {*} prop 
-     * @param {*} isIndex 
+     * @param {*} bool 
      */
 
-    function getELByClass(el, prop, isIndex) {
-      return !isIndex ? el.querySelector('.' + prop) : el.querySelectorAll('.' + prop);
+    function getELByClass(el, prop, bool) {
+      return !bool ? el.querySelector('.' + prop) : el.querySelectorAll('.' + prop);
+    }
+    /**
+    * 克隆颜色对象
+    * @param {*} color 
+    */
+
+
+    function cloneColor(color) {
+      const newColor = util.deepCloneObjByRecursion(color);
+      newColor.s = newColor.b = 100;
+      return newColor;
     }
     /**
      * 打开面板
@@ -934,8 +953,13 @@
 
 
     function changeCursorColor(scope, left, top, panelWidth, panelHeight) {
-      util.setCss(scope.pickerCursor, 'left', left + 'px');
-      util.setCss(scope.pickerCursor, 'top', top + 'px');
+      util.setSomeCss(scope.pickerCursor, [{
+        prop: 'left',
+        value: left + 'px'
+      }, {
+        prop: 'top',
+        value: top + 'px'
+      }]);
       const s = parseInt(100 * (left - 4) / panelWidth);
       const b = parseInt(100 * (panelHeight - (top - 4)) / panelHeight); //需要减去本身的宽高来做判断
 
@@ -972,17 +996,6 @@
         const top = moveY >= panelHeight - 2 ? panelHeight : moveY <= 0 ? 0 : moveY;
         changeCursorColor(scope, left + 4, top + 4, panelWidth, panelHeight);
       }
-    }
-    /**
-     * 克隆颜色对象
-     * @param {*} color 
-     */
-
-
-    function cloneColor(color) {
-      const newColor = util.deepCloneObjByRecursion(color);
-      newColor.s = newColor.b = 100;
-      return newColor;
     }
     /**
      * 改变透明度
