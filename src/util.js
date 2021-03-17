@@ -60,14 +60,18 @@ util["off"] = (element, type, handler, useCapture = false) => {
         element.removeEventListener(type, handler, useCapture);
     }
 };
+util['getRect'] = (el) => el.getBoundingClientRect();
 util["clickOutSide"] = (el,callback) => {
     const mouseHandler = (event) => {
-        const rect = el.querySelector('.ew-color-picker').getBoundingClientRect();
+        const rect = util.getRect(el.querySelector('.ew-color-picker'));
+        const boxRect = util.getRect(el.querySelector('.ew-color-picker-box'));
         const target = event.target;
         if(!target)return;
-        const targetRect = target.getBoundingClientRect();
+        const targetRect = util.getRect(target);
         // 利用rect来判断用户点击的地方是否在颜色选择器面板区域之内
         if(targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width)return;
+        // 如果点击的是盒子元素
+        if(targetRect.x >= boxRect.x && targetRect.y >= boxRect.y && targetRect.width <= boxRect.width && targetRect.height <= boxRect.height)return;
         callback();
         setTimeout(() => {
             util.off(document,'mousedown',mouseHandler);

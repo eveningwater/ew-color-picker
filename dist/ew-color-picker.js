@@ -89,14 +89,19 @@
       }
     };
 
+    util['getRect'] = el => el.getBoundingClientRect();
+
     util["clickOutSide"] = (el, callback) => {
       const mouseHandler = event => {
-        const rect = el.querySelector('.ew-color-picker').getBoundingClientRect();
+        const rect = util.getRect(el.querySelector('.ew-color-picker'));
+        const boxRect = util.getRect(el.querySelector('.ew-color-picker-box'));
         const target = event.target;
         if (!target) return;
-        const targetRect = target.getBoundingClientRect(); // 利用rect来判断用户点击的地方是否在颜色选择器面板区域之内
+        const targetRect = util.getRect(target); // 利用rect来判断用户点击的地方是否在颜色选择器面板区域之内
 
-        if (targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width) return;
+        if (targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width) return; // 如果点击的是盒子元素
+
+        if (targetRect.x >= boxRect.x && targetRect.y >= boxRect.y && targetRect.width <= boxRect.width && targetRect.height <= boxRect.height) return;
         callback();
         setTimeout(() => {
           util.off(document, 'mousedown', mouseHandler);
@@ -459,7 +464,7 @@
       };
     });
 
-    const consoleInfo = () => console.log(`%c ew-color-picker@1.6.5%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+    const consoleInfo = () => console.log(`%c ew-color-picker@1.6.6%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
     const NOT_DOM_ELEMENTS = ['html', 'head', 'body', 'meta', 'title', 'link', 'style', 'script'];
     const ERROR_VARIABLE = {
@@ -737,10 +742,10 @@
 
         util.on(this.pickerClear, 'click', () => onClearColor(ele, scope)); //确认按钮事件
 
-        util.on(this.pickerSure, 'click', () => onSureColor(ele, scope)); //是否禁止打开选择器面板，未禁止则点击可打开
+        util.on(this.pickerSure, 'click', () => onSureColor(ele, scope));
+        handleClickOutSide(ele, config); //是否禁止打开选择器面板，未禁止则点击可打开
 
-        if (!config.disabled) util.on(this.box, 'click', () => openPicker(ele, scope));
-        handleClickOutSide(ele, config); //颜色面板点击事件
+        if (!config.disabled) util.on(this.box, 'click', () => openPicker(ele, scope)); //颜色面板点击事件
 
         util.on(this.pickerPanel, 'click', event => onClickPanel(scope, event)); //颜色面板拖拽元素拖拽事件
 
