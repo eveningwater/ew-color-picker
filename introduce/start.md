@@ -11,7 +11,7 @@
 ### 引入
 
 ```js
-  <script src="./dist/ewColorPicker.min.js"></script>
+  <script src="./dist/ew-color-picker.min.js"></script>
 ```
 
 颜色选择器插件如下:
@@ -64,6 +64,16 @@
       }
   })
 
+```
+> tips: 需要注意的是，从1.6.4版本开始，如果传入的dom元素是多个，则只有第一个dom元素渲染成颜色选择器，如果需要渲染多个颜色选择器，可使用一个数组来实例化。例如:
+```js
+   let els = document.querySelectorAll('.demo');
+   els.forEach(item => {
+     new ewColorPicker(item);
+     //或new ewColorPicker({
+    //  el:item,
+    //  }) //以及一些相关配置属性
+   })
 ```
 
 ## cdn引入

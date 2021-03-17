@@ -30,6 +30,10 @@
    color.config.clear = function(defaultColor){
      //返回默认颜色值
    }
+  //  当颜色值改变时触发
+  color.config.changeColor = function(color){
+     //返回改变后的颜色值，即color
+  }
    //自定义配置
    var color = new ewColorPicker({
       el:'.demo2',//绑定选择器的dom元素
@@ -56,7 +60,10 @@
              console.log('关闭颜色选择器')
          }
       },//点击色块事件回调
-      isLog:false //是否开启打印信息,默认是true如果不指定该值的话
+      isLog:false, //是否开启打印信息,默认是true如果不指定该值的话
+      changeColor:(color) => {
+        // 返回改变后的颜色值
+      }
   })
 
 ```
@@ -75,6 +82,16 @@ CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
    import "ew-color-picker/src/ew-color-picker.css"
    var pluginName = new ewColorPicker(option);//option为配置对象，详情见前述
 
+```
+> tips: 需要注意的是，从1.6.4版本开始，如果传入的dom元素是多个，则只有第一个dom元素渲染成颜色选择器，如果需要渲染多个颜色选择器，可使用一个数组来实例化。例如:
+```js
+   let els = document.querySelectorAll('.demo');
+   els.forEach(item => {
+     new ewColorPicker(item);
+     //或new ewColorPicker({
+    //  el:item,
+    //  }) //以及一些相关配置属性
+   })
 ```
 
 更多详情参阅文档官网介绍[ewColorPicker](https://eveningwater.github.io/ew-color-picker/);

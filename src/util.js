@@ -66,7 +66,8 @@ util["clickOutSide"] = (el,callback) => {
         const target = event.target;
         if(!target)return;
         const targetRect = target.getBoundingClientRect();
-        if(targetRect.x >= rect.x && targetRect.y >= rect.y)return;
+        // 利用rect来判断用户点击的地方是否在颜色选择器面板区域之内
+        if(targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width)return;
         callback();
         setTimeout(() => {
             util.off(document,'mousedown',mouseHandler);
