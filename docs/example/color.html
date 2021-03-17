@@ -21,7 +21,10 @@
             el: ".demo1",
             isLog: false,
             alpha: true,
-            predefineColor: ['#223456', 'rgba(122,35,77,.5)', 'rgba(255,255,255,1)']
+            predefineColor: ['#223456', 'rgba(122,35,77,.5)', 'rgba(255,255,255,1)'],
+            changeColor:(color) => {
+                console.log(color);
+            }
         });
         var color2 = new ewColorPicker({
             el: '.demo2',
