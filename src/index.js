@@ -234,9 +234,9 @@ const methods = [
             util.on(this.pickerClear, 'click', () => onClearColor(ele, scope));
             //确认按钮事件
             util.on(this.pickerSure, 'click', () => onSureColor(ele, scope));
+            handleClickOutSide(ele,config);
             //是否禁止打开选择器面板，未禁止则点击可打开
             if (!config.disabled) util.on(this.box, 'click', () => openPicker(ele, scope));
-            handleClickOutSide(ele,config);
             //颜色面板点击事件
             util.on(this.pickerPanel, 'click', event => onClickPanel(scope, event));
             //颜色面板拖拽元素拖拽事件
