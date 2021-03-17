@@ -383,7 +383,7 @@ function onSureColor(el, scope) {
     scope.config.sure(result, scope);
 }
 /**
- * 重置颜色选择器
+ * 重新渲染颜色选择器
  * @param {*} color 
  * @param {*} pickerFlag 
  * @param {*} el 
@@ -490,11 +490,8 @@ function setDefaultValue(context, panelWidth, panelHeight) {
  * @param {*} y 
  */
 function changeHue(context, y) {
-    const sliderBarHeight = context.hueBar.offsetHeight,
-        sliderBarRect = context.hueBar.getBoundingClientRect();
-    const sliderThumbY = Math.max(0, Math.min(y - sliderBarRect.y, sliderBarHeight));
-    util.setCss(context.hueThumb, 'top', sliderThumbY + 'px');
-    context.hsbColor.h = cloneColor(context.hsbColor).h = parseInt(360 * sliderThumbY / sliderBarHeight);
+    let value = setAlphaHueTop(context.hueBar,context.hueThumb,y);
+    context.hsbColor.h = cloneColor(context.hsbColor).h = parseInt(360 * value.barThumbY / value.barHeight);
     util.setCss(context.pickerPanel, 'background', colorRgbaToHex(colorHsbToRgba(cloneColor(context.hsbColor))));
     changeElementColor(context);
     changeAlphaBar(context);
@@ -505,12 +502,24 @@ function changeHue(context, y) {
  * @param {*} y 
  */
 function changeAlpha(context, y) {
-    const alphaBarHeight = context.alphaBar.offsetHeight,
-        alphaBarRect = context.alphaBar.getBoundingClientRect();
-    const alphaThumbY = Math.max(0, Math.min(y - alphaBarRect.y, alphaBarHeight));
-    util.setCss(context.alphaBarThumb, 'top', alphaThumbY + 'px');
-    const alpha = ((alphaBarHeight - alphaThumbY <= 0 ? 0 : alphaBarHeight - alphaThumbY) / alphaBarHeight);
+    let value = setAlphaHueTop(context.alphaBar,context.alphaBarThumb,y);
+    const alpha = ((value.barHeight - value.barThumbY <= 0 ? 0 : value.barHeight - value.barThumbY) / value.barHeight);
     context.hsbColor.a = alpha >= 1 ? 1 : alpha.toFixed(2);
     changeElementColor(context, true);
+}
+/**
+ * 设置hue和alpha的top
+ * @param {*} bar 
+ * @param {*} thumb 
+ * @param {*} y 
+ */
+function setAlphaHueTop(bar,thumb,y){
+    const barHeight = bar.offsetHeight,barRect = bar.getBoundingClientRect();
+    const barThumbY = Math.max(0,Math.min(y - barRect.y,barHeight));
+    util.setCss(thumb,'top',barThumbY + 'px');
+    return {
+        barHeight,
+        barThumbY
+    }
 }
 export default ewColorPicker;

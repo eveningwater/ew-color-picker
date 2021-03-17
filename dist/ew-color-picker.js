@@ -94,8 +94,9 @@
         const rect = el.querySelector('.ew-color-picker').getBoundingClientRect();
         const target = event.target;
         if (!target) return;
-        const targetRect = target.getBoundingClientRect();
-        if (targetRect.x >= rect.x && targetRect.y >= rect.y) return;
+        const targetRect = target.getBoundingClientRect(); // 利用rect来判断用户点击的地方是否在颜色选择器面板区域之内
+
+        if (targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width) return;
         callback();
         setTimeout(() => {
           util.off(document, 'mousedown', mouseHandler);
@@ -458,7 +459,7 @@
       };
     });
 
-    const consoleInfo = () => console.log(`%c ew-color-picker@1.6.4%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+    const consoleInfo = () => console.log(`%c ew-color-picker@1.6.5%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
     const NOT_DOM_ELEMENTS = ['html', 'head', 'body', 'meta', 'title', 'link', 'style', 'script'];
     const ERROR_VARIABLE = {
@@ -916,7 +917,7 @@
       scope.config.sure(result, scope);
     }
     /**
-     * 重置颜色选择器
+     * 重新渲染颜色选择器
      * @param {*} color 
      * @param {*} pickerFlag 
      * @param {*} el 
@@ -1040,11 +1041,8 @@
 
 
     function changeHue(context, y) {
-      const sliderBarHeight = context.hueBar.offsetHeight,
-            sliderBarRect = context.hueBar.getBoundingClientRect();
-      const sliderThumbY = Math.max(0, Math.min(y - sliderBarRect.y, sliderBarHeight));
-      util.setCss(context.hueThumb, 'top', sliderThumbY + 'px');
-      context.hsbColor.h = cloneColor(context.hsbColor).h = parseInt(360 * sliderThumbY / sliderBarHeight);
+      let value = setAlphaHueTop(context.hueBar, context.hueThumb, y);
+      context.hsbColor.h = cloneColor(context.hsbColor).h = parseInt(360 * value.barThumbY / value.barHeight);
       util.setCss(context.pickerPanel, 'background', colorRgbaToHex(colorHsbToRgba(cloneColor(context.hsbColor))));
       changeElementColor(context);
       changeAlphaBar(context);
@@ -1057,13 +1055,28 @@
 
 
     function changeAlpha(context, y) {
-      const alphaBarHeight = context.alphaBar.offsetHeight,
-            alphaBarRect = context.alphaBar.getBoundingClientRect();
-      const alphaThumbY = Math.max(0, Math.min(y - alphaBarRect.y, alphaBarHeight));
-      util.setCss(context.alphaBarThumb, 'top', alphaThumbY + 'px');
-      const alpha = (alphaBarHeight - alphaThumbY <= 0 ? 0 : alphaBarHeight - alphaThumbY) / alphaBarHeight;
+      let value = setAlphaHueTop(context.alphaBar, context.alphaBarThumb, y);
+      const alpha = (value.barHeight - value.barThumbY <= 0 ? 0 : value.barHeight - value.barThumbY) / value.barHeight;
       context.hsbColor.a = alpha >= 1 ? 1 : alpha.toFixed(2);
       changeElementColor(context, true);
+    }
+    /**
+     * 设置hue和alpha的top
+     * @param {*} bar 
+     * @param {*} thumb 
+     * @param {*} y 
+     */
+
+
+    function setAlphaHueTop(bar, thumb, y) {
+      const barHeight = bar.offsetHeight,
+            barRect = bar.getBoundingClientRect();
+      const barThumbY = Math.max(0, Math.min(y - barRect.y, barHeight));
+      util.setCss(thumb, 'top', barThumbY + 'px');
+      return {
+        barHeight,
+        barThumbY
+      };
     }
 
     return ewColorPicker;
