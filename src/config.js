@@ -13,6 +13,9 @@ const baseDefaultConfig = {
     isLog: true,
     changeColor: emptyFun,
     hasBox: true,
-    isClickOutside: true
+    isClickOutside: true,
+    hasClear:true,
+    hasSure:true,
+    hasColorInput:true
 }
 export default baseDefaultConfig;

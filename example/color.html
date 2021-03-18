@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>color demo</title>
     <link rel="stylesheet" href="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.css">
+    <!-- <link rel="stylesheet" href="../dist/ew-color-picker.min.css"> -->
     <style>
         .btn-group {
             display: flex;
@@ -31,12 +32,17 @@
     <script>
         var color1 = new ewColorPicker({
             el: ".demo1",
-            isLog: false,
-            alpha: true,
-            predefineColor: ['#223456', 'rgba(122,35,77,.5)', 'rgba(255,255,255,1)'],
-            changeColor:(color) => {
-                console.log(color);
-            }
+            // isLog: false,
+            // alpha: true,
+            // predefineColor: ['#223456', 'rgba(122,35,77,.5)', 'rgba(255,255,255,1)'],
+            // changeColor:(color) => {
+            //     console.log(color);
+            // }
+            // isClickOutside:false,
+            // hasBox:false,
+            // hasClear:false,
+            // hasSure:false,
+            // hasColorInput:false
         });
         var color2 = new ewColorPicker({
             el: '.demo2',
@@ -87,12 +93,12 @@
             el:".demo5",
             ...ewColorPicker.getDefaultConfig()
         })
-        // console.log(ewColorPicker.getDefaultConfig())
+        // // console.log(ewColorPicker.getDefaultConfig())
         document.getElementById('openBtn').onclick = function (){
-            color4.openPicker();
+            color1.openPicker();
         }
         document.getElementById('closeBtn').onclick = function (){
-            color4.closePicker();
+            color1.closePicker();
         }
         document.getElementById("updateBtn").onclick = function(){
             color4.updateColor("#2396ef");
