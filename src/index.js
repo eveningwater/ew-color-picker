@@ -35,7 +35,7 @@ function ewColorPicker(config) {
 ewColorPicker.createColorPicker = function (config) {
     return new ewColorPicker(config);
 }
-ewColorPicker.getDefaultConfig = function(){
+ewColorPicker.getDefaultConfig = function () {
     return colorPickerConfig;
 }
 const methods = [
@@ -98,7 +98,18 @@ const methods = [
     {
         name: "render",
         func: function (element, config) {
-            let predefineColorHTML = '', alphaBar = '', hueBar = '', predefineHTML = '', boxDisabledClassName = '', boxBackground = '', boxHTML = '';
+            let predefineColorHTML = '', 
+            alphaBar = '', 
+            hueBar = '', 
+            predefineHTML = '', 
+            boxDisabledClassName = '', 
+            boxBackground = '', 
+            boxHTML = '',
+            clearHTML = '',
+            sureHTML = '',
+            inputHTML = '',
+            btnGroupHTML = '',
+            dropHTML = '';
             const p_c = config.predefineColor;
             if (!util.isDeepArray(p_c)) return util.ewError(ERROR_VARIABLE.PREDEFINE_COLOR_ERROR);
             if (p_c.length) p_c.map(color => { if (isValidColor(color)) predefineColorHTML += `<div class="ew-pre-define-color" style="background:${color};"></div>` });
@@ -131,9 +142,23 @@ const methods = [
             if (config.hasBox) {
                 boxHTML = `<div class="ew-color-picker-box ${boxDisabledClassName}" tabIndex="0" style="${boxStyle}">${colorBox}</div>`;
             }
+            if (config.hasClear) {
+                clearHTML = '<button class="ew-color-clear ew-color-drop-btn">清空</button>';
+            }
+            if(config.hasSure){
+                sureHTML = `<button class="ew-color-sure ew-color-drop-btn">确定</button>`;
+            }
+            if(config.hasClear || config.hasSure){
+                btnGroupHTML = `<div class="ew-color-drop-btn-group">${ clearHTML }${ sureHTML }</div>`;
+            }
+            if(config.hasColorInput){
+                inputHTML = '<input type="text" class="ew-color-input">';
+            }
+            if(config.hasColorInput || config.hasClear || config.hasSure){
+                dropHTML = `<div class="ew-color-drop-container">${ inputHTML }${ btnGroupHTML }</div>`;
+            }
             //颜色选择器
-            const html = `
-                ${boxHTML}
+            const html = `${boxHTML}
                 <div class="ew-color-picker">
                     <div class="ew-color-picker-content">
                         <div class="ew-color-slider">${alphaBar}${hueBar}</div>
@@ -143,13 +168,7 @@ const methods = [
                             <div class="ew-color-cursor"></div>
                         </div>
                     </div>
-                    <div class="ew-color-drop-container">
-                        <input type="text" class="ew-color-input">
-                        <div class="ew-color-drop-btn-group">
-                            <button class="ew-color-clear ew-color-drop-btn">清空</button>
-                            <button class="ew-color-sure ew-color-drop-btn">确定</button>
-                        </div>
-                    </div>
+                    ${ dropHTML }
                     ${predefineHTML}
                 </div>`;
             element.innerHTML = html;
@@ -168,9 +187,15 @@ const methods = [
             this.arrowRight = getELByClass(ele, 'ew-color-picker-arrow-right');
             this.pickerPanel = getELByClass(ele, 'ew-color-panel');
             this.pickerCursor = getELByClass(ele, 'ew-color-cursor');
-            this.pickerInput = getELByClass(ele, 'ew-color-input');
-            this.pickerClear = getELByClass(ele, 'ew-color-clear');
-            this.pickerSure = getELByClass(ele, 'ew-color-sure');
+            if(config.hasColorInput){
+                this.pickerInput = getELByClass(ele, 'ew-color-input');
+            }
+            if(config.hasClear){
+                this.pickerClear = getELByClass(ele, 'ew-color-clear');
+            }
+            if(config.hasSure){
+                this.pickerSure = getELByClass(ele, 'ew-color-sure');
+            }
             this.hueBar = getELByClass(ele, 'ew-color-slider-bar');
             this.hueThumb = getELByClass(ele, 'ew-color-slider-thumb');
             this.picker = getELByClass(ele, 'ew-color-picker');
@@ -229,11 +254,17 @@ const methods = [
                 util.on(this.alphaBar, 'click', event => changeAlpha(scope, event.y));
             }
             //输入框输入事件
-            util.on(this.pickerInput, 'blur', event => onInputColor(scope, event.target.value))
+            if(config.hasColorInput){
+                util.on(this.pickerInput, 'blur', event => onInputColor(scope, event.target.value))
+            }
             //清空按钮事件
-            util.on(this.pickerClear, 'click', () => onClearColor(ele, scope));
+            if(config.hasClear){
+                util.on(this.pickerClear, 'click', () => onClearColor(ele, scope));
+            }
             //确认按钮事件
-            util.on(this.pickerSure, 'click', () => onSureColor(ele, scope));
+            if(config.hasSure){
+                util.on(this.pickerSure, 'click', () => onSureColor(ele, scope));
+            }
             if (!config.hasBox) {
                 this.config.pickerFlag = true;
                 open(getHeiAni(scope), this.picker);
@@ -303,7 +334,13 @@ const methods = [
                 this.config.pickerFlag = true;
                 const funOpen = () => open(getHeiAni(this), this.picker);
                 const funRender = () => onRenderColorPicker(this.config.defaultColor, this.config.pickerFlag, this.rootElement, this);
-                handlePicker(this, funOpen, funRender);
+                if (this.config.hasBox) {
+                    funRender();
+                    funOpen();
+                } else {
+                    funOpen();
+                    funRender();
+                }
                 setDefaultValue(this, this.panelWidth, this.panelHeight);
             }
         }
@@ -316,29 +353,12 @@ const methods = [
             }
             if (this.config.pickerFlag) {
                 this.config.pickerFlag = false;
-                let funClose = () => close(getHeiAni(this), this.picker);
-                let funRender = () => onRenderColorPicker(this.config.defaultColor, this.config.pickerFlag, this.rootElement, this);
-                handlePicker(this, funClose, funRender);
+                close(getHeiAni(this), this.picker)
             }
         }
     }
 ];
 methods.forEach(method => util.addMethod(ewColorPicker, method.name, method.func));
-/**
- * 手动开启或关闭颜色选择器
- * @param {*} context 
- * @param {*} showOrHidePicker 
- * @param {*} renderPicker 
- */
-function handlePicker(context, showOrHidePicker, renderPicker) {
-    if (context.config.hasBox) {
-        renderPicker();
-        showOrHidePicker();
-    } else {
-        showOrHidePicker();
-        renderPicker();
-    }
-}
 /**
  * 修正输入框颜色值问题
  * @param {*} bgColor 
@@ -346,7 +366,9 @@ function handlePicker(context, showOrHidePicker, renderPicker) {
  */
 function mixedColorValue(bgColor, scope) {
     const setColor = colorRgbaToHex(bgColor);
-    scope.pickerInput.value = scope.config.alpha ? colorToRgba(setColor) : setColor;
+    if(scope.pickerInput){
+        scope.pickerInput.value = scope.config.alpha ? colorToRgba(setColor) : setColor;
+    }
 }
 /**
  * 获取元素的子元素
@@ -490,8 +512,11 @@ function changeCursorColor(scope, left, top, panelWidth, panelHeight) {
  */
 function changeElementColor(scope, isAlpha) {
     const color = colorHsbToRgba(scope.hsbColor);
-    scope.pickerInput.value = isAlpha || scope.config.alpha ? color : colorRgbaToHex(color);
-    if (util.isFunction(scope.config.changeColor)) scope.config.changeColor(scope.pickerInput.value);
+    const newColor = isAlpha || scope.config.alpha ? color : colorRgbaToHex(color);
+    if(scope.pickerInput){
+        scope.pickerInput.value = newColor;
+    }
+    if (util.isFunction(scope.config.changeColor)) scope.config.changeColor(newColor);
 }
 /**
  * 点击面板改变
@@ -526,7 +551,9 @@ function changeAlphaBar(scope) {
  * @param {*} panelHeight 
  */
 function setDefaultValue(context, panelWidth, panelHeight) {
-    context.pickerInput.value = context.config.alpha ? colorHsbToRgba(context.hsbColor) : colorRgbaToHex(colorHsbToRgba(context.hsbColor));
+    if(context.pickerInput){
+        context.pickerInput.value = context.config.alpha ? colorHsbToRgba(context.hsbColor) : colorRgbaToHex(colorHsbToRgba(context.hsbColor));
+    }
     let sliderBarHeight = 0;
     let l = parseInt(context.hsbColor.s * panelWidth / 100),
         t = parseInt(panelHeight - context.hsbColor.b * panelHeight / 100);

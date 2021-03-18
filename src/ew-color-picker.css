@@ -169,6 +169,7 @@
 
 .ew-color-drop-container {
   margin-top: 6px;
+  min-height: 28px;
 }
 
 .ew-color-input {
