@@ -57,13 +57,22 @@
          }else{
              console.log('关闭颜色选择器')
          }
-      },//点击色块事件回调
+      },//点击色块事件回调,需要注意该事件触发必须要将hasBox设置为true
       isLog:false, //是否开启打印信息,默认是true如果不指定该值的话
       changeColor:(color) => {
         console.log('颜色值改变时触发:',color);
-      }
+      },
+      hasBox:true //默认为true,或者为false，表示是否显示颜色选择器
+      isClickOutside:true //默认为true，或者设置为false,表示是否允许点击颜色选择器区域之外关闭颜色选择器
   })
-
+  //如果不喜欢实例化的方式来创建一个颜色选择器，也可以使用createColorPicker方法
+  ewColorPicker.createColorPicker(config);//config为属性配置对象
+  //当然还提供了一个api，可以获取默认的配置对象
+  ewColorPicker.getDefaultConfig();
+  //实例化的颜色选择器类，我们还提供了三个api，如下:
+  color.openPicker(openPickerAni);//手动打开颜色选择器，参数为动画类型，即height或opacity
+  color.closePicker(openPickerAni);//手动关闭颜色选择器，参数同手动打开方法一样
+  color.updateColor(color);//手动更新颜色值，参数为颜色值，不合格的颜色值会给出错误提示,并且颜色选择器面板要处于开启状态
 ```
 > tips: 需要注意的是，从1.6.4版本开始，如果传入的dom元素是多个，则只有第一个dom元素渲染成颜色选择器，如果需要渲染多个颜色选择器，可使用一个数组来实例化。例如:
 ```js
