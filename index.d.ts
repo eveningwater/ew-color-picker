@@ -17,11 +17,15 @@ declare namespace ewColorPicker {
     isLog?: boolean;
     openPicker?: Function;
     changeColor?: Function;
+    hasBox?:boolean;
+    isClickOutside?:boolean;
   };
 }
 export type WrapperType = ewColorPicker.WrapperType;
 export type OptionType = ewColorPicker.OptionType;
 declare class ewColorPicker {
     constructor(colorPickerOption:WrapperType | OptionType);
+    createColorPicker(colorPickerOption:WrapperType | OptionType);
+    getDefaultConfig();
 }
 export default ewColorPicker; 

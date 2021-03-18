@@ -7,6 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>color demo</title>
     <link rel="stylesheet" href="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.css">
+    <style>
+        .btn-group {
+            display: flex;
+            justify-content: flex-end;
+        }
+    </style>
 </head>
 
 <body>
@@ -14,6 +20,12 @@
     <div class="demo2"></div>
     <div class="demo3"></div>
     <div class="demo4"></div>
+    <div class="demo5"></div>
+    <div class="btn-group">
+        <button type="button" id="openBtn">开启颜色选择器</button>
+        <button type="button" id="closeBtn">关闭颜色选择器</button>
+        <button type="button" id="updateBtn">更新颜色值</button>
+    </div>
     <script src="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.js"></script>
     <!-- <script src="../dist/ew-color-picker.js"></script> -->
     <script>
@@ -70,7 +82,21 @@
             },
             isLog: false
         });
-        var color4 = new ewColorPicker(document.querySelector('.demo4'));
+        var color4 = new ewColorPicker('.demo4');
+        ewColorPicker.createColorPicker({
+            el:".demo5",
+            ...ewColorPicker.getDefaultConfig()
+        })
+        // console.log(ewColorPicker.getDefaultConfig())
+        document.getElementById('openBtn').onclick = function (){
+            color4.openPicker();
+        }
+        document.getElementById('closeBtn').onclick = function (){
+            color4.closePicker();
+        }
+        document.getElementById("updateBtn").onclick = function(){
+            color4.updateColor("#2396ef");
+        }
     </script>
 </body>
 

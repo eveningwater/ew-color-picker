@@ -39,6 +39,7 @@ util.setSomeCss = (el,propValue = []) => {
 }
 util.isDom = el => util.isShallowObject(HTMLElement) ? el instanceof HTMLElement : el && util.isShallowObject(el) && el.nodeType === 1 && util.isString(el.nodeName) || el instanceof HTMLCollection || el instanceof NodeList;
 util.ewError = value => console.error('[ewColorPicker warn]\n' + new Error(value));
+util.ewWarn = value => console.warn('[ewColorPicker warn]\n' + value);
 util.deepCloneObjByJSON = obj => JSON.parse(JSON.stringify(obj));
 util.deepCloneObjByRecursion = (function f(obj) {
     if (!util.isShallowObject(obj)) return;
@@ -61,18 +62,26 @@ util["off"] = (element, type, handler, useCapture = false) => {
     }
 };
 util['getRect'] = (el) => el.getBoundingClientRect();
-util["clickOutSide"] = (el,callback) => {
+util["clickOutSide"] = (el,config,callback) => {
     const mouseHandler = (event) => {
         const rect = util.getRect(el.querySelector('.ew-color-picker'));
-        const boxRect = util.getRect(el.querySelector('.ew-color-picker-box'));
+        let boxRect = null;
+        if(config.hasBox){
+            boxRect = util.getRect(el.querySelector('.ew-color-picker-box'))
+        }
         const target = event.target;
         if(!target)return;
         const targetRect = util.getRect(target);
         // 利用rect来判断用户点击的地方是否在颜色选择器面板区域之内
-        if(targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width)return;
-        // 如果点击的是盒子元素
-        if(targetRect.x >= boxRect.x && targetRect.y >= boxRect.y && targetRect.width <= boxRect.width && targetRect.height <= boxRect.height)return;
-        callback();
+        if(config.hasBox){
+            if(targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width)return;
+            // 如果点击的是盒子元素
+            if(targetRect.x >= boxRect.x && targetRect.y >= boxRect.y && targetRect.width <= boxRect.width && targetRect.height <= boxRect.height)return;
+            callback();
+        }else{
+            if(targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width && targetRect.height <= rect.height)return;
+            callback();
+        }
         setTimeout(() => {
             util.off(document,'mousedown',mouseHandler);
         })

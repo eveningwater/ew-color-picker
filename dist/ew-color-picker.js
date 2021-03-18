@@ -60,6 +60,8 @@
 
     util.ewError = value => console.error('[ewColorPicker warn]\n' + new Error(value));
 
+    util.ewWarn = value => console.warn('[ewColorPicker warn]\n' + value);
+
     util.deepCloneObjByJSON = obj => JSON.parse(JSON.stringify(obj));
 
     util.deepCloneObjByRecursion = function f(obj) {
@@ -91,18 +93,29 @@
 
     util['getRect'] = el => el.getBoundingClientRect();
 
-    util["clickOutSide"] = (el, callback) => {
+    util["clickOutSide"] = (el, config, callback) => {
       const mouseHandler = event => {
         const rect = util.getRect(el.querySelector('.ew-color-picker'));
-        const boxRect = util.getRect(el.querySelector('.ew-color-picker-box'));
+        let boxRect = null;
+
+        if (config.hasBox) {
+          boxRect = util.getRect(el.querySelector('.ew-color-picker-box'));
+        }
+
         const target = event.target;
         if (!target) return;
         const targetRect = util.getRect(target); // 利用rect来判断用户点击的地方是否在颜色选择器面板区域之内
 
-        if (targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width) return; // 如果点击的是盒子元素
+        if (config.hasBox) {
+          if (targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width) return; // 如果点击的是盒子元素
 
-        if (targetRect.x >= boxRect.x && targetRect.y >= boxRect.y && targetRect.width <= boxRect.width && targetRect.height <= boxRect.height) return;
-        callback();
+          if (targetRect.x >= boxRect.x && targetRect.y >= boxRect.y && targetRect.width <= boxRect.width && targetRect.height <= boxRect.height) return;
+          callback();
+        } else {
+          if (targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width && targetRect.height <= rect.height) return;
+          callback();
+        }
+
         setTimeout(() => {
           util.off(document, 'mousedown', mouseHandler);
         });
@@ -464,7 +477,7 @@
       };
     });
 
-    const consoleInfo = () => console.log(`%c ew-color-picker@1.6.6%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+    const consoleInfo = () => console.log(`%c ew-color-picker@1.6.7%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
     const NOT_DOM_ELEMENTS = ['html', 'head', 'body', 'meta', 'title', 'link', 'style', 'script'];
     const ERROR_VARIABLE = {
@@ -476,7 +489,28 @@
       DOM_NOT_ERROR: 'Do not pass these elements: ' + NOT_DOM_ELEMENTS.join(',') + ' as a param,pass the correct element such as div!',
       PREDEFINE_COLOR_ERROR: 'PredefineColor is a array that is need to contain color value!',
       CONSTRUCTOR_ERROR: 'ewColorPicker is a constructor and should be called with the new keyword!',
-      DEFAULT_COLOR_ERROR: 'the "defaultColor" is not a invalid color,make sure to use the correct color!'
+      DEFAULT_COLOR_ERROR: 'the "defaultColor" is not a invalid color,make sure to use the correct color!',
+      UPDATE_PARAM_COLOR_ERROR: 'the param is not a invalid color,make sure to use the correct color!',
+      UPDATE_PARAM_COLOR_WARN: "the color picker is hided,make sure showing it and then updating the color!"
+    };
+
+    const emptyFun = function () {};
+
+    const baseDefaultConfig = {
+      hue: true,
+      alpha: false,
+      size: "normal",
+      predefineColor: [],
+      disabled: false,
+      defaultColor: "",
+      openPickerAni: "height",
+      sure: emptyFun,
+      clear: emptyFun,
+      openPicker: emptyFun,
+      isLog: true,
+      changeColor: emptyFun,
+      hasBox: true,
+      isClickOutside: true
     };
 
     /**
@@ -485,29 +519,17 @@
      */
 
     function ewColorPicker(config) {
-      if (util.isUndefined(new.target)) return util.ewError(ERROR_VARIABLE.CONSTRUCTOR_ERROR); // 一个空函数
-
-      const emptyFun = function () {};
-
-      const defaultConfig = {
-        hue: true,
-        alpha: false,
-        size: "normal",
-        predefineColor: [],
-        disabled: false,
-        defaultColor: "",
-        openPickerAni: "height",
-        sure: emptyFun,
-        clear: emptyFun,
-        openPicker: emptyFun,
-        isLog: true,
+      if (util.isUndefined(new.target)) return util.ewError(ERROR_VARIABLE.CONSTRUCTOR_ERROR);
+      const privateConfig = {
         boxSize: {
           b_width: null,
           b_height: null
         },
         pickerFlag: false,
-        colorValue: "",
-        changeColor: emptyFun
+        colorValue: ""
+      };
+      const defaultConfig = { ...baseDefaultConfig,
+        ...privateConfig
       }; //如果第二个参数传的是字符串，或DOM对象，则初始化默认的配置
 
       if (util.isString(config) || util.isDom(config)) {
@@ -522,6 +544,14 @@
           return util.ewError(errorText);
         }
     }
+
+    ewColorPicker.createColorPicker = function (config) {
+      return new ewColorPicker(config);
+    };
+
+    ewColorPicker.getDefaultConfig = function () {
+      return baseDefaultConfig;
+    };
 
     const methods$1 = [{
       name: "beforeInit",
@@ -593,7 +623,8 @@
             hueBar = '',
             predefineHTML = '',
             boxDisabledClassName = '',
-            boxBackground = '';
+            boxBackground = '',
+            boxHTML = '';
         const p_c = config.predefineColor;
         if (!util.isDeepArray(p_c)) return util.ewError(ERROR_VARIABLE.PREDEFINE_COLOR_ERROR);
         if (p_c.length) p_c.map(color => {
@@ -627,10 +658,15 @@
         config.colorValue = config.defaultColor;
         if (!config.disabled && config.colorValue) boxBackground = `background:${config.colorValue}`; // 盒子样式
 
-        const boxStyle = `width:${config.boxSize.b_width};height:${config.boxSize.b_height};${boxBackground}`; //颜色选择器
+        const boxStyle = `width:${config.boxSize.b_width};height:${config.boxSize.b_height};${boxBackground}`;
+
+        if (config.hasBox) {
+          boxHTML = `<div class="ew-color-picker-box ${boxDisabledClassName}" tabIndex="0" style="${boxStyle}">${colorBox}</div>`;
+        } //颜色选择器
+
 
         const html = `
-                <div class="ew-color-picker-box ${boxDisabledClassName}" tabIndex="0" style="${boxStyle}">${colorBox}</div>
+                ${boxHTML}
                 <div class="ew-color-picker">
                     <div class="ew-color-picker-content">
                         <div class="ew-color-slider">${alphaBar}${hueBar}</div>
@@ -657,7 +693,11 @@
       func: function (ele, config) {
         let scope = this; //获取颜色选择器的一些操作元素
 
-        this.box = getELByClass(ele, 'ew-color-picker-box');
+        if (config.hasBox) {
+          this.box = getELByClass(ele, 'ew-color-picker-box');
+        }
+
+        this.rootElement = ele;
         this.arrowRight = getELByClass(ele, 'ew-color-picker-arrow-right');
         this.pickerPanel = getELByClass(ele, 'ew-color-panel');
         this.pickerCursor = getELByClass(ele, 'ew-color-cursor');
@@ -675,7 +715,8 @@
           a: 1
         };
         const panelWidth = this.panelWidth = parseInt(util.getCss(this.pickerPanel, 'width'));
-        const panelHeight = this.panelHeight = parseInt(util.getCss(this.pickerPanel, 'height')); //计算偏差
+        const panelHeight = this.panelHeight = parseInt(util.getCss(this.pickerPanel, 'height'));
+        this._isManualOpen = false; //计算偏差
 
         let elem = ele,
             top = elem.offsetTop,
@@ -705,8 +746,7 @@
               changeAlphaBar(scope);
               changeElementColor(scope); // fix the value bug
 
-              const setColor = colorRgbaToHex(bgColor);
-              scope.pickerInput.value = scope.config.alpha ? colorToRgba(setColor) : setColor;
+              mixedColorValue(bgColor, scope);
             };
 
             const blurHandler = event => util.removeClass(event.target, 'ew-pre-define-color-active');
@@ -743,9 +783,19 @@
         util.on(this.pickerClear, 'click', () => onClearColor(ele, scope)); //确认按钮事件
 
         util.on(this.pickerSure, 'click', () => onSureColor(ele, scope));
-        handleClickOutSide(ele, config); //是否禁止打开选择器面板，未禁止则点击可打开
 
-        if (!config.disabled) util.on(this.box, 'click', () => openPicker(ele, scope)); //颜色面板点击事件
+        if (!config.hasBox) {
+          this.config.pickerFlag = true;
+          open(getHeiAni(scope), this.picker);
+          setDefaultValue(this, this.panelWidth, this.panelHeight);
+        }
+
+        if (config.isClickOutside) {
+          handleClickOutSide(ele, config);
+        } //是否禁止打开选择器面板，未禁止则点击可打开
+
+
+        if (!config.disabled && config.hasBox) util.on(this.box, 'click', () => openPicker(ele, scope)); //颜色面板点击事件
 
         util.on(this.pickerPanel, 'click', event => onClickPanel(scope, event)); //颜色面板拖拽元素拖拽事件
 
@@ -790,14 +840,87 @@
 
         util.on(el, util.eventType[0], handler);
       }
+    }, {
+      name: "updateColor",
+      func: function (color) {
+        if (!isValidColor(color)) return util.ewError(ERROR_VARIABLE.UPDATE_PARAM_COLOR_ERROR);
+        if (!this.config.pickerFlag) util.ewWarn(ERROR_VARIABLE.UPDATE_PARAM_COLOR_WARN);
+        let rgbaColor = colorToRgba(color);
+        this.hsbColor = colorRgbaToHsb(rgbaColor);
+        setDefaultValue(this, this.panelWidth, this.panelHeight);
+        mixedColorValue(rgbaColor, this);
+      }
+    }, {
+      name: "openPicker",
+      func: function (ani) {
+        if (ani) {
+          this.config.openPickerAni = ani;
+        }
+
+        if (!this.config.pickerFlag) {
+          this.config.pickerFlag = true;
+
+          const funOpen = () => open(getHeiAni(this), this.picker);
+
+          const funRender = () => onRenderColorPicker(this.config.defaultColor, this.config.pickerFlag, this.rootElement, this);
+
+          handlePicker(this, funOpen, funRender);
+          setDefaultValue(this, this.panelWidth, this.panelHeight);
+        }
+      }
+    }, {
+      name: "closePicker",
+      func: function (ani) {
+        if (ani) {
+          this.config.openPickerAni = ani;
+        }
+
+        if (this.config.pickerFlag) {
+          this.config.pickerFlag = false;
+
+          let funClose = () => close(getHeiAni(this), this.picker);
+
+          let funRender = () => onRenderColorPicker(this.config.defaultColor, this.config.pickerFlag, this.rootElement, this);
+
+          handlePicker(this, funClose, funRender);
+        }
+      }
     }];
     methods$1.forEach(method => util.addMethod(ewColorPicker, method.name, method.func));
+    /**
+     * 手动开启或关闭颜色选择器
+     * @param {*} context 
+     * @param {*} showOrHidePicker 
+     * @param {*} renderPicker 
+     */
+
+    function handlePicker(context, showOrHidePicker, renderPicker) {
+      if (context.config.hasBox) {
+        renderPicker();
+        showOrHidePicker();
+      } else {
+        showOrHidePicker();
+        renderPicker();
+      }
+    }
+    /**
+     * 修正输入框颜色值问题
+     * @param {*} bgColor 
+     * @param {*} scope 
+     */
+
+
+    function mixedColorValue(bgColor, scope) {
+      const setColor = colorRgbaToHex(bgColor);
+      scope.pickerInput.value = scope.config.alpha ? colorToRgba(setColor) : setColor;
+    }
     /**
      * 获取元素的子元素
      * @param {*} el 
      * @param {*} prop 
      * @param {*} bool 
      */
+
 
     function getELByClass(el, prop, bool) {
       return !bool ? el.querySelector('.' + prop) : el.querySelectorAll('.' + prop);
@@ -810,7 +933,7 @@
 
 
     function handleClickOutSide(ele, config) {
-      util.clickOutSide(ele, () => {
+      util.clickOutSide(ele, config, () => {
         if (config.pickerFlag) {
           config.pickerFlag = false;
           close(getHeiAni({
