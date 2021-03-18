@@ -63,7 +63,10 @@
         console.log('颜色值改变时触发:',color);
       },
       hasBox:true //默认为true,或者为false，表示是否显示颜色选择器
-      isClickOutside:true //默认为true，或者设置为false,表示是否允许点击颜色选择器区域之外关闭颜色选择器
+      isClickOutside:true, //默认为true，或者设置为false,表示是否允许点击颜色选择器区域之外关闭颜色选择器
+      hasClear:true,//是否显示清空按钮，默认为true
+      hasSure:true, //是否显示确定按钮，默认为true,不建议设置为false
+      hasColorInput:true //是否显示输入框,默认为true,不建议设置为false
   })
   //如果不喜欢实例化的方式来创建一个颜色选择器，也可以使用createColorPicker方法
   ewColorPicker.createColorPicker(config);//config为属性配置对象
