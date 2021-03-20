@@ -471,7 +471,7 @@
       };
     });
 
-    const consoleInfo = () => console.log(`%c ew-color-picker@1.6.9%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+    const consoleInfo = () => console.log(`%c ew-color-picker@1.7.0%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
     const NOT_DOM_ELEMENTS = ['html', 'head', 'meta', 'title', 'link', 'style', 'script'];
     const ERROR_VARIABLE = {
@@ -615,6 +615,7 @@
     }, {
       name: "render",
       func: function (element, config) {
+        let uid = 0;
         let predefineColorHTML = '',
             alphaBar = '',
             hueBar = '',
@@ -700,7 +701,25 @@
                     ${dropHTML}
                     ${predefineHTML}
                 </div>`;
-        element.innerHTML = html;
+
+        if (element.tagName.toLowerCase() === 'body') {
+          const div = document.createElement('div');
+          div.innerHTML = html;
+          uid++;
+          let children = util.ewObjToArray(div.children).reduce((res, item) => {
+            item.setAttribute('uid', uid);
+            res.push(item);
+            return res;
+          }, []);
+          let bodyChildren = util.ewObjToArray(element.children);
+          bodyChildren.forEach(item => {
+            if (item.hasAttribute('uid')) item.parentElement.removeChild(item);
+          });
+          children.forEach(item => element.appendChild(item));
+        } else {
+          element.innerHTML = html;
+        }
+
         this.startMain(element, config);
       }
     }, {
