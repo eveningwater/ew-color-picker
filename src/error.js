@@ -1,4 +1,4 @@
-export const NOT_DOM_ELEMENTS = ['html','head','body','meta','title','link','style','script'];
+export const NOT_DOM_ELEMENTS = ['html','head','meta','title','link','style','script'];
 export const ERROR_VARIABLE = {
     PICKER_OBJECT_CONFIG_ERROR:'you should pass a param which is el and el must be a string or a dom element!',
     PICKER_CONFIG_ERROR:'you should pass a param that it must be a string or a dom element!',

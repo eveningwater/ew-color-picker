@@ -367,7 +367,7 @@ methods.forEach(method => util.addMethod(ewColorPicker, method.name, method.func
 function mixedColorValue(bgColor, scope) {
     const setColor = colorRgbaToHex(bgColor);
     if(scope.pickerInput){
-        scope.pickerInput.value = scope.config.alpha ? colorToRgba(setColor) : setColor;
+        scope.pickerInput.value = scope.config.alpha ? colorToRgba(bgColor) : setColor;
     }
 }
 /**

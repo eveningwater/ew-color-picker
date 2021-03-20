@@ -26,82 +26,84 @@
         <button type="button" id="openBtn">开启颜色选择器</button>
         <button type="button" id="closeBtn">关闭颜色选择器</button>
         <button type="button" id="updateBtn">更新颜色值</button>
+        <button type="button" id="openClickOutsideBtn">开启|关闭</button>
     </div>
     <script src="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.js"></script>
     <!-- <script src="../dist/ew-color-picker.js"></script> -->
     <script>
         var color1 = new ewColorPicker({
             el: ".demo1",
-            // isLog: false,
-            // alpha: true,
-            // predefineColor: ['#223456', 'rgba(122,35,77,.5)', 'rgba(255,255,255,1)'],
-            // changeColor:(color) => {
-            //     console.log(color);
-            // }
-            // isClickOutside:false,
-            // hasBox:false,
-            // hasClear:false,
-            // hasSure:false,
-            // hasColorInput:false
-        });
-        var color2 = new ewColorPicker({
-            el: '.demo2',
-            alpha: false,
-            size: {
-                width: 100,
-                height: 50
-            },
-            predefineColor: ['#223456', 'rgba(122,35,77,.5)', 'rgba(255,255,255,1)', ],
-            disabled: false,
-            defaultColor: '#eeff22',
-            openPickerAni: 'opacity',
-            sure: function (color) {
-                console.log(color);
-            },
-            clear: function () {
-                console.log(this)
-            },
-            openPicker: function () {
-                // console.log(this);
-            },
-            isLog: true
-        });
-        var color3 = new ewColorPicker({
-            el: '.demo3',
+            isLog: false,
             alpha: true,
-            size: {
-                width: 100,
-                height: 50
-            },
-            predefineColor: ['#223456', 'rgba(122,35,77,.5)', 'rgba(255,255,255,1)', ],
-            disabled: true,
-            defaultColor: '#2396ef',
-            openPickerAni: 'opacity',
-            sure: function (color) {
+            predefineColor: ['#223456', 'rgba(122,35,77,.5)', 'rgba(255,255,255,1)'],
+            changeColor:(color) => {
                 console.log(color);
             },
-            clear: function () {
-                console.log(this)
-            },
-            openPicker: function (el, scope) {
-                console.log(el, scope);
-            },
-            isLog: false
+            isClickOutside:false
         });
-        var color4 = new ewColorPicker('.demo4');
-        ewColorPicker.createColorPicker({
-            el:".demo5",
-            ...ewColorPicker.getDefaultConfig()
-        })
-        // // console.log(ewColorPicker.getDefaultConfig())
-        document.getElementById('openBtn').onclick = function (){
-            color1.openPicker();
-        }
-        document.getElementById('closeBtn').onclick = function (){
-            color1.closePicker();
-        }
-        document.getElementById("updateBtn").onclick = function(){
-            color4.updateColor("#2396ef");
+        // var color2 = new ewColorPicker({
+        //     el: '.demo2',
+        //     alpha: false,
+        //     size: {
+        //         width: 100,
+        //         height: 50
+        //     },
+        //     predefineColor: ['#223456', 'rgba(122,35,77,.5)', 'rgba(255,255,255,1)', ],
+        //     disabled: false,
+        //     defaultColor: '#eeff22',
+        //     openPickerAni: 'opacity',
+        //     sure: function (color) {
+        //         console.log(color);
+        //     },
+        //     clear: function () {
+        //         console.log(this)
+        //     },
+        //     openPicker: function () {
+        //         // console.log(this);
+        //     },
+        //     isLog: true
+        // });
+        // var color3 = new ewColorPicker({
+        //     el: '.demo3',
+        //     alpha: true,
+        //     size: {
+        //         width: 100,
+        //         height: 50
+        //     },
+        //     predefineColor: ['#223456', 'rgba(122,35,77,.5)', 'rgba(255,255,255,1)', ],
+        //     disabled: true,
+        //     defaultColor: '#2396ef',
+        //     openPickerAni: 'opacity',
+        //     sure: function (color) {
+        //         console.log(color);
+        //     },
+        //     clear: function () {
+        //         console.log(this)
+        //     },
+        //     openPicker: function (el, scope) {
+        //         console.log(el, scope);
+        //     },
+        //     isLog: false
+        // });
+        // var color4 = new ewColorPicker('.demo4');
+        // ewColorPicker.createColorPicker({
+        //     el:".demo5",
+        //     ...ewColorPicker.getDefaultConfig()
+        // })
+        // // // console.log(ewColorPicker.getDefaultConfig())
+        // document.getElementById('openBtn').onclick = function (){
+        //     color1.openPicker();
+        // }
+        // document.getElementById('closeBtn').onclick = function (){
+        //     color1.closePicker();
+        // }
+        // document.getElementById("updateBtn").onclick = function(){
+        //     color4.updateColor("#2396ef");
+        // }
+        document.getElementById("openClickOutsideBtn").onclick = function(){
+            color1.config.isClickOutside = !color1.config.isClickOutside;
+            color1.config.pickerFlag = false;
+            color1.render(color1.rootElement,color1.config);
         }
     </script>
 </body>
