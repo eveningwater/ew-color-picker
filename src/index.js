@@ -98,6 +98,7 @@ const methods = [
     {
         name: "render",
         func: function (element, config) {
+            let uid = 0;
             let predefineColorHTML = '', 
             alphaBar = '', 
             hueBar = '', 
@@ -171,7 +172,23 @@ const methods = [
                     ${ dropHTML }
                     ${predefineHTML}
                 </div>`;
-            element.innerHTML = html;
+            if(element.tagName.toLowerCase() === 'body'){
+                const div = document.createElement('div');
+                div.innerHTML = html;
+                uid++;
+                let children = util.ewObjToArray(div.children).reduce((res,item) => {
+                    item.setAttribute('uid',uid);
+                    res.push(item);
+                    return res;
+                },[]);
+                let bodyChildren = util.ewObjToArray(element.children);
+                bodyChildren.forEach(item => {
+                    if(item.hasAttribute('uid'))item.parentElement.removeChild(item);
+                });
+                children.forEach(item => element.appendChild(item));
+            }else{
+                element.innerHTML = html;
+            }
             this.startMain(element, config);
         }
     },
