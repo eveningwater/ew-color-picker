@@ -115,83 +115,11 @@ CDN:
 ```
 > 在线示例
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>color demo</title>
-    <link rel="stylesheet" href="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.css">
-</head>
-
-<body>
-    <div class="demo1"></div>
-    <div class="demo1"></div>
-    <div class="demo2"></div>
-    <div class="demo2"></div>
-    <div class="demo3"></div>
-    <script src="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js"></script>
-    <script>
-        var color1 = new ewColorPicker({
-            el:".demo1",
-            isLog:false,
-            alpha:true,
-            predefineColor:['#223456','rgba(122,35,77,.5)','rgba(255,255,255,1)']
-        });
-        var color2 = new ewColorPicker({
-            el:'.demo2',
-            alpha:false,
-            size:{
-                width:100,
-                height:50
-            },
-            predefineColor:['#223456','rgba(122,35,77,.5)','rgba(255,255,255,1)',],
-            disabled:false,
-            defaultColor:'#eeff22',
-            openPickerAni:'opacity',
-            sure:function(color){
-                console.log(color);
-            },
-            clear:function(){
-                console.log(this)
-            },
-            openPicker:function(){
-                // console.log(this);
-            },
-            isLog:true
-        });
-        var color3 = new ewColorPicker({
-            el:'.demo3',
-            alpha:true,
-            size:{
-                width:100,
-                height:50
-            },
-            predefineColor:['#223456','rgba(122,35,77,.5)','rgba(255,255,255,1)',],
-            disabled:true,
-            defaultColor:'',
-            openPickerAni:'opacity',
-            sure:function(color){
-                console.log(color);
-            },
-            clear:function(){
-                console.log(this)
-            },
-            openPicker:function(el,scope){
-                console.log(el,scope);
-            },
-            isLog:false
-        })
-    </script>
-</body>
-
-</html>
-```
-
-[在线示例](https://eveningwater.github.io/ew-color-picker/example/color.html)
+[在线示例1](https://eveningwater.github.io/ew-color-picker/example/color.html)
+[在线示例2](https://eveningwater.github.io/ew-color-picker/example/color-body.html)
+[在线示例3](https://eveningwater.github.io/ew-color-picker/example/color-predefine.html)
+[在线示例4](https://eveningwater.github.io/ew-color-picker/example/color-show.html)
+[在线示例5](https://eveningwater.github.io/ew-color-picker/example/color-size.html)
 
 > 在vue中可以写如下代码:
 

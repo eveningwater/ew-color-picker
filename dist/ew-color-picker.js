@@ -127,14 +127,24 @@
 
     util.eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
 
+    // HEX color 
+    const colorRegExp = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/; // RGB color 
+
+    const colorRegRGB = /^[rR][gG][Bb][\(]([\\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?)[\\s]*,){2}[\\s]*(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)[\\s]*[\)]{1}$/; // RGBA color
+
+    const colorRegRGBA = /^[rR][gG][Bb][Aa][\(]([\\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?)[\\s]*,){3}[\\s]*(1|1.0|0|0?.[0-9]{1,2})[\\s]*[\)]{1}$/; // hsl color
+
+    const colorRegHSL = /^[hH][Ss][Ll][\(]([\\s]*(2[0-9][0-9]|360｜3[0-5][0-9]|[01]?[0-9][0-9]?)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*)[\)]$/; // HSLA color
+
+    const colorRegHSLA = /^[hH][Ss][Ll][Aa][\(]([\\s]*(2[0-9][0-9]|360｜3[0-5][0-9]|[01]?[0-9][0-9]?)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*,){2}([\\s]*(1|1.0|0|0?.[0-9]{1,2})[\\s]*)[\)]$/;
     /**
      * hex to rgba
      * @param {*} hex 
      * @param {*} alpha 
      */
+
     function colorHexToRgba(hex, alpha) {
       let a = alpha || 1,
-          colorRegExp = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/,
           hColor = hex.toLowerCase(),
           hLen = hex.length,
           rgbaColor = [];
@@ -316,7 +326,9 @@
       document.body.appendChild(div);
       const c = window.getComputedStyle(div).backgroundColor;
       document.body.removeChild(div);
-      return c.slice(0, 2) + 'ba' + c.slice(3, c.length - 1) + ', 1)';
+      let lastValue = c.slice(c.lastIndexOf(',') + 1, c.lastIndexOf(')')).trim();
+      let isAlpha = lastValue.indexOf('.') > -1;
+      return isAlpha ? c : c.slice(0, 2) + 'ba' + c.slice(3, c.length - 1) + ', 1)';
     }
     /**
      * 判断是否是合格的颜色值
@@ -324,25 +336,7 @@
      */
 
     function isValidColor(color) {
-      let type = '';
-
-      if (/^rgb\(/.test(color)) {
-        //如果是rgb开头，200-249，250-255，0-199
-        type = "^[rR][gG][Bb][\(]([\\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?)[\\s]*,){2}[\\s]*(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)[\\s]*[\)]{1}$";
-      } else if (/^rgba\(/.test(color)) {
-        //如果是rgba开头，判断0-255:200-249，250-255，0-199 判断0-1：0 1 1.0 0.0-0.9
-        type = "^[rR][gG][Bb][Aa][\(]([\\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?)[\\s]*,){3}[\\s]*(1|1.0|0|0.[0-9]{2})[\\s]*[\)]{1}$";
-      } else if (/^#/.test(color)) {
-        //六位或者三位
-        type = "^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$";
-      } else if (/^hsl\(/.test(color)) {
-        //判断0-360 判断0-100%(0可以没有百分号)
-        type = "^[hH][Ss][Ll][\(]([\\s]*(2[0-9][0-9]|360｜3[0-5][0-9]|[01]?[0-9][0-9]?)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*)[\)]$";
-      } else if (/^hsla\(/.test(color)) {
-        type = "^[hH][Ss][Ll][Aa][\(]([\\s]*(2[0-9][0-9]|360｜3[0-5][0-9]|[01]?[0-9][0-9]?)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*,){2}([\\s]*(1|1.0|0|0.[0-9])[\\s]*)[\)]$";
-      }
-
-      return !!color.match(new RegExp(type));
+      return colorRegExp.test(color) || colorRegRGB.test(color) || colorRegRGBA.test(color) || colorRegHSL.test(color) || colorRegHSLA.test(color);
     }
 
     const animation = {};
@@ -477,9 +471,9 @@
       };
     });
 
-    const consoleInfo = () => console.log(`%c ew-color-picker@1.6.8%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+    const consoleInfo = () => console.log(`%c ew-color-picker@1.6.9%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
-    const NOT_DOM_ELEMENTS = ['html', 'head', 'body', 'meta', 'title', 'link', 'style', 'script'];
+    const NOT_DOM_ELEMENTS = ['html', 'head', 'meta', 'title', 'link', 'style', 'script'];
     const ERROR_VARIABLE = {
       PICKER_OBJECT_CONFIG_ERROR: 'you should pass a param which is el and el must be a string or a dom element!',
       PICKER_CONFIG_ERROR: 'you should pass a param that it must be a string or a dom element!',
@@ -938,7 +932,7 @@
       const setColor = colorRgbaToHex(bgColor);
 
       if (scope.pickerInput) {
-        scope.pickerInput.value = scope.config.alpha ? colorToRgba(setColor) : setColor;
+        scope.pickerInput.value = scope.config.alpha ? colorToRgba(bgColor) : setColor;
       }
     }
     /**
