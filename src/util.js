@@ -31,6 +31,14 @@ util.ewAssign = function (target, args) {
 }
 util.addClass = (el, className) => el.classList.add(className);
 util.removeClass = (el, className) => el.classList.remove(className);
+util.hasClass = (el,className) =>  {
+    let _hasClass = (value) => new RegExp(" " + el.className + " ").test(" " + value + " ");
+    if(util.isDeepArray(className)){
+        return className.some(name => _hasClass(name));
+    }else{
+        return _hasClass(className);
+    }
+};
 util['setCss'] = (el, prop, value) => el.style[prop] = value;
 util.setSomeCss = (el,propValue = []) => {
     if(propValue.length){
@@ -88,6 +96,7 @@ util["clickOutSide"] = (el,config,callback) => {
     }
     util.on(document, 'mousedown', mouseHandler);
 }
+util['createUUID'] = () => (Math.random() * 10000000).toString(16).substr(0, 4) + '-' + (new Date()).getTime() + '-' + Math.random().toString().substr(2, 5);
 //the event
 util.eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
 export default util;

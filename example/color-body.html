@@ -5,16 +5,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>color demo</title>
-    <link rel="stylesheet" href="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.css">
+    <!-- <link rel="stylesheet" href="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.css"> -->
+    <link rel="stylesheet" href="../dist/ew-color-picker.min.css">
 </head>
 <body>
-    <script src="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.js"></script>
-    <!-- <script src="../dist/ew-color-picker.js"></script> -->
+    <div>sdgsdgs</div>
+    <!-- <script src="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.js"></script> -->
+    <script src="../dist/ew-color-picker.js"></script>
     <script>
-        new ewColorPicker({
+        const color1 = new ewColorPicker({
             el:"body",
-            alpha:true
+            alpha:true,
+            disabled:false,
+            hasBox:false
         });
+        const color2 = ewColorPicker.createColorPicker("body");
+        // console.log(color1,color2);
     </script>
 </body>
 </html>

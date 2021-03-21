@@ -86,6 +86,9 @@
   display: none;
   text-align: left;
 }
+.ew-color-picker.ew-color-picker-disabled *{
+ cursor: not-allowed;
+}
 .ew-color-picker-content {
   margin-bottom: 6px;
 }
@@ -181,8 +184,7 @@
   transition: border-color 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   border-radius: 5px;
 }
-
-.ew-color-input:focus {
+.ew-color-input:not(.ew-input-disabled):focus {
   border-color: #239fe6;
 }
 
@@ -261,7 +263,7 @@
   font-size: 14px;
   transition: border-color 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.ew-color-picker-box-disabled {
+.ew-color-picker-box-disabled,.ew-color-input.ew-input-disabled {
   background-color: #ebe7e7;
   cursor: not-allowed;
 }
