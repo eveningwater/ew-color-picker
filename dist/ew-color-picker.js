@@ -48,6 +48,16 @@
 
     util.removeClass = (el, className) => el.classList.remove(className);
 
+    util.hasClass = (el, className) => {
+      let _hasClass = value => new RegExp(" " + el.className + " ").test(" " + value + " ");
+
+      if (util.isDeepArray(className)) {
+        return className.some(name => _hasClass(name));
+      } else {
+        return _hasClass(className);
+      }
+    };
+
     util['setCss'] = (el, prop, value) => el.style[prop] = value;
 
     util.setSomeCss = (el, propValue = []) => {
@@ -122,19 +132,31 @@
       };
 
       util.on(document, 'mousedown', mouseHandler);
-    }; //the event
+    };
+
+    util['createUUID'] = () => (Math.random() * 10000000).toString(16).substr(0, 4) + '-' + new Date().getTime() + '-' + Math.random().toString().substr(2, 5); //the event
 
 
     util.eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
 
+    // HEX color 
+    const colorRegExp = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/; // RGB color 
+
+    const colorRegRGB = /^[rR][gG][Bb][\(]([\\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?)[\\s]*,){2}[\\s]*(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)[\\s]*[\)]{1}$/; // RGBA color
+
+    const colorRegRGBA = /^[rR][gG][Bb][Aa][\(]([\\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?)[\\s]*,){3}[\\s]*(1|1.0|0|0?.[0-9]{1,2})[\\s]*[\)]{1}$/; // hsl color
+
+    const colorRegHSL = /^[hH][Ss][Ll][\(]([\\s]*(2[0-9][0-9]|360｜3[0-5][0-9]|[01]?[0-9][0-9]?)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*)[\)]$/; // HSLA color
+
+    const colorRegHSLA = /^[hH][Ss][Ll][Aa][\(]([\\s]*(2[0-9][0-9]|360｜3[0-5][0-9]|[01]?[0-9][0-9]?)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*,){2}([\\s]*(1|1.0|0|0?.[0-9]{1,2})[\\s]*)[\)]$/;
     /**
      * hex to rgba
      * @param {*} hex 
      * @param {*} alpha 
      */
+
     function colorHexToRgba(hex, alpha) {
       let a = alpha || 1,
-          colorRegExp = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/,
           hColor = hex.toLowerCase(),
           hLen = hex.length,
           rgbaColor = [];
@@ -316,7 +338,9 @@
       document.body.appendChild(div);
       const c = window.getComputedStyle(div).backgroundColor;
       document.body.removeChild(div);
-      return c.slice(0, 2) + 'ba' + c.slice(3, c.length - 1) + ', 1)';
+      let lastValue = c.slice(c.lastIndexOf(',') + 1, c.lastIndexOf(')')).trim();
+      let isAlpha = lastValue.indexOf('.') > -1;
+      return isAlpha ? c : c.slice(0, 2) + 'ba' + c.slice(3, c.length - 1) + ', 1)';
     }
     /**
      * 判断是否是合格的颜色值
@@ -324,25 +348,7 @@
      */
 
     function isValidColor(color) {
-      let type = '';
-
-      if (/^rgb\(/.test(color)) {
-        //如果是rgb开头，200-249，250-255，0-199
-        type = "^[rR][gG][Bb][\(]([\\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?)[\\s]*,){2}[\\s]*(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)[\\s]*[\)]{1}$";
-      } else if (/^rgba\(/.test(color)) {
-        //如果是rgba开头，判断0-255:200-249，250-255，0-199 判断0-1：0 1 1.0 0.0-0.9
-        type = "^[rR][gG][Bb][Aa][\(]([\\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?)[\\s]*,){3}[\\s]*(1|1.0|0|0.[0-9]{2})[\\s]*[\)]{1}$";
-      } else if (/^#/.test(color)) {
-        //六位或者三位
-        type = "^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$";
-      } else if (/^hsl\(/.test(color)) {
-        //判断0-360 判断0-100%(0可以没有百分号)
-        type = "^[hH][Ss][Ll][\(]([\\s]*(2[0-9][0-9]|360｜3[0-5][0-9]|[01]?[0-9][0-9]?)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*)[\)]$";
-      } else if (/^hsla\(/.test(color)) {
-        type = "^[hH][Ss][Ll][Aa][\(]([\\s]*(2[0-9][0-9]|360｜3[0-5][0-9]|[01]?[0-9][0-9]?)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*,){2}([\\s]*(1|1.0|0|0.[0-9])[\\s]*)[\)]$";
-      }
-
-      return !!color.match(new RegExp(type));
+      return colorRegExp.test(color) || colorRegRGB.test(color) || colorRegRGBA.test(color) || colorRegHSL.test(color) || colorRegHSLA.test(color);
     }
 
     const animation = {};
@@ -477,9 +483,9 @@
       };
     });
 
-    const consoleInfo = () => console.log(`%c ew-color-picker@1.6.8%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+    const consoleInfo = () => console.log(`%c ew-color-picker@1.7.2%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
-    const NOT_DOM_ELEMENTS = ['html', 'head', 'body', 'meta', 'title', 'link', 'style', 'script'];
+    const NOT_DOM_ELEMENTS = ['html', 'head', 'meta', 'title', 'link', 'style', 'script'];
     const ERROR_VARIABLE = {
       PICKER_OBJECT_CONFIG_ERROR: 'you should pass a param which is el and el must be a string or a dom element!',
       PICKER_CONFIG_ERROR: 'you should pass a param that it must be a string or a dom element!',
@@ -575,6 +581,7 @@
         if (!ele.tagName) return util.ewError(errorText);
 
         if (!isNotDom(ele)) {
+          this._color_picker_uid = util.createUUID();
           this.init(ele, config);
         }
       }
@@ -706,8 +713,29 @@
                     ${dropHTML}
                     ${predefineHTML}
                 </div>`;
-        element.innerHTML = html;
-        this.startMain(element, config);
+        let isBody = element.tagName.toLowerCase() === 'body';
+
+        if (isBody) {
+          const div = document.createElement('div');
+          div.innerHTML = html;
+          div.setAttribute('id', 'placeElement-' + this._color_picker_uid);
+          this._bodyPlaceEle = div;
+          let hasDiv = util.$('#placeElement-' + this._color_picker_uid);
+
+          if (hasDiv) {
+            hasDiv.parentElement.removeChild(hasDiv);
+          }
+
+          element.appendChild(div);
+        } else {
+          element.innerHTML = html;
+        }
+
+        if (isBody) {
+          this.startMain(this._bodyPlaceEle, config);
+        } else {
+          this.startMain(element, config);
+        }
       }
     }, {
       name: "startMain",
@@ -788,7 +816,9 @@
             }, {
               type: "blur",
               handler: blurHandler
-            }].forEach(t => util.on(item, t.type, t.handler));
+            }].forEach(t => {
+              if (!config.disabled) util.on(item, t.type, t.handler);
+            });
           });
         } //颜色选择器打开的动画初始设置
 
@@ -804,8 +834,32 @@
           this.alphaBarBg = getELByClass(ele, 'ew-alpha-slider-bg');
           this.alphaBarThumb = getELByClass(ele, 'ew-alpha-slider-thumb');
           changeAlphaBar(this);
-          this.bindEvent(this.alphaBarThumb, (scope, el, x, y) => changeAlpha(scope, y));
-          util.on(this.alphaBar, 'click', event => changeAlpha(scope, event.y));
+
+          if (!config.disabled) {
+            this.bindEvent(this.alphaBarThumb, (scope, el, x, y) => changeAlpha(scope, y));
+            util.on(this.alphaBar, 'click', event => changeAlpha(scope, event.y));
+          }
+        }
+
+        if (!config.hasBox) {
+          this.config.pickerFlag = true;
+          open(getHeiAni(scope), this.picker);
+          setDefaultValue(this, this.panelWidth, this.panelHeight);
+        }
+
+        if (config.disabled) {
+          if (config.hasColorInput) {
+            if (!util.hasClass(this.pickerInput, 'ew-input-disabled')) {
+              this.pickerInput.classList.add('ew-input-disabled');
+              this.pickerInput.disabled = true;
+            }
+          }
+
+          if (!util.hasClass(this.pickerInput, 'ew-color-picker-disabled')) {
+            this.picker.classList.add('ew-color-picker-disabled');
+          }
+
+          return false;
         } //输入框输入事件
 
 
@@ -823,18 +877,11 @@
           util.on(this.pickerSure, 'click', () => onSureColor(ele, scope));
         }
 
-        if (!config.hasBox) {
-          this.config.pickerFlag = true;
-          open(getHeiAni(scope), this.picker);
-          setDefaultValue(this, this.panelWidth, this.panelHeight);
-        }
-
         if (config.isClickOutside) {
           handleClickOutSide(ele, config);
-        } //是否禁止打开选择器面板，未禁止则点击可打开
+        }
 
-
-        if (!config.disabled && config.hasBox) util.on(this.box, 'click', () => openPicker(ele, scope)); //颜色面板点击事件
+        if (config.hasBox) util.on(this.box, 'click', () => openPicker(ele, scope)); //颜色面板点击事件
 
         util.on(this.pickerPanel, 'click', event => onClickPanel(scope, event)); //颜色面板拖拽元素拖拽事件
 
@@ -938,7 +985,7 @@
       const setColor = colorRgbaToHex(bgColor);
 
       if (scope.pickerInput) {
-        scope.pickerInput.value = scope.config.alpha ? colorToRgba(setColor) : setColor;
+        scope.pickerInput.value = scope.config.alpha ? colorToRgba(bgColor) : setColor;
       }
     }
     /**
