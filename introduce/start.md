@@ -42,7 +42,7 @@
           height:50
       },//颜色选择器类型，有四个字符串值normal,medium,small,mini或者一个对象自定义宽高
       predefineColor:['#223456','rgba(122,35,77,.5)'],//预定义颜色是一个数组
-      disabled:false,//是否禁止开启选择器面板
+      disabled:false,//从1.7.2版本开始禁止颜色选择器的所有点击
       defaultColor:'#eeff22',//默认颜色
       openPickerAni:'opacity',//或者'height'，开启颜色选择器面板的动画
       sure:function(color){
@@ -66,7 +66,9 @@
       isClickOutside:true, //默认为true，或者设置为false,表示是否允许点击颜色选择器区域之外关闭颜色选择器
       hasClear:true,//是否显示清空按钮，默认为true
       hasSure:true, //是否显示确定按钮，默认为true,不建议设置为false
-      hasColorInput:true //是否显示输入框,默认为true,不建议设置为false
+      hasColorInput:true, //是否显示输入框,默认为true,不建议设置为false
+      boxDisabled:true,//默认是false,设置为true并且hasBox为true，禁止点击色块打开颜色选择器
+      openChangeColorMode:true,//是否打开颜色切换模式，注意打开这个模式必须要将alpha和hue设置为true
   })
   //如果不喜欢实例化的方式来创建一个颜色选择器，也可以使用createColorPicker方法
   ewColorPicker.createColorPicker(config);//config为属性配置对象
@@ -120,6 +122,8 @@ CDN:
 [在线示例3](https://eveningwater.github.io/ew-color-picker/example/color-predefine.html)
 [在线示例4](https://eveningwater.github.io/ew-color-picker/example/color-show.html)
 [在线示例5](https://eveningwater.github.io/ew-color-picker/example/color-size.html)
+[在线示例6](https://eveningwater.github.io/ew-color-picker/example/color-box-disabled.html)
+[在线示例7](https://eveningwater.github.io/ew-color-picker/example/color-mode.html)
 
 > 在vue中可以写如下代码:
 

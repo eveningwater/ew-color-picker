@@ -68,7 +68,9 @@
       isClickOutside:true, //默认为true，或者设置为false,表示是否允许点击颜色选择器区域之外关闭颜色选择器
       hasClear:true,//是否显示清空按钮，默认为true
       hasSure:true, //是否显示确定按钮，默认为true,不建议设置为false
-      hasColorInput:true //是否显示输入框,默认为true,不建议设置为false
+      hasColorInput:true, //是否显示输入框,默认为true,不建议设置为false
+      boxDisabled:true,//默认是false,设置为true并且hasBox为true，禁止点击色块打开颜色选择器
+      openChangeColorMode:true,//是否打开颜色切换模式，注意打开这个模式必须要将alpha和hue设置为true
   })
   //如果不喜欢实例化的方式来创建一个颜色选择器，也可以使用createColorPicker方法
   ewColorPicker.createColorPicker(config);//config为属性配置对象
@@ -109,3 +111,9 @@ CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
 更多详情参阅文档官网介绍[ewColorPicker](https://eveningwater.github.io/ew-color-picker/);
 
 > 国内访问速度慢可访问[ewColorPicker](https://eveningwater.gitee.io/ew-color-picker/)
+
+# 更新日志
+
+1.7.3:优化了颜色值算法，新增了`boxDisabled`和`openChangeColorMode`配置属性。
+1.7.2:新增了允许将颜色选择器添加到`body`中，但会生成一个容器元素来包含，将`disabled`配置属性更改成了全部禁止点击。
+1.3.0 ~ 1.7.1:添加了颜色选择器的基本功能。
