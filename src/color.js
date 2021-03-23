@@ -1,13 +1,14 @@
+import util from './util';
 // HEX color 
-const colorRegExp = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
+export const colorRegExp = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
 // RGB color 
-const colorRegRGB = /^[rR][gG][Bb][\(]([\\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?)[\\s]*,){2}[\\s]*(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)[\\s]*[\)]{1}$/;
+export const colorRegRGB = /[rR][gG][Bb][Aa]?[\(]([\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?),){2}[\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?),?[\s]*(0\.\d{1,2}|1|0)?[\)]{1}/g;
 // RGBA color
-const colorRegRGBA = /^[rR][gG][Bb][Aa][\(]([\\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?)[\\s]*,){3}[\\s]*(1|1.0|0|0?.[0-9]{1,2})[\\s]*[\)]{1}$/;
+export const colorRegRGBA = /^[rR][gG][Bb][Aa][\(]([\\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?)[\\s]*,){3}[\\s]*(1|1.0|0|0?.[0-9]{1,2})[\\s]*[\)]{1}$/;
 // hsl color
-const colorRegHSL = /^[hH][Ss][Ll][\(]([\\s]*(2[0-9][0-9]|360｜3[0-5][0-9]|[01]?[0-9][0-9]?)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*)[\)]$/;
+export const colorRegHSL = /^[hH][Ss][Ll][\(]([\\s]*(2[0-9][0-9]|360｜3[0-5][0-9]|[01]?[0-9][0-9]?)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*)[\)]$/;
 // HSLA color
-const colorRegHSLA = /^[hH][Ss][Ll][Aa][\(]([\\s]*(2[0-9][0-9]|360｜3[0-5][0-9]|[01]?[0-9][0-9]?)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*,){2}([\\s]*(1|1.0|0|0?.[0-9]{1,2})[\\s]*)[\)]$/;
+export const colorRegHSLA = /^[hH][Ss][Ll][Aa][\(]([\\s]*(2[0-9][0-9]|360｜3[0-5][0-9]|[01]?[0-9][0-9]?)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*,){2}([\\s]*(1|1.0|0|0?.[0-9]{1,2})[\\s]*)[\)]$/;
 /**
  * hex to rgba
  * @param {*} hex 
@@ -26,11 +27,11 @@ export function colorHexToRgba(hex, alpha) {
             hColor = hSixColor;
         }
         for (let j = 1, len = hColor.length; j < len; j += 2) {
-            rgbaColor.push(parseInt('0X' + hColor.slice(j, j + 2),16));
+            rgbaColor.push(parseInt('0X' + hColor.slice(j, j + 2), 16));
         }
-        return "rgba(" + rgbaColor.join(",") + ',' + a + ")";
+        return util.removeAllSpace(("rgba(" + rgbaColor.join(",") + ',' + a + ")"));
     } else {
-        return hColor;
+        return util.removeAllSpace(hColor);
     }
 }
 /**
@@ -52,7 +53,7 @@ export function colorRgbaToHex(rgba) {
                 color += hexColor(value);
             }
         })
-        return value + color;
+        return util.removeAllSpace(value + color);
     }
 }
 /**
@@ -60,9 +61,9 @@ export function colorRgbaToHex(rgba) {
  * @param {*} hsb 
  * @param {*} alpha 
  */
-export function colorHsbToRgba(hsb,alpha) {
+export function colorHSBaToRgba(hsb, alpha) {
     let r, g, b, a = hsb.a;//rgba(r,g,b,a)
-    let h = Math.round(hsb.h), s = Math.round(hsb.s * 255 / 100), v = Math.round(hsb.b * 255 / 100);//hsv(h,s,v)
+    let h = hsb.h, s = hsb.s * 255 / 100, v = hsb.b * 255 / 100;//hsv(h,s,v)
     if (s === 0) {
         r = g = b = v;
     } else {
@@ -85,28 +86,101 @@ export function colorHsbToRgba(hsb,alpha) {
             r = g = b = 0;
         }
     }
-    if(alpha >= 0 || alpha <= 1)a = alpha;
-    return 'rgba(' + Math.round(r) + ',' + Math.round(g) + ',' + Math.round(b) + ',' + a + ')';
+    if (alpha >= 0 || alpha <= 1) a = alpha;
+    return util.removeAllSpace(('rgba(' + Math.ceil(r) + ',' + Math.ceil(g) + ',' + Math.ceil(b) + ',' + a + ')'));
+}
+/**
+ * hsla to rgba
+ * 换算公式:https://zh.wikipedia.org/wiki/HSL%E5%92%8CHSV%E8%89%B2%E5%BD%A9%E7%A9%BA%E9%97%B4#%E4%BB%8EHSL%E5%88%B0RGB%E7%9A%84%E8%BD%AC%E6%8D%A2
+ * @param {*} hsla 
+ */
+export function colorHslaToRgba(hsla) {
+    let h = hsla.h, s = hsla.s / 100, l = hsla.l / 100, a = hsla.a;
+    let r, g, b;
+    if (s === 0) {
+        r = g = b = l;
+    } else {
+        let compareRGB = (p, q, t) => {
+            if (t > 1) t = t - 1;
+            if (t < 0) t = t + 1;
+            if (t < 1 / 6) return p + ((q - p) * 6 * t);
+            if (t < 1 / 2) return q;
+            if (t < 2 / 3) return p + ((q - p) * 6 * (2 / 3 - t));
+            return p;
+        }
+        let q = l >= 0.5 ? l + s - l * s : l * (1 + s),
+            p = 2 * l - q,
+            k = h / 360;
+        r = compareRGB(p, q, k + 1 / 3);
+        g = compareRGB(p, q, k);
+        b = compareRGB(p, q, k - 1 / 3);
+    }
+    return util.removeAllSpace(`rgba(${Math.ceil(r * 255)},${Math.ceil(g * 255)},${Math.ceil(b * 255)},${a})`);
+}
+/**
+ * rgba to hsla
+ * 换算公式:https://zh.wikipedia.org/wiki/HSL%E5%92%8CHSV%E8%89%B2%E5%BD%A9%E7%A9%BA%E9%97%B4#%E4%BB%8EHSL%E5%88%B0RGB%E7%9A%84%E8%BD%AC%E6%8D%A2
+ * @param {*} rgba 
+ */
+export function colorRgbaToHsla(rgba) {
+    const rgbaArr = rgba.slice(rgba.indexOf('(') + 1, rgba.lastIndexOf(')')).split(',');
+    let a = rgbaArr.length < 4 ? 1 : parseInt(rgbaArr[3]);
+    let r = parseInt(rgbaArr[0]) / 255,
+        g = parseInt(rgbaArr[1]) / 255,
+        b = parseInt(rgbaArr[2]) / 255;
+    let max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+
+    if (max === min) {
+        h = s = 0;
+    } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+            case r:
+                h = (g - b) / d + (g >= b ? 0 : 6);
+                break;
+            case g:
+                h = (b - r) / d + 2;
+                break;
+            case b:
+                h = (r - g) / d + 4;
+                break;
+        }
+    }
+    return {
+        colorStr: util.removeAllSpace(('hsla(' + Math.ceil(h * 60) + ',' + Math.ceil(s * 100) + '%,' + Math.ceil(l * 100) + '%,' + a + ')')),
+        colorObj: {
+            h: h,
+            s: s,
+            l: l,
+            a: a
+        }
+    };
 }
 /**
  * rgba to hsb
  * @param {*} rgba 
  */
-export function colorRgbaToHsb(rgba){
-    const rgbaArr = rgba.slice(rgba.indexOf('(') + 1,rgba.lastIndexOf(')')).split(',');
-    let a = rgbaArr.length < 4 ? 1 : Number(rgbaArr[3]);
-    let r = Number(rgbaArr[0]) / 255,
-        g = Number(rgbaArr[1]) / 255,
-        b = Number(rgbaArr[2]) / 255;
-    let h,s,v;
-    let min = Math.min(r,g,b);
-    let max = v = Math.max(r,g,b);
+export function colorRgbaToHSBa(rgba) {
+    const rgbaArr = rgba.slice(rgba.indexOf('(') + 1, rgba.lastIndexOf(')')).split(',');
+    let a = rgbaArr.length < 4 ? 1 : parseInt(rgbaArr[3]);
+    let r = parseInt(rgbaArr[0]) / 255,
+        g = parseInt(rgbaArr[1]) / 255,
+        b = parseInt(rgbaArr[2]) / 255;
+    let h, s, v;
+    let min = Math.min(r, g, b);
+    let max = v = Math.max(r, g, b);
     let diff = max - min;
-
-    if(max === min){
+    if (max === 0) {
+        s = 0;
+    } else {
+        s = 1 - min / max;
+    }
+    if (max === min) {
         h = 0;
-    }else{
-        switch(max){
+    } else {
+        switch (max) {
             case r:
                 h = (g - b) / diff + (g < b ? 6 : 0);
                 break;
@@ -117,21 +191,17 @@ export function colorRgbaToHsb(rgba){
                 h = 4.0 + (r - g) / diff;
                 break;
         }
-        h = Math.round(h * 60);
+        h = h * 60;
     }
 
-    if(max === 0){
-        s = 0;
-    }else{
-        s = 1 - min / max;
-    }
-    s = Math.round(s * 100);
-    v = Math.round(v * 100);
+
+    s = s * 100;
+    v = v * 100;
     return {
-        h:h,
-        s:s,
-        b:v,
-        a:a
+        h: h,
+        s: s,
+        b: v,
+        a: a
     }
 }
 /* 
@@ -141,13 +211,14 @@ export function colorRgbaToHsb(rgba){
 */
 export function colorToRgba(color) {
     const div = document.createElement('div');
-    div.style.backgroundColor = color;
+    util.setCss(div, 'backgroundColor', color);
     document.body.appendChild(div);
-    const c = window.getComputedStyle(div).backgroundColor;    
+    const c = util.getCss(div, 'backgroundColor');
     document.body.removeChild(div);
-    let lastValue = c.slice(c.lastIndexOf(',') + 1,c.lastIndexOf(')')).trim();
+    let lastValue = c.slice(c.lastIndexOf(',') + 1, c.lastIndexOf(')')).trim();
     let isAlpha = lastValue.indexOf('.') > -1;
-    return isAlpha ? c : c.slice(0,2) + 'ba' + c.slice(3,c.length - 1) + ', 1)';
+    let result = isAlpha ? c : c.slice(0, 2) + 'ba' + c.slice(3, c.length - 1) + ', 1)';
+    return util.removeAllSpace(result);
 };
 /**
  * 判断是否是合格的颜色值

@@ -1,5 +1,5 @@
 import util from './util'
-import { colorToRgba, colorRgbaToHex, colorHsbToRgba, colorRgbaToHsb, isValidColor, colorHexToRgba } from './color'
+import { colorToRgba, colorRgbaToHex, colorHSBaToRgba, colorRgbaToHSBa, isValidColor, colorHexToRgba, colorRegRGB, colorRegRGBA, colorRgbaToHsla, colorHslaToRgba } from './color'
 import ani from './animation';
 import { consoleInfo } from './console';
 import { ERROR_VARIABLE, NOT_DOM_ELEMENTS } from './error';
@@ -56,6 +56,9 @@ const methods = [
             if (!ele.tagName) return util.ewError(errorText);
             if (!isNotDom(ele)) {
                 this._color_picker_uid = util.createUUID();
+                if (config.openChangeColorMode) {
+                    this.colorMode = ["hex", "rgba", "hsla"];
+                }
                 this.init(ele, config);
             }
         }
@@ -110,7 +113,9 @@ const methods = [
                 sureHTML = '',
                 inputHTML = '',
                 btnGroupHTML = '',
-                dropHTML = '';
+                dropHTML = '',
+                openChangeColorModeHTML = '',
+                openChangeColorModeLabelHTML = '';
             const p_c = config.predefineColor;
             if (!util.isDeepArray(p_c)) return util.ewError(ERROR_VARIABLE.PREDEFINE_COLOR_ERROR);
             if (p_c.length) p_c.map(color => { if (isValidColor(color)) predefineColorHTML += `<div class="ew-pre-define-color" style="background:${color};"></div>` });
@@ -134,7 +139,10 @@ const methods = [
             if (predefineColorHTML) {
                 predefineHTML = `<div class="ew-pre-define-color-container">${predefineColorHTML}</div>`;
             }
-            if (config.disabled) boxDisabledClassName = 'ew-color-picker-box-disabled';
+            if (config.disabled || config.boxDisabled) boxDisabledClassName = 'ew-color-picker-box-disabled';
+            if (colorRegRGB.test(config.defaultColor)) {
+                config.defaultColor = colorToRgba(config.defaultColor);
+            }
             if (config.defaultColor && !isValidColor(config.defaultColor)) return util.ewError(ERROR_VARIABLE.DEFAULT_COLOR_ERROR);
             config.colorValue = config.defaultColor;
             if (!config.disabled && config.colorValue) boxBackground = `background:${config.colorValue}`;
@@ -155,8 +163,20 @@ const methods = [
             if (config.hasColorInput) {
                 inputHTML = '<input type="text" class="ew-color-input">';
             }
+            if (config.openChangeColorMode) {
+                if (!config.alpha || !config.hue) {
+                    return util.ewError(ERROR_VARIABLE.COLOR_MODE_ERROR);
+                }
+                openChangeColorModeHTML = `<div class="ew-color-mode-container">
+                <div class="ew-color-mode-up"></div>
+                <div class="ew-color-mode-down"></div>
+                </div>`;
+                openChangeColorModeLabelHTML = `<label class="ew-color-mode-title">${this.colorMode[1]}</label>`;
+            }
             if (config.hasColorInput || config.hasClear || config.hasSure) {
-                dropHTML = `<div class="ew-color-drop-container">${inputHTML}${btnGroupHTML}</div>`;
+                dropHTML = `<div class="ew-color-drop-container">
+                ${openChangeColorModeLabelHTML}${inputHTML}${openChangeColorModeHTML}${btnGroupHTML}
+                </div>`;
             }
             //颜色选择器
             const html = `${boxHTML}
@@ -176,19 +196,19 @@ const methods = [
             if (isBody) {
                 const div = document.createElement('div');
                 div.innerHTML = html;
-                div.setAttribute('id','placeElement-' + this._color_picker_uid);
+                div.setAttribute('id', 'placeElement-' + this._color_picker_uid);
                 this._bodyPlaceEle = div;
                 let hasDiv = util.$('#placeElement-' + this._color_picker_uid);
-                if(hasDiv){
+                if (hasDiv) {
                     hasDiv.parentElement.removeChild(hasDiv);
                 }
                 element.appendChild(div);
             } else {
                 element.innerHTML = html;
             }
-            if(isBody){
-                this.startMain(this._bodyPlaceEle,config);
-            }else{
+            if (isBody) {
+                this.startMain(this._bodyPlaceEle, config);
+            } else {
                 this.startMain(element, config);
             }
         }
@@ -214,19 +234,29 @@ const methods = [
             if (config.hasSure) {
                 this.pickerSure = getELByClass(ele, 'ew-color-sure');
             }
-            this.hueBar = getELByClass(ele, 'ew-color-slider-bar');
-            this.hueThumb = getELByClass(ele, 'ew-color-slider-thumb');
+            if (config.hue) {
+                this.hueBar = getELByClass(ele, 'ew-color-slider-bar');
+                this.hueThumb = getELByClass(ele, 'ew-color-slider-thumb');
+            }
+            if (config.openChangeColorMode) {
+                this.modeUp = getELByClass(ele, 'ew-color-mode-up');
+                this.modeDown = getELByClass(ele, 'ew-color-mode-down');
+                this.modeTitle = getELByClass(ele, "ew-color-mode-title");
+            }
             this.picker = getELByClass(ele, 'ew-color-picker');
             this.slider = getELByClass(ele, 'ew-color-slider');
-            this.hsbColor = config.defaultColor ? colorRgbaToHsb(colorToRgba(config.defaultColor)) : {
-                h: 0,
-                s: 100,
-                b: 100,
-                a: 1
-            };
+            if (config.defaultColor) {
+                this.hsbColor = colorRegRGBA.test(config.defaultColor) ? colorRgbaToHSBa(config.defaultColor) : colorRgbaToHSBa(colorToRgba(config.defaultColor));
+            } else {
+                this.hsbColor = {
+                    h: 0,
+                    s: 100,
+                    b: 100,
+                    a: 1
+                };
+            }
             const panelWidth = this.panelWidth = parseInt(util.getCss(this.pickerPanel, 'width'));
             const panelHeight = this.panelHeight = parseInt(util.getCss(this.pickerPanel, 'height'));
-            this._isManualOpen = false;
             //计算偏差
             let elem = ele, top = elem.offsetTop, left = elem.offsetLeft;
             while (elem.offsetParent) {
@@ -246,16 +276,14 @@ const methods = [
                         items.forEach(child => util.removeClass(child, 'ew-pre-define-color-active'));
                         util.addClass(event.target, 'ew-pre-define-color-active');
                         const bgColor = util.getCss(event.target, 'background-color');
-                        scope.hsbColor = colorRgbaToHsb(bgColor);
+                        scope.hsbColor = colorRgbaToHSBa(bgColor);
                         setDefaultValue(scope, panelWidth, panelHeight);
                         changeAlphaBar(scope);
                         changeElementColor(scope);
-                        // fix the value bug
-                        mixedColorValue(bgColor, scope);
                     };
                     const blurHandler = event => util.removeClass(event.target, 'ew-pre-define-color-active');
                     [{ type: "click", handler: clickHandler }, { type: "blur", handler: blurHandler }].forEach(t => {
-                        if(!config.disabled)util.on(item, t.type, t.handler);
+                        if (!config.disabled) util.on(item, t.type, t.handler);
                     });
                 })
             }
@@ -270,7 +298,7 @@ const methods = [
                 this.alphaBarBg = getELByClass(ele, 'ew-alpha-slider-bg');
                 this.alphaBarThumb = getELByClass(ele, 'ew-alpha-slider-thumb');
                 changeAlphaBar(this);
-                if(!config.disabled){
+                if (!config.disabled) {
                     this.bindEvent(this.alphaBarThumb, (scope, el, x, y) => changeAlpha(scope, y));
                     util.on(this.alphaBar, 'click', event => changeAlpha(scope, event.y));
                 }
@@ -280,14 +308,14 @@ const methods = [
                 open(getHeiAni(scope), this.picker);
                 setDefaultValue(this, this.panelWidth, this.panelHeight);
             }
-            if(config.disabled){
-                if(config.hasColorInput){
-                    if(!util.hasClass(this.pickerInput,'ew-input-disabled')){
+            if (config.disabled) {
+                if (config.hasColorInput) {
+                    if (!util.hasClass(this.pickerInput, 'ew-input-disabled')) {
                         this.pickerInput.classList.add('ew-input-disabled');
                         this.pickerInput.disabled = true;
                     }
                 }
-                if(!util.hasClass(this.pickerInput,'ew-color-picker-disabled')){
+                if (!util.hasClass(this.pickerInput, 'ew-color-picker-disabled')) {
                     this.picker.classList.add('ew-color-picker-disabled');
                 }
                 return false;
@@ -307,7 +335,13 @@ const methods = [
             if (config.isClickOutside) {
                 handleClickOutSide(ele, config);
             }
-            if (config.hasBox) util.on(this.box, 'click', () => openPicker(ele, scope));
+            if (config.hasBox && !config.boxDisabled) util.on(this.box, 'click', () => openPicker(ele, scope));
+            if (config.openChangeColorMode && config.hasColorInput) {
+                this.modeCount = config.alpha ? 1 : 0;
+                this.currentMode = this.colorMode[this.modeCount];
+                util.on(this.modeUp, "click", event => onHandleChangeMode(scope,'up'));
+                util.on(this.modeDown, "click", event => onHandleChangeMode(scope,'down'));
+            }
             //颜色面板点击事件
             util.on(this.pickerPanel, 'click', event => onClickPanel(scope, event));
             //颜色面板拖拽元素拖拽事件
@@ -351,9 +385,8 @@ const methods = [
             if (!isValidColor(color)) return util.ewError(ERROR_VARIABLE.UPDATE_PARAM_COLOR_ERROR);
             if (!this.config.pickerFlag) util.ewWarn(ERROR_VARIABLE.UPDATE_PARAM_COLOR_WARN);
             let rgbaColor = colorToRgba(color);
-            this.hsbColor = colorRgbaToHsb(rgbaColor);
+            this.hsbColor = colorRgbaToHSBa(rgbaColor);
             setDefaultValue(this, this.panelWidth, this.panelHeight);
-            mixedColorValue(rgbaColor, this);
         }
     },
     {
@@ -392,15 +425,46 @@ const methods = [
 ];
 methods.forEach(method => util.addMethod(ewColorPicker, method.name, method.func));
 /**
- * 修正输入框颜色值问题
- * @param {*} bgColor 
- * @param {*} scope 
+ * 切换颜色模式
+ * @param {*} context 
+ * @param {*} index 
  */
-function mixedColorValue(bgColor, scope) {
-    const setColor = colorRgbaToHex(bgColor);
-    if (scope.pickerInput) {
-        scope.pickerInput.value = scope.config.alpha ? colorToRgba(bgColor) : setColor;
+function onHandleChangeMode(context,handleType){
+    let l = context.colorMode.length;
+    if(handleType === 'up'){
+        context.modeCount += 1;
+    }else{
+        context.modeCount -= 1;
     }
+    if (context.modeCount > l - 1) context.modeCount = 0;
+    if (context.modeCount < 0) context.modeCount = l - 1;
+    context.currentMode = context.colorMode[context.modeCount];
+    changeElementColor(context);
+}
+/**
+ * 转换颜色模式
+ * @param {*} context 
+ * @param {*} color 
+ * @returns 
+ */
+function changeMode(context, color) {
+    let result = null;
+    switch (context.currentMode) {
+        case "hex":
+            result = colorRgbaToHex(color);
+            break;
+        case "rgba":
+            result = colorToRgba(color);
+            break;
+        case "hsla":
+            result = colorRgbaToHsla(color).colorStr;
+            break;
+        default:
+            result = color;
+            break;
+    }
+    context.modeTitle.innerHTML = context.currentMode;
+    return result;
 }
 /**
  * 获取元素的子元素
@@ -482,7 +546,27 @@ function openAndClose(scope) {
  */
 function onInputColor(scope, value) {
     if (!isValidColor(value)) return;
-    const color = value.indexOf('#') > -1 ? colorRgbaToHsb(colorHexToRgba(value)) : colorRgbaToHsb(value);
+    // 两者相等，说明用户没有更改颜色
+    if (util.removeAllSpace(scope.InputValue) === util.removeAllSpace(value))return;
+    let color = null;
+    switch (scope.currentMode) {
+        case "hex":
+            color = colorRgbaToHSBa(colorHexToRgba(value));
+            break;
+        case "rgba":
+            color = colorRgbaToHSBa(value);
+            break;
+        case "hsla":
+            // 需要先转换成rgba,再转换成hsv模式
+            let hslaArr = value.slice(value.indexOf('(') + 1, value.lastIndexOf(')')).split(',');
+            color = colorRgbaToHSBa(colorHslaToRgba({
+                h: Number(hslaArr[0]),
+                s: Number(hslaArr[1].replace(/%/g, "")),
+                l: Number(hslaArr[2].replace(/%/g, "")),
+                a: Number(hslaArr[3])
+            }));
+            break;
+    }
     scope.hsbColor = color;
     setDefaultValue(scope, scope.panelWidth, scope.panelHeight);
     changeElementColor(scope);
@@ -502,7 +586,7 @@ function onClearColor(el, scope) {
  * @param {*} scope 
  */
 function onSureColor(el, scope) {
-    const result = scope.config.alpha ? colorHsbToRgba(scope.hsbColor) : colorRgbaToHex(colorHsbToRgba(scope.hsbColor));
+    const result = scope.config.alpha ? colorHSBaToRgba(scope.hsbColor) : colorRgbaToHex(colorHSBaToRgba(scope.hsbColor));
     onRenderColorPicker(result, false, el, scope);
     openAndClose(scope);
     changeElementColor(scope);
@@ -543,10 +627,14 @@ function changeCursorColor(scope, left, top, panelWidth, panelHeight) {
  * @param {*} isAlpha 
  */
 function changeElementColor(scope, isAlpha) {
-    const color = colorHsbToRgba(scope.hsbColor);
-    const newColor = isAlpha || scope.config.alpha ? color : colorRgbaToHex(color);
+    const color = colorHSBaToRgba(scope.hsbColor);
+    let newColor = isAlpha || scope.config.alpha ? color : colorRgbaToHex(color);
+    if (scope.config.openChangeColorMode) {
+        newColor = changeMode(scope, color);
+    }
     if (scope.pickerInput) {
         scope.pickerInput.value = newColor;
+        scope.InputValue = newColor;
     }
     if (util.isFunction(scope.config.changeColor)) scope.config.changeColor(newColor);
 }
@@ -574,7 +662,7 @@ function onClickPanel(scope, eve) {
  */
 function changeAlphaBar(scope) {
     if (!scope.alphaBarBg) return;
-    util.setCss(scope.alphaBarBg, 'background', 'linear-gradient(to top,' + colorHsbToRgba(cloneColor(scope.hsbColor), 0) + ' 0%,' + colorHsbToRgba(cloneColor(scope.hsbColor)) + ' 100%)')
+    util.setCss(scope.alphaBarBg, 'background', 'linear-gradient(to top,' + colorHSBaToRgba(cloneColor(scope.hsbColor), 0) + ' 0%,' + colorHSBaToRgba(cloneColor(scope.hsbColor)) + ' 100%)')
 }
 /**
  * 设置默认颜色
@@ -583,9 +671,8 @@ function changeAlphaBar(scope) {
  * @param {*} panelHeight 
  */
 function setDefaultValue(context, panelWidth, panelHeight) {
-    if (context.pickerInput) {
-        context.pickerInput.value = context.config.alpha ? colorHsbToRgba(context.hsbColor) : colorRgbaToHex(colorHsbToRgba(context.hsbColor));
-    }
+    changeElementColor(context);
+    context.InputValue = context.pickerInput.value;
     let sliderBarHeight = 0;
     let l = parseInt(context.hsbColor.s * panelWidth / 100),
         t = parseInt(panelHeight - context.hsbColor.b * panelHeight / 100);
@@ -603,7 +690,7 @@ function setDefaultValue(context, panelWidth, panelHeight) {
         {
             el: context.pickerPanel,
             prop: 'background',
-            value: colorRgbaToHex(colorHsbToRgba(cloneColor(context.hsbColor)))
+            value: colorRgbaToHex(colorHSBaToRgba(cloneColor(context.hsbColor)))
         }
     ].forEach(item => util.setCss(item.el, item.prop, item.value));
     if (context.config.hue) {
@@ -623,7 +710,7 @@ function setDefaultValue(context, panelWidth, panelHeight) {
 function changeHue(context, y) {
     let value = setAlphaHueTop(context.hueBar, context.hueThumb, y);
     context.hsbColor.h = cloneColor(context.hsbColor).h = parseInt(360 * value.barThumbY / value.barHeight);
-    util.setCss(context.pickerPanel, 'background', colorRgbaToHex(colorHsbToRgba(cloneColor(context.hsbColor))));
+    util.setCss(context.pickerPanel, 'background', colorRgbaToHex(colorHSBaToRgba(cloneColor(context.hsbColor))));
     changeElementColor(context);
     changeAlphaBar(context);
 }
@@ -652,5 +739,5 @@ function setAlphaHueTop(bar, thumb, y) {
         barHeight,
         barThumbY
     }
-}
+};
 export default ewColorPicker;

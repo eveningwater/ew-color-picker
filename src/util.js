@@ -97,6 +97,7 @@ util["clickOutSide"] = (el,config,callback) => {
     util.on(document, 'mousedown', mouseHandler);
 }
 util['createUUID'] = () => (Math.random() * 10000000).toString(16).substr(0, 4) + '-' + (new Date()).getTime() + '-' + Math.random().toString().substr(2, 5);
+util.removeAllSpace = (value) => value.replace(/\s+/g,"");
 //the event
 util.eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
 export default util;

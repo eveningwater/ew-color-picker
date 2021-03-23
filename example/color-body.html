@@ -16,10 +16,13 @@
         const color1 = new ewColorPicker({
             el:"body",
             alpha:true,
-            disabled:false,
+            disabled:true,
+            hasBox:true
+        });
+        const color2 = ewColorPicker.createColorPicker({
+            el:"body",
             hasBox:false
         });
-        const color2 = ewColorPicker.createColorPicker("body");
         // console.log(color1,color2);
     </script>
 </body>
