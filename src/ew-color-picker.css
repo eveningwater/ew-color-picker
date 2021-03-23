@@ -18,7 +18,9 @@
 .ew-color-drop-container,
 .ew-color-picker-box,
 .ew-color-picker-arrow-left,
-.ew-color-picker-arrow-right {
+.ew-color-picker-arrow-right,
+.ew-color-mode-container .ew-color-mode-up,
+.ew-color-mode-container .ew-color-mode-down {
   position: relative;
 }
 .ew-color-slider,
@@ -189,7 +191,7 @@
 }
 
 .ew-color-drop-btn {
-  padding: 5px 15px;
+  padding: 5px 5px;
   font-size: 12px;
   border-radius: 3px;
   transition: 0.1s;
@@ -299,4 +301,39 @@
 .ew-color-picker-arrow-right {
   transform: rotate(-45deg);
   right: 3px;
+}
+.ew-color-mode-container {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 6px;
+  cursor: pointer;
+  border-radius: 2px;
+}
+.ew-color-mode-container:hover {
+  background-color: #cecece;
+}
+.ew-color-mode-container .ew-color-mode-up,
+.ew-color-mode-container .ew-color-mode-down {
+   width: 0;
+   height: 0;
+   border-width: 6px;
+   border-style: solid;
+}
+.ew-color-mode-container .ew-color-mode-up {
+  bottom: 5px;
+  border-color:  transparent transparent #606266 transparent;
+}
+.ew-color-mode-container .ew-color-mode-down {
+  top: 5px;
+  border-color:  #606266 transparent transparent  transparent;
+}
+.ew-color-mode-title {
+  color: #535455;
+  font-size: 16px;
+  display: inline-block;
+  padding-right: 2px;
+}
+.ew-color-mode-title::after {
+  content:":";
+  display: inline-block;
 }

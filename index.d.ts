@@ -19,6 +19,11 @@ declare namespace ewColorPicker {
     changeColor?: Function;
     hasBox?:boolean;
     isClickOutside?:boolean;
+    hasClear?:boolean;
+    hasSure?:boolean;
+    hasColorInput?:boolean;
+    boxDisabled?:boolean;
+    openChangeColorMode?:boolean;
   };
 }
 export type WrapperType = ewColorPicker.WrapperType;
