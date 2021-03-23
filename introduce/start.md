@@ -117,13 +117,13 @@ CDN:
 ```
 > 在线示例
 
-[在线示例1](https://eveningwater.github.io/ew-color-picker/example/color.html)
-[在线示例2](https://eveningwater.github.io/ew-color-picker/example/color-body.html)
-[在线示例3](https://eveningwater.github.io/ew-color-picker/example/color-predefine.html)
-[在线示例4](https://eveningwater.github.io/ew-color-picker/example/color-show.html)
-[在线示例5](https://eveningwater.github.io/ew-color-picker/example/color-size.html)
-[在线示例6](https://eveningwater.github.io/ew-color-picker/example/color-box-disabled.html)
-[在线示例7](https://eveningwater.github.io/ew-color-picker/example/color-mode.html)
+[在线示例1](https://eveningwater.gitee.io/ew-color-picker/example/color.html)
+[在线示例2](https://eveningwater.gitee.io/ew-color-picker/example/color-body.html)
+[在线示例3](https://eveningwater.gitee.io/ew-color-picker/example/color-predefine.html)
+[在线示例4](https://eveningwater.gitee.io/ew-color-picker/example/color-show.html)
+[在线示例5](https://eveningwater.gitee.io/ew-color-picker/example/color-size.html)
+[在线示例6](https://eveningwater.gitee.io/ew-color-picker/example/color-box-disabled.html)
+[在线示例7](https://eveningwater.gitee.io/ew-color-picker/example/color-mode.html)
 
 > 在vue中可以写如下代码:
 
@@ -199,8 +199,8 @@ CDN:
     }).mount("#app")
 ```
 
-[在vue2.0中使用的在线示例](https://eveningwater.github.io/ew-color-picker/example/vue-color-demo.html)
-[在vue3.0中使用的在线示例](https://eveningwater.github.io/ew-color-picker/example/vue-next-color-demo.html)
+[在vue2.0中使用的在线示例](https://eveningwater.gitee.io/ew-color-picker/example/vue-color-demo.html)
+[在vue3.0中使用的在线示例](https://eveningwater.gitee.io/ew-color-picker/example/vue-next-color-demo.html)
 
 > 在react中可以写如下代码:
 
@@ -292,7 +292,7 @@ CDN:
 ```js
   ReactDOM.render(<ColorPicker />, document.getElementById('#app'));
 ```
-[在react中使用的在线示例](https://eveningwater.github.io/ew-color-picker/example/react-color-demo.html)
+[在react中使用的在线示例](https://eveningwater.gitee.io/ew-color-picker/example/react-color-demo.html)
 
 > 说明:在react的工程化如create-react-app以及vue的工程化如vue-cli使用方式同引入式开发差不多的。
 
