@@ -114,6 +114,6 @@ CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
 
 # 更新日志
 
-1.7.3:优化了颜色值算法，新增了`boxDisabled`和`openChangeColorMode`配置属性。
-1.7.2:新增了允许将颜色选择器添加到`body`中，但会生成一个容器元素来包含，将`disabled`配置属性更改成了全部禁止点击。
-1.3.0 ~ 1.7.1:添加了颜色选择器的基本功能。
+* 1.7.3:优化了颜色值算法，新增了`boxDisabled`和`openChangeColorMode`配置属性。
+* 1.7.2:新增了允许将颜色选择器添加到`body`中，但会生成一个容器元素来包含，将`disabled`配置属性更改成了全部禁止点击。
+* 1.3.0 ~ 1.7.1:添加了颜色选择器的基本功能。
