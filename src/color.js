@@ -124,7 +124,7 @@ export function colorHslaToRgba(hsla) {
  */
 export function colorRgbaToHsla(rgba) {
     const rgbaArr = rgba.slice(rgba.indexOf('(') + 1, rgba.lastIndexOf(')')).split(',');
-    let a = rgbaArr.length < 4 ? 1 : parseInt(rgbaArr[3]);
+    let a = rgbaArr.length < 4 ? 1 : Number(rgbaArr[3]);
     let r = parseInt(rgbaArr[0]) / 255,
         g = parseInt(rgbaArr[1]) / 255,
         b = parseInt(rgbaArr[2]) / 255;
@@ -226,4 +226,12 @@ export function colorToRgba(color) {
  */
 export function isValidColor(color) {
     return colorRegExp.test(color) || colorRegRGB.test(color) || colorRegRGBA.test(color) || colorRegHSL.test(color) || colorRegHSLA.test(color);
+}
+/**
+ * 
+ * @param {*} color 
+ * @returns 
+ */
+export function isAlphaColor(color){
+    return colorRegRGB.test(color) || colorRegRGBA.test(color) || colorRegHSL.test(color) || colorRegHSLA.test(color);
 }
