@@ -69,6 +69,7 @@
       hasColorInput:true, //是否显示输入框,默认为true,不建议设置为false
       boxDisabled:true,//默认是false,设置为true并且hasBox为true，禁止点击色块打开颜色选择器
       openChangeColorMode:true,//是否打开颜色切换模式，注意打开这个模式必须要将alpha和hue设置为true
+      changeBoxByChangeColor:false,//如果设置为true，则在色块显示的时候，打开颜色面板，色块会根据颜色的改变而变色
   })
   //如果不喜欢实例化的方式来创建一个颜色选择器，也可以使用createColorPicker方法
   ewColorPicker.createColorPicker(config);//config为属性配置对象

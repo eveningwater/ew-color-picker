@@ -114,6 +114,7 @@ CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
 
 # 更新日志
 
+* 1.7.4:修复了颜色模式切换透明度不改变问题，新增了`changeBoxByChangeColor`配置属性,该属性表示是否在打开颜色面板，颜色值触发的时候，色块的背景色更改，如果不点击确定按钮，关闭颜色面板后会恢复到默认颜色,预定义颜色数组`predefineColor`新增了可以传数组项为对象或字符串，对象定义为`{ color:"#123",disabled:true }(color为合格的颜色值,disabled为true或者false，表示是否禁用该预定义点击更换颜色)`。
 * 1.7.3:优化了颜色值算法，新增了`boxDisabled`和`openChangeColorMode`配置属性。
 * 1.7.2:新增了允许将颜色选择器添加到`body`中，但会生成一个容器元素来包含，将`disabled`配置属性更改成了全部禁止点击。
-* 1.3.0 ~ 1.7.1:添加了颜色选择器的基本功能。
+* 1.3.3 ~ 1.7.1:添加了颜色选择器的基本功能。

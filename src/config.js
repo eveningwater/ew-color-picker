@@ -18,6 +18,7 @@ const baseDefaultConfig = {
     hasSure:true,
     hasColorInput:true,
     boxDisabled:false,
-    openChangeColorMode:false
+    openChangeColorMode:false,
+    changeBoxByChangeColor:false
 }
 export default baseDefaultConfig;

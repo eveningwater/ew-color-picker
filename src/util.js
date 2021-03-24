@@ -70,12 +70,13 @@ util["off"] = (element, type, handler, useCapture = false) => {
     }
 };
 util['getRect'] = (el) => el.getBoundingClientRect();
-util["clickOutSide"] = (el,config,callback) => {
+util["clickOutSide"] = (context,config,callback) => {
+    let el = context.rootElement;
     const mouseHandler = (event) => {
-        const rect = util.getRect(el.querySelector('.ew-color-picker'));
+        const rect = util.getRect(context.picker);
         let boxRect = null;
         if(config.hasBox){
-            boxRect = util.getRect(el.querySelector('.ew-color-picker-box'))
+            boxRect = util.getRect(context.box);
         }
         const target = event.target;
         if(!target)return;
@@ -92,7 +93,7 @@ util["clickOutSide"] = (el,config,callback) => {
         }
         setTimeout(() => {
             util.off(document,'mousedown',mouseHandler);
-        })
+        });
     }
     util.on(document, 'mousedown', mouseHandler);
 }
