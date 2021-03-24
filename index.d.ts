@@ -1,4 +1,8 @@
 declare namespace ewColorPicker {
+  export interface PredefineColorType {
+      color?:String,
+      disabled?:boolean
+  }
   export type WrapperType = string | HTMLElement;
   export type OptionType = {
     el: WrapperType;
@@ -8,7 +12,7 @@ declare namespace ewColorPicker {
         width?: string | number;
         height?: string | number;
     };
-    predefineColor?: string[];
+    predefineColor?: string[] | Array<PredefineColorType>;
     disabled?: boolean;
     defaultColor?: string;
     openPickerAni?: string;
@@ -24,6 +28,7 @@ declare namespace ewColorPicker {
     hasColorInput?:boolean;
     boxDisabled?:boolean;
     openChangeColorMode?:boolean;
+    changeBoxByChangeColor?:boolean;
   };
 }
 export type WrapperType = ewColorPicker.WrapperType;
