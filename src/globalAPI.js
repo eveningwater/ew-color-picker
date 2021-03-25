@@ -1,11 +1,9 @@
 import colorPickerConfig from './config';
-import { initConfig } from './initConfig';
+import { startInit } from './startInit';
 const createColorPicker = function (config) {
     const Super = this;
     const Sub = function(){
-        let initOptions = initConfig(config);
-        this.config = initOptions.config;
-        this.beforeInit(initOptions.element,initOptions.config,initOptions.error);
+        startInit(this,config);
     }
     Sub.prototype = Object.create(Super.prototype);
     Sub.prototype.constructor = Sub;

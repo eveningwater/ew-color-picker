@@ -11,5 +11,5 @@ export const ERROR_VARIABLE = {
     DEFAULT_COLOR_ERROR:'the "defaultColor" is not an invalid color,make sure to use the correct color!',
     UPDATE_PARAM_COLOR_ERROR:'the param is not a invalid color,make sure to use the correct color!',
     UPDATE_PARAM_COLOR_WARN:"the color picker is hided,make sure showing it and then updating the color!",
-    COLOR_MODE_ERROR:"To turn on the mode for changing the color mode, the 'alpha' property and the 'hue' property should be set to true!"
+    COLOR_MODE_ERROR:"To turn on the mode for changing the color, the 'alpha' property and the 'hue' property should be set to true!"
 };
