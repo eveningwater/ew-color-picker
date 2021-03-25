@@ -164,7 +164,7 @@ export function colorRgbaToHsla(rgba) {
  */
 export function colorRgbaToHSBa(rgba) {
     const rgbaArr = rgba.slice(rgba.indexOf('(') + 1, rgba.lastIndexOf(')')).split(',');
-    let a = rgbaArr.length < 4 ? 1 : parseInt(rgbaArr[3]);
+    let a = rgbaArr.length < 4 ? 1 : Number(rgbaArr[3]);
     let r = parseInt(rgbaArr[0]) / 255,
         g = parseInt(rgbaArr[1]) / 255,
         b = parseInt(rgbaArr[2]) / 255;
