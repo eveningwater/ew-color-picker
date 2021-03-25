@@ -24,3 +24,20 @@ import { colorToRgba, colorRgbaToHex, colorRgbaToHsla } from './color';
     context.modeTitle.innerHTML = context.currentMode;
     return result;
 }
+ /**
+* 切换颜色模式
+* @param {*} context 
+* @param {*} index 
+*/
+export function onHandleChangeMode(context,handleType,callback){
+   let l = context.colorMode.length;
+   if(handleType === 'up'){
+       context.modeCount += 1;
+   }else{
+       context.modeCount -= 1;
+   }
+   if (context.modeCount > l - 1) context.modeCount = 0;
+   if (context.modeCount < 0) context.modeCount = l - 1;
+   context.currentMode = context.colorMode[context.modeCount];
+   callback();
+}

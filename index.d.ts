@@ -19,7 +19,7 @@ declare namespace ewColorPicker {
     sure?: Function;
     clear?: Function;
     isLog?: boolean;
-    openPicker?: Function;
+    openOrClosePicker?: Function;
     changeColor?: Function;
     hasBox?:boolean;
     isClickOutside?:boolean;
