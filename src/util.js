@@ -92,10 +92,10 @@ util["clickOutSide"] = (context,config,callback) => {
             callback();
         }
         setTimeout(() => {
-            util.off(document,'mousedown',mouseHandler);
+            util.off(document,util.eventType[0],mouseHandler);
         });
     }
-    util.on(document, 'mousedown', mouseHandler);
+    util.on(document,util.eventType[0], mouseHandler);
 }
 util['createUUID'] = () => (Math.random() * 10000000).toString(16).substr(0, 4) + '-' + (new Date()).getTime() + '-' + Math.random().toString().substr(2, 5);
 util.removeAllSpace = (value) => value.replace(/\s+/g,"");

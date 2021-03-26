@@ -5,6 +5,6 @@ import util from './util';
 */
 export function cloneColor(color) {
     const newColor = util.deepCloneObjByRecursion(color);
-    newColor.s = newColor.b = 100;
+    newColor.s = newColor.v = 100;
     return newColor;
 }

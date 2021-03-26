@@ -1,7 +1,7 @@
 import { handleClickOutSide } from './clickOutSide';
 import { getELByClass } from './query';
 import { handlePicker,getHeiAni,open } from './openOrClosePicker';
-import { colorRegRGBA,colorRgbaToHSBa,colorToRgba } from './color';
+import { colorRegRGBA,colorRgbaToHsva,colorToRgba } from './color';
 import { setColorValue } from './setColorValue';
 import { changeElementColor } from './changeElementColor';
 import { changeAlpha,changeHue } from './hueAndAlpha';
@@ -46,12 +46,12 @@ export function startMain(ele, config) {
     this.picker = getELByClass(ele, 'ew-color-picker');
     this.slider = getELByClass(ele, 'ew-color-slider');
     if (config.defaultColor) {
-        this.hsbColor = colorRegRGBA.test(config.defaultColor) ? colorRgbaToHSBa(config.defaultColor) : colorRgbaToHSBa(colorToRgba(config.defaultColor));
+        this.hsvaColor = colorRegRGBA.test(config.defaultColor) ? colorRgbaToHsva(config.defaultColor) : colorRgbaToHsva(colorToRgba(config.defaultColor));
     } else {
-        this.hsbColor = {
+        this.hsvaColor = {
             h: 0,
             s: 100,
-            b: 100,
+            v: 100,
             a: 1
         };
     }
@@ -70,13 +70,14 @@ export function startMain(ele, config) {
     this.preDefineItem = getELByClass(ele, 'ew-pre-define-color', true);
     if (this.preDefineItem.length) {
         const items = util.ewObjToArray(this.preDefineItem);
+        const siblings = (el) => Array.prototype.filter.call(el.parentElement.children,child => child !== el);
         //点击预定义颜色
         items.map(item => {
             const clickHandler = event => {
-                items.forEach(child => util.removeClass(child, 'ew-pre-define-color-active'));
-                util.addClass(event.target, 'ew-pre-define-color-active');
+                util.addClass(item,'ew-pre-define-color-active');
+                siblings(item).forEach(sibling => util.removeClass(sibling,'ew-pre-define-color-active'))
                 const bgColor = util.getCss(event.target, 'background-color');
-                scope.hsbColor = colorRgbaToHSBa(bgColor);
+                scope.hsvaColor = colorRgbaToHsva(bgColor);
                 setColorValue(scope, panelWidth, panelHeight,true);
                 changeElementColor(scope);
             };

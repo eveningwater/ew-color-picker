@@ -48,7 +48,7 @@ export function colorRgbaToHex(rgba) {
     const value = '#';
     if (/rgba?/.test(rgba)) {
         let values = rgba.replace(/rgba?\(/, '').replace(/\)/, '').replace(/[\s+]/g, '').split(','), color = '';
-        values.map(function (value, index) {
+        values.map((value, index) => {
             if (index <= 2) {
                 color += hexColor(value);
             }
@@ -57,13 +57,13 @@ export function colorRgbaToHex(rgba) {
     }
 }
 /**
- * hsb to rgba
- * @param {*} hsb 
+ * hsva to rgba
+ * @param {*} hsva 
  * @param {*} alpha 
  */
-export function colorHSBaToRgba(hsb, alpha) {
-    let r, g, b, a = hsb.a;//rgba(r,g,b,a)
-    let h = hsb.h, s = hsb.s * 255 / 100, v = hsb.b * 255 / 100;//hsv(h,s,v)
+export function colorHsvaToRgba(hsva, alpha) {
+    let r, g, b, a = hsva.a;//rgba(r,g,b,a)
+    let h = hsva.h, s = hsva.s * 255 / 100, v = hsva.v * 255 / 100;//hsv(h,s,v)
     if (s === 0) {
         r = g = b = v;
     } else {
@@ -151,18 +151,18 @@ export function colorRgbaToHsla(rgba) {
     return {
         colorStr: util.removeAllSpace(('hsla(' + Math.ceil(h * 60) + ',' + Math.ceil(s * 100) + '%,' + Math.ceil(l * 100) + '%,' + a + ')')),
         colorObj: {
-            h: h,
-            s: s,
-            l: l,
-            a: a
+            h,
+            s,
+            l,
+            a
         }
     };
 }
 /**
- * rgba to hsb
+ * rgba to hsva
  * @param {*} rgba 
  */
-export function colorRgbaToHSBa(rgba) {
+export function colorRgbaToHsva(rgba) {
     const rgbaArr = rgba.slice(rgba.indexOf('(') + 1, rgba.lastIndexOf(')')).split(',');
     let a = rgbaArr.length < 4 ? 1 : Number(rgbaArr[3]);
     let r = parseInt(rgbaArr[0]) / 255,
@@ -198,10 +198,10 @@ export function colorRgbaToHSBa(rgba) {
     s = s * 100;
     v = v * 100;
     return {
-        h: h,
-        s: s,
-        b: v,
-        a: a
+        h,
+        s,
+        v,
+        a
     }
 }
 /* 
@@ -224,6 +224,7 @@ export function colorToRgba(color) {
  * @param {*} color 
  */
 export function isValidColor(color) {
+    // https://developer.mozilla.org/zh-CN/docs/Web/CSS/color_value#%E8%89%B2%E5%BD%A9%E5%85%B3%E9%94%AE%E5%AD%97
     let isTransparent = color === 'transparent';
     return colorRegExp.test(color) || colorRegRGB.test(color) || colorRegRGBA.test(color) || colorRegHSL.test(color) || colorRegHSLA.test(color) || (colorToRgba(color) !== 'rgba(0,0,0,0)' && !isTransparent) || isTransparent;
 }
