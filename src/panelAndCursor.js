@@ -11,10 +11,10 @@ import util from './util';
  export function changeCursorColor(scope, left, top, panelWidth, panelHeight) {
     util.setSomeCss(scope.pickerCursor, [{ prop: 'left', value: left + 'px' }, { prop: 'top', value: top + 'px' }])
     const s = parseInt(100 * (left - 4) / panelWidth);
-    const b = parseInt(100 * (panelHeight - (top - 4)) / panelHeight);
+    const v = parseInt(100 * (panelHeight - (top - 4)) / panelHeight);
     //需要减去本身的宽高来做判断
-    scope.hsbColor.s = s > 100 ? 100 : s < 0 ? 0 : s;
-    scope.hsbColor.b = b > 100 ? 100 : b < 0 ? 0 : b;
+    scope.hsvaColor.s = s > 100 ? 100 : s < 0 ? 0 : s;
+    scope.hsvaColor.v = v > 100 ? 100 : v < 0 ? 0 : v;
     scope.boxChange = true;
     changeElementColor(scope);
 }
