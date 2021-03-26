@@ -1,6 +1,7 @@
 import { setPredefineDisabled,hasAlpha } from './predefineColor';
 import util from './util';
 import { isValidColor,colorRegRGB,colorToRgba } from './color';
+import { ERROR_VARIABLE } from './error';
 /**
  * 重新渲染颜色选择器
  * @param {*} color 
@@ -66,10 +67,10 @@ export function staticRender(element, config) {
         predefineHTML = `<div class="ew-pre-define-color-container">${predefineColorHTML}</div>`;
     }
     if (config.disabled || config.boxDisabled) boxDisabledClassName = 'ew-color-picker-box-disabled';
-    if (colorRegRGB.test(config.defaultColor)) {
+    if (config.defaultColor && !isValidColor(config.defaultColor))return util.ewError(ERROR_VARIABLE.DEFAULT_COLOR_ERROR);
+    if (isValidColor(config.defaultColor)) {
         config.defaultColor = colorToRgba(config.defaultColor);
     }
-    if (config.defaultColor && !isValidColor(config.defaultColor)) return util.ewError(ERROR_VARIABLE.DEFAULT_COLOR_ERROR);
     config.colorValue = config.defaultColor;
     if (!config.disabled && config.colorValue) boxBackground = `background:${config.colorValue}`;
     // 盒子样式

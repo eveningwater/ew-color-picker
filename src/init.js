@@ -1,5 +1,6 @@
 import util from './util';
 import { consoleInfo } from './console';
+import { ERROR_VARIABLE } from './error';
 /**
  * 初始化
  * @param {*} bindElement 

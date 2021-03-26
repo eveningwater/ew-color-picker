@@ -114,6 +114,7 @@ CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
 
 # 更新日志
 
+* 1.7.6 修复了一些问题，开放了内部工具方法，可通过`ewColorPicker.util`访问到所有工具方法，并修改了颜色值的验证，支持英文颜色单词的传入，例如设置预定义颜色以及默认颜色。
 * 1.7.5 修复了透明度默认赋值问题，将原`openPicker`点击色块打开或关闭的回调更名为`openOrClosePicker`，优化了代码。
 * 1.7.4:修复了颜色模式切换透明度不改变问题，新增了`changeBoxByChangeColor`配置属性,该属性表示是否在打开颜色面板，颜色值触发的时候，色块的背景色更改，如果不点击确定按钮，关闭颜色面板后会恢复到默认颜色,预定义颜色数组`predefineColor`新增了可以传数组项为对象或字符串，对象定义为`{ color:"#123",disabled:true }(color为合格的颜色值,disabled为true或者false，表示是否禁用该预定义点击更换颜色)`。
 * 1.7.3:优化了颜色值算法，新增了`boxDisabled`和`openChangeColorMode`配置属性。

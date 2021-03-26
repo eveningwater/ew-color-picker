@@ -1,5 +1,7 @@
 import colorPickerConfig from './config';
 import { startInit } from './startInit';
+import * as color from './color';
+import base from './util';
 const createColorPicker = function (config) {
     const Super = this;
     const Sub = function(){
@@ -13,7 +15,16 @@ const createColorPicker = function (config) {
 const getDefaultConfig = function () {
     return colorPickerConfig;
 }
+const util = Object.create(null);
+[color,base].forEach(module => {
+    Object.keys(module).forEach(key => {
+        if(base.isFunction(module[key])){
+            util[key] = module[key];
+        }
+    })
+})
 export default {
     createColorPicker,
-    getDefaultConfig
+    getDefaultConfig,
+    util
 }

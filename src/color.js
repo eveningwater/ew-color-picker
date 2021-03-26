@@ -215,8 +215,7 @@ export function colorToRgba(color) {
     document.body.appendChild(div);
     const c = util.getCss(div, 'backgroundColor');
     document.body.removeChild(div);
-    let lastValue = c.slice(c.lastIndexOf(',') + 1, c.lastIndexOf(')')).trim();
-    let isAlpha = lastValue.indexOf('.') > -1;
+    let isAlpha = c.match(/,/g) && c.match(/,/g).length > 2;
     let result = isAlpha ? c : c.slice(0, 2) + 'ba' + c.slice(3, c.length - 1) + ', 1)';
     return util.removeAllSpace(result);
 };
@@ -225,7 +224,8 @@ export function colorToRgba(color) {
  * @param {*} color 
  */
 export function isValidColor(color) {
-    return colorRegExp.test(color) || colorRegRGB.test(color) || colorRegRGBA.test(color) || colorRegHSL.test(color) || colorRegHSLA.test(color);
+    let isTransparent = color === 'transparent';
+    return colorRegExp.test(color) || colorRegRGB.test(color) || colorRegRGBA.test(color) || colorRegHSL.test(color) || colorRegHSLA.test(color) || (colorToRgba(color) !== 'rgba(0,0,0,0)' && !isTransparent) || isTransparent;
 }
 /**
  * 
