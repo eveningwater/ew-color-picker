@@ -1,4 +1,4 @@
-import { isValidColor,colorToRgba,colorRgbaToHSBa } from './color';
+import { isValidColor,colorToRgba,colorRgbaToHsva } from './color';
 import { ERROR_VARIABLE } from './error';
 import { setColorValue } from './setColorValue';
 import util from './util';
@@ -11,6 +11,6 @@ export function updateColor(color) {
     if (!isValidColor(color))return util.ewError(ERROR_VARIABLE.UPDATE_PARAM_COLOR_ERROR);
     if (!this.config.pickerFlag)util.ewWarn(ERROR_VARIABLE.UPDATE_PARAM_COLOR_WARN);
     let rgbaColor = colorToRgba(color);
-    this.hsbColor = colorRgbaToHSBa(rgbaColor);
+    this.hsvaColor = colorRgbaToHsva(rgbaColor);
     setColorValue(this, this.panelWidth, this.panelHeight,true);
 }

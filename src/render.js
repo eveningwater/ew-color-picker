@@ -38,12 +38,15 @@ export function staticRender(element, config) {
     const p_c = config.predefineColor;
     if (!util.isDeepArray(p_c)) return util.ewError(ERROR_VARIABLE.PREDEFINE_COLOR_ERROR);
     if (p_c.length) {
-        p_c.map(color => {
+        p_c.map((color,index) => {
             let isValidColorString = util.isString(color) && isValidColor(color);
             let isValidColorObj = util.isDeepObject(color) && color.hasOwnProperty('color') && isValidColor(color.color);
             let renderColor = isValidColorString ? color : isValidColorObj ? color.color : '';
             let renderDisabled = isValidColorObj ? setPredefineDisabled(color.disabled) : '';
-            predefineColorHTML += `<div class="ew-pre-define-color${hasAlpha(renderColor)}${renderDisabled}" style="background:${renderColor};"></div>`;
+            predefineColorHTML += `
+            <div class="ew-pre-define-color${hasAlpha(renderColor)}${renderDisabled}" tabindex=${index}>
+                <div class="ew-pre-define-color-item" style="background-color:${renderColor};"></div>
+            </div>`;
         })
     };
     //打开颜色选择器的方框

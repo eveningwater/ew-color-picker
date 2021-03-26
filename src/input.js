@@ -1,4 +1,4 @@
-import { isValidColor,colorRgbaToHSBa,colorHexToRgba,colorHslaToRgba } from './color';
+import { isValidColor,colorRgbaToHsva,colorHexToRgba,colorHslaToRgba } from './color';
 import { setColorValue } from './setColorValue';
 import { changeElementColor } from './changeElementColor';
 import util from './util';
@@ -15,15 +15,15 @@ import util from './util';
     if(scope.config.openChangeColorMode){
         switch (scope.currentMode) {
             case "hex":
-                color = colorRgbaToHSBa(colorHexToRgba(value));
+                color = colorRgbaToHsva(colorHexToRgba(value));
                 break;
             case "rgba":
-                color = colorRgbaToHSBa(value);
+                color = colorRgbaToHsva(value);
                 break;
             case "hsla":
                 // 需要先转换成rgba,再转换成hsv模式
                 let hslaArr = value.slice(value.indexOf('(') + 1, value.lastIndexOf(')')).split(',');
-                color = colorRgbaToHSBa(colorHslaToRgba({
+                color = colorRgbaToHsva(colorHslaToRgba({
                     h: Number(hslaArr[0]),
                     s: Number(hslaArr[1].replace(/%/g, "")),
                     l: Number(hslaArr[2].replace(/%/g, "")),
@@ -32,9 +32,9 @@ import util from './util';
                 break;
         }
     }else{
-        color = scope.config.alpha ? colorRgbaToHSBa(value) : colorRgbaToHSBa(colorHexToRgba(value));
+        color = scope.config.alpha ? colorRgbaToHsva(value) : colorRgbaToHsva(colorHexToRgba(value));
     }
-    scope.hsbColor = color;
+    scope.hsvaColor = color;
     setColorValue(scope, scope.panelWidth, scope.panelHeight,true);
     changeElementColor(scope);
 }

@@ -1,7 +1,7 @@
 import util from './util';
 import { changeMode } from './mode';
 import { changeAlphaBar } from './changeAlphaBarBackground';
-import { colorHSBaToRgba,colorRgbaToHex } from './color';
+import { colorHsvaToRgba,colorRgbaToHex } from './color';
 import { setBoxBackground } from './box';
 /**
  * 改变元素的颜色
@@ -9,7 +9,7 @@ import { setBoxBackground } from './box';
  * @param {*} isAlpha 
  */
  export function changeElementColor(scope, isAlpha) {
-    const color = colorHSBaToRgba(scope.hsbColor);
+    const color = colorHsvaToRgba(scope.hsvaColor);
     let newColor = isAlpha || scope.config.alpha ? color : colorRgbaToHex(color);
     if (scope.config.openChangeColorMode) {
         newColor = changeMode(scope, color);

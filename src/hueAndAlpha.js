@@ -1,7 +1,7 @@
 import util from './util';
 import { changeElementColor } from './changeElementColor';
 import { cloneColor } from './cloneColor';
-import { colorHSBaToRgba,colorRgbaToHex } from './color';
+import { colorHsvaToRgba,colorRgbaToHex } from './color';
 /**
  * 设置hue和alpha的top
  * @param {*} bar 
@@ -25,7 +25,7 @@ import { colorHSBaToRgba,colorRgbaToHex } from './color';
 export function changeAlpha(context, y) {
    let value = setAlphaHueTop(context.alphaBar, context.alphaBarThumb, y);
    const alpha = ((value.barHeight - value.barThumbY <= 0 ? 0 : value.barHeight - value.barThumbY) / value.barHeight);
-   context.hsbColor.a = alpha >= 1 ? 1 : alpha.toFixed(2);
+   context.hsvaColor.a = alpha >= 1 ? 1 : alpha.toFixed(2);
    changeElementColor(context, true);
 }
 /**
@@ -35,7 +35,7 @@ export function changeAlpha(context, y) {
  */
  export function changeHue(context, y) {
     let value = setAlphaHueTop(context.hueBar, context.hueThumb, y);
-    context.hsbColor.h = cloneColor(context.hsbColor).h = parseInt(360 * value.barThumbY / value.barHeight);
-    util.setCss(context.pickerPanel, 'background', colorRgbaToHex(colorHSBaToRgba(cloneColor(context.hsbColor))));
+    context.hsvaColor.h = cloneColor(context.hsvaColor).h = parseInt(360 * value.barThumbY / value.barHeight);
+    util.setCss(context.pickerPanel, 'background', colorRgbaToHex(colorHsvaToRgba(cloneColor(context.hsvaColor))));
     changeElementColor(context);
 }
