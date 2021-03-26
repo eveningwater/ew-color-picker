@@ -8,8 +8,8 @@ import util from './util';
  * @returns 
  */
 export function updateColor(color) {
-    if (!isValidColor(color)) return util.ewError(ERROR_VARIABLE.UPDATE_PARAM_COLOR_ERROR);
-    if (!this.config.pickerFlag) util.ewWarn(ERROR_VARIABLE.UPDATE_PARAM_COLOR_WARN);
+    if (!isValidColor(color))return util.ewError(ERROR_VARIABLE.UPDATE_PARAM_COLOR_ERROR);
+    if (!this.config.pickerFlag)util.ewWarn(ERROR_VARIABLE.UPDATE_PARAM_COLOR_WARN);
     let rgbaColor = colorToRgba(color);
     this.hsbColor = colorRgbaToHSBa(rgbaColor);
     setColorValue(this, this.panelWidth, this.panelHeight,true);

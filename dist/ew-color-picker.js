@@ -144,7 +144,7 @@
     util.eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
 
     const NOT_DOM_ELEMENTS = ['html', 'head', 'meta', 'title', 'link', 'style', 'script'];
-    const ERROR_VARIABLE$1 = {
+    const ERROR_VARIABLE = {
       PICKER_OBJECT_CONFIG_ERROR: 'you should pass a param which is el and el must be a string or a dom element!',
       PICKER_CONFIG_ERROR: 'you should pass a param that it must be a string or a dom element!',
       DOM_OBJECT_ERROR: 'can not find the element by el property,make sure to pass a correct value!',
@@ -573,8 +573,7 @@
       document.body.appendChild(div);
       const c = util.getCss(div, 'backgroundColor');
       document.body.removeChild(div);
-      let lastValue = c.slice(c.lastIndexOf(',') + 1, c.lastIndexOf(')')).trim();
-      let isAlpha = lastValue.indexOf('.') > -1;
+      let isAlpha = c.match(/,/g) && c.match(/,/g).length > 2;
       let result = isAlpha ? c : c.slice(0, 2) + 'ba' + c.slice(3, c.length - 1) + ', 1)';
       return util.removeAllSpace(result);
     }
@@ -584,7 +583,8 @@
      */
 
     function isValidColor(color) {
-      return colorRegExp.test(color) || colorRegRGB.test(color) || colorRegRGBA.test(color) || colorRegHSL.test(color) || colorRegHSLA.test(color);
+      let isTransparent = color === 'transparent';
+      return colorRegExp.test(color) || colorRegRGB.test(color) || colorRegRGBA.test(color) || colorRegHSL.test(color) || colorRegHSLA.test(color) || colorToRgba(color) !== 'rgba(0,0,0,0)' && !isTransparent || isTransparent;
     }
     /**
      * 
@@ -595,6 +595,24 @@
     function isAlphaColor(color) {
       return colorRegRGB.test(color) || colorRegRGBA.test(color) || colorRegHSL.test(color) || colorRegHSLA.test(color);
     }
+
+    var color = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        colorRegExp: colorRegExp,
+        colorRegRGB: colorRegRGB,
+        colorRegRGBA: colorRegRGBA,
+        colorRegHSL: colorRegHSL,
+        colorRegHSLA: colorRegHSLA,
+        colorHexToRgba: colorHexToRgba,
+        colorRgbaToHex: colorRgbaToHex,
+        colorHSBaToRgba: colorHSBaToRgba,
+        colorHslaToRgba: colorHslaToRgba,
+        colorRgbaToHsla: colorRgbaToHsla,
+        colorRgbaToHSBa: colorRgbaToHSBa,
+        colorToRgba: colorToRgba,
+        isValidColor: isValidColor,
+        isAlphaColor: isAlphaColor
+    });
 
     /**
      * 
@@ -689,12 +707,12 @@
       }
 
       if (config.disabled || config.boxDisabled) boxDisabledClassName = 'ew-color-picker-box-disabled';
+      if (config.defaultColor && !isValidColor(config.defaultColor)) return util.ewError(ERROR_VARIABLE.DEFAULT_COLOR_ERROR);
 
-      if (colorRegRGB.test(config.defaultColor)) {
+      if (isValidColor(config.defaultColor)) {
         config.defaultColor = colorToRgba(config.defaultColor);
       }
 
-      if (config.defaultColor && !isValidColor(config.defaultColor)) return util.ewError(ERROR_VARIABLE.DEFAULT_COLOR_ERROR);
       config.colorValue = config.defaultColor;
       if (!config.disabled && config.colorValue) boxBackground = `background:${config.colorValue}`; // 盒子样式
 
@@ -1059,14 +1077,14 @@
       if (util.isString(config) || util.isDom(config)) {
         mergeConfig = defaultConfig;
         element = config;
-        error = ERROR_VARIABLE$1.DOM_ERROR;
+        error = ERROR_VARIABLE.DOM_ERROR;
       } //如果是对象，则自定义配置，自定义配置选项如下:
       else if (util.isDeepObject(config) && (util.isString(config.el) || util.isDom(config.el))) {
           mergeConfig = util.ewAssign(defaultConfig, config);
           element = config.el;
-          error = ERROR_VARIABLE$1.DOM_OBJECT_ERROR;
+          error = ERROR_VARIABLE.DOM_OBJECT_ERROR;
         } else {
-          const errorText = util.isDeepObject(config) ? ERROR_VARIABLE$1.PICKER_OBJECT_CONFIG_ERROR : ERROR_VARIABLE$1.PICKER_CONFIG_ERROR;
+          const errorText = util.isDeepObject(config) ? ERROR_VARIABLE.PICKER_OBJECT_CONFIG_ERROR : ERROR_VARIABLE.PICKER_CONFIG_ERROR;
           return util.ewError(errorText);
         }
 
@@ -1108,9 +1126,18 @@
       return baseDefaultConfig;
     };
 
+    const util$1 = Object.create(null);
+    [color, util].forEach(module => {
+      Object.keys(module).forEach(key => {
+        if (util.isFunction(module[key])) {
+          util$1[key] = module[key];
+        }
+      });
+    });
     var globalAPI = {
       createColorPicker,
-      getDefaultConfig
+      getDefaultConfig,
+      util: util$1
     };
 
     /**
@@ -1149,7 +1176,7 @@
 
     const isNotDom = ele => {
       if (NOT_DOM_ELEMENTS.indexOf(ele.tagName.toLowerCase()) > -1) {
-        util.ewError(ERROR_VARIABLE$1.DOM_NOT_ERROR);
+        util.ewError(ERROR_VARIABLE.DOM_NOT_ERROR);
         return true;
       }
 
@@ -1188,14 +1215,14 @@
      */
 
     function updateColor(color) {
-      if (!isValidColor(color)) return util.ewError(ERROR_VARIABLE$1.UPDATE_PARAM_COLOR_ERROR);
-      if (!this.config.pickerFlag) util.ewWarn(ERROR_VARIABLE$1.UPDATE_PARAM_COLOR_WARN);
+      if (!isValidColor(color)) return util.ewError(ERROR_VARIABLE.UPDATE_PARAM_COLOR_ERROR);
+      if (!this.config.pickerFlag) util.ewWarn(ERROR_VARIABLE.UPDATE_PARAM_COLOR_WARN);
       let rgbaColor = colorToRgba(color);
       this.hsbColor = colorRgbaToHSBa(rgbaColor);
       setColorValue(this, this.panelWidth, this.panelHeight, true);
     }
 
-    const consoleInfo = () => console.log(`%c ew-color-picker@1.7.5%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+    const consoleInfo = () => console.log(`%c ew-color-picker@1.7.6%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
     /**
      * 初始化
@@ -1618,7 +1645,7 @@
      */
 
     function ewColorPicker(config) {
-      if (util.isUndefined(new.target)) return util.ewError(ERROR_VARIABLE$1.CONSTRUCTOR_ERROR);
+      if (util.isUndefined(new.target)) return util.ewError(ERROR_VARIABLE.CONSTRUCTOR_ERROR);
       startInit(this, config);
     }
 
