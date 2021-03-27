@@ -314,11 +314,10 @@
   display: inline-block;
   vertical-align: middle;
   padding: 6px;
-  cursor: pointer;
   border-radius: 2px;
 }
 .ew-color-mode-container:hover {
-  background-color: #cecece;
+  background-color: #ebe7e7;
 }
 .ew-color-mode-container .ew-color-mode-up,
 .ew-color-mode-container .ew-color-mode-down {
@@ -326,6 +325,7 @@
    height: 0;
    border-width: 6px;
    border-style: solid;
+   cursor: pointer;
 }
 .ew-color-mode-container .ew-color-mode-up {
   bottom: 5px;

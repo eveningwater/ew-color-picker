@@ -46,7 +46,7 @@
       predefineColor:['#223456','rgba(122,35,77,.5)'],//预定义颜色是一个数组
       disabled:false,//是否禁止开启选择器面板
       defaultColor:'#eeff22',//默认颜色
-      openPickerAni:'opacity',//或者'height'，开启颜色选择器面板的动画
+      pickerAnimation:'opacity',//或者'height'，开启颜色选择器面板的动画
       sure:function(color){
           console.log(color);
       },//点击确定按钮的回调
@@ -77,8 +77,8 @@
   //当然还提供了一个api，可以获取默认的配置对象
   ewColorPicker.getDefaultConfig();
   //实例化的颜色选择器类，我们还提供了三个api，如下:
-  color.openPicker(openPickerAni);//手动打开颜色选择器，参数为动画类型，即height或opacity
-  color.closePicker(openPickerAni);//手动关闭颜色选择器，参数同手动打开方法一样
+  color.openPicker(pickerAnimation);//手动打开颜色选择器，参数为动画类型，即height或opacity
+  color.closePicker(pickerAnimation);//手动关闭颜色选择器，参数同手动打开方法一样
   color.updateColor(color);//手动更新颜色值，参数为颜色值，不合格的颜色值会给出错误提示,并且颜色选择器面板要处于开启状态
 ```
 
@@ -114,6 +114,7 @@ CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
 
 # 更新日志
 
+* 1.7.8 修复了将input隐藏的问题，优化了代码，将`openPickerAni`配置属性名更改为`pickerAnimation`。
 * 1.7.7 修复了预定义颜色的一些问题，优化了一些代码。
 * 1.7.6 修复了一些问题，开放了内部工具方法，可通过`ewColorPicker.util`访问到所有工具方法，并修改了颜色值的验证，支持英文颜色单词的传入，例如设置预定义颜色以及默认颜色。
 * 1.7.5 修复了透明度默认赋值问题，将原`openPicker`点击色块打开或关闭的回调更名为`openOrClosePicker`，优化了代码。

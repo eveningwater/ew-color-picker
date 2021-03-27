@@ -23,7 +23,7 @@ export function close(expression, picker) {
  * @param {*} scope 
  */
 export function getHeiAni(scope) {
-    return util.isString(scope.config.openPickerAni) && scope.config.openPickerAni.indexOf('height') > -1
+    return util.isString(scope.config.pickerAnimation) && scope.config.pickerAnimation.indexOf('height') > -1
 }
 /**
  * 打开和关闭
@@ -38,7 +38,7 @@ export function openAndClose(scope) {
  */
 export function handleClosePicker(ani) {
     if (ani) {
-        this.config.openPickerAni = ani;
+        this.config.pickerAnimation = ani;
     }
     if (this.config.pickerFlag) {
         this.config.pickerFlag = false;
@@ -51,7 +51,7 @@ export function handleClosePicker(ani) {
  */
 export function handleOpenPicker(ani) {
     if (ani) {
-        this.config.openPickerAni = ani;
+        this.config.pickerAnimation = ani;
     }
     if (!this.config.pickerFlag) {
         this.config.pickerFlag = true;

@@ -44,7 +44,7 @@
       predefineColor:['#223456','rgba(122,35,77,.5)'],//预定义颜色是一个数组
       disabled:false,//从1.7.2版本开始禁止颜色选择器的所有点击
       defaultColor:'#eeff22',//默认颜色
-      openPickerAni:'opacity',//或者'height'，开启颜色选择器面板的动画
+      pickerAnimation:'opacity',//或者'height'，开启颜色选择器面板的动画
       sure:function(color){
           console.log(color);
       },//点击确定按钮的回调
@@ -76,8 +76,8 @@
   //当然还提供了一个api，可以获取默认的配置对象
   ewColorPicker.getDefaultConfig();
   //实例化的颜色选择器类，我们还提供了三个api，如下:
-  color.openPicker(openPickerAni);//手动打开颜色选择器，参数为动画类型，即height或opacity
-  color.closePicker(openPickerAni);//手动关闭颜色选择器，参数同手动打开方法一样
+  color.openPicker(pickerAnimation);//手动打开颜色选择器，参数为动画类型，即height或opacity
+  color.closePicker(pickerAnimation);//手动关闭颜色选择器，参数同手动打开方法一样
   color.updateColor(color);//手动更新颜色值，参数为颜色值，不合格的颜色值会给出错误提示,并且颜色选择器面板要处于开启状态
 ```
 > tips: 需要注意的是，从1.6.4版本开始，如果传入的dom元素是多个，则只有第一个dom元素渲染成颜色选择器，如果需要渲染多个颜色选择器，可使用一个数组来实例化。例如:
