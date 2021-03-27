@@ -121,22 +121,17 @@ export function staticRender(element, config) {
             ${predefineHTML}
         </div>`;
     let isBody = element.tagName.toLowerCase() === 'body';
+    let mountElement = isBody ? document.createElement('div') : element;
+    let mountProp = isBody ? 'id' : 'color-picker-id';
+    let mountValue = isBody ? 'placeElement-' + this._color_picker_uid : this._color_picker_uid;
+    mountElement.innerHTML = html;
+    mountElement.setAttribute(mountProp,mountValue);
     if (isBody) {
-        const div = document.createElement('div');
-        div.innerHTML = html;
-        div.setAttribute('id', 'placeElement-' + this._color_picker_uid);
-        this._bodyPlaceEle = div;
         let hasDiv = util.$('#placeElement-' + this._color_picker_uid);
-        if (hasDiv) {
-            hasDiv.parentElement.removeChild(hasDiv);
-        }
+        if (hasDiv)hasDiv.parentElement.removeChild(hasDiv);
         element.appendChild(div);
     } else {
         element.innerHTML = html;
     }
-    if (isBody) {
-        this.startMain(this._bodyPlaceEle, config);
-    } else {
-        this.startMain(element, config);
-    }
+    this.startMain(mountElement, config);
 }

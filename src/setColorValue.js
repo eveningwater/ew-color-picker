@@ -11,7 +11,7 @@ import { colorHsvaToRgba,colorRgbaToHex } from './color';
  export function setColorValue(context, panelWidth, panelHeight,boxChange) {
     context.boxChange = boxChange;
     changeElementColor(context);
-    context.prevInputValue = context.pickerInput.value;
+    if(context.config.hasColorInput)context.prevInputValue = context.pickerInput.value;
     let sliderBarHeight = 0;
     let l = parseInt(context.hsvaColor.s * panelWidth / 100),
         t = parseInt(panelHeight - context.hsvaColor.v * panelHeight / 100);
