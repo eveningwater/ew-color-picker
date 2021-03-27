@@ -14,7 +14,7 @@ import { setBoxBackground } from './box';
     if (scope.config.openChangeColorMode) {
         newColor = changeMode(scope, color);
     }
-    if (scope.pickerInput) {
+    if (scope.config.hasColorInput) {
         scope.pickerInput.value = newColor;
         scope.prevInputValue = newColor;
     }

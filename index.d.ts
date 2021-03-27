@@ -15,7 +15,7 @@ declare namespace ewColorPicker {
     predefineColor?: string[] | Array<PredefineColorType>;
     disabled?: boolean;
     defaultColor?: string;
-    openPickerAni?: string;
+    pickerAnimation?: string;
     sure?: Function;
     clear?: Function;
     isLog?: boolean;

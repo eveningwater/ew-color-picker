@@ -16,11 +16,18 @@
 <script>
     const color = new ewColorPicker({
         el:"div",
-        predefineColor:["#2396ef","#fff","rgba(134,11,12,1)",{
-            color:"#666",
-            disabled:true
-        }],
+        predefineColor:[
+            "#2396ef",
+            "#fff",
+            "rgba(134,11,12,1)",
+            "rgba(1,11,12,.6)",
+            {
+                color:"#666",
+                disabled:true
+            }
+        ],
         alpha:true,
+        // hue:false,
         defaultColor:"#123",
         changeBoxByChangeColor:false
     });

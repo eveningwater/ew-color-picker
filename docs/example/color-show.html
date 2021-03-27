@@ -11,6 +11,7 @@
     <div></div>
 </body>
 <script src="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js"></script>
+<!-- <script src="../dist/ew-color-picker.min.js"></script> -->
 <script>
     const color = new ewColorPicker({
         el:"div",
@@ -18,7 +19,10 @@
         hasSure:false,
         hasBox:false,
         hasClear:false,
-        alpha:true
+        alpha:true,
+        changeColor:(color) => {
+            console.log(color);
+        }
     })
 </script>
 </html>
