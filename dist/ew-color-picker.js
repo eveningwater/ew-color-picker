@@ -711,12 +711,14 @@
       }
 
       if (config.disabled || config.boxDisabled) boxDisabledClassName = 'ew-color-picker-box-disabled';
-      if (config.defaultColor && !isValidColor(config.defaultColor)) return util.ewError(ERROR_VARIABLE.DEFAULT_COLOR_ERROR);
 
-      if (isValidColor(config.defaultColor)) {
-        config.defaultColor = colorToRgba(config.defaultColor);
+      if (config.defaultColor) {
+        if (!isValidColor(config.defaultColor)) {
+          return util.ewError(ERROR_VARIABLE.DEFAULT_COLOR_ERROR);
+        } else {
+          config.defaultColor = colorToRgba(config.defaultColor);
+        }
       }
-
       config.colorValue = config.defaultColor;
       if (!config.disabled && config.colorValue) boxBackground = `background:${config.colorValue}`; // 盒子样式
 
@@ -735,7 +737,7 @@
       }
 
       if (config.hasClear || config.hasSure) {
-        btnGroupHTML = `<div class="ew-color-drop-btn-group">${clearHTML}${sureHTML}</div>`;
+        btnGroupHTML = `<div class="ew-color-drop-btn-group">${sureHTML}${clearHTML}</div>`;
       }
 
       if (config.hasColorInput) {
@@ -1219,7 +1221,7 @@
       setColorValue(this, this.panelWidth, this.panelHeight, true);
     }
 
-    const consoleInfo = () => console.log(`%c ew-color-picker@1.7.8%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+    const consoleInfo = () => console.log(`%c ew-color-picker@1.7.9%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
     /**
      * 初始化
@@ -1574,9 +1576,11 @@
         this.box = getELByClass(ele, 'ew-color-picker-box');
         if (!config.boxDisabled) util.on(this.box, 'click', () => handlePicker(ele, scope));
       } else {
-        this.config.pickerFlag = true;
-        open(getHeiAni(scope), this.picker);
-        setColorValue(this, this.panelWidth, this.panelHeight, false);
+        setTimeout(() => {
+          this.config.pickerFlag = true;
+          open(getHeiAni(scope), this.picker);
+          setColorValue(this, this.panelWidth, this.panelHeight, false);
+        }, 0);
       }
 
       if (config.hasColorInput) {
