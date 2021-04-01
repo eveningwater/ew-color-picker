@@ -114,6 +114,7 @@ CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
 
 # 更新日志
 
+* 1.7.9 修复了隐藏色块的问题。
 * 1.7.8 修复了将input隐藏的问题，优化了代码，将`openPickerAni`配置属性名更改为`pickerAnimation`。
 * 1.7.7 修复了预定义颜色的一些问题，优化了一些代码。
 * 1.7.6 修复了一些问题，开放了内部工具方法，可通过`ewColorPicker.util`访问到所有工具方法，并修改了颜色值的验证，支持英文颜色单词的传入，例如设置预定义颜色以及默认颜色。

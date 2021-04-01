@@ -70,10 +70,13 @@ export function staticRender(element, config) {
         predefineHTML = `<div class="ew-pre-define-color-container">${predefineColorHTML}</div>`;
     }
     if (config.disabled || config.boxDisabled) boxDisabledClassName = 'ew-color-picker-box-disabled';
-    if (config.defaultColor && !isValidColor(config.defaultColor))return util.ewError(ERROR_VARIABLE.DEFAULT_COLOR_ERROR);
-    if (isValidColor(config.defaultColor)) {
-        config.defaultColor = colorToRgba(config.defaultColor);
-    }
+    if (config.defaultColor){
+        if(!isValidColor(config.defaultColor)){
+            return util.ewError(ERROR_VARIABLE.DEFAULT_COLOR_ERROR)
+        }else{
+            config.defaultColor = colorToRgba(config.defaultColor);
+        }
+    };
     config.colorValue = config.defaultColor;
     if (!config.disabled && config.colorValue) boxBackground = `background:${config.colorValue}`;
     // 盒子样式
@@ -88,7 +91,7 @@ export function staticRender(element, config) {
         sureHTML = `<button class="ew-color-sure ew-color-drop-btn">确定</button>`;
     }
     if (config.hasClear || config.hasSure) {
-        btnGroupHTML = `<div class="ew-color-drop-btn-group">${clearHTML}${sureHTML}</div>`;
+        btnGroupHTML = `<div class="ew-color-drop-btn-group">${sureHTML}${clearHTML}</div>`;
     }
     if (config.hasColorInput) {
         inputHTML = '<input type="text" class="ew-color-input">';

@@ -109,9 +109,11 @@ export function startMain(ele, config) {
         this.box = getELByClass(ele, 'ew-color-picker-box');
         if(!config.boxDisabled)util.on(this.box, 'click', () => handlePicker(ele, scope));;
     }else{
+      setTimeout(() => {
         this.config.pickerFlag = true;
         open(getHeiAni(scope), this.picker);
         setColorValue(this, this.panelWidth, this.panelHeight,false);
+      },0);
     }
     if (config.hasColorInput) {
         this.pickerInput = getELByClass(ele, 'ew-color-input');
