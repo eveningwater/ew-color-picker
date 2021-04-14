@@ -1,6 +1,10 @@
 import colorPickerConfig from './config';
 import util from './util';
 import { ERROR_VARIABLE } from './error';
+function filterConfig(config){
+    config.hueDirection = config.hueDirection === 'horizontal' ? config.hueDirection : 'vertical';
+    config.alphaDirection = config.alphaDirection === 'horizontal' ? config.alphaDirection : 'vertical';
+}
 /**
  * 初始化配置
  * @param {*} config 
@@ -24,12 +28,20 @@ export function initConfig(config){
         error = ERROR_VARIABLE.DOM_ERROR;
     } //如果是对象，则自定义配置，自定义配置选项如下:
     else if (util.isDeepObject(config) && (util.isString(config.el) || util.isDom(config.el))) {
+        filterConfig(config);
         mergeConfig = util.ewAssign(defaultConfig, config);
         element = config.el;
         error = ERROR_VARIABLE.DOM_OBJECT_ERROR;
     } else {
-        const errorText = util.isDeepObject(config) ? ERROR_VARIABLE.PICKER_OBJECT_CONFIG_ERROR : ERROR_VARIABLE.PICKER_CONFIG_ERROR;
-        return util.ewError(errorText);
+        element = 'body';
+        if(util.isDeepObject(config)){
+            filterConfig(config);
+            mergeConfig =  util.ewAssign(defaultConfig, config);
+            error = ERROR_VARIABLE.DOM_OBJECT_ERROR;
+        }else{
+            mergeConfig = defaultConfig;
+            error = ERROR_VARIABLE.DOM_ERROR;
+        }
     }
     return {
         element,

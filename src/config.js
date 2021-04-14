@@ -19,6 +19,8 @@ const baseDefaultConfig = {
     hasColorInput:true,
     boxDisabled:false,
     openChangeColorMode:false,
-    changeBoxByChangeColor:false
+    changeBoxByChangeColor:false,
+    hueDirection:"vertical",//vertical or horizontal
+    alphaDirection:"vertical",//vertical or horizontal
 }
 export default baseDefaultConfig;
