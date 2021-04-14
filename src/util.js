@@ -39,7 +39,7 @@ util.hasClass = (el,className) =>  {
         return _hasClass(className);
     }
 };
-util['setCss'] = (el, prop, value) => el.style[prop] = value;
+util['setCss'] = (el, prop, value) => el.style.setProperty(prop,value);
 util.setSomeCss = (el,propValue = []) => {
     if(propValue.length){
         propValue.forEach(p => util.setCss(el,p.prop,p.value));

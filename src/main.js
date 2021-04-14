@@ -17,11 +17,29 @@ import util from './util';
 function initAnimation(context){
     //颜色选择器打开的动画初始设置
     const expression = getHeiAni(context);
-    context.picker.style[expression  ? 'display' : 'opacity'] = expression ? 'none' : 0;
-    const sliderWidth = !context.config.alpha && !context.config.hue ? 0 : !context.config.alpha || !context.config.hue ? 14 : 27;
-    const pickerWidth = !context.config.alpha && !context.config.hue ? 280 : !context.config.alpha || !context.config.hue ? 300 : 320;
-    context.slider.style.width = sliderWidth + 'px';
-    context.picker.style.minWidth = pickerWidth + 'px';
+    util.setCss(context.picker,(expression  ? 'display' : 'opacity'),(expression ? 'none' : 0))
+    let pickerWidth = 0,sliderWidth = 0,sliderHeight = 0;
+    let isVerticalAlpha = !context.isAlphaHorizontal;
+    let isVerticalHue = !context.isHueHorizontal;
+    let isHue = context.config.hue;
+    let isAlpha = context.config.alpha;
+    if(isAlpha && isHue && isVerticalAlpha && isVerticalHue){
+        pickerWidth = 320;
+        sliderWidth = 28;
+    }else if(isVerticalAlpha && isAlpha && (!isVerticalHue || !isHue) || (isVerticalHue && isHue && (!isVerticalAlpha || !isAlpha))){
+        pickerWidth = 300;
+        sliderWidth = sliderHeight = 14;
+    }else{
+        pickerWidth = 280;
+        sliderHeight = isAlpha && isHue && !isVerticalHue && !isVerticalAlpha ? 30 : 14;
+    }
+    util.setCss(context.picker,'min-width',pickerWidth + 'px');
+    if(context.horizontalSlider){
+        util.setCss(context.horizontalSlider,'height',sliderHeight + 'px');
+    }
+    if(context.verticalSlider){
+        util.setCss(context.verticalSlider,'width',sliderWidth + 'px');
+    }
 }
 /**
  * 
@@ -37,7 +55,7 @@ function initPreDefineHandler(items,context){
             siblings(item).forEach(sibling => util.removeClass(sibling,'ew-pre-define-color-active'))
             const bgColor = util.getCss(event.target, 'background-color');
             context.hsvaColor = colorRgbaToHsva(bgColor);
-            setColorValue(context, panelWidth, panelHeight,true);
+            setColorValue(context, context.panelWidth, context.panelHeight,true);
             changeElementColor(context);
         };
         const blurHandler = event => util.removeClass(event.target, 'ew-pre-define-color-active');
@@ -60,7 +78,12 @@ export function startMain(ele, config) {
     this.pickerPanel = getELByClass(ele, 'ew-color-panel');
     this.pickerCursor = getELByClass(ele, 'ew-color-cursor');
     this.picker = getELByClass(ele, 'ew-color-picker');
-    this.slider = getELByClass(ele, 'ew-color-slider');
+    if(this.isHueHorizontal || this.isAlphaHorizontal) {
+        this.horizontalSlider = getELByClass(ele, 'ew-is-horizontal');
+    }
+    if(!this.isHueHorizontal || !this.isAlphaHorizontal){
+        this.verticalSlider = getELByClass(ele, 'ew-is-vertical');
+    }
     if (config.defaultColor) {
         this.hsvaColor = colorRegRGBA.test(config.defaultColor) ? colorRgbaToHsva(config.defaultColor) : colorRgbaToHsva(colorToRgba(config.defaultColor));
     } else {
@@ -90,24 +113,24 @@ export function startMain(ele, config) {
         this.hueBar = getELByClass(ele, 'ew-color-slider-bar');
         this.hueThumb = getELByClass(ele, 'ew-color-slider-thumb');
         //hue的点击事件
-        util.on(this.hueBar, 'click', event => changeHue(scope, event.y))
+        util.on(this.hueBar, 'click', event => changeHue(scope, (this.isHueHorizontal ? event.x : event.y)))
         //hue 轨道的拖拽事件
-        this.bindEvent(this.hueThumb, (scope, el, x, y) => changeHue(scope, y));
+        this.bindEvent(this.hueThumb, (scope, el, x, y) => changeHue(scope, (this.isHueHorizontal ? x : y)));
     }
     if (config.alpha) {
         this.alphaBar = getELByClass(ele, 'ew-alpha-slider-bar');
         this.alphaBarBg = getELByClass(ele, 'ew-alpha-slider-bg');
         this.alphaBarThumb = getELByClass(ele, 'ew-alpha-slider-thumb');
         if (!config.disabled) {
-            this.bindEvent(this.alphaBarThumb, (scope, el, x, y) => changeAlpha(scope, y));
-            util.on(this.alphaBar, 'click', event => changeAlpha(scope, event.y));
+            this.bindEvent(this.alphaBarThumb, (scope, el, x, y) => changeAlpha(scope, (this.isAlphaHorizontal ? x : y)));
+            util.on(this.alphaBar, 'click', event => changeAlpha(scope, (this.isAlphaHorizontal ? event.x : event.y)));
         }
     }
     initAnimation(scope);
     //获取颜色选择器的一些操作元素
     if (config.hasBox) {
         this.box = getELByClass(ele, 'ew-color-picker-box');
-        if(!config.boxDisabled)util.on(this.box, 'click', () => handlePicker(ele, scope));;
+        if(!config.boxDisabled && !config.disabled)util.on(this.box, 'click', () => handlePicker(ele, scope));;
     }else{
       setTimeout(() => {
         this.config.pickerFlag = true;

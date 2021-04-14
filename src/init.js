@@ -30,8 +30,8 @@ export function initFunction(bindElement, config) {
                 break;
         }
     } else if (util.isDeepObject(config.size)) {
-        b_width = config.size.width && util.isNumber(config.size.width) ? parseInt(config.size.width) + 'px' : '40px';
-        b_height = config.size.height && util.isNumber(config.size.height) ? parseInt(config.size.height) + 'px' : '40px';
+        b_width = config.size.width &&(util.isNumber(config.size.width) || util.isString(config.size.width)) ? parseInt(config.size.width) + 'px' : '40px';
+        b_height = config.size.height && (util.isNumber(config.size.height) || util.isString(config.size.height))? parseInt(config.size.height) + 'px' : '40px';
     } else {
         return util.ewError(ERROR_VARIABLE.CONFIG_SIZE_ERROR);
     }

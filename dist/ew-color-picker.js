@@ -58,7 +58,7 @@
       }
     };
 
-    util['setCss'] = (el, prop, value) => el.style[prop] = value;
+    util['setCss'] = (el, prop, value) => el.style.setProperty(prop, value);
 
     util.setSomeCss = (el, propValue = []) => {
       if (propValue.length) {
@@ -145,8 +145,6 @@
 
     const NOT_DOM_ELEMENTS = ['html', 'head', 'meta', 'title', 'link', 'style', 'script'];
     const ERROR_VARIABLE = {
-      PICKER_OBJECT_CONFIG_ERROR: 'you should pass a param which is el and el must be a string or a dom element!',
-      PICKER_CONFIG_ERROR: 'you should pass a param that it must be a string or a dom element!',
       DOM_OBJECT_ERROR: 'can not find the element by el property,make sure to pass a correct value!',
       DOM_ERROR: 'can not find the element,make sure to pass a correct param!',
       CONFIG_SIZE_ERROR: 'the value must be a string which is one of the normal,medium,small,mini,or must be an object and need to contain width or height property!',
@@ -214,19 +212,16 @@
 
     function registerMethods(type, element, time) {
       let transition = '';
-      let overflow = '';
 
       if (type.indexOf('slide') > -1) {
         transition = "height" + time + ' ms';
-        overflow = 'hidden';
+        util.setCss(element, 'overflow', "hidden");
         upAndDown();
       } else {
         transition = "opacity" + time + ' ms';
-        overflow = '';
         inAndOut();
       }
 
-      if (overflow) util.setCss(element, 'overflow', overflow);
       util.setCss(element, 'transition', transition);
 
       function upAndDown() {
@@ -569,9 +564,9 @@
 
     function colorToRgba(color) {
       const div = document.createElement('div');
-      util.setCss(div, 'backgroundColor', color);
+      util.setCss(div, 'background-color', color);
       document.body.appendChild(div);
-      const c = util.getCss(div, 'backgroundColor');
+      const c = util.getCss(div, 'background-color');
       document.body.removeChild(div);
       let isAlpha = c.match(/,/g) && c.match(/,/g).length > 2;
       let result = isAlpha ? c : c.slice(0, 2) + 'ba' + c.slice(3, c.length - 1) + ', 1)';
@@ -671,7 +666,9 @@
           btnGroupHTML = '',
           dropHTML = '',
           openChangeColorModeHTML = '',
-          openChangeColorModeLabelHTML = '';
+          openChangeColorModeLabelHTML = '',
+          horizontalSliderHTML = '',
+          verticalSliderHTML = '';
       const p_c = config.predefineColor;
       if (!util.isDeepArray(p_c)) return util.ewError(ERROR_VARIABLE.PREDEFINE_COLOR_ERROR);
 
@@ -737,7 +734,7 @@
       }
 
       if (config.hasClear || config.hasSure) {
-        btnGroupHTML = `<div class="ew-color-drop-btn-group">${sureHTML}${clearHTML}</div>`;
+        btnGroupHTML = `<div class="ew-color-drop-btn-group">${clearHTML}${sureHTML}</div>`;
       }
 
       if (config.hasColorInput) {
@@ -754,22 +751,52 @@
       }
 
       if (config.hasColorInput || config.hasClear || config.hasSure) {
-        dropHTML = `<div class="ew-color-drop-container">
-        ${openChangeColorModeLabelHTML}${inputHTML}${openChangeColorModeHTML}${btnGroupHTML}
+        dropHTML = config.openChangeColorMode ? `<div class="ew-color-drop-container ew-has-mode-container">
+        ${openChangeColorModeLabelHTML}${inputHTML}${openChangeColorModeHTML}
+        </div><div class="ew-color-drop-container">
+        ${btnGroupHTML}
+        </div>` : `<div class="ew-color-drop-container">
+        ${inputHTML}${btnGroupHTML}
         </div>`;
+      }
+
+      this.isAlphaHorizontal = config.alphaDirection === 'horizontal';
+      this.isHueHorizontal = config.hueDirection === 'horizontal';
+
+      if (this.isAlphaHorizontal && this.isHueHorizontal) {
+        horizontalSliderHTML = hueBar + alphaBar;
+      } else if (!this.isAlphaHorizontal && !this.isHueHorizontal) {
+        verticalSliderHTML = alphaBar + hueBar;
+      } else {
+        if (this.isHueHorizontal) {
+          horizontalSliderHTML = hueBar;
+          verticalSliderHTML = alphaBar;
+        } else {
+          horizontalSliderHTML = alphaBar;
+          verticalSliderHTML = hueBar;
+        }
+      }
+
+      if (horizontalSliderHTML) {
+        horizontalSliderHTML = `<div class="ew-color-slider ew-is-horizontal">${horizontalSliderHTML}</div>`;
+      }
+
+      if (verticalSliderHTML) {
+        verticalSliderHTML = `<div class="ew-color-slider ew-is-vertical">${verticalSliderHTML}</div>`;
       } //颜色选择器
 
 
       const html = `${boxHTML}
         <div class="ew-color-picker">
             <div class="ew-color-picker-content">
-                <div class="ew-color-slider">${alphaBar}${hueBar}</div>
+                ${verticalSliderHTML}
                 <div class="ew-color-panel" style="background:red;">
                     <div class="ew-color-white-panel"></div>
                     <div class="ew-color-black-panel"></div>
                     <div class="ew-color-cursor"></div>
                 </div>
             </div>
+            ${horizontalSliderHTML}
             ${dropHTML}
             ${predefineHTML}
         </div>`;
@@ -783,7 +810,7 @@
       if (isBody) {
         let hasDiv = util.$('#placeElement-' + this._color_picker_uid);
         if (hasDiv) hasDiv.parentElement.removeChild(hasDiv);
-        element.appendChild(div);
+        element.appendChild(mountElement);
       } else {
         element.innerHTML = html;
       }
@@ -850,11 +877,12 @@
 
     function changeAlphaBar(scope) {
       if (!scope.alphaBarBg) return;
-      util.setCss(scope.alphaBarBg, 'background', 'linear-gradient(to top,' + colorHsvaToRgba(scope.hsvaColor, 0) + ' 0%,' + colorHsvaToRgba(scope.hsvaColor, 1) + ' 100%)');
+      let position = scope.config.alphaDirection === 'horizontal' ? 'to right' : 'to top';
+      util.setCss(scope.alphaBarBg, 'background', 'linear-gradient(' + position + ',' + colorHsvaToRgba(scope.hsvaColor, 0) + ' 0%,' + colorHsvaToRgba(scope.hsvaColor, 1) + ' 100%)');
     }
 
     function setBoxBackground(box, color) {
-      return box.style.setProperty('background', color);
+      return util.setCss(box, 'background', color);
     }
 
     /**
@@ -1048,14 +1076,23 @@
       hasColorInput: true,
       boxDisabled: false,
       openChangeColorMode: false,
-      changeBoxByChangeColor: false
+      changeBoxByChangeColor: false,
+      hueDirection: "vertical",
+      //vertical or horizontal
+      alphaDirection: "vertical" //vertical or horizontal
+
     };
 
+    function filterConfig(config) {
+      config.hueDirection = config.hueDirection === 'horizontal' ? config.hueDirection : 'vertical';
+      config.alphaDirection = config.alphaDirection === 'horizontal' ? config.alphaDirection : 'vertical';
+    }
     /**
      * 初始化配置
      * @param {*} config 
      * @returns 
      */
+
 
     function initConfig(config) {
       const privateConfig = {
@@ -1079,12 +1116,21 @@
         error = ERROR_VARIABLE.DOM_ERROR;
       } //如果是对象，则自定义配置，自定义配置选项如下:
       else if (util.isDeepObject(config) && (util.isString(config.el) || util.isDom(config.el))) {
+          filterConfig(config);
           mergeConfig = util.ewAssign(defaultConfig, config);
           element = config.el;
           error = ERROR_VARIABLE.DOM_OBJECT_ERROR;
         } else {
-          const errorText = util.isDeepObject(config) ? ERROR_VARIABLE.PICKER_OBJECT_CONFIG_ERROR : ERROR_VARIABLE.PICKER_CONFIG_ERROR;
-          return util.ewError(errorText);
+          element = 'body';
+
+          if (util.isDeepObject(config)) {
+            filterConfig(config);
+            mergeConfig = util.ewAssign(defaultConfig, config);
+            error = ERROR_VARIABLE.DOM_OBJECT_ERROR;
+          } else {
+            mergeConfig = defaultConfig;
+            error = ERROR_VARIABLE.DOM_ERROR;
+          }
         }
 
       return {
@@ -1221,7 +1267,7 @@
       setColorValue(this, this.panelWidth, this.panelHeight, true);
     }
 
-    const consoleInfo = () => console.log(`%c ew-color-picker@1.7.9%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+    const consoleInfo = () => console.log(`%c ew-color-picker@1.8.5%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
     /**
      * 初始化
@@ -1257,8 +1303,8 @@
             break;
         }
       } else if (util.isDeepObject(config.size)) {
-        b_width = config.size.width && util.isNumber(config.size.width) ? parseInt(config.size.width) + 'px' : '40px';
-        b_height = config.size.height && util.isNumber(config.size.height) ? parseInt(config.size.height) + 'px' : '40px';
+        b_width = config.size.width && (util.isNumber(config.size.width) || util.isString(config.size.width)) ? parseInt(config.size.width) + 'px' : '40px';
+        b_height = config.size.height && (util.isNumber(config.size.height) || util.isString(config.size.height)) ? parseInt(config.size.height) + 'px' : '40px';
       } else {
         return util.ewError(ERROR_VARIABLE.CONFIG_SIZE_ERROR);
       }
@@ -1301,43 +1347,48 @@
     }
 
     /**
-     * 设置hue和alpha的top
+     * 
+     * @param {*} direction 
      * @param {*} bar 
      * @param {*} thumb 
-     * @param {*} y 
+     * @param {*} position 
      */
 
-    function setAlphaHueTop(bar, thumb, y) {
-      const barHeight = bar.offsetHeight,
+    function setAlphaHuePosition(direction, bar, thumb, position) {
+      const positionProp = direction ? 'x' : 'y';
+      const barProp = direction ? 'left' : 'top';
+      const barPosition = direction ? bar.offsetWidth : bar.offsetHeight,
             barRect = util.getRect(bar);
-      const barThumbY = Math.max(0, Math.min(y - barRect.y, barHeight));
-      util.setCss(thumb, 'top', barThumbY + 'px');
+      const barThumbPosition = Math.max(0, Math.min(position - barRect[positionProp], barPosition));
+      util.setCss(thumb, barProp, barThumbPosition + 'px');
       return {
-        barHeight,
-        barThumbY
+        barPosition,
+        barThumbPosition
       };
     }
     /**
     * 改变透明度
     * @param {*} context 
-    * @param {*} y 
+    * @param {*} position
     */
 
-    function changeAlpha(context, y) {
-      let value = setAlphaHueTop(context.alphaBar, context.alphaBarThumb, y);
-      const alpha = (value.barHeight - value.barThumbY <= 0 ? 0 : value.barHeight - value.barThumbY) / value.barHeight;
+
+    function changeAlpha(context, position) {
+      let value = setAlphaHuePosition(context.isAlphaHorizontal, context.alphaBar, context.alphaBarThumb, position);
+      let currentValue = value.barPosition - value.barThumbPosition <= 0 ? 0 : value.barPosition - value.barThumbPosition;
+      let alpha = context.isAlphaHorizontal ? 1 - currentValue / value.barPosition : currentValue / value.barPosition;
       context.hsvaColor.a = alpha >= 1 ? 1 : alpha.toFixed(2);
       changeElementColor(context, true);
     }
     /**
      * 改变色调
      * @param {*} context 
-     * @param {*} y 
+     * @param {*} position
      */
 
-    function changeHue(context, y) {
-      let value = setAlphaHueTop(context.hueBar, context.hueThumb, y);
-      context.hsvaColor.h = cloneColor(context.hsvaColor).h = parseInt(360 * value.barThumbY / value.barHeight);
+    function changeHue(context, position) {
+      let value = setAlphaHuePosition(context.isHueHorizontal, context.hueBar, context.hueThumb, position);
+      context.hsvaColor.h = cloneColor(context.hsvaColor).h = parseInt(360 * value.barThumbPosition / value.barPosition);
       util.setCss(context.pickerPanel, 'background', colorRgbaToHex(colorHsvaToRgba(cloneColor(context.hsvaColor))));
       changeElementColor(context);
     }
@@ -1425,7 +1476,6 @@
 
       scope.hsvaColor = color;
       setColorValue(scope, scope.panelWidth, scope.panelHeight, true);
-      changeElementColor(scope);
     }
 
     /**
@@ -1460,11 +1510,35 @@
     function initAnimation(context) {
       //颜色选择器打开的动画初始设置
       const expression = getHeiAni(context);
-      context.picker.style[expression ? 'display' : 'opacity'] = expression ? 'none' : 0;
-      const sliderWidth = !context.config.alpha && !context.config.hue ? 0 : !context.config.alpha || !context.config.hue ? 14 : 27;
-      const pickerWidth = !context.config.alpha && !context.config.hue ? 280 : !context.config.alpha || !context.config.hue ? 300 : 320;
-      context.slider.style.width = sliderWidth + 'px';
-      context.picker.style.minWidth = pickerWidth + 'px';
+      util.setCss(context.picker, expression ? 'display' : 'opacity', expression ? 'none' : 0);
+      let pickerWidth = 0,
+          sliderWidth = 0,
+          sliderHeight = 0;
+      let isVerticalAlpha = !context.isAlphaHorizontal;
+      let isVerticalHue = !context.isHueHorizontal;
+      let isHue = context.config.hue;
+      let isAlpha = context.config.alpha;
+
+      if (isAlpha && isHue && isVerticalAlpha && isVerticalHue) {
+        pickerWidth = 320;
+        sliderWidth = 28;
+      } else if (isVerticalAlpha && isAlpha && (!isVerticalHue || !isHue) || isVerticalHue && isHue && (!isVerticalAlpha || !isAlpha)) {
+        pickerWidth = 300;
+        sliderWidth = sliderHeight = 14;
+      } else {
+        pickerWidth = 280;
+        sliderHeight = isAlpha && isHue && !isVerticalHue && !isVerticalAlpha ? 30 : 14;
+      }
+
+      util.setCss(context.picker, 'min-width', pickerWidth + 'px');
+
+      if (context.horizontalSlider) {
+        util.setCss(context.horizontalSlider, 'height', sliderHeight + 'px');
+      }
+
+      if (context.verticalSlider) {
+        util.setCss(context.verticalSlider, 'width', sliderWidth + 'px');
+      }
     }
     /**
      * 
@@ -1483,7 +1557,7 @@
           siblings(item).forEach(sibling => util.removeClass(sibling, 'ew-pre-define-color-active'));
           const bgColor = util.getCss(event.target, 'background-color');
           context.hsvaColor = colorRgbaToHsva(bgColor);
-          setColorValue(context, panelWidth, panelHeight, true);
+          setColorValue(context, context.panelWidth, context.panelHeight, true);
           changeElementColor(context);
         };
 
@@ -1516,7 +1590,14 @@
       this.pickerPanel = getELByClass(ele, 'ew-color-panel');
       this.pickerCursor = getELByClass(ele, 'ew-color-cursor');
       this.picker = getELByClass(ele, 'ew-color-picker');
-      this.slider = getELByClass(ele, 'ew-color-slider');
+
+      if (this.isHueHorizontal || this.isAlphaHorizontal) {
+        this.horizontalSlider = getELByClass(ele, 'ew-is-horizontal');
+      }
+
+      if (!this.isHueHorizontal || !this.isAlphaHorizontal) {
+        this.verticalSlider = getELByClass(ele, 'ew-is-vertical');
+      }
 
       if (config.defaultColor) {
         this.hsvaColor = colorRegRGBA.test(config.defaultColor) ? colorRgbaToHsva(config.defaultColor) : colorRgbaToHsva(colorToRgba(config.defaultColor));
@@ -1554,9 +1635,9 @@
         this.hueBar = getELByClass(ele, 'ew-color-slider-bar');
         this.hueThumb = getELByClass(ele, 'ew-color-slider-thumb'); //hue的点击事件
 
-        util.on(this.hueBar, 'click', event => changeHue(scope, event.y)); //hue 轨道的拖拽事件
+        util.on(this.hueBar, 'click', event => changeHue(scope, this.isHueHorizontal ? event.x : event.y)); //hue 轨道的拖拽事件
 
-        this.bindEvent(this.hueThumb, (scope, el, x, y) => changeHue(scope, y));
+        this.bindEvent(this.hueThumb, (scope, el, x, y) => changeHue(scope, this.isHueHorizontal ? x : y));
       }
 
       if (config.alpha) {
@@ -1565,8 +1646,8 @@
         this.alphaBarThumb = getELByClass(ele, 'ew-alpha-slider-thumb');
 
         if (!config.disabled) {
-          this.bindEvent(this.alphaBarThumb, (scope, el, x, y) => changeAlpha(scope, y));
-          util.on(this.alphaBar, 'click', event => changeAlpha(scope, event.y));
+          this.bindEvent(this.alphaBarThumb, (scope, el, x, y) => changeAlpha(scope, this.isAlphaHorizontal ? x : y));
+          util.on(this.alphaBar, 'click', event => changeAlpha(scope, this.isAlphaHorizontal ? event.x : event.y));
         }
       }
 
@@ -1574,7 +1655,7 @@
 
       if (config.hasBox) {
         this.box = getELByClass(ele, 'ew-color-picker-box');
-        if (!config.boxDisabled) util.on(this.box, 'click', () => handlePicker(ele, scope));
+        if (!config.boxDisabled && !config.disabled) util.on(this.box, 'click', () => handlePicker(ele, scope));
       } else {
         setTimeout(() => {
           this.config.pickerFlag = true;

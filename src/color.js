@@ -211,9 +211,9 @@ export function colorRgbaToHsva(rgba) {
 */
 export function colorToRgba(color) {
     const div = document.createElement('div');
-    util.setCss(div, 'backgroundColor', color);
+    util.setCss(div, 'background-color', color);
     document.body.appendChild(div);
-    const c = util.getCss(div, 'backgroundColor');
+    const c = util.getCss(div, 'background-color');
     document.body.removeChild(div);
     let isAlpha = c.match(/,/g) && c.match(/,/g).length > 2;
     let result = isAlpha ? c : c.slice(0, 2) + 'ba' + c.slice(3, c.length - 1) + ', 1)';

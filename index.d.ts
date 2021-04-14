@@ -3,9 +3,9 @@ declare namespace ewColorPicker {
       color?:String,
       disabled?:boolean
   }
-  export type WrapperType = string | HTMLElement;
+  export type WrapperType = string | HTMLElement | Element | HTMLCollection | Node | NodeList;
   export type OptionType = {
-    el: WrapperType;
+    el?: WrapperType;
     alpha?: boolean;
     hue?: boolean;
     size?:string | {
@@ -29,6 +29,8 @@ declare namespace ewColorPicker {
     boxDisabled?:boolean;
     openChangeColorMode?:boolean;
     changeBoxByChangeColor?:boolean;
+    hueDirection?:string;
+    alphaDirection?:string;
   };
 }
 export type WrapperType = ewColorPicker.WrapperType;

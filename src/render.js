@@ -34,7 +34,9 @@ export function staticRender(element, config) {
         btnGroupHTML = '',
         dropHTML = '',
         openChangeColorModeHTML = '',
-        openChangeColorModeLabelHTML = '';
+        openChangeColorModeLabelHTML = '',
+        horizontalSliderHTML = '',
+        verticalSliderHTML = '';
     const p_c = config.predefineColor;
     if (!util.isDeepArray(p_c)) return util.ewError(ERROR_VARIABLE.PREDEFINE_COLOR_ERROR);
     if (p_c.length) {
@@ -91,7 +93,7 @@ export function staticRender(element, config) {
         sureHTML = `<button class="ew-color-sure ew-color-drop-btn">确定</button>`;
     }
     if (config.hasClear || config.hasSure) {
-        btnGroupHTML = `<div class="ew-color-drop-btn-group">${sureHTML}${clearHTML}</div>`;
+        btnGroupHTML = `<div class="ew-color-drop-btn-group">${clearHTML}${sureHTML}</div>`;
     }
     if (config.hasColorInput) {
         inputHTML = '<input type="text" class="ew-color-input">';
@@ -105,21 +107,47 @@ export function staticRender(element, config) {
         openChangeColorModeLabelHTML = `<label class="ew-color-mode-title">${this.colorMode[1]}</label>`;
     }
     if (config.hasColorInput || config.hasClear || config.hasSure) {
-        dropHTML = `<div class="ew-color-drop-container">
-        ${openChangeColorModeLabelHTML}${inputHTML}${openChangeColorModeHTML}${btnGroupHTML}
+        dropHTML = config.openChangeColorMode ? `<div class="ew-color-drop-container ew-has-mode-container">
+        ${openChangeColorModeLabelHTML}${inputHTML}${openChangeColorModeHTML}
+        </div><div class="ew-color-drop-container">
+        ${btnGroupHTML}
+        </div>` : `<div class="ew-color-drop-container">
+        ${inputHTML}${btnGroupHTML}
         </div>`;
+    }
+    this.isAlphaHorizontal = config.alphaDirection === 'horizontal';
+    this.isHueHorizontal = config.hueDirection === 'horizontal';
+    if(this.isAlphaHorizontal && this.isHueHorizontal){
+        horizontalSliderHTML = hueBar + alphaBar;
+    }else if(!this.isAlphaHorizontal && !this.isHueHorizontal){
+        verticalSliderHTML = alphaBar + hueBar;
+    }else{
+        if(this.isHueHorizontal){
+            horizontalSliderHTML = hueBar;
+            verticalSliderHTML = alphaBar;
+        } else{
+            horizontalSliderHTML = alphaBar;
+            verticalSliderHTML = hueBar;
+        }
+    }
+    if(horizontalSliderHTML){
+        horizontalSliderHTML = `<div class="ew-color-slider ew-is-horizontal">${ horizontalSliderHTML }</div>`
+    }
+    if(verticalSliderHTML){
+        verticalSliderHTML = `<div class="ew-color-slider ew-is-vertical">${ verticalSliderHTML }</div>`;
     }
     //颜色选择器
     const html = `${boxHTML}
         <div class="ew-color-picker">
             <div class="ew-color-picker-content">
-                <div class="ew-color-slider">${alphaBar}${hueBar}</div>
+                ${ verticalSliderHTML }
                 <div class="ew-color-panel" style="background:red;">
                     <div class="ew-color-white-panel"></div>
                     <div class="ew-color-black-panel"></div>
                     <div class="ew-color-cursor"></div>
                 </div>
             </div>
+            ${ horizontalSliderHTML }
             ${dropHTML}
             ${predefineHTML}
         </div>`;
@@ -132,7 +160,7 @@ export function staticRender(element, config) {
     if (isBody) {
         let hasDiv = util.$('#placeElement-' + this._color_picker_uid);
         if (hasDiv)hasDiv.parentElement.removeChild(hasDiv);
-        element.appendChild(div);
+        element.appendChild(mountElement);
     } else {
         element.innerHTML = html;
     }

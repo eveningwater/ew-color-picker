@@ -50,17 +50,14 @@ function runNext(element) {
 }
 function registerMethods(type, element, time) {
     let transition = '';
-    let overflow = '';
     if (type.indexOf('slide') > -1) {
         transition = "height" + time + ' ms';
-        overflow = 'hidden';
+        util.setCss(element, 'overflow', "hidden");
         upAndDown();
     } else {
         transition = "opacity" + time + ' ms';
-        overflow = '';
         inAndOut();
     }
-    if (overflow) util.setCss(element, 'overflow', overflow);
     util.setCss(element, 'transition', transition);
     function upAndDown() {
         const isDown = type.toLowerCase().indexOf('down') > -1;
@@ -85,14 +82,14 @@ function registerMethods(type, element, time) {
         let timer = null;
         let unit = 1 * 100 / (time / 10);
         let curAlpha = isIn ? 0 : 100;
-        util.setSomeCss(element,[
+        util.setSomeCss(element, [
             {
-                prop:"display",
-                value:(isIn ? 'none' : 'block')
+                prop: "display",
+                value: (isIn ? 'none' : 'block')
             },
             {
-                prop:"opacity",
-                value:(isIn ? 0 : 1)
+                prop: "opacity",
+                value: (isIn ? 0 : 1)
             }
         ])
         let handleFade = function () {

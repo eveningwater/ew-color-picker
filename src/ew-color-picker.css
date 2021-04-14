@@ -68,14 +68,14 @@
   display: table;
   clear: both;
 }
-.ew-alpha-slider-bar,
-.ew-color-slider-bar,
+.ew-color-slider.ew-is-vertical .ew-alpha-slider-bar,
+.ew-color-slider.ew-is-vertical .ew-color-slider-bar,
 .ew-pre-define-color {
-    float: left;
+  float: left;
 }
 .ew-color-drop-btn,
 .ew-color-picker-no {
-    text-align: center;
+  text-align: center;
 }
 .ew-color-picker {
   min-width: 320px;
@@ -88,8 +88,8 @@
   display: none;
   text-align: left;
 }
-.ew-color-picker.ew-color-picker-disabled *{
- cursor: not-allowed;
+.ew-color-picker.ew-color-picker-disabled * {
+  cursor: not-allowed;
 }
 .ew-color-picker-content {
   margin-bottom: 6px;
@@ -120,12 +120,16 @@
   background: linear-gradient(0deg, #000, transparent);
 }
 
-.ew-color-slider {
+.ew-color-slider.ew-is-vertical {
   width: 27px;
   height: 180px;
   float: right;
 }
-.ew-color-slider-bar {
+.ew-color-slider.ew-is-horizontal {
+  width: 100%;
+  height: 14px;
+}
+.ew-color-slider.ew-is-vertical .ew-color-slider-bar {
   background: linear-gradient(
     180deg,
     #f00 0,
@@ -138,12 +142,33 @@
   );
   margin-left: 3px;
 }
-.ew-alpha-slider-bar,
-.ew-color-slider-bar {
+.ew-color-slider.ew-is-horizontal .ew-color-slider-bar {
+  background: linear-gradient(
+    90deg,
+    #f00 0,
+    #ff0 17%,
+    #0f0 33%,
+    #0ff 50%,
+    #00f 67%,
+    #f0f 83%,
+    #f00
+  );
+}
+.ew-color-slider.ew-is-vertical .ew-alpha-slider-bar,
+.ew-color-slider.ew-is-vertical .ew-color-slider-bar {
   width: 12px;
   height: 100%;
 }
-.ew-alpha-slider-wrapper,.ew-pre-define-color.ew-has-alpha  {
+.ew-color-slider.ew-is-horizontal .ew-alpha-slider-bar,
+.ew-color-slider.ew-is-horizontal .ew-color-slider-bar {
+  width: 100%;
+  height: 12px;
+}
+.ew-color-slider.ew-is-horizontal .ew-alpha-slider-bar {
+    margin-top: 3px;
+}
+.ew-alpha-slider-wrapper,
+.ew-pre-define-color.ew-has-alpha {
   background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGUlEQVQYV2M4gwH+YwCGIasIUwhT25BVBADtzYNYrHvv4gAAAABJRU5ErkJggg==");
 }
 
@@ -151,14 +176,22 @@
 .ew-alpha-slider-thumb {
   left: 0;
   top: 0;
-  width: 12px;
-  height: 4px;
   border-radius: 1px;
   background: #fff;
   border: 1px solid #f0f0f0;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
 }
 
+.ew-color-slider.ew-is-horizontal .ew-color-slider-thumb,
+.ew-color-slider.ew-is-horizontal .ew-alpha-slider-thumb  {
+    width: 4px;
+    height: 100%;
+}
+.ew-color-slider.ew-is-vertical .ew-color-slider-thumb,
+.ew-color-slider.ew-is-vertical .ew-alpha-slider-thumb {
+  width: 12px;
+  height: 4px;
+}
 .ew-color-cursor {
   left: 100%;
   top: 0%;
@@ -174,7 +207,16 @@
 
 .ew-color-drop-container {
   margin-top: 6px;
+  padding-top: 4px;
   min-height: 28px;
+  border-top:1px solid #cdcdcd;
+}
+
+.ew-has-mode-container .ew-color-input {
+  width: 210px;
+}
+.ew-has-mode-container .ew-color-mode-container {
+  margin-left: 3px;
 }
 
 .ew-color-input {
@@ -205,7 +247,7 @@
 
 .ew-color-drop-btn-group {
   right: 0;
-  top: 1px;
+  top: 5px;
 }
 
 .ew-color-clear {
@@ -273,7 +315,8 @@
   font-size: 14px;
   transition: border-color 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.ew-color-picker-box-disabled,.ew-color-input.ew-input-disabled {
+.ew-color-picker-box-disabled,
+.ew-color-input.ew-input-disabled {
   background-color: #ebe7e7;
   cursor: not-allowed;
 }
@@ -321,19 +364,19 @@
 }
 .ew-color-mode-container .ew-color-mode-up,
 .ew-color-mode-container .ew-color-mode-down {
-   width: 0;
-   height: 0;
-   border-width: 6px;
-   border-style: solid;
-   cursor: pointer;
+  width: 0;
+  height: 0;
+  border-width: 6px;
+  border-style: solid;
+  cursor: pointer;
 }
 .ew-color-mode-container .ew-color-mode-up {
   bottom: 5px;
-  border-color:  transparent transparent #606266 transparent;
+  border-color: transparent transparent #606266 transparent;
 }
 .ew-color-mode-container .ew-color-mode-down {
   top: 5px;
-  border-color:  #606266 transparent transparent  transparent;
+  border-color: #606266 transparent transparent transparent;
 }
 .ew-color-mode-title {
   color: #535455;
@@ -342,6 +385,6 @@
   padding-right: 2px;
 }
 .ew-color-mode-title::after {
-  content:":";
+  content: ":";
   display: inline-block;
 }

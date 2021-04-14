@@ -36,5 +36,4 @@ import util from './util';
     }
     scope.hsvaColor = color;
     setColorValue(scope, scope.panelWidth, scope.panelHeight,true);
-    changeElementColor(scope);
 }
