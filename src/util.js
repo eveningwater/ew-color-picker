@@ -93,7 +93,7 @@ util["clickOutSide"] = (context,config,callback) => {
         }
         setTimeout(() => {
             util.off(document,util.eventType[0],mouseHandler);
-        });
+        },0);
     }
     util.on(document,util.eventType[0], mouseHandler);
 }

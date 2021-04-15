@@ -1,44 +1,47 @@
 import { handleClickOutSide } from './clickOutSide';
 import { getELByClass } from './query';
-import { handlePicker,getHeiAni,open } from './openOrClosePicker';
-import { colorRegRGBA,colorRgbaToHsva,colorToRgba } from './color';
+import { handlePicker, getHeiAni, open } from './openOrClosePicker';
+import { colorRegRGBA, colorRgbaToHsva, colorToRgba } from './color';
 import { setColorValue } from './setColorValue';
 import { changeElementColor } from './changeElementColor';
-import { changeAlpha,changeHue } from './hueAndAlpha';
+import { changeAlpha, changeHue } from './hueAndAlpha';
 import { onHandleChangeMode } from './mode';
-import { onClickPanel,changeCursorColor } from './panelAndCursor';
+import { onClickPanel, changeCursorColor } from './panelAndCursor';
 import { onInputColor } from './input';
-import { onClearColor,onSureColor } from './clearAndSure';
+import { onClearColor, onSureColor } from './clearAndSure';
 import util from './util';
+import RenderWatcher from './renderWatcher';
+import { Observer } from './proxy';
+import { showColorPickerWithNoBox } from './showColorPickerWithNoBox';
 /**
  *  
  * @param {*} context 
  */
-function initAnimation(context){
+function initAnimation(context) {
     //颜色选择器打开的动画初始设置
     const expression = getHeiAni(context);
-    util.setCss(context.picker,(expression  ? 'display' : 'opacity'),(expression ? 'none' : 0))
-    let pickerWidth = 0,sliderWidth = 0,sliderHeight = 0;
+    util.setCss(context.picker, (expression ? 'display' : 'opacity'), (expression ? 'none' : 0))
+    let pickerWidth = 0, sliderWidth = 0, sliderHeight = 0;
     let isVerticalAlpha = !context.isAlphaHorizontal;
     let isVerticalHue = !context.isHueHorizontal;
     let isHue = context.config.hue;
     let isAlpha = context.config.alpha;
-    if(isAlpha && isHue && isVerticalAlpha && isVerticalHue){
+    if (isAlpha && isHue && isVerticalAlpha && isVerticalHue) {
         pickerWidth = 320;
         sliderWidth = 28;
-    }else if(isVerticalAlpha && isAlpha && (!isVerticalHue || !isHue) || (isVerticalHue && isHue && (!isVerticalAlpha || !isAlpha))){
+    } else if (isVerticalAlpha && isAlpha && (!isVerticalHue || !isHue) || (isVerticalHue && isHue && (!isVerticalAlpha || !isAlpha))) {
         pickerWidth = 300;
         sliderWidth = sliderHeight = 14;
-    }else{
+    } else {
         pickerWidth = 280;
         sliderHeight = isAlpha && isHue && !isVerticalHue && !isVerticalAlpha ? 30 : 14;
     }
-    util.setCss(context.picker,'min-width',pickerWidth + 'px');
-    if(context.horizontalSlider){
-        util.setCss(context.horizontalSlider,'height',sliderHeight + 'px');
+    util.setCss(context.picker, 'min-width', pickerWidth + 'px');
+    if (context.horizontalSlider) {
+        util.setCss(context.horizontalSlider, 'height', sliderHeight + 'px');
     }
-    if(context.verticalSlider){
-        util.setCss(context.verticalSlider,'width',sliderWidth + 'px');
+    if (context.verticalSlider) {
+        util.setCss(context.verticalSlider, 'width', sliderWidth + 'px');
     }
 }
 /**
@@ -46,26 +49,27 @@ function initAnimation(context){
  * @param {*} items 
  * @param {*} context 
  */
-function initPreDefineHandler(items,context){
+function initPreDefineHandler(items, context) {
     // get the siblings
-    const siblings = el => Array.prototype.filter.call(el.parentElement.children,child => child !== el);
+    const siblings = el => Array.prototype.filter.call(el.parentElement.children, child => child !== el);
     items.map(item => {
         const clickHandler = event => {
-            util.addClass(item,'ew-pre-define-color-active');
-            siblings(item).forEach(sibling => util.removeClass(sibling,'ew-pre-define-color-active'))
+            util.addClass(item, 'ew-pre-define-color-active');
+            siblings(item).forEach(sibling => util.removeClass(sibling, 'ew-pre-define-color-active'))
             const bgColor = util.getCss(event.target, 'background-color');
             context.hsvaColor = colorRgbaToHsva(bgColor);
-            setColorValue(context, context.panelWidth, context.panelHeight,true);
+            setColorValue(context, context.panelWidth, context.panelHeight, true);
             changeElementColor(context);
         };
         const blurHandler = event => util.removeClass(event.target, 'ew-pre-define-color-active');
         [{ type: "click", handler: clickHandler }, { type: "blur", handler: blurHandler }].forEach(t => {
-            if (!context.config.disabled && util.ewObjToArray(item.classList).indexOf('ew-pre-define-color-disabled') === -1){
+            if (!context.config.disabled && util.ewObjToArray(item.classList).indexOf('ew-pre-define-color-disabled') === -1) {
                 util.on(item, t.type, t.handler);
             }
         });
     })
 }
+
 /**
  * 主要功能
  * @param {*} ele 
@@ -75,13 +79,15 @@ function initPreDefineHandler(items,context){
 export function startMain(ele, config) {
     let scope = this;
     this.rootElement = ele;
+    this._watcher = new RenderWatcher(this);
+    this._observer = new Observer(config);
     this.pickerPanel = getELByClass(ele, 'ew-color-panel');
     this.pickerCursor = getELByClass(ele, 'ew-color-cursor');
     this.picker = getELByClass(ele, 'ew-color-picker');
-    if(this.isHueHorizontal || this.isAlphaHorizontal) {
+    if (this.isHueHorizontal || this.isAlphaHorizontal) {
         this.horizontalSlider = getELByClass(ele, 'ew-is-horizontal');
     }
-    if(!this.isHueHorizontal || !this.isAlphaHorizontal){
+    if (!this.isHueHorizontal || !this.isAlphaHorizontal) {
         this.verticalSlider = getELByClass(ele, 'ew-is-vertical');
     }
     if (config.defaultColor) {
@@ -107,7 +113,7 @@ export function startMain(ele, config) {
     this.panelTop = top + ele.offsetHeight;
     this.preDefineItem = getELByClass(ele, 'ew-pre-define-color', true);
     if (this.preDefineItem.length) {
-        initPreDefineHandler(util.ewObjToArray(this.preDefineItem),scope);
+        initPreDefineHandler(util.ewObjToArray(this.preDefineItem), scope);
     }
     if (config.hue) {
         this.hueBar = getELByClass(ele, 'ew-color-slider-bar');
@@ -130,13 +136,12 @@ export function startMain(ele, config) {
     //获取颜色选择器的一些操作元素
     if (config.hasBox) {
         this.box = getELByClass(ele, 'ew-color-picker-box');
-        if(!config.boxDisabled && !config.disabled)util.on(this.box, 'click', () => handlePicker(ele, scope));;
+        if (!config.boxDisabled && !config.disabled) util.on(this.box, 'click', () => handlePicker(ele, scope));
     }else{
-      setTimeout(() => {
-        this.config.pickerFlag = true;
-        open(getHeiAni(scope), this.picker);
-        setColorValue(this, this.panelWidth, this.panelHeight,false);
-      },0);
+        showColorPickerWithNoBox(this);
+    }
+    if (config.isClickOutside) {
+        handleClickOutSide(this, config);
     }
     if (config.hasColorInput) {
         this.pickerInput = getELByClass(ele, 'ew-color-input');
@@ -154,11 +159,11 @@ export function startMain(ele, config) {
         this.modeUp = getELByClass(ele, 'ew-color-mode-up');
         this.modeDown = getELByClass(ele, 'ew-color-mode-down');
         this.modeTitle = getELByClass(ele, "ew-color-mode-title");
-        if(config.hasColorInput){
+        if (config.hasColorInput) {
             this.modeCount = config.alpha ? 1 : 0;
             this.currentMode = this.colorMode[this.modeCount];
-            util.on(this.modeUp, "click", event => onHandleChangeMode(scope,'up',() => changeElementColor(scope)));
-            util.on(this.modeDown, "click", event => onHandleChangeMode(scope,'down',() => changeElementColor(scope)));
+            util.on(this.modeUp, "click", event => onHandleChangeMode(scope, 'up', () => changeElementColor(scope)));
+            util.on(this.modeDown, "click", event => onHandleChangeMode(scope, 'down', () => changeElementColor(scope)));
         }
     }
     if (config.disabled) {
@@ -172,9 +177,6 @@ export function startMain(ele, config) {
             this.picker.classList.add('ew-color-picker-disabled');
         }
         return false;
-    }
-    if (config.isClickOutside) {
-        handleClickOutSide(this,config);
     }
     //颜色面板点击事件
     util.on(this.pickerPanel, 'click', event => onClickPanel(scope, event));

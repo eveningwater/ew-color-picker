@@ -22,6 +22,7 @@ export function beforeInit(element, config, errorText) {
     if (!ele.tagName) return util.ewError(errorText);
     if (!isNotDom(ele)) {
         this._color_picker_uid = util.createUUID();
+        this._errorText = errorText;
         if (config.openChangeColorMode) {
             this.colorMode = ["hex", "rgba", "hsla"];
         }
