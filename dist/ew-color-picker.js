@@ -130,7 +130,7 @@
 
         setTimeout(() => {
           util.off(document, util.eventType[0], mouseHandler);
-        });
+        }, 0);
       };
 
       util.on(document, util.eventType[0], mouseHandler);
@@ -1244,6 +1244,7 @@
 
       if (!isNotDom(ele)) {
         this._color_picker_uid = util.createUUID();
+        this._errorText = errorText;
 
         if (config.openChangeColorMode) {
           this.colorMode = ["hex", "rgba", "hsla"];
@@ -1502,6 +1503,170 @@
       scope.config.sure(result, scope);
     }
 
+    let depId = 0;
+    function remove(array, item) {
+      if (array.length) {
+        let idx = array.indexOf(item);
+
+        if (idx > -1) {
+          return array.splice(idx, 1);
+        }
+      }
+    }
+    class Dep {
+      constructor() {
+        this.id = depId++;
+        this.subs = [];
+      }
+
+      addSub(sub) {
+        this.subs.push(sub);
+      }
+
+      removeSub(sub) {
+        remove(this.subs, sub);
+      }
+
+      notify() {
+        const subs = this.subs.slice();
+
+        for (let i = 0, len = subs.length; i < len; i++) {
+          subs[i].update();
+        }
+      }
+
+      depend() {
+        if (Dep.DepTarget) {
+          Dep.DepTarget.addDep(this);
+        }
+      }
+
+    }
+    Dep.id = depId;
+    Dep.subs = [];
+    Dep.DepTarget = null;
+    function pushTarget(watcher) {
+      Dep.DepTarget = watcher;
+    }
+    function popTarget() {
+      Dep.DepTarget = null;
+    }
+
+    class RenderWatcher {
+      constructor(vm) {
+        this._colorPickerInstance = vm;
+        this._watcher_id = vm._color_picker_uid;
+        this.depIds = new Set();
+        this.dep = null;
+        vm._watcher = this;
+        this.get();
+      }
+
+      get() {
+        pushTarget(this);
+      }
+
+      update() {
+        popTarget();
+        this.cleanDeps();
+        let vm = this._colorPickerInstance;
+        let config = util.ewAssign(vm.config, {
+          boxSize: {
+            b_width: null,
+            b_height: null
+          },
+          pickerFlag: false,
+          colorValue: ""
+        });
+        vm.beforeInit(vm.rootElement, config, vm._errorText);
+      }
+
+      cleanDeps() {
+        if (this.dep) {
+          this.dep = null;
+        }
+      }
+
+      addDep(dep) {
+        const id = dep.id;
+
+        if (!this.depIds.has(id)) {
+          this.depIds.add(id);
+          dep.addSub(this);
+          this.dep = dep;
+        }
+      }
+
+    }
+
+    function defineReactive(target, key) {
+      const dep = new Dep();
+      let val = target[key];
+      Object.defineProperty(target, key, {
+        enumerable: true,
+        configurable: true,
+
+        get(value) {
+          if (Dep.DepTarget) {
+            dep.depend();
+          }
+
+          return val;
+        },
+
+        set(newVal) {
+          if (newVal === val) {
+            return;
+          }
+
+          val = newVal;
+
+          if (Dep.DepTarget) {
+            dep.notify();
+          }
+        }
+
+      });
+    }
+
+    function def(obj, key, value, enumerable) {
+      Object.defineProperty(obj, key, {
+        enumerable: !!enumerable,
+        value: value,
+        writable: true,
+        configurable: true
+      });
+    }
+
+    class Observer {
+      constructor(value) {
+        this.value = value;
+        this.dep = new Dep();
+        def(value, '__ob__', this);
+        this.walk(value);
+      }
+
+      walk(value) {
+        let keys = Object.keys(value);
+        const notKeys = ['isClickOutside', "colorValue", "boxSize", "pickerFlag", "boxSize"];
+
+        for (let i = 0, len = keys.length; i < len; i++) {
+          if (!util.isFunction(keys[i]) && notKeys.indexOf(keys[i]) === -1) {
+            defineReactive(value, keys[i]);
+          }
+        }
+      }
+
+    }
+
+    function showColorPickerWithNoBox(context) {
+      setTimeout(() => {
+        context.config.pickerFlag = true;
+        open(getHeiAni(context), context.picker);
+        setColorValue(context, context.panelWidth, context.panelHeight, false);
+      }, 0);
+    }
+
     /**
      *  
      * @param {*} context 
@@ -1587,6 +1752,8 @@
     function startMain(ele, config) {
       let scope = this;
       this.rootElement = ele;
+      this._watcher = new RenderWatcher(this);
+      this._observer = new Observer(config);
       this.pickerPanel = getELByClass(ele, 'ew-color-panel');
       this.pickerCursor = getELByClass(ele, 'ew-color-cursor');
       this.picker = getELByClass(ele, 'ew-color-picker');
@@ -1657,11 +1824,11 @@
         this.box = getELByClass(ele, 'ew-color-picker-box');
         if (!config.boxDisabled && !config.disabled) util.on(this.box, 'click', () => handlePicker(ele, scope));
       } else {
-        setTimeout(() => {
-          this.config.pickerFlag = true;
-          open(getHeiAni(scope), this.picker);
-          setColorValue(this, this.panelWidth, this.panelHeight, false);
-        }, 0);
+        showColorPickerWithNoBox(this);
+      }
+
+      if (config.isClickOutside) {
+        handleClickOutSide(this, config);
       }
 
       if (config.hasColorInput) {
@@ -1705,10 +1872,6 @@
         }
 
         return false;
-      }
-
-      if (config.isClickOutside) {
-        handleClickOutSide(this, config);
       } //颜色面板点击事件
 
 

@@ -8,18 +8,18 @@
     <link rel="stylesheet" href="../dist/ew-color-picker.min.css">
 </head>
 <body>
-    
+    <button id="click">测试</button>
 </body>
-<script src="../dist/ew-color-picker.min.js"></script>
+<script src="../dist/ew-color-picker.js"></script>
 <script>
-    new ewColorPicker();
-    ewColorPicker.createColorPicker();
-    ewColorPicker.createColorPicker({
-        alpha:true,
-        size:{
-            width:"20px",
-            height:"20px"
-        }
-    });
+    let config = {
+        hasBox:false,
+        isClickOutside:false
+    };
+    const color = new ewColorPicker(config);
+    ewColorPicker.util.$("#click").onclick = function(){
+        // console.log(config)
+        color.config.hasBox = !color.config.hasBox;
+    }
 </script>
 </html>
