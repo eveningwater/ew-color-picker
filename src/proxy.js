@@ -40,7 +40,7 @@ export class Observer {
     }
     walk(value){
         let keys = Object.keys(value);
-        const notKeys = ['isClickOutside',"colorValue","boxSize","pickerFlag","boxSize"];
+        const notKeys = ['isClickOutside',"colorValue","boxSize","pickerFlag"];
         for(let i = 0,len = keys.length;i < len;i++){
             if(!util.isFunction(keys[i]) && notKeys.indexOf(keys[i]) === -1){
                 defineReactive(value,keys[i]);
