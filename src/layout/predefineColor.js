@@ -1,4 +1,4 @@
-import { isAlphaColor } from './color'; 
+import { isAlphaColor } from '../color/color'; 
 /**
  * 
  * @param {*} disabled 

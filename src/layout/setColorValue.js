@@ -1,7 +1,7 @@
 import { changeElementColor } from './changeElementColor';
-import util from './util';
-import { cloneColor } from './cloneColor';
-import { colorHsvaToRgba,colorRgbaToHex } from './color';
+import util from '../utils/util';
+import { cloneColor } from '../color/cloneColor';
+import { colorHsvaToRgba,colorRgbaToHex } from '../color/color';
 /**
  * 设置颜色
  * @param {*} context 

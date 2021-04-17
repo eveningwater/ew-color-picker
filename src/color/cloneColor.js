@@ -1,4 +1,4 @@
-import util from './util';
+import util from '../utils/util';
 /**
 * 克隆颜色对象
 * @param {*} color 

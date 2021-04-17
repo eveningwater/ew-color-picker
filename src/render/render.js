@@ -1,9 +1,9 @@
-import { setPredefineDisabled,hasAlpha } from './predefineColor';
-import util from './util';
-import { isValidColor,colorRegRGB,colorToRgba } from './color';
-import { ERROR_VARIABLE } from './error';
-import RenderWatcher from './renderWatcher';
-import { Observer } from './proxy';
+import { setPredefineDisabled,hasAlpha } from '../layout/predefineColor';
+import util from '../utils/util';
+import { isValidColor,colorRegRGB,colorToRgba } from '../color/color';
+import { ERROR_VARIABLE } from '../const/error';
+import RenderWatcher from '../render/renderWatcher';
+import { Observer } from '../observe/proxy';
 /**
  * 重新渲染颜色选择器
  * @param {*} color 

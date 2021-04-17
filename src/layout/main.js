@@ -1,7 +1,7 @@
-import { handleClickOutSide } from './clickOutSide';
-import { getELByClass } from './query';
-import { handlePicker, getHeiAni } from './openOrClosePicker';
-import { colorRegRGBA, colorRgbaToHsva, colorToRgba } from './color';
+import { handleClickOutSide } from '../handler/clickOutSide';
+import { getELByClass } from '../utils/query';
+import { handlePicker, getHeiAni } from '../handler/openOrClosePicker';
+import { colorRegRGBA, colorRgbaToHsva, colorToRgba } from '../color/color';
 import { setColorValue } from './setColorValue';
 import { changeElementColor } from './changeElementColor';
 import { changeAlpha, changeHue } from './hueAndAlpha';
@@ -9,7 +9,7 @@ import { onHandleChangeMode } from './mode';
 import { onClickPanel, changeCursorColor } from './panelAndCursor';
 import { onInputColor } from './input';
 import { onClearColor, onSureColor } from './clearAndSure';
-import util from './util';
+import util from '../utils/util';
 import { showColorPickerWithNoBox } from './showColorPickerWithNoBox';
 /**
  *  

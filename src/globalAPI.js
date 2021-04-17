@@ -1,7 +1,8 @@
 import colorPickerConfig from './config';
-import { startInit } from './startInit';
-import * as color from './color';
-import base from './util';
+import { startInit } from './init/startInit';
+import * as color from './color/color';
+import base from './utils/util';
+import { bindEvent } from './handler/bindEvent';
 const createColorPicker = function (config) {
     const Super = this;
     const Sub = function(){
@@ -16,7 +17,7 @@ const getDefaultConfig = function () {
     return colorPickerConfig;
 }
 const util = Object.create(null);
-[color,base].forEach(module => {
+[color,base,{ bindEvent:bindEvent }].forEach(module => {
     Object.keys(module).forEach(key => {
         if(base.isFunction(module[key]) && key !=='clickOutSide'){
             util[key] = module[key];

@@ -1,5 +1,5 @@
-import util from './util';
-import { colorHsvaToRgba } from './color';
+import util from '../utils/util';
+import { colorHsvaToRgba } from '../color/color';
 /**
  * 改变透明度
  * @param {*} scope 

@@ -1,7 +1,7 @@
 
-import { pushTarget,popTarget, remove } from './Dep';
-import util from './util';
-import { initError } from './startInit'
+import { pushTarget,popTarget, remove } from '../observe/Dep';
+import util from '../utils/util';
+import { initError } from '../init/startInit';
 export default class RenderWatcher {
     constructor(vm){
         this._colorPickerInstance = vm;

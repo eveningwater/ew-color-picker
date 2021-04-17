@@ -1,5 +1,5 @@
 import { changeElementColor } from './changeElementColor';
-import util from './util';
+import util from '../utils/util';
 /**
  * 拖拽
  * @param {*} scope 

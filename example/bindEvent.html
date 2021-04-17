@@ -38,11 +38,26 @@
 </body>
 <script src="../dist/ew-color-picker.js"></script>
 <script>
-    const color = new ewColorPicker();
+    // const color = new ewColorPicker();
     const box = ewColorPicker.util.$("#box");
     const demo = ewColorPicker.util.$("#demo");
     const util = ewColorPicker.util;
-    color.bindEvent(demo, (context, el, x, y) => {
+    // color.bindEvent(demo, (context, el, x, y) => {
+    //     const rect = util.getRect(box);
+    //     const left = Math.max(0, Math.min(x - rect.x, rect.width - 15));
+    //     const top = Math.max(0, Math.min(y - rect.y, rect.height - 15));
+    //     util.setSomeCss(el, [
+    //         {
+    //             prop: "left",
+    //             value: left + 'px'
+    //         },
+    //         {
+    //             prop: "top",
+    //             value: top + 'px'
+    //         }
+    //     ]);
+    // });
+    util.bindEvent(demo, (context, el, x, y) => {
         const rect = util.getRect(box);
         const left = Math.max(0, Math.min(x - rect.x, rect.width - 15));
         const top = Math.max(0, Math.min(y - rect.y, rect.height - 15));
@@ -56,7 +71,7 @@
                 value: top + 'px'
             }
         ]);
-    })
+    });
 </script>
 
 </html>

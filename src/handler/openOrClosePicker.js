@@ -1,7 +1,7 @@
-import util from './util';
-import ani from './animation';
-import { onRenderColorPicker } from './render';
-import { setColorValue } from './setColorValue';
+import util from '../utils/util';
+import ani from '../utils/animation';
+import { onRenderColorPicker } from '../render/render';
+import { setColorValue } from '../layout/setColorValue';
 /**
  * 开启颜色选择器
  * @param {*} expression 

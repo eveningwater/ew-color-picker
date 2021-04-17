@@ -1,7 +1,7 @@
-import { onRenderColorPicker } from './render';
+import { onRenderColorPicker } from '../render/render';
 import { changeElementColor } from './changeElementColor';
-import { openAndClose } from './openOrClosePicker';
-import { colorHsvaToRgba, colorRgbaToHex } from './color';
+import { openAndClose } from '../handler/openOrClosePicker';
+import { colorHsvaToRgba, colorRgbaToHex } from '../color/color';
 /**
  * 清空
  * @param {*} el 

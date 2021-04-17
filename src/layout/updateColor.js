@@ -1,7 +1,7 @@
-import { isValidColor,colorToRgba,colorRgbaToHsva } from './color';
-import { ERROR_VARIABLE } from './error';
+import { isValidColor,colorToRgba,colorRgbaToHsva } from '../color/color';
+import { ERROR_VARIABLE } from '../const/error';
 import { setColorValue } from './setColorValue';
-import util from './util';
+import util from '../utils/util';
 /**
  * 手动更新颜色
  * @param {*} color 
