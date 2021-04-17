@@ -1,6 +1,6 @@
-import { open, getHeiAni } from './openOrClosePicker';
+import { open, getHeiAni } from '../handler/openOrClosePicker';
 import { setColorValue } from './setColorValue';
-import util from './util';
+import util from '../utils/util';
 export function showColorPickerWithNoBox(context) {
     setTimeout(() => {
         const ani = getHeiAni(context);

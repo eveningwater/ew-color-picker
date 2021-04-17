@@ -1,4 +1,4 @@
-import util from './util';
+import util from '../utils/util';
 /**
  * 绑定事件
  * @param {*} el 

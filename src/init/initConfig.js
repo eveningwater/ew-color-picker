@@ -1,7 +1,7 @@
-import colorPickerConfig from './config';
-import util from './util';
-import { ERROR_VARIABLE } from './error';
-import { consoleInfo } from './console';
+import colorPickerConfig from '../config';
+import util from '../utils/util';
+import { ERROR_VARIABLE } from '../const/error';
+import { consoleInfo } from '../const/console';
 function filterConfig(config){
     config.hueDirection = config.hueDirection === 'horizontal' ? config.hueDirection : 'vertical';
     config.alphaDirection = config.alphaDirection === 'horizontal' ? config.alphaDirection : 'vertical';

@@ -1,4 +1,4 @@
-import util from './util';
+import util from '../utils/util';
 // HEX color 
 export const colorRegExp = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
 // RGB color 

@@ -1,7 +1,7 @@
-import { isValidColor,colorRgbaToHsva,colorHexToRgba,colorHslaToRgba } from './color';
+import { isValidColor,colorRgbaToHsva,colorHexToRgba,colorHslaToRgba } from '../color/color';
 import { setColorValue } from './setColorValue';
 import { changeElementColor } from './changeElementColor';
-import util from './util';
+import util from '../utils/util';
 /**
  * 输入颜色的转换
  * @param {*} scope 

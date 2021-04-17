@@ -1,4 +1,4 @@
-import util from './util';
+import util from '../utils/util';
 import Dep from './Dep';
 export function defineReactive(target) {
     const dep = new Dep();

@@ -1,4 +1,4 @@
-import { colorToRgba, colorRgbaToHex, colorRgbaToHsla } from './color';
+import { colorToRgba, colorRgbaToHex, colorRgbaToHsla } from '../color/color';
 /**
  * 转换颜色模式
  * @param {*} context 

@@ -242,13 +242,13 @@ color.bindEvent(demo, (context, el, x, y) => {
 })
 ```
 
-> 注意:这个方法单独使用的作用不大。
+> 注意:这样使用这个方法不太好，还是使用内置工具方法`bindEvent`好。
 
 
 ### 
 ## 内置工具方法详解
 
-内置工具方法都被放在`ewColorPicker.util`对象中，下面让我们来看一看都有哪些工具方法吧！
+内置工具方法都被放在`ewColorPicker.util`对象中，一共有`41`个工具方法，可以通过在页面中引入插件的js文件，然后打印这个工具方法对象，下面让我们来看一看都有哪些工具方法吧！
 
 ### $方法
 
@@ -290,7 +290,7 @@ const elements = ewColorPicker.util.$('.element');
 
 ### baseClickOutSide方法
 
-4.`baseClickOutSide`
+4.`baseClickOutSide`方法
 
 顾名思义，该方法就是点击目标区域元素之外执行的操作。例如本颜色选择器中的点击颜色面板之外的区域关闭颜色面板的功能。有三个参数，第一个参数是目标元素，也就是一个DOM元素，第二个元素则是一个布尔值，表示是否在执行回调函数之后解绑事件，默认值是true,第三个参数则是一个回调函数，即点击目标元素区域之外所进行的操作。可以看如下一个示例:
 
@@ -313,5 +313,35 @@ ewColorPicker.util.baseClickOutSide(test,false,() => {
 });
 ```
 
-不过，我想单独使用该功能，不使用颜色选择器的情况应该不存在吧!
+这个功能和常用。
+
+### bindEvent方法
+
+5.`bindEvent`方法
+
+这个方法和实例上的`bindEvent`（即color.bindEvent）是一样的。例如前面的实例方法中介绍到的示例中的js代码我们可以修改成如下这样:
+
+```js
+const box = ewColorPicker.util.$("#box");
+const demo = ewColorPicker.util.$("#demo");
+const util = ewColorPicker.util;
+util.bindEvent(demo, (context, el, x, y) => {
+    const rect = util.getRect(box);
+    const left = Math.max(0, Math.min(x - rect.x, rect.width - 15));
+    const top = Math.max(0, Math.min(y - rect.y, rect.height - 15));
+    util.setSomeCss(el, [
+        {
+            prop: "left",
+            value: left + 'px'
+        },
+        {
+            prop: "top",
+            value: top + 'px'
+        }
+    ]);
+})
+```
+
+这样就实现了一个限定在盒子区域内拖拽改变被拖拽元素位置偏移的功能。
+
 

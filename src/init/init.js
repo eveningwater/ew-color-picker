@@ -1,6 +1,6 @@
-import util from './util';
-import { ERROR_VARIABLE } from './error';
-import colorPickerConfig from './config';
+import util from '../utils/util';
+import { ERROR_VARIABLE } from '../const/error';
+import colorPickerConfig from '../config';
 /**
  * 初始化
  * @param {*} bindElement 

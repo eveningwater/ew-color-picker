@@ -1,6 +1,6 @@
-import util from './util';
-import { setBoxBackground } from './box';
-import { close,getHeiAni } from './openOrClosePicker';
+import util from '../utils/util';
+import { setBoxBackground } from '../layout/box';
+import { close,getHeiAni } from '../handler/openOrClosePicker';
 /**
  * 点击目标元素之外关闭颜色选择器
  * @param {*} context 

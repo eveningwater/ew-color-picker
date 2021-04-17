@@ -1352,37 +1352,6 @@
       if (util.isFunction(scope.config.openOrClosePicker)) scope.config.openOrClosePicker(el, scope);
     }
 
-    const createColorPicker = function (config) {
-      const Super = this;
-
-      const Sub = function () {
-        startInit(this, config);
-      };
-
-      Sub.prototype = Object.create(Super.prototype);
-      Sub.prototype.constructor = Sub;
-      Sub['Super'] = Super;
-      return new Sub();
-    };
-
-    const getDefaultConfig = function () {
-      return baseDefaultConfig;
-    };
-
-    const util$1 = Object.create(null);
-    [color, util].forEach(module => {
-      Object.keys(module).forEach(key => {
-        if (util.isFunction(module[key]) && key !== 'clickOutSide') {
-          util$1[key] = module[key];
-        }
-      });
-    });
-    var globalAPI = {
-      createColorPicker,
-      getDefaultConfig,
-      util: util$1
-    };
-
     /**
      * 绑定事件
      * @param {*} el 
@@ -1416,6 +1385,39 @@
 
       util.on(el, util.eventType[0], handler);
     }
+
+    const createColorPicker = function (config) {
+      const Super = this;
+
+      const Sub = function () {
+        startInit(this, config);
+      };
+
+      Sub.prototype = Object.create(Super.prototype);
+      Sub.prototype.constructor = Sub;
+      Sub['Super'] = Super;
+      return new Sub();
+    };
+
+    const getDefaultConfig = function () {
+      return baseDefaultConfig;
+    };
+
+    const util$1 = Object.create(null);
+    [color, util, {
+      bindEvent: bindEvent
+    }].forEach(module => {
+      Object.keys(module).forEach(key => {
+        if (util.isFunction(module[key]) && key !== 'clickOutSide') {
+          util$1[key] = module[key];
+        }
+      });
+    });
+    var globalAPI = {
+      createColorPicker,
+      getDefaultConfig,
+      util: util$1
+    };
 
     const isNotDom = ele => {
       if (NOT_DOM_ELEMENTS.indexOf(ele.tagName.toLowerCase()) > -1) {

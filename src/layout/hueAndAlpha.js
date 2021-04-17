@@ -1,7 +1,7 @@
-import util from './util';
+import util from '../utils/util';
 import { changeElementColor } from './changeElementColor';
-import { cloneColor } from './cloneColor';
-import { colorHsvaToRgba, colorRgbaToHex } from './color';
+import { cloneColor } from '../color/cloneColor';
+import { colorHsvaToRgba, colorRgbaToHex } from '../color/color';
 /**
  * 
  * @param {*} direction 

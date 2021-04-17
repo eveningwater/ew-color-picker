@@ -1,7 +1,7 @@
-import util from './util';
+import util from '../utils/util';
 import { changeMode } from './mode';
 import { changeAlphaBar } from './changeAlphaBarBackground';
-import { colorHsvaToRgba,colorRgbaToHex } from './color';
+import { colorHsvaToRgba,colorRgbaToHex } from '../color/color';
 import { setBoxBackground } from './box';
 /**
  * 改变元素的颜色

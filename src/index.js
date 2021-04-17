@@ -1,14 +1,14 @@
-import util from './util';
-import { ERROR_VARIABLE } from './error';
-import { handleClosePicker,handleOpenPicker } from './openOrClosePicker';
+import util from './utils/util';
+import { ERROR_VARIABLE } from './const/error';
+import { handleClosePicker,handleOpenPicker } from './handler/openOrClosePicker';
 import globalAPI from './globalAPI.js';
-import { startInit } from './startInit';
-import { bindEvent } from './bindEvent';
-import { beforeInit } from './beforeInit';
-import { updateColor } from './updateColor';
-import { initFunction } from './init';
-import { startMain } from './main';
-import { staticRender } from './render';
+import { startInit } from './init/startInit';
+import { bindEvent } from './handler/bindEvent';
+import { beforeInit } from './init/beforeInit';
+import { updateColor } from './layout/updateColor';
+import { initFunction } from './init/init';
+import { startMain } from './layout/main';
+import { staticRender } from './render/render';
 /**
  * 构造函数
  * @param {*} config 

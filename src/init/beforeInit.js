@@ -1,6 +1,6 @@
-import util from './util';
-import colorPickerConfig from './config';
-import { ERROR_VARIABLE, NOT_DOM_ELEMENTS } from './error';
+import util from '../utils/util';
+import colorPickerConfig from '../config';
+import { ERROR_VARIABLE, NOT_DOM_ELEMENTS } from '../const/error';
 import { initError } from './startInit';
 // 不能是哪些标签元素
 const isNotDom = ele => {
