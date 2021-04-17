@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo 7</title>
+    <link rel="stylesheet" href="../dist/ew-color-picker.min.css">
+</head>
+
+<body>
+    <div></div>
+    <div id="demo"></div>
+</body>
+<script src="../dist/ew-color-picker.js"></script>
+<script>
+    const config = {
+        predefineColor: [
+            "#fff",
+            "red",
+            "hsla(123,36%,55%,1)",
+            "rgba(233,123,22,.6)"
+        ]
+    }
+    const color = ewColorPicker.createColorPicker({
+        el: "div",
+        ...config
+    });
+    color.beforeInit("#demo",{
+        predefineColor: [
+            {
+                color:"#fff"
+            },
+            {
+                color:"red",
+                disabled:true
+            },
+            {
+                color:"hsla(123,36%,55%,.6)",
+                disabled:false
+            },
+            "rgba(233,123,22,.6)"
+        ]
+    });
+    console.log(ewColorPicker.util);
+    // function Test(){}
+    // const getTest = () => console.log('hello,ewColorPicker!');
+    // ewColorPicker.util.addMethod(Test,'getTest',getTest);
+    // //此时你会在Test的原型上看到又一个getTest方法
+    // const test = new Test();
+    // test.getTest();//在控制台打印hello,ewColorPicker!
+</script>
+
+</html>

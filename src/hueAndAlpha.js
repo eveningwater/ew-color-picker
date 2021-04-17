@@ -27,7 +27,7 @@ function setAlphaHuePosition(direction,bar,thumb,position){
 * @param {*} position
 */
 export function changeAlpha(context, position) {
-    let value = setAlphaHuePosition(context.isAlphaHorizontal,context.alphaBar,context.alphaBarThumb,position);
+    let value = setAlphaHuePosition(context.isAlphaHorizontal,context.$Dom.alphaBar,context.$Dom.alphaBarThumb,position);
     let currentValue = value.barPosition - value.barThumbPosition <= 0 ? 0 : value.barPosition - value.barThumbPosition; 
     let alpha = context.isAlphaHorizontal ? 1 - currentValue / value.barPosition : currentValue / value.barPosition;
     context.hsvaColor.a = alpha >= 1 ? 1 : alpha.toFixed(2);
@@ -39,8 +39,8 @@ export function changeAlpha(context, position) {
  * @param {*} position
  */
 export function changeHue(context, position) {
-    let value = setAlphaHuePosition(context.isHueHorizontal,context.hueBar, context.hueThumb, position);
+    let value = setAlphaHuePosition(context.isHueHorizontal,context.$Dom.hueBar, context.$Dom.hueThumb, position);
     context.hsvaColor.h = cloneColor(context.hsvaColor).h = parseInt(360 * value.barThumbPosition / value.barPosition);
-    util.setCss(context.pickerPanel, 'background', colorRgbaToHex(colorHsvaToRgba(cloneColor(context.hsvaColor))));
+    util.setCss(context.$Dom.pickerPanel, 'background', colorRgbaToHex(colorHsvaToRgba(cloneColor(context.hsvaColor))));
     changeElementColor(context);
 }

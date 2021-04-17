@@ -1,6 +1,7 @@
 import colorPickerConfig from './config';
 import util from './util';
 import { ERROR_VARIABLE } from './error';
+import { consoleInfo } from './console';
 function filterConfig(config){
     config.hueDirection = config.hueDirection === 'horizontal' ? config.hueDirection : 'vertical';
     config.alphaDirection = config.alphaDirection === 'horizontal' ? config.alphaDirection : 'vertical';
@@ -11,15 +12,7 @@ function filterConfig(config){
  * @returns 
  */
 export function initConfig(config){
-    const privateConfig = {
-        boxSize: {
-            b_width: null,
-            b_height: null
-        },
-        pickerFlag: false,
-        colorValue: "",
-    }
-    const defaultConfig = { ...colorPickerConfig, ...privateConfig };
+    const defaultConfig = { ...colorPickerConfig };
     let element,error,mergeConfig = null;
     //如果第二个参数传的是字符串，或DOM对象，则初始化默认的配置
     if (util.isString(config) || util.isDom(config)) {
@@ -43,6 +36,7 @@ export function initConfig(config){
             error = ERROR_VARIABLE.DOM_ERROR;
         }
     }
+    if (mergeConfig.isLog)consoleInfo();
     return {
         element,
         config:mergeConfig,

@@ -1,6 +1,6 @@
 import util from './util';
-import { consoleInfo } from './console';
 import { ERROR_VARIABLE } from './error';
+import colorPickerConfig from './config';
 /**
  * 初始化
  * @param {*} bindElement 
@@ -8,7 +8,10 @@ import { ERROR_VARIABLE } from './error';
  * @returns 
  */
 export function initFunction(bindElement, config) {
-    if (config.isLog)consoleInfo();
+    if(!util.isDom(bindElement)){
+        return this.beforeInit(bindElement,config,ERROR_VARIABLE.DOM_ERROR);
+    }
+    config = util.ewAssign(colorPickerConfig,config);
     let b_width, b_height;
     //自定义颜色选择器的类型
     if (util.isString(config.size)) {
@@ -35,8 +38,8 @@ export function initFunction(bindElement, config) {
     } else {
         return util.ewError(ERROR_VARIABLE.CONFIG_SIZE_ERROR);
     }
-    config.boxSize.b_width = b_width;
-    config.boxSize.b_height = b_height;
+    this._privateConfig.boxSize.b_width = b_width;
+   this._privateConfig.boxSize.b_height = b_height;
     //渲染选择器
     this.render(bindElement, config);
 }

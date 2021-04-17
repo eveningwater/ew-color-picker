@@ -1,6 +1,6 @@
 import { handleClickOutSide } from './clickOutSide';
 import { getELByClass } from './query';
-import { handlePicker, getHeiAni, open } from './openOrClosePicker';
+import { handlePicker, getHeiAni } from './openOrClosePicker';
 import { colorRegRGBA, colorRgbaToHsva, colorToRgba } from './color';
 import { setColorValue } from './setColorValue';
 import { changeElementColor } from './changeElementColor';
@@ -10,8 +10,6 @@ import { onClickPanel, changeCursorColor } from './panelAndCursor';
 import { onInputColor } from './input';
 import { onClearColor, onSureColor } from './clearAndSure';
 import util from './util';
-import RenderWatcher from './renderWatcher';
-import { Observer } from './proxy';
 import { showColorPickerWithNoBox } from './showColorPickerWithNoBox';
 /**
  *  
@@ -20,7 +18,7 @@ import { showColorPickerWithNoBox } from './showColorPickerWithNoBox';
 function initAnimation(context) {
     //颜色选择器打开的动画初始设置
     const expression = getHeiAni(context);
-    util.setCss(context.picker, (expression ? 'display' : 'opacity'), (expression ? 'none' : 0))
+    util.setCss(context.$Dom.picker, (expression ? 'display' : 'opacity'), (expression ? 'none' : 0))
     let pickerWidth = 0, sliderWidth = 0, sliderHeight = 0;
     let isVerticalAlpha = !context.isAlphaHorizontal;
     let isVerticalHue = !context.isHueHorizontal;
@@ -36,12 +34,12 @@ function initAnimation(context) {
         pickerWidth = 280;
         sliderHeight = isAlpha && isHue && !isVerticalHue && !isVerticalAlpha ? 30 : 14;
     }
-    util.setCss(context.picker, 'min-width', pickerWidth + 'px');
-    if (context.horizontalSlider) {
-        util.setCss(context.horizontalSlider, 'height', sliderHeight + 'px');
+    util.setCss(context.$Dom.picker, 'min-width', pickerWidth + 'px');
+    if (context.$Dom.horizontalSlider) {
+        util.setCss(context.$Dom.horizontalSlider, 'height', sliderHeight + 'px');
     }
-    if (context.verticalSlider) {
-        util.setCss(context.verticalSlider, 'width', sliderWidth + 'px');
+    if (context.$Dom.verticalSlider) {
+        util.setCss(context.$Dom.verticalSlider, 'width', sliderWidth + 'px');
     }
 }
 /**
@@ -78,17 +76,16 @@ function initPreDefineHandler(items, context) {
  */
 export function startMain(ele, config) {
     let scope = this;
-    this.rootElement = ele;
-    this._watcher = new RenderWatcher(this);
-    this._observer = new Observer(config);
-    this.pickerPanel = getELByClass(ele, 'ew-color-panel');
-    this.pickerCursor = getELByClass(ele, 'ew-color-cursor');
-    this.picker = getELByClass(ele, 'ew-color-picker');
+    this.$Dom = Object.create(null);
+    this.$Dom.rootElement = ele;
+    this.$Dom.pickerPanel = getELByClass(ele, 'ew-color-panel');
+    this.$Dom.pickerCursor = getELByClass(ele, 'ew-color-cursor');
+    this.$Dom.picker = getELByClass(ele, 'ew-color-picker');
     if (this.isHueHorizontal || this.isAlphaHorizontal) {
-        this.horizontalSlider = getELByClass(ele, 'ew-is-horizontal');
+        this.$Dom.horizontalSlider = getELByClass(ele, 'ew-is-horizontal');
     }
     if (!this.isHueHorizontal || !this.isAlphaHorizontal) {
-        this.verticalSlider = getELByClass(ele, 'ew-is-vertical');
+        this.$Dom.verticalSlider = getELByClass(ele, 'ew-is-vertical');
     }
     if (config.defaultColor) {
         this.hsvaColor = colorRegRGBA.test(config.defaultColor) ? colorRgbaToHsva(config.defaultColor) : colorRgbaToHsva(colorToRgba(config.defaultColor));
@@ -100,8 +97,8 @@ export function startMain(ele, config) {
             a: 1
         };
     }
-    const panelWidth = this.panelWidth = parseInt(util.getCss(this.pickerPanel, 'width'));
-    const panelHeight = this.panelHeight = parseInt(util.getCss(this.pickerPanel, 'height'));
+    const panelWidth = this.panelWidth = parseInt(util.getCss(this.$Dom.pickerPanel, 'width'));
+    const panelHeight = this.panelHeight = parseInt(util.getCss(this.$Dom.pickerPanel, 'height'));
     //计算偏差
     let elem = ele, top = elem.offsetTop, left = elem.offsetLeft;
     while (elem.offsetParent) {
@@ -111,32 +108,32 @@ export function startMain(ele, config) {
     }
     this.panelLeft = left;
     this.panelTop = top + ele.offsetHeight;
-    this.preDefineItem = getELByClass(ele, 'ew-pre-define-color', true);
-    if (this.preDefineItem.length) {
-        initPreDefineHandler(util.ewObjToArray(this.preDefineItem), scope);
+    this.$Dom.preDefineItem = getELByClass(ele, 'ew-pre-define-color', true);
+    if (this.$Dom.preDefineItem.length) {
+        initPreDefineHandler(util.ewObjToArray(this.$Dom.preDefineItem), scope);
     }
     if (config.hue) {
-        this.hueBar = getELByClass(ele, 'ew-color-slider-bar');
-        this.hueThumb = getELByClass(ele, 'ew-color-slider-thumb');
+        this.$Dom.hueBar = getELByClass(ele, 'ew-color-slider-bar');
+        this.$Dom.hueThumb = getELByClass(ele, 'ew-color-slider-thumb');
         //hue的点击事件
-        util.on(this.hueBar, 'click', event => changeHue(scope, (this.isHueHorizontal ? event.x : event.y)))
+        util.on(this.$Dom.hueBar, 'click', event => changeHue(scope, (this.isHueHorizontal ? event.x : event.y)))
         //hue 轨道的拖拽事件
-        this.bindEvent(this.hueThumb, (scope, el, x, y) => changeHue(scope, (this.isHueHorizontal ? x : y)));
+        this.bindEvent(this.$Dom.hueThumb, (scope, el, x, y) => changeHue(scope, (this.isHueHorizontal ? x : y)));
     }
     if (config.alpha) {
-        this.alphaBar = getELByClass(ele, 'ew-alpha-slider-bar');
-        this.alphaBarBg = getELByClass(ele, 'ew-alpha-slider-bg');
-        this.alphaBarThumb = getELByClass(ele, 'ew-alpha-slider-thumb');
+        this.$Dom.alphaBar = getELByClass(ele, 'ew-alpha-slider-bar');
+        this.$Dom.alphaBarBg = getELByClass(ele, 'ew-alpha-slider-bg');
+        this.$Dom.alphaBarThumb = getELByClass(ele, 'ew-alpha-slider-thumb');
         if (!config.disabled) {
-            this.bindEvent(this.alphaBarThumb, (scope, el, x, y) => changeAlpha(scope, (this.isAlphaHorizontal ? x : y)));
-            util.on(this.alphaBar, 'click', event => changeAlpha(scope, (this.isAlphaHorizontal ? event.x : event.y)));
+            this.bindEvent(this.$Dom.alphaBarThumb, (scope, el, x, y) => changeAlpha(scope, (this.isAlphaHorizontal ? x : y)));
+            util.on(this.$Dom.alphaBar, 'click', event => changeAlpha(scope, (this.isAlphaHorizontal ? event.x : event.y)));
         }
     }
     initAnimation(scope);
     //获取颜色选择器的一些操作元素
     if (config.hasBox) {
-        this.box = getELByClass(ele, 'ew-color-picker-box');
-        if (!config.boxDisabled && !config.disabled) util.on(this.box, 'click', () => handlePicker(ele, scope));
+        this.$Dom.box = getELByClass(ele, 'ew-color-picker-box');
+        if (!config.boxDisabled && !config.disabled) util.on(this.$Dom.box, 'click', () => handlePicker(ele, scope));
     }else{
         showColorPickerWithNoBox(this);
     }
@@ -144,44 +141,44 @@ export function startMain(ele, config) {
         handleClickOutSide(this, config);
     }
     if (config.hasColorInput) {
-        this.pickerInput = getELByClass(ele, 'ew-color-input');
-        util.on(this.pickerInput, 'blur', event => onInputColor(scope, event.target.value));
+        this.$Dom.pickerInput = getELByClass(ele, 'ew-color-input');
+        util.on(this.$Dom.pickerInput, 'blur', event => onInputColor(scope, event.target.value));
     }
     if (config.hasClear) {
-        this.pickerClear = getELByClass(ele, 'ew-color-clear');
-        util.on(this.pickerClear, 'click', () => onClearColor(ele, scope));
+        this.$Dom.pickerClear = getELByClass(ele, 'ew-color-clear');
+        util.on(this.$Dom.pickerClear, 'click', () => onClearColor(ele, scope));
     }
     if (config.hasSure) {
-        this.pickerSure = getELByClass(ele, 'ew-color-sure');
-        util.on(this.pickerSure, 'click', () => onSureColor(ele, scope));
+        this.$Dom.pickerSure = getELByClass(ele, 'ew-color-sure');
+        util.on(this.$Dom.pickerSure, 'click', () => onSureColor(ele, scope));
     }
     if (config.openChangeColorMode) {
-        this.modeUp = getELByClass(ele, 'ew-color-mode-up');
-        this.modeDown = getELByClass(ele, 'ew-color-mode-down');
-        this.modeTitle = getELByClass(ele, "ew-color-mode-title");
+        this.$Dom.modeUp = getELByClass(ele, 'ew-color-mode-up');
+        this.$Dom.modeDown = getELByClass(ele, 'ew-color-mode-down');
+        this.$Dom.modeTitle = getELByClass(ele, "ew-color-mode-title");
         if (config.hasColorInput) {
             this.modeCount = config.alpha ? 1 : 0;
             this.currentMode = this.colorMode[this.modeCount];
-            util.on(this.modeUp, "click", event => onHandleChangeMode(scope, 'up', () => changeElementColor(scope)));
-            util.on(this.modeDown, "click", event => onHandleChangeMode(scope, 'down', () => changeElementColor(scope)));
+            util.on(this.$Dom.modeUp, "click", event => onHandleChangeMode(scope, 'up', () => changeElementColor(scope)));
+            util.on(this.$Dom.modeDown, "click", event => onHandleChangeMode(scope, 'down', () => changeElementColor(scope)));
         }
     }
     if (config.disabled) {
         if (config.hasColorInput) {
-            if (!util.hasClass(this.pickerInput, 'ew-input-disabled')) {
-                this.pickerInput.classList.add('ew-input-disabled');
-                this.pickerInput.disabled = true;
+            if (!util.hasClass(this.$Dom.pickerInput, 'ew-input-disabled')) {
+                this.$Dom.pickerInput.classList.add('ew-input-disabled');
+                this.$Dom.pickerInput.disabled = true;
             }
         }
-        if (!util.hasClass(this.picker, 'ew-color-picker-disabled')) {
-            this.picker.classList.add('ew-color-picker-disabled');
+        if (!util.hasClass(this.$Dom.picker, 'ew-color-picker-disabled')) {
+            this.$Dom.picker.classList.add('ew-color-picker-disabled');
         }
         return false;
     }
     //颜色面板点击事件
-    util.on(this.pickerPanel, 'click', event => onClickPanel(scope, event));
+    util.on(this.$Dom.pickerPanel, 'click', event => onClickPanel(scope, event));
     //颜色面板拖拽元素拖拽事件
-    this.bindEvent(this.pickerCursor, (scope, el, x, y) => {
+    this.bindEvent(this.$Dom.pickerCursor, (scope, el, x, y) => {
         const left = Math.max(0, Math.min(x - scope.panelLeft, panelWidth));
         const top = Math.max(0, Math.min(y - scope.panelTop, panelHeight));
         changeCursorColor(scope, left + 4, top + 4, panelWidth, panelHeight);

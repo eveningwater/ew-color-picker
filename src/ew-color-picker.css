@@ -85,8 +85,8 @@
   border-radius: 5px;
   z-index: 10;
   padding: 7px;
-  display: none;
   text-align: left;
+  display: none;
 }
 .ew-color-picker.ew-color-picker-disabled * {
   cursor: not-allowed;

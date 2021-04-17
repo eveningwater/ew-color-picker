@@ -21,7 +21,7 @@ import { colorToRgba, colorRgbaToHex, colorRgbaToHsla } from './color';
             result = color;
             break;
     }
-    context.modeTitle.innerHTML = context.currentMode;
+    context.$Dom.modeTitle.innerHTML = context.currentMode;
     return result;
 }
  /**
