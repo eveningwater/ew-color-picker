@@ -3,7 +3,7 @@ declare namespace ewColorPicker {
       color?:String,
       disabled?:boolean
   }
-  export type WrapperType = string | HTMLElement | Element | HTMLCollection | Node | NodeList;
+  export type WrapperType = string | HTMLElement | Element | HTMLCollection | Node | NodeList | null | void;
   export type OptionType = {
     el?: WrapperType;
     alpha?: boolean;
@@ -16,6 +16,7 @@ declare namespace ewColorPicker {
     disabled?: boolean;
     defaultColor?: string;
     pickerAnimation?: string;
+    pickerAnimationTime?:number;
     sure?: Function;
     clear?: Function;
     isLog?: boolean;

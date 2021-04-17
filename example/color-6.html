@@ -4,15 +4,24 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>demo 1</title>
+    <title>demo 6</title>
     <link rel="stylesheet" href="../dist/ew-color-picker.min.css">
 </head>
 <body>
-    
+    <div></div>
+    <div id="demo"></div>
 </body>
 <script src="../dist/ew-color-picker.js"></script>
 <script>
-    const color1 = new ewColorPicker();
-    const color2 = ewColorPicker.createColorPicker();
+    const config = {
+        isClickOutside:true,
+        alpha:true
+    }
+    const color = ewColorPicker.createColorPicker({
+        el:"div",
+        ...config
+    });
+    color.init("div",{ hasBox:false });
+    console.log(ewColorPicker.util);
 </script>
 </html>

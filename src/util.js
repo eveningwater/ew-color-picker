@@ -31,18 +31,18 @@ util.ewAssign = function (target, args) {
 }
 util.addClass = (el, className) => el.classList.add(className);
 util.removeClass = (el, className) => el.classList.remove(className);
-util.hasClass = (el,className) =>  {
+util.hasClass = (el, className) => {
     let _hasClass = (value) => new RegExp(" " + el.className + " ").test(" " + value + " ");
-    if(util.isDeepArray(className)){
+    if (util.isDeepArray(className)) {
         return className.some(name => _hasClass(name));
-    }else{
+    } else {
         return _hasClass(className);
     }
 };
-util['setCss'] = (el, prop, value) => el.style.setProperty(prop,value);
-util.setSomeCss = (el,propValue = []) => {
-    if(propValue.length){
-        propValue.forEach(p => util.setCss(el,p.prop,p.value));
+util['setCss'] = (el, prop, value) => el.style.setProperty(prop, value);
+util.setSomeCss = (el, propValue = []) => {
+    if (propValue.length) {
+        propValue.forEach(p => util.setCss(el, p.prop, p.value));
     }
 }
 util.isDom = el => util.isShallowObject(HTMLElement) ? el instanceof HTMLElement : el && util.isShallowObject(el) && el.nodeType === 1 && util.isString(el.nodeName) || el instanceof HTMLCollection || el instanceof NodeList;
@@ -58,7 +58,10 @@ util.deepCloneObjByRecursion = (function f(obj) {
     return cloneObj;
 });
 util.getCss = (el, prop) => window.getComputedStyle(el, null)[prop];
-util.$ = ident => document[ident && ident.indexOf('#') > -1 ? 'querySelector' : 'querySelectorAll'](ident);
+util.$ = ident => {
+    if (!ident) return null;
+    return document[ident.indexOf('#') > -1 ? 'querySelector' : 'querySelectorAll'](ident);
+};
 util["on"] = (element, type, handler, useCapture = false) => {
     if (element && type && handler) {
         element.addEventListener(type, handler, useCapture);
@@ -70,35 +73,51 @@ util["off"] = (element, type, handler, useCapture = false) => {
     }
 };
 util['getRect'] = (el) => el.getBoundingClientRect();
-util["clickOutSide"] = (context,config,callback) => {
-    let el = context.rootElement;
+util['baseClickOutSide'] = (element, isUnbind = true, callback) => {
     const mouseHandler = (event) => {
-        const rect = util.getRect(context.picker);
+        const rect = util.getRect(element);
+        const target = event.target;
+        if (!target) return;
+        const targetRect = util.getRect(target);
+        if (targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width && targetRect.height <= rect.height) return;
+        if(util.isFunction(callback))callback();
+        if (isUnbind) {
+            // 延迟解除绑定
+            setTimeout(() => {
+                util.off(document, util.eventType[0], mouseHandler);
+            }, 0);
+        }
+    }
+    util.on(document, util.eventType[0], mouseHandler);
+}
+util["clickOutSide"] = (context, config, callback) => {
+    const mouseHandler = (event) => {
+        const rect = util.getRect(context.$Dom.picker);
         let boxRect = null;
-        if(config.hasBox){
-            boxRect = util.getRect(context.box);
+        if (config.hasBox) {
+            boxRect = util.getRect(context.$Dom.box);
         }
         const target = event.target;
-        if(!target)return;
+        if (!target) return;
         const targetRect = util.getRect(target);
         // 利用rect来判断用户点击的地方是否在颜色选择器面板区域之内
-        if(config.hasBox){
-            if(targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width)return;
+        if (config.hasBox) {
+            if (targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width) return;
             // 如果点击的是盒子元素
-            if(targetRect.x >= boxRect.x && targetRect.y >= boxRect.y && targetRect.width <= boxRect.width && targetRect.height <= boxRect.height)return;
+            if (targetRect.x >= boxRect.x && targetRect.y >= boxRect.y && targetRect.width <= boxRect.width && targetRect.height <= boxRect.height) return;
             callback();
-        }else{
-            if(targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width && targetRect.height <= rect.height)return;
+        } else {
+            if (targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width && targetRect.height <= rect.height) return;
             callback();
         }
         setTimeout(() => {
-            util.off(document,util.eventType[0],mouseHandler);
-        },0);
+            util.off(document, util.eventType[0], mouseHandler);
+        }, 0);
     }
-    util.on(document,util.eventType[0], mouseHandler);
+    util.on(document, util.eventType[0], mouseHandler);
 }
 util['createUUID'] = () => (Math.random() * 10000000).toString(16).substr(0, 4) + '-' + (new Date()).getTime() + '-' + Math.random().toString().substr(2, 5);
-util.removeAllSpace = (value) => value.replace(/\s+/g,"");
+util.removeAllSpace = (value) => value.replace(/\s+/g, "");
 //the event
 util.eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
 export default util;

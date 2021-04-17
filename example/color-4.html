@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo 4</title>
+    <link rel="stylesheet" href="../dist/ew-color-picker.min.css">
+    <style>
+        .ew-color-picker-container {
+            margin: 15px;
+        }
+    </style>
+</head>
+<body>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+</body>
+<script src="../dist/ew-color-picker.js"></script>
+<script>
+    const config = {
+        isClickOutside:true
+    }
+    const colorConfigs = [
+        {
+            size:"normal"
+        },
+        {
+            size:"medium"
+        },
+        {
+            size:"small"
+        },
+        {
+            size:"mini"
+        },
+        {
+            size:{
+                width:25,
+                height:25
+            }
+        }
+    ];
+    ewColorPicker.util.$('p').forEach((item,index) => {
+        ewColorPicker.createColorPicker(ewColorPicker.util.ewAssign(config,{ el:item,...colorConfigs[index] }));
+    });
+</script>
+</html>

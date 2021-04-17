@@ -8,11 +8,11 @@ import { close,getHeiAni } from './openOrClosePicker';
  */
  export function handleClickOutSide(context, config) {
     util.clickOutSide(context, config, () => {
-        if (config.pickerFlag) {
-            config.pickerFlag = false;
-            close(getHeiAni({ config: config }), context.picker);
+        if (context._privateConfig.pickerFlag) {
+            context._privateConfig.pickerFlag = false;
+            close(getHeiAni({ config: config }), context.$Dom.picker,config.pickerAnimationTime);
             if(config.hasBox && config.changeBoxByChangeColor){
-                setBoxBackground(context.box,config.defaultColor);
+                setBoxBackground(context.$Dom.box,config.defaultColor);
             }
         }
     });

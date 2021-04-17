@@ -91,7 +91,7 @@ function registerMethods(type, element, time) {
                 prop: "opacity",
                 value: (isIn ? 0 : 1)
             }
-        ])
+        ]);
         let handleFade = function () {
             curAlpha = isIn ? curAlpha + unit : curAlpha - unit;
             if (element.style.display === 'none' && isIn) util.setCss(element, 'display', 'block');

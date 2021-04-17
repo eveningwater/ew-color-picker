@@ -2,6 +2,8 @@ import { setPredefineDisabled,hasAlpha } from './predefineColor';
 import util from './util';
 import { isValidColor,colorRegRGB,colorToRgba } from './color';
 import { ERROR_VARIABLE } from './error';
+import RenderWatcher from './renderWatcher';
+import { Observer } from './proxy';
 /**
  * 重新渲染颜色选择器
  * @param {*} color 
@@ -10,8 +12,8 @@ import { ERROR_VARIABLE } from './error';
  * @param {*} scope 
  */
 export function onRenderColorPicker(color, pickerFlag, el, scope) {
-    scope.config.defaultColor = scope.config.colorValue = color;
-    scope.config.pickerFlag = pickerFlag;
+    scope.config.defaultColor = scope._privateConfig.colorValue = color;
+    scope._privateConfig.pickerFlag = pickerFlag;
     scope.render(el, scope.config);
 }
 /**
@@ -52,10 +54,10 @@ export function staticRender(element, config) {
         })
     };
     //打开颜色选择器的方框
-    const colorBox = config.defaultColor ? `<div class="ew-color-picker-arrow" style="width:${this.config.boxSize.b_width};height:${this.config.boxSize.b_height};">
+    const colorBox = config.defaultColor ? `<div class="ew-color-picker-arrow" style="width:${this._privateConfig.boxSize.b_width};height:${this._privateConfig.boxSize.b_height};">
         <div class="ew-color-picker-arrow-left"></div>
         <div class="ew-color-picker-arrow-right"></div>
-    </div>` : `<div class="ew-color-picker-no" style="width:${this.config.boxSize.b_width};height:${this.config.boxSize.b_height};line-height:${this.config.boxSize.b_height};">&times;</div>`;
+    </div>` : `<div class="ew-color-picker-no" style="width:${this._privateConfig.boxSize.b_width};height:${this._privateConfig.boxSize.b_height};line-height:${this._privateConfig.boxSize.b_height};">&times;</div>`;
     //透明度
     if (config.alpha) {
         alphaBar = `<div class="ew-alpha-slider-bar">
@@ -79,10 +81,10 @@ export function staticRender(element, config) {
             config.defaultColor = colorToRgba(config.defaultColor);
         }
     };
-    config.colorValue = config.defaultColor;
-    if (!config.disabled && config.colorValue) boxBackground = `background:${config.colorValue}`;
+    this._privateConfig.colorValue = config.defaultColor;
+    if (!config.disabled && this._privateConfig.colorValue) boxBackground = `background:${this._privateConfig.colorValue}`;
     // 盒子样式
-    const boxStyle = `width:${config.boxSize.b_width};height:${config.boxSize.b_height};${boxBackground}`;
+    const boxStyle = `width:${this._privateConfig.boxSize.b_width};height:${this._privateConfig.boxSize.b_height};${boxBackground}`;
     if (config.hasBox) {
         boxHTML = `<div class="ew-color-picker-box ${boxDisabledClassName}" tabIndex="0" style="${boxStyle}">${colorBox}</div>`;
     }
@@ -152,17 +154,25 @@ export function staticRender(element, config) {
             ${predefineHTML}
         </div>`;
     let isBody = element.tagName.toLowerCase() === 'body';
-    let mountElement = isBody ? document.createElement('div') : element;
+    let container = document.createElement('div');
+    let mountElement = isBody ? container.cloneNode(true) : element;
     let mountProp = isBody ? 'id' : 'color-picker-id';
     let mountValue = isBody ? 'placeElement-' + this._color_picker_uid : this._color_picker_uid;
-    mountElement.innerHTML = html;
     mountElement.setAttribute(mountProp,mountValue);
     if (isBody) {
         let hasDiv = util.$('#placeElement-' + this._color_picker_uid);
         if (hasDiv)hasDiv.parentElement.removeChild(hasDiv);
-        element.appendChild(mountElement);
+        mountElement.innerHTML = html;
+        util.addClass(container,'ew-color-picker-container');
+        container.appendChild(mountElement);
+        element.appendChild(container);
     } else {
-        element.innerHTML = html;
+        element.innerHTML = `<div class="ew-color-picker-container">${ html }</div>`;
+    }
+    this._watcher = new RenderWatcher(this);
+    // 如果config上有__ob__属性，则表明是一个响应式对象
+    if(!('__ob__' in this.config)){
+        this.config = new Observer(config).reactive;
     }
     this.startMain(mountElement, config);
 }

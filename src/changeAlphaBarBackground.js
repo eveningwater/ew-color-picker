@@ -5,7 +5,7 @@ import { colorHsvaToRgba } from './color';
  * @param {*} scope 
  */
  export function changeAlphaBar(scope) {
-    if (!scope.alphaBarBg) return;
-    let position = scope.config.alphaDirection === 'horizontal' ? 'to right' : 'to top';
-    util.setCss(scope.alphaBarBg, 'background', 'linear-gradient('+ position +',' + colorHsvaToRgba(scope.hsvaColor,0) + ' 0%,' + colorHsvaToRgba(scope.hsvaColor,1) + ' 100%)');
+    if (!scope.$Dom.alphaBarBg) return;
+    let position = scope.isAlphaHorizontal === 'horizontal' ? 'to right' : 'to top';
+    util.setCss(scope.$Dom.alphaBarBg, 'background', 'linear-gradient('+ position +',' + colorHsvaToRgba(scope.hsvaColor,0) + ' 0%,' + colorHsvaToRgba(scope.hsvaColor,1) + ' 100%)');
 }

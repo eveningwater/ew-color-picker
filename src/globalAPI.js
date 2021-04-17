@@ -18,7 +18,7 @@ const getDefaultConfig = function () {
 const util = Object.create(null);
 [color,base].forEach(module => {
     Object.keys(module).forEach(key => {
-        if(base.isFunction(module[key])){
+        if(base.isFunction(module[key]) && key !=='clickOutSide'){
             util[key] = module[key];
         }
     })

@@ -7,6 +7,7 @@ const baseDefaultConfig = {
     disabled: false,
     defaultColor: "",
     pickerAnimation: "height",
+    pickerAnimationTime:200,
     sure: emptyFun,
     clear: emptyFun,
     openOrClosePicker: emptyFun,
