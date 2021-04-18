@@ -4,6 +4,12 @@
 
 * [在线示例](https://eveningwater.github.io/ew-color-picker/example/color.html)
 
+## 响应式示例
+
+> 响应式示例
+
+* [在线示例](https://eveningwater.github.io/ew-color-picker/example/color-9.html)
+
 ## vue2.x示例
 
 > 在vue中可以写如下代码:
@@ -186,3 +192,10 @@
 > 说明:在react的工程化如create-react-app以及vue的工程化如vue-cli使用方式同引入式开发差不多的。
 
 还可以封装成一个颜色组件，如在`vue3.0`脚手架的示例[demo](https://github.com/eveningwater/website/blob/master/src/components/ColorPicker.vue)。
+
+## 更多示例
+
+详见[更多示例](https://github.com/eveningwater/ew-color-picker/tree/master/example)。
+
+
+
