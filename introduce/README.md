@@ -2,7 +2,7 @@
 home: true
 heroImage: /logo.png
 actionText: 前往查看 →
-actionLink: /start
+actionLink: /docs/introduce/introduce
 features:
 - title: 使用简单
   details: 下载包，然后引入，即可使用。

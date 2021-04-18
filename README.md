@@ -47,6 +47,7 @@
       disabled:false,//是否禁止开启选择器面板
       defaultColor:'#eeff22',//默认颜色
       pickerAnimation:'opacity',//或者'height'，开启颜色选择器面板的动画
+      pickerAnimationTime:300,//动画执行时间，默认是200
       sure:function(color){
           console.log(color);
       },//点击确定按钮的回调
@@ -71,14 +72,16 @@
       hasColorInput:true, //是否显示输入框,默认为true,不建议设置为false
       boxDisabled:true,//默认是false,设置为true并且hasBox为true，禁止点击色块打开颜色选择器
       openChangeColorMode:true,//是否打开颜色切换模式，注意打开这个模式必须要将alpha和hue设置为true
+      hueDirection:"horizontal",//或者vertical,默认是垂直布局显示,表示hue色阶柱是水平还是垂直布局显示
+      alphaDirection:"horizontal",//或者vertical,默认是垂直布局显示,表示透明度柱是水平还是垂直布局显示
   })
   //如果不喜欢实例化的方式来创建一个颜色选择器，也可以使用createColorPicker方法
   ewColorPicker.createColorPicker(config);//config为属性配置对象
   //当然还提供了一个api，可以获取默认的配置对象
   ewColorPicker.getDefaultConfig();
   //实例化的颜色选择器类，我们还提供了三个api，如下:
-  color.openPicker(pickerAnimation);//手动打开颜色选择器，参数为动画类型，即height或opacity
-  color.closePicker(pickerAnimation);//手动关闭颜色选择器，参数同手动打开方法一样
+  color.openPicker(pickerAnimation,time);//手动打开颜色选择器，参数为动画类型，即height或opacity
+  color.closePicker(pickerAnimation,time);//手动关闭颜色选择器，参数同手动打开方法一样
   color.updateColor(color);//手动更新颜色值，参数为颜色值，不合格的颜色值会给出错误提示,并且颜色选择器面板要处于开启状态
 ```
 
@@ -114,6 +117,13 @@ CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
 
 # 更新日志
 
+* 1.8.6 颜色选择器配置对象添加了响应式功能，无论是增删改颜色选择器的属性，都会触发颜色选择器的更新，同时添加了`pickerAnimationTime`属性，表示执行动画的时间，当然不建议将时间设置的过长，优化了一些代码。
+* 1.8.5 取消el属性和不传dom元素的验证，如果不传任何参数，则默认将颜色选择器添加到body中(但会生成一个容器元素来包含)。
+* 1.8.3 ~ 1.8.4 修复了一些问题，优化了一些代码
+* 1.8.2 修复了水平方向透明度改变问题,并调整了一下布局和优化了一些代码。
+* 1.8.1 修复了一些问题，并添加了`hueDirection`和`alphaDirection`属性。
+* 1.8.0 修复了添加到body中的问题，以及修改了将disabled设置为true的问题。
+* 1.7.9 修复了隐藏色块的问题。
 * 1.7.8 修复了将input隐藏的问题，优化了代码，将`openPickerAni`配置属性名更改为`pickerAnimation`。
 * 1.7.7 修复了预定义颜色的一些问题，优化了一些代码。
 * 1.7.6 修复了一些问题，开放了内部工具方法，可通过`ewColorPicker.util`访问到所有工具方法，并修改了颜色值的验证，支持英文颜色单词的传入，例如设置预定义颜色以及默认颜色。

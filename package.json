@@ -1,6 +1,6 @@
 {
   "name": "ew-color-picker",
-  "version": "1.7.8",
+  "version": "1.8.6",
   "description": "一个基于原生js而封装的颜色选择器",
   "main": "src/index.js",
   "scripts": {
@@ -25,6 +25,8 @@
   "homepage": "https://github.com/eveningwater/ew-color-picker#readme",
   "devDependencies": {
     "@babel/core": "^7.10.2",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@vuepress/plugin-back-to-top": "^1.8.2",
     "cssnano": "^4.1.10",
     "postcss-cssnext": "^3.1.0",
     "rollup-plugin-babel": "^4.4.0",

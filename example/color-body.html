@@ -9,8 +9,8 @@
     <!-- <link rel="stylesheet" href="../dist/ew-color-picker.min.css"> -->
 </head>
 <body>
-    <div>sdgsdgs</div>
-    <script src="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.js"></script>
+    <div>将颜色选择器添加到body中</div>
+    <script src="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js"></script>
     <!-- <script src="../dist/ew-color-picker.js"></script> -->
     <script>
         const color1 = new ewColorPicker({
@@ -21,7 +21,7 @@
         });
         const color2 = ewColorPicker.createColorPicker({
             el:"body",
-            hasBox:false
+            hasBox:true
         });
         // console.log(color1,color2);
     </script>

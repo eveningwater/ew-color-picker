@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo 2</title>
+    <link rel="stylesheet" href="../dist/ew-color-picker.min.css">
+    <style>
+        .ew-color-picker-container {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            /* min-width: 320px;
+            min-height: 235px; */
+            margin: 150px 220px;
+        }
+    </style>
+</head>
+<body>
+    
+</body>
+<script src="../dist/ew-color-picker.js"></script>
+<script>
+    const config = {
+        hasBox:false,
+        isClickOutside:false
+    }
+    const color1 = new ewColorPicker(config);
+    const color2 = ewColorPicker.createColorPicker(config);
+    const color3 = ewColorPicker.createColorPicker(config);
+    const color4 = ewColorPicker.createColorPicker(config);
+    const color5 = new ewColorPicker(config);
+    // ewColorPicker.util.setCss(color2.$Dom.rootElement,'margin-left',"330px");
+</script>
+</html>
