@@ -732,7 +732,7 @@
 
     };
 
-    const consoleInfo = () => console.log(`%c ew-color-picker@1.8.6%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+    const consoleInfo = () => console.log(`%c ew-color-picker@1.8.7%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
     function filterConfig(config) {
       config.hueDirection = config.hueDirection === 'horizontal' ? config.hueDirection : 'vertical';
@@ -1233,7 +1233,6 @@
       context.boxChange = boxChange;
       changeElementColor(context);
       if (context.config.hasColorInput) context.prevInputValue = context.$Dom.pickerInput.value;
-      let sliderBarHeight = 0;
       let l = parseInt(context.hsvaColor.s * panelWidth / 100),
           t = parseInt(panelHeight - context.hsvaColor.v * panelHeight / 100);
       [{
@@ -1251,14 +1250,29 @@
       }].forEach(item => util.setCss(item.el, item.prop, item.value));
 
       if (context.config.hue) {
-        sliderBarHeight = context.$Dom.hueBar.offsetHeight || 180;
-        util.setCss(context.$Dom.hueThumb, 'top', parseInt(context.hsvaColor.h * sliderBarHeight / 360) + 'px');
+        getSliderBarPosition(context.isHueHorizontal, context.$Dom.hueBar, (position, prop) => {
+          util.setCss(context.$Dom.hueThumb, prop, parseInt(context.hsvaColor.h * position / 360) + 'px');
+        });
       }
 
       if (context.config.alpha) {
-        sliderBarHeight = context.$Dom.alphaBar.offsetHeight || 180;
-        util.setCss(context.$Dom.alphaBarThumb, 'top', sliderBarHeight - context.hsvaColor.a * sliderBarHeight + 'px');
+        getSliderBarPosition(context.isAlphaHorizontal, context.$Dom.alphaBar, (position, prop) => {
+          util.setCss(context.$Dom.alphaBarThumb, prop, position - context.hsvaColor.a * position + 'px');
+        });
       }
+    }
+    /**
+     * 设置样式
+     * @param {*} direction 
+     * @param {*} bar 
+     * @param {*} thumb 
+     * @param {*} value 
+     */
+
+    function getSliderBarPosition(direction, bar, callback) {
+      let sliderPosition = direction ? bar.offsetWidth : bar.offsetHeight;
+      let sliderProp = direction ? 'left' : 'top';
+      callback(sliderPosition, sliderProp);
     }
 
     /**

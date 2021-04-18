@@ -7,104 +7,42 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>color demo</title>
     <link rel="stylesheet" href="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.css">
-    <!-- <link rel="stylesheet" href="../dist/ew-color-picker.min.css"> -->
-    <style>
-        .btn-group {
-            display: flex;
-            justify-content: flex-end;
-        }
-    </style>
 </head>
 
 <body>
-    <div class="demo1"></div>
-    <div class="demo2"></div>
-    <div class="demo3"></div>
-    <div class="demo4"></div>
-    <div class="demo5"></div>
-    <div class="btn-group">
-        <button type="button" id="openBtn">开启颜色选择器</button>
-        <button type="button" id="closeBtn">关闭颜色选择器</button>
-        <button type="button" id="updateBtn">更新颜色值</button>
-        <button type="button" id="openClickOutsideBtn">开启|关闭</button>
-    </div>
-    <script src="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.js"></script>
-    <!-- <script src="../dist/ew-color-picker.js"></script> -->
+    <div class="demo"></div>
+    <script src="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js"></script>
     <script>
-        var color1 = new ewColorPicker({
-            el: ".demo1",
-            isLog: false,
-            alpha: true,
-            predefineColor: ['#223456', 'rgba(122,35,77,.5)', 'rgba(255,255,255,1)'],
+        const colorConfig = {
+            el:".demo",
+            alpha:true,
+            alphaDirection:"horizontal",
+            openChangeColorMode:true,
             changeColor:(color) => {
-                console.log(color);
+                console.log('颜色值改变',color)
             },
-            isClickOutside:false
-        });
-        var color2 = new ewColorPicker({
-            el: '.demo2',
-            alpha: false,
-            size: {
-                width: 100,
-                height: 50
-            },
-            predefineColor: ['#223456', 'rgba(122,35,77,.5)', 'rgba(255,255,255,1)', ],
-            disabled: false,
-            defaultColor: '#eeff22',
-            pickerAnimation: 'opacity',
-            sure: function (color) {
-                console.log(color);
-            },
-            clear: function () {
-                console.log(this)
-            },
-            openOrClosePicker: function () {
-                // console.log(this);
-            },
-            isLog: true
-        });
-        var color3 = new ewColorPicker({
-            el: '.demo3',
-            alpha: true,
-            size: {
-                width: 100,
-                height: 50
-            },
-            predefineColor: ['#223456', 'rgba(122,35,77,.5)', 'rgba(255,255,255,1)', ],
-            disabled: true,
-            defaultColor: '#2396ef',
-            pickerAnimation: 'opacity',
-            sure: function (color) {
-                console.log(color);
-            },
-            clear: function () {
-                console.log(this)
-            },
-            openOrClosePicker: function (el, scope) {
-                console.log(el, scope);
-            },
-            isLog: false
-        });
-        var color4 = new ewColorPicker('.demo4');
-        ewColorPicker.createColorPicker({
-            el:".demo5",
-            ...ewColorPicker.getDefaultConfig()
-        })
-        // // console.log(ewColorPicker.getDefaultConfig())
-        document.getElementById('openBtn').onclick = function (){
-            color1.openPicker();
+            hueDirection:"horizontal",
+            isClickOutside:false,
+            pickerAnimationTime:350,
+            predefineColor:[
+                "red",
+                "#2396ef",
+                {
+                    color:"rgba(255,231,11,.3)"
+                },
+                {
+                    color:"hsla(255,23%,11%,.9)",
+                    disabled:true
+                },
+                {
+                    color:"hsla(125,53%,31%)",
+                },
+                {
+                    color:"rgb(105,53,31)",
+                }
+            ]
         }
-        document.getElementById('closeBtn').onclick = function (){
-            color1.closePicker();
-        }
-        document.getElementById("updateBtn").onclick = function(){
-            color4.updateColor("#2396ef");
-        }
-        document.getElementById("openClickOutsideBtn").onclick = function(){
-            color1.config.isClickOutside = !color1.config.isClickOutside;
-            color1.config.pickerFlag = false;
-            color1.render(color1.rootElement,color1.config);
-        }
+        const color = new ewColorPicker(colorConfig);
     </script>
 </body>
 
