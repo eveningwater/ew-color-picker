@@ -32,12 +32,27 @@ import { colorHsvaToRgba,colorRgbaToHex } from '../color/color';
             value: colorRgbaToHex(colorHsvaToRgba(cloneColor(context.hsvaColor)))
         }
     ].forEach(item => util.setCss(item.el, item.prop, item.value));
+
     if (context.config.hue) {
-        sliderBarHeight = context.$Dom.hueBar.offsetHeight || 180;
-        util.setCss(context.$Dom.hueThumb, 'top', parseInt(context.hsvaColor.h * sliderBarHeight / 360) + 'px');
+        getSliderBarPosition(context.isHueHorizontal,context.$Dom.hueBar,(position,prop) => {
+            util.setCss(context.$Dom.hueThumb, prop, parseInt(context.hsvaColor.h * position / 360) + 'px');
+        });
     }
     if (context.config.alpha) {
-        sliderBarHeight = context.$Dom.alphaBar.offsetHeight || 180;
-        util.setCss(context.$Dom.alphaBarThumb, 'top', sliderBarHeight - context.hsvaColor.a * sliderBarHeight + 'px');
+        getSliderBarPosition(context.isAlphaHorizontal,context.$Dom.alphaBar,(position,prop) => {
+            util.setCss(context.$Dom.alphaBarThumb, prop, position - context.hsvaColor.a * position + 'px');
+        });
     }
+}
+/**
+ * 设置样式
+ * @param {*} direction 
+ * @param {*} bar 
+ * @param {*} thumb 
+ * @param {*} value 
+ */
+export function getSliderBarPosition(direction,bar,callback){
+    let sliderPosition = direction ? bar.offsetWidth : bar.offsetHeight;
+    let sliderProp = direction ? 'left' : 'top';
+    callback(sliderPosition,sliderProp);
 }
