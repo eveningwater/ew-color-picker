@@ -50,7 +50,8 @@ export class Observer {
         this.value = value;
         this.reactive = null;
         this.dep = new Dep();
-        def(value, '__ob__', this);
+        // 为了区分于vue,添加独特的标志属性
+        def(value, '__ew__color__picker__ob__', this);
         this.walk(value);
     }
     walk(value) {

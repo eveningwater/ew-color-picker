@@ -171,7 +171,7 @@ export function staticRender(element, config) {
     }
     this._watcher = new RenderWatcher(this);
     // 如果config上有__ob__属性，则表明是一个响应式对象
-    if(!('__ob__' in this.config)){
+    if(!('__ew__color__picker__ob__' in this.config)){
         this.config = new Observer(config).reactive;
     }
     this.startMain(mountElement, config);

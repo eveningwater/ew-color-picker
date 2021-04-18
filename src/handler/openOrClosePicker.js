@@ -37,9 +37,12 @@ export function openAndClose(scope) {
  * 手动关闭颜色选择器
  * @param {*} ani 
  */
-export function handleClosePicker(ani) {
+export function handleClosePicker(ani,time) {
     if (ani) {
         this.config.pickerAnimation = ani;
+    }
+    if(time){
+        this.config.pickerAnimationTime = time;
     }
     if (this._privateConfig.pickerFlag) {
         this._privateConfig.pickerFlag = false;
@@ -50,9 +53,12 @@ export function handleClosePicker(ani) {
  * 手动打开颜色选择器
  * @param {*} ani 
  */
-export function handleOpenPicker(ani) {
+export function handleOpenPicker(ani,time) {
     if (ani) {
         this.config.pickerAnimation = ani;
+    }
+    if(time){
+        this.config.pickerAnimationTime = time;
     }
     if (!this._privateConfig.pickerFlag) {
         this._privateConfig.pickerFlag = true;

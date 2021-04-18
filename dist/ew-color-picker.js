@@ -909,8 +909,9 @@
       constructor(value) {
         this.value = value;
         this.reactive = null;
-        this.dep = new Dep();
-        def(value, '__ob__', this);
+        this.dep = new Dep(); // 为了区分于vue,添加独特的标志属性
+
+        def(value, '__ew__color__picker__ob__', this);
         this.walk(value);
       }
 
@@ -1108,7 +1109,7 @@
 
       this._watcher = new RenderWatcher(this); // 如果config上有__ob__属性，则表明是一个响应式对象
 
-      if (!('__ob__' in this.config)) {
+      if (!('__ew__color__picker__ob__' in this.config)) {
         this.config = new Observer(config).reactive;
       }
 
@@ -1174,7 +1175,7 @@
 
     function changeAlphaBar(scope) {
       if (!scope.$Dom.alphaBarBg) return;
-      let position = scope.isAlphaHorizontal === 'horizontal' ? 'to right' : 'to top';
+      let position = scope.isAlphaHorizontal ? 'to right' : 'to top';
       util.setCss(scope.$Dom.alphaBarBg, 'background', 'linear-gradient(' + position + ',' + colorHsvaToRgba(scope.hsvaColor, 0) + ' 0%,' + colorHsvaToRgba(scope.hsvaColor, 1) + ' 100%)');
     }
 
@@ -1300,9 +1301,13 @@
      * @param {*} ani 
      */
 
-    function handleClosePicker(ani) {
+    function handleClosePicker(ani, time) {
       if (ani) {
         this.config.pickerAnimation = ani;
+      }
+
+      if (time) {
+        this.config.pickerAnimationTime = time;
       }
 
       if (this._privateConfig.pickerFlag) {
@@ -1315,9 +1320,13 @@
      * @param {*} ani 
      */
 
-    function handleOpenPicker(ani) {
+    function handleOpenPicker(ani, time) {
       if (ani) {
         this.config.pickerAnimation = ani;
+      }
+
+      if (time) {
+        this.config.pickerAnimationTime = time;
       }
 
       if (!this._privateConfig.pickerFlag) {

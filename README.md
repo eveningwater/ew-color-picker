@@ -47,6 +47,7 @@
       disabled:false,//是否禁止开启选择器面板
       defaultColor:'#eeff22',//默认颜色
       pickerAnimation:'opacity',//或者'height'，开启颜色选择器面板的动画
+      pickerAnimationTime:300,//动画执行时间，默认是200
       sure:function(color){
           console.log(color);
       },//点击确定按钮的回调
@@ -79,8 +80,8 @@
   //当然还提供了一个api，可以获取默认的配置对象
   ewColorPicker.getDefaultConfig();
   //实例化的颜色选择器类，我们还提供了三个api，如下:
-  color.openPicker(pickerAnimation);//手动打开颜色选择器，参数为动画类型，即height或opacity
-  color.closePicker(pickerAnimation);//手动关闭颜色选择器，参数同手动打开方法一样
+  color.openPicker(pickerAnimation,time);//手动打开颜色选择器，参数为动画类型，即height或opacity
+  color.closePicker(pickerAnimation,time);//手动关闭颜色选择器，参数同手动打开方法一样
   color.updateColor(color);//手动更新颜色值，参数为颜色值，不合格的颜色值会给出错误提示,并且颜色选择器面板要处于开启状态
 ```
 
