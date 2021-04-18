@@ -1106,3 +1106,17 @@ ewColorPicker.util.setSomeCss(test, [
 ])
 ```
 
+## 响应式对象
+
+颜色选择器的配置对象是一个响应式对象，这也就意味着如果修改或者增加或者删除颜色选择器配置对象的属性就会引起颜色选择器的重新渲染。如:
+
+```js
+// colorConfig不是响应式对象
+const colorConfig = Object.create(null);
+const color = new ewColorPicker(colorConfig);
+// 从实例上读取的config对象是一个响应式对象，因此增加了alpha属性，则颜色选择器会触发颜色选择器的重新渲染
+color.config.alpha = true;
+```
+
+这是因为颜色选择器在内部使用`proxy`代理了颜色选择器的配置对象，然后将颜色选择器的配置对象变成了一个响应式对象，当对象的属性改变，则触发颜色选择器的重新渲染。
+
