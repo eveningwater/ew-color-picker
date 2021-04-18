@@ -2,13 +2,7 @@
 
 > 在线示例
 
-* [在线示例1](https://eveningwater.github.io/ew-color-picker/example/color.html)
-* [在线示例2](https://eveningwater.github.io/ew-color-picker/example/color-body.html)
-* [在线示例3](https://eveningwater.github.io/ew-color-picker/example/color-predefine.html)
-* [在线示例4](https://eveningwater.github.io/ew-color-picker/example/color-show.html)
-* [在线示例5](https://eveningwater.github.io/ew-color-picker/example/color-size.html)
-* [在线示例6](https://eveningwater.github.io/ew-color-picker/example/color-box-disabled.html)
-* [在线示例7](https://eveningwater.github.io/ew-color-picker/example/color-mode.html)
+* [在线示例](https://eveningwater.github.io/ew-color-picker/example/color.html)
 
 ## vue2.x示例
 

@@ -14,6 +14,8 @@ const color = new ewColorPicker('div');
 
 ## 配置对象详解
 
+从1到20是值属性，而20后面的就是方法属性。
+
 ### el属性
 
 1.el?(可选属性)
@@ -111,7 +113,252 @@ color.beforeInit("#demo",{
     ]
 })
 ```
+### disabled属性
 
+6.disabled?(可选属性)
+
+该属性的设置会直接禁用掉颜色选择器的所有点击。默认值是false，是一个布尔值。如:
+
+```js
+    const color1 = new ewColorPicker({
+        disabled:true,
+    });
+    const color2 = ewColorPicker.createColorPicker({
+        disabled:true,
+        hasBox:false
+    });
+```
+### defaultColor属性
+
+7.defaultColor?(可选属性)
+
+该属性是一个字符串值属性，顾名思义，就是定义颜色选择器的默认颜色值，支持颜色选择器所支持的颜色模式，默认值为空。如:
+
+```js
+const color = new ewColorPicker({
+    defaultColor:"#2396ef",
+});
+```
+### pickerAnimation属性
+
+8.pickerAnimation?(可选属性)
+
+该属性是一个字符串属性，有两个值`height`或`opacity`,默认值是`height`。表示打开颜色选择器或关闭颜色选择器所执行的动画类型。如:
+
+```js
+const color = new ewColorPicker({
+    pickerAnimation:"opacity",
+});
+```
+
+### pickerAnimationTime属性
+
+9.pickerAnimationTime?(可选属性)
+
+该属性是一个数值型属性，可传入任意的数值，但是建议传入的数值大小在`0~1000`以内，否则会很慢才执行动画，所以该属性表示打开或关闭颜色选择器所执行的动画时间。如:
+
+```js
+const color = new ewColorPicker({
+    pickerAnimationTime:450,
+});
+```
+
+### hasBox属性
+
+10.hasBox?(可选属性)
+
+该属性表示是否显示色块，默认值为true,是一个布尔值。如:
+
+```js
+const color = new ewColorPicker({
+    hasBox:false,
+});
+
+```
+
+### isClickOutside属性
+
+11.isClickOutside?(可选属性)
+
+该属性是一个布尔值，默认值是true，表示是否允许点击颜色面板区域之外关闭颜色面板。如:
+
+```js
+const color = new ewColorPicker({
+    isClickOutside:false,
+});
+```
+
+### hasClear属性
+
+12.hasClear?(可选属性)
+
+该属性表示是否显示清空按钮，是一个布尔值，默认值是true。如:
+
+```js
+const color = new ewColorPicker({
+    hasClear:false,
+});
+```
+
+### hasSure属性
+
+13.hasSure?(可选属性)
+
+该属性表示是否显示确定按钮，是一个布尔值，默认值是true。如:
+
+```js
+const color = new ewColorPicker({
+    hasSure:false,
+});
+```
+
+### hasColorInput属性
+
+14.hasColorInput?(可选属性)
+
+该属性表示是否显示输入框，是一个布尔值，默认值是true。如:
+
+```js
+const color = new ewColorPicker({
+    hasColorInput:false,
+});
+```
+
+### boxDisabled属性
+
+15.boxDisabled?(可选属性)
+
+该属性表示是否禁用点击色块元素打开或关闭颜色选择器，是一个布尔值，默认值是false。如:
+
+```js
+const color = new ewColorPicker({
+    boxDisabled:true,
+});
+```
+
+> 注意:该属性和disabled属性有所区别，它只是禁用了色块的点击，而disabled属性则是禁用了所有的点击。并且该属性在hasBox为false的情况下失效，因为都没有色块元素了怎么可能还能禁用，所以要想该属性生效，就不能将hasBox属性设置为false。
+
+### openChangeColorMode属性
+
+16.openChangeColorMode?(可选属性)
+
+该属性表示是否开启颜色转换模式，是一个布尔值，默认值是false。请注意该值会修改颜色选择器的布局。如:
+
+```js
+const color = new ewColorPicker({
+    openChangeColorMode:true,
+});
+```
+
+### changeBoxByChangeColor属性
+
+17.changeBoxByChangeColor?(可选属性)
+
+该属性表示是否允许色块的背景色随着颜色的改变而改变。也就是说当我们打开颜色选择器面板改变颜色的时候，将该值设置为true，我们就会看到色块的背景色随之而改变。默认值是false。如:
+
+```js
+const color = new ewColorPicker({
+    changeBoxByChangeColor:true,
+});
+```
+
+### hueDirection属性
+
+18.hueDirection?(可选属性)
+
+该属性是一个字符串值的属性，表示色阶柱为横向还是竖向布局。值只能是`horizontal`或`vertical`,默认是`vertical`。如:
+
+```js
+const color = new ewColorPicker({
+    hueDirection:"horizontal",
+});
+```
+
+### alphaDirection属性
+
+19.alphaDirection?(可选属性)
+
+该属性同`hueDirection`类似，表示透明度柱为横向还是竖向布局。值只能是`horizontal`或`vertical`,默认是`vertical`。另外需要注意该值生效必须要将`alpha`设置为true。如:
+
+
+```js
+const color = new ewColorPicker({
+    alphaDirection:"horizontal",
+    alpha:true
+});
+```
+
+### isLog属性
+
+20.isLog?(可选属性)
+
+该属性表示是否运行在控制台打印颜色选择器相关信息。默认值是true,设置为false将不会在控制台看到颜色选择器的相关信息。如:
+
+```js
+const color = new ewColorPicker({
+    isLog:false
+});
+```
+
+### sure属性
+
+21.sure?(可选属性)
+
+该属性的值是一个函数或者方法，表示点击确定按钮所执行的回调，回调函数有两个参数，第一个是颜色值，第二个则是当前颜色选择器实例对象。如:
+
+```js
+const colorPicker = new ewColorPicker({
+    sure:(color,context) => {
+        console.log('选中的颜色值',color);
+        console.log('当前颜色选择器实例对象',context);
+    }
+});
+```
+
+### clear属性
+
+22.clear?(可选属性)
+
+该属性的值是一个函数或者方法，类似`clear`属性，表示点击清空按钮所执行的回调，回调函数有二个参数，第一个是默认颜色值，第二个则是当前颜色选择器实例对象。如:
+
+```js
+const colorPicker = new ewColorPicker({
+    clear:(defaultColor,context) => {
+        console.log('默认的颜色值',defaultColor);
+        console.log('当前颜色选择器实例对象',context);
+    }
+});
+```
+
+### openOrClosePicker属性
+
+23.openOrClosePicker?(可选属性)
+
+该属性的值是一个函数或者方法，类似`clear`属性，表示点击色块的回调，回调函数有二个参数，第一个是颜色选择器的实例化根元素，第二个则是当前颜色选择器实例对象。如:
+
+```js
+const colorPicker = new ewColorPicker({
+    openOrClosePicker:(el,context) => {
+        console.log('当前根元素',el);
+        console.log('当前颜色选择器实例对象',context);
+    }
+});
+```
+
+### changeColor属性
+
+24.changeColor?(可选属性)
+
+该属性的值是一个函数或者方法，类似`clear`属性，表示颜色值改变所触发的回调，回调函数有一个参数，即更改后的颜色值。如:
+
+```js
+const colorPicker = new ewColorPicker({
+    changeColor:(color) => {
+        console.log('颜色值改变',color);
+    }
+});
+```
+> 注意:该方法是只要颜色值改变就会触发，例如你传入一个默认颜色值`defaultColor`,也会触发该函数的执行，或者是当有色块盒子的时候，打开颜色选择器的时候也会触发，因为打开颜色选择器的时候也会为颜色面板赋值一个默认颜色值。
 
 ## 全局方法
 
@@ -184,13 +431,13 @@ color.init("div",{ hasBox:false });
 
 3.render方法
 
-顾名思义就是渲染颜色选择器的方法，该方法不建议单独使用，故不作详解,感兴趣可参看[源码](https://github.com/eveningwater/ew-color-picker/blob/master/src/render.js)。
+顾名思义就是渲染颜色选择器的方法，也是一个核心私有方法，传入二个参数，第一个是一个DOM元素，第二个则是一个配置对象。该方法不建议单独使用，故不作详解,感兴趣可参看[源码](https://github.com/eveningwater/ew-color-picker/blob/master/src/render/render.js)。
 
 ### startMain方法
 
 4.startMain方法
 
-颜色选择器的主要逻辑操作都在这个方法中，该方法也也不建议单独使用，故不作详解，感兴趣可参看[源码](https://github.com/eveningwater/ew-color-picker/blob/master/src/main.js)。
+颜色选择器的主要逻辑操作都在这个方法中，该方法是一个核心私有方法，也不建议单独使用，故不作详解，感兴趣可参看[源码](https://github.com/eveningwater/ew-color-picker/blob/master/src/layout/main.js)。
 
 ### bindEvent方法
 
@@ -245,7 +492,49 @@ color.bindEvent(demo, (context, el, x, y) => {
 > 注意:这样使用这个方法不太好，还是使用内置工具方法`bindEvent`好。
 
 
-### 
+### updateColor方法
+
+6.updateColor方法
+
+顾名思义，该方法的含义就是更新颜色值，用于手动去触发颜色选择器的颜色改变，可传入一个颜色值的参数，颜色值必须是一个合格的颜色。如果传入不合格的颜色，那么则会在控制台给出错误提示，并且还要让颜色面板属于开启中的状态，否则会给出错误警告。如:
+
+```js
+    const color = new ewColorPicker({
+        hasBox:false
+    });
+    color.updateColor('#2396ef');
+```
+这在自定义颜色选择器的颜色选择的时候非常有用，例如在vue-cli中，使用input双向绑定来替换掉颜色选择器的默认input框，这时候就需要在input的change事件中调用该方法触发该颜色面板的颜色改变了。如以下一个示例:
+
+<iframe height="265" style="width: 100%;" scrolling="no" title="ew-color-picker" src="https://codepen.io/eveningwater/embed/KKaBreE?height=265&theme-id=light&default-tab=js,result" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href='https://codepen.io/eveningwater/pen/KKaBreE'>ew-color-picker</a> by eveningwater
+  (<a href='https://codepen.io/eveningwater'>@eveningwater</a>) on <a href='https://codepen.io'>CodePen</a>.
+</iframe>
+
+### openPicker方法
+
+7.openPicker方法
+
+该方法允许传入一个字符串参数和一个数值型参数，用于手动开启颜色选择器面板，这个字符串参数只能是`height`或者`opacity`,表示以什么样的动画方式去打开颜色选择器。而数值型参数则表示动画的执行时间，不建议设置的过大，在1000以内即可，因为1000以上会很慢。如:
+
+```js
+    const color = new ewColorPicker();
+    color.openPicker('height',300);
+    //或color.openPicker('opacity',300);
+```
+
+### closePicker方法
+
+8.closePicker方法
+
+该方法和`openPicker`方法的参数一样，用于手动关闭颜色选择器。如:
+
+```js
+const color = new ewColorPicker();
+color.closePicker('height',300);
+//或color.closePicker('opacity',300);
+```
+
 ## 内置工具方法详解
 
 内置工具方法都被放在`ewColorPicker.util`对象中，一共有`41`个工具方法，可以通过在页面中引入插件的js文件，然后打印这个工具方法对象，下面让我们来看一看都有哪些工具方法吧！
@@ -313,7 +602,7 @@ ewColorPicker.util.baseClickOutSide(test,false,() => {
 });
 ```
 
-这个功能和常用。
+这个功能十分常用。
 
 ### bindEvent方法
 
@@ -344,4 +633,476 @@ util.bindEvent(demo, (context, el, x, y) => {
 
 这样就实现了一个限定在盒子区域内拖拽改变被拖拽元素位置偏移的功能。
 
+### `colorHexToRgba`方法
+
+6.`colorHexToRgba`方法
+
+该方法就是将一个hex颜色(如:`#fff`)转换成`rgba`颜色。传入二个参数，第一个参数为hex颜色，第二个参数为透明度。如:
+
+```js
+ewColorPicker.util.colorHexToRgba("#fff",0.4);
+//返回rgba(255,255,255,0.4)
+```
+
+### colorHslaToRgba方法
+
+7.`colorHslaToRgba`方法
+
+该方法就是将一个hsla颜色(如:"hsla(123,22%,15%,.3)")转换成`rgba`颜色。传入一个参数，即hsla颜色值对象。如:
+
+```js
+ewColorPicker.util.colorHslaToRgba({
+    h:123,
+    s:22,
+    l:15,
+    a:.3
+});
+//返回rgba(30,47,31,0.3)
+```
+
+### `colorHsvaToRgba`方法
+
+8.`colorHsvaToRgba`方法
+
+该方法就是将一个hsva颜色转换成rgba颜色。传入二个参数,第一个参数为hsva颜色值对象，第二个参数代表透明度，取值`0~1`。如:
+
+```js
+ewColorPicker.util.colorHsvaToRgba({
+    h:123,
+    s:22,
+    v:15,
+    a:.3
+},.4);
+//返回rgba(30,39,31,0.4)
+```
+
+### `colorRgbaToHex`方法
+
+9.`colorRgbaToHex`方法
+
+该方法就是将一个rgba颜色转换成hex颜色。传入一个参数，即rgba颜色字符串。如:
+
+
+```js
+ewColorPicker.util.colorRgbaToHex("rgba(123,22,33,.6)");
+//返回#7B1621
+```
+
+###`colorRgbaToHsla`方法
+
+10.`colorRgbaToHsla`方法
+
+该方法就是将一个rgba颜色转换成hsla颜色。传入一个rgba颜色字符串。如:
+
+```js
+ewColorPicker.util.colorRgbaToHsla("rgba(123,22,33,.6)");
+//返回{"colorStr":"hsla(354,70%,29%,0.6)","colorObj":{"h":5.891089108910891,"s":0.6965517241379311,"l":0.28431372549019607,"a":0.6}}
+```
+
+###`colorRgbaToHsva`方法
+
+11.`colorRgbaToHsva`方法
+
+该方法就是将一个rgba颜色转换成hsva颜色。传入一个rgba颜色字符串。如:
+
+```js
+ewColorPicker.util.colorRgbaToHsva("rgba(123,22,33,.6)");
+//返回{"h":353.46534653465346,"s":82.11382113821138,"v":48.23529411764706,"a":0.6}
+```
+
+###`colorToRgba`方法
+
+12.`colorToRgba`方法
+
+将任意颜色值转换成rgba颜色。传入一个合格的颜色值，如:
+
+```js
+ewColorPicker.util.colorToRgba("red");
+//返回rgba(255,0,0,1)
+ewColorPicker.util.colorToRgba("#fff");
+//返回rgba(255,255,255,1)
+ewColorPicker.util.colorToRgba("hsla(111,22%,11%,.4)");
+//返回rgba(24,34,22,0.4)
+```
+
+###`createUUID`方法
+
+13.`createUUID`方法
+
+该方法不用传入任何参数，随机返回一个唯一的`uuid`。如:
+
+```js
+    ewColorPicker.util.createUUID();
+    //返回类似这样的"20e8-1618715879335-74736"
+```
+###`deepCloneObjByJSON`方法
+
+14.`deepCloneObjByJSON`方法
+
+该方法用于复制一个对象，传入一个对象参数，由于内部是对`JSON.parse`与`JSON.stringify`方法的封装，因此会有一些缺陷。如:
+
+```js
+ewColorPicker.util.deepCloneObjByJSON({ name:"eveningwater"});
+//返回{ name:"eveningwater"}
+```
+
+###`deepCloneObjByRecursion`方法
+
+15.`deepCloneObjByRecursion`方法
+
+该方法作用等同`deepCloneObjByJSON`，不同的是它的内部是通过递归实现的，所以与`deepCloneObjByJSON`方法也有一些不同。如:
+
+```js
+ewColorPicker.util.deepCloneObjByRecursion({ name:"eveningwater"});
+//返回{ name:"eveningwater"}
+```
+
+### `ewAssign`方法
+
+16.`ewAssign`方法
+
+该方法传入多个对象参数，表示将多个对象合并，作用等同`Object.assign`方法。如:
+
+```js
+ewColorPicker.util.ewAssign({ name:"eveningwater"},{ name:"waterXi"});
+//返回{ name:"waterXi"}
+```
+
+### `ewError`方法
+
+17.`ewError`方法
+
+该方法用于在控制台打印出错误信息。传入一个字符串参数。如:
+
+```js
+ewColorPicker.util.ewError("error");
+//返回[ewColorPicker warn] Error: error
+```
+
+### `ewObjToArray`方法
+
+18.`ewObjToArray`方法
+
+该方法用于将一个类数组转换成真正的数组,传入参数为一个类数组对象。如:
+
+```js
+function test(){
+    return ewColorPicker.util.ewObjToArray(arguments);
+}
+test(1,2,3);
+//返回[1, 2, 3]
+```
+
+### `ewWarn`方法
+
+19.`ewWarn`方法
+
+该方法用于在控制台打印一个警告信息，传入参数为一个字符串。如:
+
+```js
+ewColorPicker.util.ewWarn("warning");
+//返回[ewColorPicker warn] warning
+```
+
+### `getCss`方法
+
+20.`getCss`方法
+
+该方法用于获取一个DOM元素的css样式，传入二个参数，第一个为DOM元素，第二个为获取的css样式属性名。如:
+
+```js
+const test = document.getElementById("test")
+ewColorPicker.util.getCss(test,"height");
+//如果获取到了高度则返回test元素的高度，如高度为100px则返回100px的字符串
+```
+
+### `getRect`方法
+
+21.`getRect`方法
+
+该方法用于返回一个DOM元素的坐标相关信息。传入一个DOM元素的参数。如:
+
+```js
+const test = document.getElementById("test")
+ewColorPicker.util.getRect(test);
+//返回类似{x:0,y:0,width:200 ... }类似的结构对象
+```
+
+### `hasClass`方法
+
+22.`hasClass`方法
+
+该方法用于判断某个DOM元素是否拥有某些类名。有二个参数，第一个参数为DOM元素，第二个参数为一个类名数组或者一个类名字符串。如:
+
+```js
+const test = document.getElementById("test")
+ewColorPicker.util.hasClass(test,"test");
+ewColorPicker.util.hasClass(test,["test","demo"]);
+//返回true或者false
+```
+
+### `isAlphaColor`方法
+
+23.`isAlphaColor`方法
+
+判断一个颜色值是否是含有透明度的颜色。传入一个颜色值参数。如:
+
+```js
+ewColorPicker.util.isAlphaColor("#fff");
+//返回false
+ewColorPicker.util.isAlphaColor("rgba(255,222,11,.4)");
+//返回true
+```
+
+### `isBoolean`方法
+
+24.`isBoolean`方法
+
+判断传入的值是否是一个布尔值。如:
+
+```js
+ewColorPicker.util.isBoolean("#fff");
+//返回false
+ewColorPicker.util.isBoolean(false);
+//返回true
+```
+
+### `isDeepArray`方法
+
+25.`isDeepArray`方法
+
+判断传入的值是否是一个数组。如:
+
+```js
+ewColorPicker.util.isDeepArray("#fff");
+//返回false
+ewColorPicker.util.isDeepArray([]);
+//返回true
+```
+
+### `isDeepObject`方法
+
+26.`isDeepObject`方法
+
+判断传入的值是否是一个对象。如:
+
+```js
+ewColorPicker.util.isDeepObject(1);
+//返回false
+ewColorPicker.util.isDeepObject([]);
+//返回false
+ewColorPicker.util.isDeepObject({});
+//返回true
+```
+
+### `isDeepRegExp`方法
+
+27.`isDeepRegExp`方法
+
+判断传入的值是否是一个正则表达式。如:
+
+
+```js
+ewColorPicker.util.isDeepRegExp(1);
+//返回false
+ewColorPicker.util.isDeepRegExp([]);
+//返回false
+ewColorPicker.util.isDeepRegExp(/123/g);
+//返回true
+```
+
+### `isDom`方法
+
+28.`isDom`方法
+
+判断传入的值是否是一个DOM元素。如:
+
+```js
+ewColorPicker.util.isDom(1);
+//返回false
+ewColorPicker.util.isDom(document.querySelectorAll('div'));
+//返回true
+ewColorPicker.util.isDom(document.getElementById("demo"));
+//返回true
+```
+
+### `isFunction`方法
+
+29.`isFunction`方法
+
+判断传入的值是否是一个函数。如:
+
+```js
+ewColorPicker.util.isFunction(123);
+//返回false
+ewColorPicker.util.isFunction(function(){ console.log('是一个函数')});
+//返回true
+ewColorPicker.util.isFunction(() => {});
+//返回true
+```
+
+### `isNull`方法
+
+30.`isNull`方法
+
+判断传入的值是否是一个null值。如:
+
+```js
+ewColorPicker.util.isNull(123);
+//返回false
+ewColorPicker.util.isNull(null);
+//返回true
+```
+
+### `isNumber`方法
+
+31.`isNumber`方法
+
+判断传入的值是否是一个数值。如:
+
+```js
+ewColorPicker.util.isNumber(123);
+//返回true
+ewColorPicker.util.isNumber(null);
+//返回false
+```
+
+### `isShallowObject`方法
+
+32.`isShallowObject`方法
+
+该方法作用等同`isDeepObject`。表示判断一个值是否是对象，不同的是该方法会将函数数组之类的对象判断为true。如:
+
+```js
+ewColorPicker.util.isShallowObject(123);
+//返回false
+ewColorPicker.util.isShallowObject([]);
+//返回true
+ewColorPicker.util.isShallowObject({});
+//返回true
+```
+
+### `isString`方法
+
+33.`isString`方法
+
+判断传入的值是否是一个字符串。如:
+
+```js
+ewColorPicker.util.isString(123);
+//返回false
+ewColorPicker.util.isString('');
+//返回true
+ewColorPicker.util.isString('aaa');
+//返回true
+```
+ 
+### `isUndefined`方法
+
+34.`isUndefined`方法
+
+判断传入的值是否是一个undefined值。如:
+
+```js
+ewColorPicker.util.isUndefined(123);
+//返回false
+ewColorPicker.util.isUndefined();
+//返回true
+ewColorPicker.util.isUndefined(undefined);
+//返回true
+```
+
+### `isValidColor`方法
+
+35.`isValidColor`方法
+
+判断传入的颜色值是否是一个合格的颜色值。如:
+
+```js
+ewColorPicker.util.isValidColor("#fff");
+//返回true
+ewColorPicker.util.isValidColor("red");
+//返回true
+ewColorPicker.util.isValidColor("rgba(123,111,22)");
+//返回true
+```
+
+### `off`方法
+
+36.`off`方法
+
+该方法用于给移除一个事件监听器，传入四个参数，第一个为DOM元素，第二个为事件名，第三个参数为事件监听器，第四个参数为一个布尔值。如:
+
+```js
+const test = document.getElementById("test");
+const handler = e => console.log(e.target.tagName);
+ewColorPicker.util.off(test,'click',handler);
+```
+
+### `on`方法
+
+37.`on`方法
+
+该方法用于添加一个时间监听器，参数等同`off`方法。如:
+
+```js
+const test = document.getElementById("test");
+const handler = e => console.log(e.target.tagName);
+ewColorPicker.util.on(test,'click',handler);
+```
+
+### `removeAllSpace`方法
+
+38.`removeAllSpace`方法
+
+该方法用于移除一个字符串的所有空白，传入参数即一个字符串。如:
+
+```js
+ewColorPicker.util.removeAllSpace("a   b   c");
+//返回abc
+```
+
+### `removeClass`方法
+
+39.`removeClass`方法
+
+该方法用于移除一个元素的类名。传入二个参数，第一个参数为dom元素，第二个参数为移除的类名字符串。如:
+
+```js
+const test = document.getElementById("test");
+ewColorPicker.util.removeClass(test,"test");
+//移除类名为test的class
+```
+
+### `setCss`方法
+
+40.`setCss`方法
+
+该方法用于给一个DOM元素设置样式，传入三个参数，第一个参数为DOM元素，第二个参数为样式名，第三个参数为样式值。如:
+
+```js
+const test = document.getElementById("test");
+ewColorPicker.util.setCss(test,"width","100px");
+```
+
+### `setSomeCss`方法
+
+41.`setSomeCss`方法
+
+该方法用于给一个DOM元素设置多个样式，传入二个参数，第一个参数为DOM元素，第二个参数为样式数组，结构如：`[{ prop,"left",propValue:"10px" }]`;如:
+
+```js
+const test = document.getElementById("test");
+const left = 0,top = 0;
+ewColorPicker.util.setSomeCss(test, [
+    {
+        prop: "left",
+        value: left + 'px'
+    },
+    {
+        prop: "top",
+        value: top + 'px'
+    }
+])
+```
 

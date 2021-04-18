@@ -27,29 +27,41 @@
         el: "div",
         ...config
     });
-    color.beforeInit("#demo",{
-        predefineColor: [
-            {
-                color:"#fff"
+    color.beforeInit("#demo", {
+        predefineColor: [{
+                color: "#fff"
             },
             {
-                color:"red",
-                disabled:true
+                color: "red",
+                disabled: true
             },
             {
-                color:"hsla(123,36%,55%,.6)",
-                disabled:false
+                color: "hsla(123,36%,55%,.6)",
+                disabled: false
             },
             "rgba(233,123,22,.6)"
         ]
     });
-    console.log(ewColorPicker.util,Object.keys(ewColorPicker.util).length);
+    console.log(ewColorPicker.util, Object.keys(ewColorPicker.util).length);
     // function Test(){}
     // const getTest = () => console.log('hello,ewColorPicker!');
     // ewColorPicker.util.addMethod(Test,'getTest',getTest);
     // //此时你会在Test的原型上看到又一个getTest方法
     // const test = new Test();
     // test.getTest();//在控制台打印hello,ewColorPicker!
+    // console.log(ewColorPicker.util.colorHexToRgba("#fff", .4), ewColorPicker.util.colorHslaToRgba({
+    //     h: 123,
+    //     s: 22,
+    //     l: 15,
+    //     a: .3
+    // }), ewColorPicker.util.colorHsvaToRgba({
+    //     h: 123,
+    //     s: 22,
+    //     v: 15,
+    //     a: .3
+    // }, .4),ewColorPicker.util.colorRgbaToHex("rgba(123,22,33,.6)"),ewColorPicker.util.colorRgbaToHsla("rgba(123,22,33,.6)"))
+    // console.log(JSON.stringify(ewColorPicker.util.colorRgbaToHsva("rgba(123,22,33,.6)")))
+    // console.log(ewColorPicker.util.colorToRgba("red"),ewColorPicker.util.colorToRgba("#fff"),ewColorPicker.util.colorToRgba("hsla(111,22%,11%,.4)"))
 </script>
 
 </html>
