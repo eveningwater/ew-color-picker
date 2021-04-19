@@ -1874,11 +1874,14 @@
 
       if (config.hue) {
         this.$Dom.hueBar = getELByClass(ele, 'ew-color-slider-bar');
-        this.$Dom.hueThumb = getELByClass(ele, 'ew-color-slider-thumb'); //hue的点击事件
+        this.$Dom.hueThumb = getELByClass(ele, 'ew-color-slider-thumb');
 
-        util.on(this.$Dom.hueBar, 'click', event => changeHue(scope, this.isHueHorizontal ? event.x : event.y)); //hue 轨道的拖拽事件
+        if (!config.disabled) {
+          //hue的点击事件
+          util.on(this.$Dom.hueBar, 'click', event => changeHue(scope, this.isHueHorizontal ? event.x : event.y)); //hue 轨道的拖拽事件
 
-        this.bindEvent(this.$Dom.hueThumb, (scope, el, x, y) => changeHue(scope, this.isHueHorizontal ? x : y));
+          this.bindEvent(this.$Dom.hueThumb, (scope, el, x, y) => changeHue(scope, this.isHueHorizontal ? x : y));
+        }
       }
 
       if (config.alpha) {
@@ -1901,13 +1904,28 @@
         showColorPickerWithNoBox(this);
       }
 
-      if (config.isClickOutside) {
-        handleClickOutSide(this, config);
-      }
-
       if (config.hasColorInput) {
         this.$Dom.pickerInput = getELByClass(ele, 'ew-color-input');
         util.on(this.$Dom.pickerInput, 'blur', event => onInputColor(scope, event.target.value));
+      }
+
+      if (config.disabled) {
+        if (config.hasColorInput) {
+          if (!util.hasClass(this.$Dom.pickerInput, 'ew-input-disabled')) {
+            this.$Dom.pickerInput.classList.add('ew-input-disabled');
+            this.$Dom.pickerInput.disabled = true;
+          }
+        }
+
+        if (!util.hasClass(this.$Dom.picker, 'ew-color-picker-disabled')) {
+          this.$Dom.picker.classList.add('ew-color-picker-disabled');
+        }
+
+        return false;
+      }
+
+      if (config.isClickOutside) {
+        handleClickOutSide(this, config);
       }
 
       if (config.hasClear) {
@@ -1931,21 +1949,6 @@
           util.on(this.$Dom.modeUp, "click", event => onHandleChangeMode(scope, 'up', () => changeElementColor(scope)));
           util.on(this.$Dom.modeDown, "click", event => onHandleChangeMode(scope, 'down', () => changeElementColor(scope)));
         }
-      }
-
-      if (config.disabled) {
-        if (config.hasColorInput) {
-          if (!util.hasClass(this.$Dom.pickerInput, 'ew-input-disabled')) {
-            this.$Dom.pickerInput.classList.add('ew-input-disabled');
-            this.$Dom.pickerInput.disabled = true;
-          }
-        }
-
-        if (!util.hasClass(this.$Dom.picker, 'ew-color-picker-disabled')) {
-          this.$Dom.picker.classList.add('ew-color-picker-disabled');
-        }
-
-        return false;
       } //颜色面板点击事件
 
 
