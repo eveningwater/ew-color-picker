@@ -37,6 +37,7 @@ declare namespace ewColorPicker {
 export type WrapperType = ewColorPicker.WrapperType;
 export type OptionType = ewColorPicker.OptionType;
 declare class ewColorPicker {
+    public config:OptionType;
     constructor(colorPickerOption:WrapperType | OptionType);
     createColorPicker(colorPickerOption:WrapperType | OptionType);
     getDefaultConfig();

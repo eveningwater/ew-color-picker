@@ -688,7 +688,7 @@ ewColorPicker.util.colorRgbaToHex("rgba(123,22,33,.6)");
 //返回#7B1621
 ```
 
-###`colorRgbaToHsla`方法
+### `colorRgbaToHsla`方法
 
 10.`colorRgbaToHsla`方法
 
@@ -699,7 +699,7 @@ ewColorPicker.util.colorRgbaToHsla("rgba(123,22,33,.6)");
 //返回{"colorStr":"hsla(354,70%,29%,0.6)","colorObj":{"h":5.891089108910891,"s":0.6965517241379311,"l":0.28431372549019607,"a":0.6}}
 ```
 
-###`colorRgbaToHsva`方法
+### `colorRgbaToHsva`方法
 
 11.`colorRgbaToHsva`方法
 
@@ -710,7 +710,7 @@ ewColorPicker.util.colorRgbaToHsva("rgba(123,22,33,.6)");
 //返回{"h":353.46534653465346,"s":82.11382113821138,"v":48.23529411764706,"a":0.6}
 ```
 
-###`colorToRgba`方法
+### `colorToRgba`方法
 
 12.`colorToRgba`方法
 
@@ -725,7 +725,7 @@ ewColorPicker.util.colorToRgba("hsla(111,22%,11%,.4)");
 //返回rgba(24,34,22,0.4)
 ```
 
-###`createUUID`方法
+### `createUUID`方法
 
 13.`createUUID`方法
 
@@ -735,7 +735,7 @@ ewColorPicker.util.colorToRgba("hsla(111,22%,11%,.4)");
     ewColorPicker.util.createUUID();
     //返回类似这样的"20e8-1618715879335-74736"
 ```
-###`deepCloneObjByJSON`方法
+### `deepCloneObjByJSON`方法
 
 14.`deepCloneObjByJSON`方法
 
@@ -746,7 +746,7 @@ ewColorPicker.util.deepCloneObjByJSON({ name:"eveningwater"});
 //返回{ name:"eveningwater"}
 ```
 
-###`deepCloneObjByRecursion`方法
+### `deepCloneObjByRecursion`方法
 
 15.`deepCloneObjByRecursion`方法
 
