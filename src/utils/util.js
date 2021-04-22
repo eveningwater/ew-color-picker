@@ -118,6 +118,7 @@ util["clickOutSide"] = (context, config, callback) => {
 }
 util['createUUID'] = () => (Math.random() * 10000000).toString(16).substr(0, 4) + '-' + (new Date()).getTime() + '-' + Math.random().toString().substr(2, 5);
 util.removeAllSpace = (value) => value.replace(/\s+/g, "");
+util.isJQDom = dom => typeof window.jQuery !== "undefined" && dom instanceof jQuery;
 //the event
 util.eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
 export default util;

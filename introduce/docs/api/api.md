@@ -163,6 +163,8 @@ const color = new ewColorPicker({
 });
 ```
 
+> 注意:该值有一个最大值，即为10000，如果超过了该值，则实际效果只会按照这个值来执行。
+
 ### hasBox属性
 
 10.hasBox?(可选属性)
@@ -250,6 +252,8 @@ const color = new ewColorPicker({
 });
 ```
 
+> 注意:要开启颜色选择器的颜色转换模式，必须要将`alpha`和`hue`都设置为true，也就是必须要显示透明度柱和色阶柱，否则会在控制台提示错误。
+
 ### changeBoxByChangeColor属性
 
 17.changeBoxByChangeColor?(可选属性)
@@ -330,17 +334,22 @@ const colorPicker = new ewColorPicker({
 });
 ```
 
-### openOrClosePicker属性
+### togglePicker属性
 
-23.openOrClosePicker?(可选属性)
+23.togglePicker?(可选属性)
 
-该属性的值是一个函数或者方法，类似`clear`属性，表示点击色块的回调，回调函数有二个参数，第一个是颜色选择器的实例化根元素，第二个则是当前颜色选择器实例对象。如:
+该属性的值是一个函数或者方法，类似`clear`属性，表示点击色块的回调，回调函数有三个个参数，第一个是颜色选择器的实例化根元素，第二个则是代表当前颜色选择器是打开还是关闭的状态值，为布尔值，第三个则是当前颜色选择器实例对象。如:
 
 ```js
 const colorPicker = new ewColorPicker({
-    openOrClosePicker:(el,context) => {
+    togglePicker:(el,flag,context) => {
         console.log('当前根元素',el);
         console.log('当前颜色选择器实例对象',context);
+        if(flag){
+            console.log("opened");
+        }else{
+            console.log("closed");
+        }
     }
 });
 ```
@@ -1119,4 +1128,7 @@ color.config.alpha = true;
 ```
 
 这是因为颜色选择器在内部使用`proxy`代理了颜色选择器的配置对象，然后将颜色选择器的配置对象变成了一个响应式对象，当对象的属性改变，则触发颜色选择器的重新渲染。
+
+> 注意:修改属性`el`和`isLog`还有方法属性是无效的，因为颜色选择器内部做了判断，这些属性的改动不会触发颜色选择器的重新渲染。
+
 

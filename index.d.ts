@@ -20,7 +20,7 @@ declare namespace ewColorPicker {
     sure?: Function;
     clear?: Function;
     isLog?: boolean;
-    openOrClosePicker?: Function;
+    togglePicker?: Function;
     changeColor?: Function;
     hasBox?:boolean;
     isClickOutside?:boolean;
@@ -36,10 +36,32 @@ declare namespace ewColorPicker {
 }
 export type WrapperType = ewColorPicker.WrapperType;
 export type OptionType = ewColorPicker.OptionType;
-declare class ewColorPicker {
+export interface $DomType {
+  box?:HTMLDivElement;
+    hueBar?:HTMLDivElement;
+    hueThumb?:HTMLDivElement;
+    pickerClear?:HTMLButtonElement;
+    picker:HTMLDivElement;
+    pickerCursor:HTMLDivElement;
+    pickerInput?:HTMLInputElement;
+    pickerPanel:HTMLDivElement;
+    pickerSure?:HTMLButtonElement;
+    preDefineItem?:NodeList;
+    rootElement:Element | HTMLElement;
+    verticalSlider?:HTMLDivElement;
+    horizontalSlider?:HTMLDivElement;
+}
+export interface Instance {
+  $Dom:$DomType;
+  config:OptionType;
+}
+declare class ewColorPicker implements Instance {
     public config:OptionType;
+    public $Dom:$DomType;
     constructor(colorPickerOption:WrapperType | OptionType);
     createColorPicker(colorPickerOption:WrapperType | OptionType);
     getDefaultConfig();
 }
+
+
 export default ewColorPicker; 

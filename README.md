@@ -54,8 +54,8 @@
       clear:function(){
           console.log(this)
       },//点击清空按钮的回调
-      openOrClosePicker:function(el,scope){
-         if(scope.config.pickerFlag){
+      togglePicker:function(el,scope){
+         if(scope._privateConfig.pickerFlag){
              console.log('打开颜色选择器')
          }else{
              console.log('关闭颜色选择器')
@@ -117,6 +117,7 @@ CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
 
 # 更新日志
 
+* 1.8.8 将el配置属性和isLog属性变成非响应式属性，修改了类型定义，修改了size的最小宽高限制，修改了动画执行时间的最大限制,并将`openAndClosePicker`配置对象属性方法名更改为`togglePicker`，修改了togglePicker的返回参数。
 * 1.8.7 修复了点击预定义颜色元素的问题
 * 1.8.6 颜色选择器配置对象添加了响应式功能，无论是增删改颜色选择器的属性，都会触发颜色选择器的更新，同时添加了`pickerAnimationTime`属性，表示执行动画的时间，当然不建议将时间设置的过长，优化了一些代码。
 * 1.8.5 取消el属性和不传dom元素的验证，如果不传任何参数，则默认将颜色选择器添加到body中(但会生成一个容器元素来包含)。

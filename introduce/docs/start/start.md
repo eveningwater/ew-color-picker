@@ -58,8 +58,8 @@
       clear:function(){
           console.log(this)
       },//点击清空按钮的回调
-      openOrClosePicker:function(el,scope){
-         if(scope.config.pickerFlag){
+      togglePicker:function(el,scope){
+         if(scope._privateConfig.pickerFlag){
              console.log('打开颜色选择器')
          }else{
              console.log('关闭颜色选择器')

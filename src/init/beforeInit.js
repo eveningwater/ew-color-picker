@@ -20,7 +20,7 @@ const isNotDom = ele => {
 export function beforeInit(element, config, errorText) {
     config = util.ewAssign(colorPickerConfig,config);
     errorText = errorText || initError;
-    let ele = util.isDom(element) ? element : util.isString(element) ? util.$(element) : null;
+    let ele = util.isDom(element) ? element : util.isString(element) ? util.$(element) : util.isJQDom(element) ? element.get(0) : null;
     if (!ele) return util.ewError(errorText);
     ele = ele.length ? ele[0] : ele;
     if (!ele.tagName) return util.ewError(errorText);

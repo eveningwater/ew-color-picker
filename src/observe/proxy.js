@@ -2,22 +2,26 @@ import util from '../utils/util';
 import Dep from './Dep';
 export function defineReactive(target) {
     const dep = new Dep();
-    const notify = () => {
-        if (Dep.DepTarget) {
+    const notKeys = ["el","isLog"];
+    const isNotKey = key => {
+        return notKeys.indexOf(key) === -1;
+    }
+    const notify = k => {
+        if (Dep.DepTarget && isNotKey(k)) {
             dep.notify();
         }
     };
     let proxy = new Proxy(target, {
         get(target, key, receiver) {
             let val = Reflect.get(target, key, receiver);
-            if ( Dep.DepTarget) {
+            if ( Dep.DepTarget && isNotKey(key)) {
                 dep.depend();
             }
             return val;
         },
         set(target, key, receiver) {
             let val = Reflect.set(target, key, receiver);
-            notify();
+            notify(key);
             return val;
         },
         has(target, key) {
@@ -30,7 +34,7 @@ export function defineReactive(target) {
         deleteProperty(target, key) {
             if (this.has(target, key)) {
                 let val = Reflect.deleteProperty(target, key);
-                notify();
+                notify(key);
                 return val;
             }
         }

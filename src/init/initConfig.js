@@ -15,15 +15,15 @@ export function initConfig(config){
     const defaultConfig = { ...colorPickerConfig };
     let element,error,mergeConfig = null;
     //如果第二个参数传的是字符串，或DOM对象，则初始化默认的配置
-    if (util.isString(config) || util.isDom(config)) {
+    if (util.isString(config) || util.isDom(config) || util.isJQDom(config)) {
         mergeConfig = defaultConfig;
-        element = config;
+        element = util.isJQDom(config) ? config.get(0) : config;
         error = ERROR_VARIABLE.DOM_ERROR;
     } //如果是对象，则自定义配置，自定义配置选项如下:
-    else if (util.isDeepObject(config) && (util.isString(config.el) || util.isDom(config.el))) {
+    else if (util.isDeepObject(config) && (util.isString(config.el) || util.isDom(config.el) || util.isJQDom(config.el))) {
         filterConfig(config);
         mergeConfig = util.ewAssign(defaultConfig, config);
-        element = config.el;
+        element = util.isJQDom(config.el) ? config.el.get(0) : config.el;
         error = ERROR_VARIABLE.DOM_OBJECT_ERROR;
     } else {
         element = 'body';

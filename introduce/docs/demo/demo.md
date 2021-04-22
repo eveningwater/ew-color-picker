@@ -197,5 +197,8 @@
 
 详见[更多示例](https://github.com/eveningwater/ew-color-picker/tree/master/example)。
 
+## 一个完整的示例
+
+这里有一个完整的示例。[完整示例](http://js.jirengu.com/fusicemita/3/)。
 
 

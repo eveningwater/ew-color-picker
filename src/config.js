@@ -10,7 +10,7 @@ const baseDefaultConfig = {
     pickerAnimationTime:200,
     sure: emptyFun,
     clear: emptyFun,
-    openOrClosePicker: emptyFun,
+    togglePicker: emptyFun,
     isLog: true,
     changeColor: emptyFun,
     hasBox: true,
