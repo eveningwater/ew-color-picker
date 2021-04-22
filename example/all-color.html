@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>一个比较完整的示例</title>
+    <link rel="stylesheet" href="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #test {
+            margin-top: 15px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 6px 8px;
+            background-color: #2396ef;
+            color: #ffffff;
+            border: 1px solid #2399ff;
+            border-radius: 5px;
+            outline: none;
+            cursor: pointer;
+            margin: 14px;
+        }
+
+        .button:hover {
+            border-color: #1087e2;
+            background-color: #1485db;
+        }
+
+        input[type="text"] {
+            display: inline-block;
+            padding: 8px 12px;
+            border: 1px solid #e9ebee;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: #2396ef;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="button-group">
+        <button type="button" class="button" index="0">hue水平</button>
+        <button type="button" class="button" index="1">alpha水平</button>
+        <button type="button" class="button" index="2">开启alpha</button>
+        <button type="button" class="button" index="3">开启box</button>
+        <button type="button" class="button" index="4">开启点击目标区域事件</button>
+        <button type="button" class="button" index="5">normal</button>
+        <button type="button" class="button" index="6">medium</button>
+        <button type="button" class="button" index="7">mini</button>
+        <button type="button" class="button" index="8">small</button>
+        <input type="text" id="widthInput" placeholder="请输入宽度，值为整数数值">
+        <input type="text" id="heightInput" placeholder="请输入高度，值为整数数值">
+        <button type="button" class="button" index="9">自定义宽高</button>
+        <button type="button" class="button" index="10">添加预定义颜色</button>
+        <button type="button" class="button" index="11">开启全面禁用</button>
+        <button type="button" class="button" index="12">开启box禁用</button>
+        <button type="button" class="button" index="13">修改动画类型</button>
+        <input type="text" id="pickerAnimationTime" placeholder="请输入动画时间，值为整数数值">
+        <button type="button" class="button" index="14">修改动画时间</button>
+        <button type="button" class="button" index="15">隐藏输入框</button>
+        <button type="button" class="button" index="16">隐藏清空按钮</button>
+        <button type="button" class="button" index="17">隐藏确定按钮</button>
+        <button type="button" class="button" index="18">开启颜色转换模式</button>
+        <button type="button" class="button" index="19">开启box跟随改变</button>
+    </div>
+    <div id="test"></div>
+    <div id="test1"></div>
+</body>
+<script src="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.js"></script>
+<script>
+    const config = {
+        el: document.getElementById("test")
+    }
+    const color = new ewColorPicker(config);
+    // console.log(color, ewColorPicker.util)
+    const util = ewColorPicker.util;
+    const buttons = util.$(".button");
+    const widthInput = util.$("#widthInput");
+    const heightInput = util.$("#widthInput");
+    const pickerAnimationTimeInput = util.$("#pickerAnimationTime");
+    util.ewObjToArray(buttons).forEach(btn => {
+        util.on(btn, 'click', function () {
+            const index = this.getAttribute("index");
+            let text;
+            switch (Number(index)) {
+                case 0:
+                    color.config.hueDirection = color.isHueHorizontal ? "vertical" : "horizontal";
+                    text = color.isHueHorizontal ? "hue垂直" : "hue水平";
+                    break;
+                case 1:
+                    color.config.alphaDirection = color.isAlphaHorizontal ? "vertical" : "horizontal";
+                    text = color.isAlphaHorizontal ? "alpha垂直" : "alpha水平";
+                    break;
+                case 2:
+                    color.config.alpha = !color.config.alpha;
+                    text = color.config.alpha ? "关闭alpha" : "开启alpha";
+                    break;
+                case 3:
+                    color.config.hasBox = !color.config.hasBox;
+                    text = color.config.hasBox ? "关闭box" : "开启box";
+                    break;
+                case 4:
+                    color.config.isClickOutside = !color.config.isClickOutside;
+                    text = color.config.isClickOutside ? "关闭目标区域事件" : "开启点击目标区域事件"
+                    break;
+                case 5:
+                    color.config.size = this.textContent;
+                    break;
+                case 6:
+                    color.config.size = this.textContent;
+                    break;
+                case 7:
+                    color.config.size = this.textContent;
+                    break;
+                case 8:
+                    color.config.size = this.textContent;
+                    break;
+                case 9:
+                    if (!Number(isNaN(widthInput.value)) && !Number(isNaN(heightInput.value))) {
+                        color.config.size = {
+                            width: Number(widthInput.value),
+                            height: Number(heightInput.value)
+                        }
+                    }
+                    break;
+                case 10:
+                    color.config.predefineColor = ["red", "#2396ef", "#fff", "#00f", "#333", {
+                        color: "#535353",
+                        disabled: true
+                    }, {
+                        color: "#f2e2e3",
+                        disabled: false
+                    }];
+                    break;
+                case 11:
+                    color.config.disabled = !color.config.disabled;
+                    text = color.config.disabled ? "关闭全面禁用" : "开启全面禁用";
+                    break;
+                case 12:
+                    color.config.boxDisabled = !color.config.boxDisabled;
+                    text = color.config.boxDisabled ? "关闭盒子禁用" : "开启盒子禁用";
+                    break;
+                case 13:
+                    color.config.pickerAnimation = color.config.pickerAnimation === "height" ?
+                        "opacity" : "height";
+                    break;
+                case 14:
+                    if (!isNaN(Number(pickerAnimationTimeInput.value))) {
+                        color.config.pickerAnimationTime = Number(pickerAnimationTimeInput.value);
+                    }
+                    break;
+                case 15:
+                    color.config.hasColorInput = !color.config.hasColorInput;
+                    text = color.config.hasColorInput ? "隐藏输入框" : "显示输入框";
+                    break;
+                case 16:
+                    color.config.hasClear = !color.config.hasClear;
+                    text = color.config.hasClear ? "隐藏清空按钮" : "显示清空按钮";
+                    break;
+                case 17:
+                    color.config.hasSure = !color.config.hasSure;
+                    text = color.config.hasSure ? "隐藏确定按钮" : "显示确定按钮";
+                    break;
+                case 18:
+                    color.config.openChangeColorMode = !color.config.openChangeColorMode;
+                    text = color.config.openChangeColorMode ? "隐藏颜色转换模式" : "显示颜色转换模式";
+                    break;
+                case 19:
+                    color.config.changeBoxByChangeColor = !color.config.changeBoxByChangeColor;
+                    text = color.config.changeBoxByChangeColor ? "关闭box颜色值跟随改变" : "开启box颜色值跟随改变";
+                    break;
+            }
+            if (text) this.textContent = text;
+        })
+    })
+    // 1.el属性更改时重新渲染问题
+    // 2.size自定义宽高值判断问题
+    // 3.动画时间限定值
+    // 4.isLog打印属性优化
+</script>
+
+</html>
