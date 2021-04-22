@@ -8,6 +8,7 @@ import { setColorValue } from '../layout/setColorValue';
  * @param {*} picker 
  */
 export function open(expression, picker,time = 200) {
+    time = time > 10000 ? 10000 : time;
     return ani[expression ? 'slideDown' : 'fadeIn'](picker, time);
 }
 /**
@@ -16,6 +17,7 @@ export function open(expression, picker,time = 200) {
  * @param {*} picker 
  */
 export function close(expression, picker,time = 200) {
+    time = time > 10000 ? 10000 : time;
     return ani[expression ? 'slideUp' : 'fadeOut'](picker, time);
 }
 /**
@@ -84,5 +86,5 @@ export function handleOpenPicker(ani,time) {
     onRenderColorPicker(scope.config.defaultColor, scope._privateConfig.pickerFlag, el, scope);
     setColorValue(scope, scope.panelWidth, scope.panelHeight,false);
     openAndClose(scope);
-    if (util.isFunction(scope.config.openOrClosePicker))scope.config.openOrClosePicker(el, scope);
+    if (util.isFunction(scope.config.openOrClosePicker))scope.config.togglePicker(el, scope._privateConfig.pickerFlag,scope);
 }

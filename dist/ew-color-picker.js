@@ -159,7 +159,9 @@
 
     util['createUUID'] = () => (Math.random() * 10000000).toString(16).substr(0, 4) + '-' + new Date().getTime() + '-' + Math.random().toString().substr(2, 5);
 
-    util.removeAllSpace = value => value.replace(/\s+/g, ""); //the event
+    util.removeAllSpace = value => value.replace(/\s+/g, "");
+
+    util.isJQDom = dom => typeof window.jQuery !== "undefined" && dom instanceof jQuery; //the event
 
 
     util.eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
@@ -715,7 +717,7 @@
       pickerAnimationTime: 200,
       sure: emptyFun,
       clear: emptyFun,
-      openOrClosePicker: emptyFun,
+      togglePicker: emptyFun,
       isLog: true,
       changeColor: emptyFun,
       hasBox: true,
@@ -732,7 +734,7 @@
 
     };
 
-    const consoleInfo = () => console.log(`%c ew-color-picker@1.8.7%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+    const consoleInfo = () => console.log(`%c ew-color-picker@1.8.8%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
     function filterConfig(config) {
       config.hueDirection = config.hueDirection === 'horizontal' ? config.hueDirection : 'vertical';
@@ -752,15 +754,15 @@
           error,
           mergeConfig = null; //如果第二个参数传的是字符串，或DOM对象，则初始化默认的配置
 
-      if (util.isString(config) || util.isDom(config)) {
+      if (util.isString(config) || util.isDom(config) || util.isJQDom(config)) {
         mergeConfig = defaultConfig;
-        element = config;
+        element = util.isJQDom(config) ? config.get(0) : config;
         error = ERROR_VARIABLE.DOM_ERROR;
       } //如果是对象，则自定义配置，自定义配置选项如下:
-      else if (util.isDeepObject(config) && (util.isString(config.el) || util.isDom(config.el))) {
+      else if (util.isDeepObject(config) && (util.isString(config.el) || util.isDom(config.el) || util.isJQDom(config.el))) {
           filterConfig(config);
           mergeConfig = util.ewAssign(defaultConfig, config);
-          element = config.el;
+          element = util.isJQDom(config.el) ? config.el.get(0) : config.el;
           error = ERROR_VARIABLE.DOM_OBJECT_ERROR;
         } else {
           element = 'body';
@@ -852,9 +854,14 @@
 
     function defineReactive(target) {
       const dep = new Dep();
+      const notKeys = ["el", "isLog"];
 
-      const notify = () => {
-        if (Dep.DepTarget) {
+      const isNotKey = key => {
+        return notKeys.indexOf(key) === -1;
+      };
+
+      const notify = k => {
+        if (Dep.DepTarget && isNotKey(k)) {
           dep.notify();
         }
       };
@@ -863,7 +870,7 @@
         get(target, key, receiver) {
           let val = Reflect.get(target, key, receiver);
 
-          if (Dep.DepTarget) {
+          if (Dep.DepTarget && isNotKey(key)) {
             dep.depend();
           }
 
@@ -872,7 +879,7 @@
 
         set(target, key, receiver) {
           let val = Reflect.set(target, key, receiver);
-          notify();
+          notify(key);
           return val;
         },
 
@@ -887,7 +894,7 @@
         deleteProperty(target, key) {
           if (this.has(target, key)) {
             let val = Reflect.deleteProperty(target, key);
-            notify();
+            notify(key);
             return val;
           }
         }
@@ -1282,6 +1289,7 @@
      */
 
     function open(expression, picker, time = 200) {
+      time = time > 10000 ? 10000 : time;
       return animation[expression ? 'slideDown' : 'fadeIn'](picker, time);
     }
     /**
@@ -1291,6 +1299,7 @@
      */
 
     function close(expression, picker, time = 200) {
+      time = time > 10000 ? 10000 : time;
       return animation[expression ? 'slideUp' : 'fadeOut'](picker, time);
     }
     /**
@@ -1372,7 +1381,7 @@
       onRenderColorPicker(scope.config.defaultColor, scope._privateConfig.pickerFlag, el, scope);
       setColorValue(scope, scope.panelWidth, scope.panelHeight, false);
       openAndClose(scope);
-      if (util.isFunction(scope.config.openOrClosePicker)) scope.config.openOrClosePicker(el, scope);
+      if (util.isFunction(scope.config.openOrClosePicker)) scope.config.togglePicker(el, scope._privateConfig.pickerFlag, scope);
     }
 
     /**
@@ -1462,7 +1471,7 @@
     function beforeInit(element, config, errorText) {
       config = util.ewAssign(baseDefaultConfig, config);
       errorText = errorText || initError;
-      let ele = util.isDom(element) ? element : util.isString(element) ? util.$(element) : null;
+      let ele = util.isDom(element) ? element : util.isString(element) ? util.$(element) : util.isJQDom(element) ? element.get(0) : null;
       if (!ele) return util.ewError(errorText);
       ele = ele.length ? ele[0] : ele;
       if (!ele.tagName) return util.ewError(errorText);
@@ -1530,8 +1539,8 @@
             break;
         }
       } else if (util.isDeepObject(config.size)) {
-        b_width = config.size.width && (util.isNumber(config.size.width) || util.isString(config.size.width)) ? parseInt(config.size.width) + 'px' : '40px';
-        b_height = config.size.height && (util.isNumber(config.size.height) || util.isString(config.size.height)) ? parseInt(config.size.height) + 'px' : '40px';
+        b_width = config.size.width && (util.isNumber(config.size.width) || util.isString(config.size.width)) ? (parseInt(config.size.width) <= 25 ? 25 : parseInt(config.size.width)) + 'px' : '40px';
+        b_height = config.size.height && (util.isNumber(config.size.height) || util.isString(config.size.height)) ? (parseInt(config.size.height) <= 25 ? 25 : parseInt(config.size.height)) + 'px' : '40px';
       } else {
         return util.ewError(ERROR_VARIABLE.CONFIG_SIZE_ERROR);
       }
