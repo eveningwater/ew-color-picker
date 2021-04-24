@@ -11,7 +11,6 @@ const options = {
     // 产出的未压缩的文件名
     file: './dist/ew-color-picker.js'
 };
-console.log(process.env.NODE_ENV)
 const cssOption = {
     extensions: ['.css'],
     plugins: [
