@@ -950,9 +950,22 @@ ewColorPicker.util.isFunction(() => {});
 //返回true
 ```
 
+### `isJQDom`方法
+
+30.isJQDom方法
+
+判断传入的值是否是一个jq对象。如:
+
+```js
+ewColorPicker.util.isJQDom(123);
+//返回false
+ewColorPicker.util.isJQDom($(".test"));
+//如果引入了jquery,并且能找到类名为test的dom元素，则返回true
+```
+
 ### `isNull`方法
 
-30.`isNull`方法
+31.`isNull`方法
 
 判断传入的值是否是一个null值。如:
 
@@ -965,7 +978,7 @@ ewColorPicker.util.isNull(null);
 
 ### `isNumber`方法
 
-31.`isNumber`方法
+32.`isNumber`方法
 
 判断传入的值是否是一个数值。如:
 
@@ -978,7 +991,7 @@ ewColorPicker.util.isNumber(null);
 
 ### `isShallowObject`方法
 
-32.`isShallowObject`方法
+33.`isShallowObject`方法
 
 该方法作用等同`isDeepObject`。表示判断一个值是否是对象，不同的是该方法会将函数数组之类的对象判断为true。如:
 
@@ -993,7 +1006,7 @@ ewColorPicker.util.isShallowObject({});
 
 ### `isString`方法
 
-33.`isString`方法
+34.`isString`方法
 
 判断传入的值是否是一个字符串。如:
 
@@ -1008,7 +1021,7 @@ ewColorPicker.util.isString('aaa');
  
 ### `isUndefined`方法
 
-34.`isUndefined`方法
+35.`isUndefined`方法
 
 判断传入的值是否是一个undefined值。如:
 
@@ -1023,7 +1036,7 @@ ewColorPicker.util.isUndefined(undefined);
 
 ### `isValidColor`方法
 
-35.`isValidColor`方法
+36.`isValidColor`方法
 
 判断传入的颜色值是否是一个合格的颜色值。如:
 
@@ -1038,7 +1051,7 @@ ewColorPicker.util.isValidColor("rgba(123,111,22)");
 
 ### `off`方法
 
-36.`off`方法
+37.`off`方法
 
 该方法用于给移除一个事件监听器，传入四个参数，第一个为DOM元素，第二个为事件名，第三个参数为事件监听器，第四个参数为一个布尔值。如:
 
@@ -1050,7 +1063,7 @@ ewColorPicker.util.off(test,'click',handler);
 
 ### `on`方法
 
-37.`on`方法
+38.`on`方法
 
 该方法用于添加一个时间监听器，参数等同`off`方法。如:
 
@@ -1062,7 +1075,7 @@ ewColorPicker.util.on(test,'click',handler);
 
 ### `removeAllSpace`方法
 
-38.`removeAllSpace`方法
+39.`removeAllSpace`方法
 
 该方法用于移除一个字符串的所有空白，传入参数即一个字符串。如:
 
@@ -1073,7 +1086,7 @@ ewColorPicker.util.removeAllSpace("a   b   c");
 
 ### `removeClass`方法
 
-39.`removeClass`方法
+40.`removeClass`方法
 
 该方法用于移除一个元素的类名。传入二个参数，第一个参数为dom元素，第二个参数为移除的类名字符串。如:
 
@@ -1085,7 +1098,7 @@ ewColorPicker.util.removeClass(test,"test");
 
 ### `setCss`方法
 
-40.`setCss`方法
+41.`setCss`方法
 
 该方法用于给一个DOM元素设置样式，传入三个参数，第一个参数为DOM元素，第二个参数为样式名，第三个参数为样式值。如:
 
@@ -1096,7 +1109,7 @@ ewColorPicker.util.setCss(test,"width","100px");
 
 ### `setSomeCss`方法
 
-41.`setSomeCss`方法
+42.`setSomeCss`方法
 
 该方法用于给一个DOM元素设置多个样式，传入二个参数，第一个参数为DOM元素，第二个参数为样式数组，结构如：`[{ prop,"left",propValue:"10px" }]`;如:
 
