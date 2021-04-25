@@ -23,5 +23,7 @@ const baseDefaultConfig = {
     changeBoxByChangeColor:false,
     hueDirection:"vertical",//vertical or horizontal
     alphaDirection:"vertical",//vertical or horizontal
+    lang:"zh",
+    userDefineText:false
 }
 export default baseDefaultConfig;
