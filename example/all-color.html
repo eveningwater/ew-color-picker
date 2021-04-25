@@ -73,14 +73,19 @@
         <button type="button" class="button" index="17">隐藏确定按钮</button>
         <button type="button" class="button" index="18">开启颜色转换模式</button>
         <button type="button" class="button" index="19">开启box跟随改变</button>
+        <button type="button" class="button" index="20">切换为英文</button>
     </div>
     <div id="test"></div>
     <div id="test1"></div>
 </body>
-<script src="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.js"></script>
+<!-- <script src="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.js"></script> -->
+<script src="../dist/ew-color-picker.js"></script>
 <script>
     const config = {
-        el: document.getElementById("test")
+        el: document.getElementById("test"),
+        // userDefineText:true,
+        // clearText:"点击清空",
+        // sureText:"点击确定"
     }
     const color = new ewColorPicker(config);
     // console.log(color, ewColorPicker.util)
@@ -180,14 +185,14 @@
                     color.config.changeBoxByChangeColor = !color.config.changeBoxByChangeColor;
                     text = color.config.changeBoxByChangeColor ? "关闭box颜色值跟随改变" : "开启box颜色值跟随改变";
                     break;
+                case 20:
+                    color.config.lang = color.config.lang === "zh" ? "en" : "zh";
+                    text = color.config.lang === "zh" ? "切换为英文" : "切换为中文";
+                    break;
             }
             if (text) this.textContent = text;
         })
     })
-    // 1.el属性更改时重新渲染问题
-    // 2.size自定义宽高值判断问题
-    // 3.动画时间限定值
-    // 4.isLog打印属性优化
 </script>
 
 </html>
