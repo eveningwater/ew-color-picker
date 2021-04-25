@@ -20,28 +20,24 @@
 
     util.isNull = value => value === null;
 
-    util.ewAssign = function (target, args) {
+    util.ewAssign = function (target) {
       if (util.isNull(target)) return;
 
-      if (Object.assign) {
-        return Object.assign(target, args);
-      } else {
-        const _ = Object(target);
+      const _ = Object(target);
 
-        for (let j = 1, len = arguments.length; j < len; j += 1) {
-          const source = arguments[j];
+      for (let j = 1, len = arguments.length; j < len; j += 1) {
+        const source = arguments[j];
 
-          if (source) {
-            for (let key in source) {
-              if (Object.prototype.hasOwnProperty.call(source, key)) {
-                _[key] = source[key];
-              }
+        if (source) {
+          for (let key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+              _[key] = source[key];
             }
           }
         }
-
-        return _;
       }
+
+      return _;
     };
 
     util.addClass = (el, className) => el.classList.add(className);
@@ -730,11 +726,23 @@
       changeBoxByChangeColor: false,
       hueDirection: "vertical",
       //vertical or horizontal
-      alphaDirection: "vertical" //vertical or horizontal
-
+      alphaDirection: "vertical",
+      //vertical or horizontal
+      lang: "zh",
+      userDefineText: false
     };
 
-    const consoleInfo = () => console.log(`%c ew-color-picker@1.8.8%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+    const consoleInfo = () => console.log(`%c ew-color-picker@1.8.9%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+
+    var zh = {
+      clearText: "清空",
+      sureText: "确定"
+    };
+
+    var en = {
+      clearText: "clear",
+      sureText: "sure"
+    };
 
     function filterConfig(config) {
       config.hueDirection = config.hueDirection === 'horizontal' ? config.hueDirection : 'vertical';
@@ -776,6 +784,14 @@
             error = ERROR_VARIABLE.DOM_ERROR;
           }
         }
+
+      let lang = mergeConfig.lang === "en" ? en : zh;
+
+      if (mergeConfig.userDefineText) {
+        mergeConfig = util.ewAssign(lang, mergeConfig);
+      } else {
+        mergeConfig = util.ewAssign(mergeConfig, lang);
+      }
 
       if (mergeConfig.isLog) consoleInfo();
       return {
@@ -1022,11 +1038,11 @@
       }
 
       if (config.hasClear) {
-        clearHTML = '<button class="ew-color-clear ew-color-drop-btn">清空</button>';
+        clearHTML = `<button class="ew-color-clear ew-color-drop-btn">${config.clearText}</button>`;
       }
 
       if (config.hasSure) {
-        sureHTML = `<button class="ew-color-sure ew-color-drop-btn">确定</button>`;
+        sureHTML = `<button class="ew-color-sure ew-color-drop-btn">${config.sureText}</button>`;
       }
 
       if (config.hasClear || config.hasSure) {
@@ -1469,7 +1485,15 @@
 
 
     function beforeInit(element, config, errorText) {
-      config = util.ewAssign(baseDefaultConfig, config);
+      let lang = config.lang === "zh" ? zh : en;
+      let newConfig;
+
+      if (config.userDefineText) {
+        newConfig = util.ewAssign(baseDefaultConfig, lang, config);
+      } else {
+        newConfig = util.ewAssign(baseDefaultConfig, config, lang);
+      }
+
       errorText = errorText || initError;
       let ele = util.isDom(element) ? element : util.isString(element) ? util.$(element) : util.isJQDom(element) ? element.get(0) : null;
       if (!ele) return util.ewError(errorText);
@@ -1483,7 +1507,7 @@
           this.colorMode = ["hex", "rgba", "hsla"];
         }
 
-        this.init(ele, config);
+        this.init(ele, newConfig);
       }
     }
 

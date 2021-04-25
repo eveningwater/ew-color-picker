@@ -74,6 +74,10 @@
       openChangeColorMode:true,//是否打开颜色切换模式，注意打开这个模式必须要将alpha和hue设置为true
       hueDirection:"horizontal",//或者vertical,默认是垂直布局显示,表示hue色阶柱是水平还是垂直布局显示
       alphaDirection:"horizontal",//或者vertical,默认是垂直布局显示,表示透明度柱是水平还是垂直布局显示
+      lang:"zh",//或en,表示启用中文模式还是英文模式
+      clearText:"清空",//清空按钮文本，如果想要自定义该值，需要设置userDefineText为true
+      sureText:"确定",//确定按钮文本,如果想要自定义该值，则需要设置userDefineText为true
+      userDefineText:false,//默认为false，设置为true之后，lang属性的切换将无效
   })
   //如果不喜欢实例化的方式来创建一个颜色选择器，也可以使用createColorPicker方法
   ewColorPicker.createColorPicker(config);//config为属性配置对象
@@ -117,6 +121,7 @@ CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
 
 # 更新日志
 
+* 1.8.9 新增了`lang`语言配置属性，新增了`clearText`与`sureText`属性,用于自定义清空按钮和确定按钮的文本,新增了`userDefineText`属性，用于开启用户自定义清空按钮和确定按钮的文本，如果不开启该属性，那么手动设置`clearText`与`sureText`属性值无效，如果开启了该值，则语言模式失效。
 * 1.8.8 将el配置属性和isLog属性变成非响应式属性，修改了类型定义，修改了size的最小宽高限制，修改了动画执行时间的最大限制,并将`openAndClosePicker`配置对象属性方法名更改为`togglePicker`，修改了togglePicker的返回参数。
 * 1.8.7 修复了点击预定义颜色元素的问题
 * 1.8.6 颜色选择器配置对象添加了响应式功能，无论是增删改颜色选择器的属性，都会触发颜色选择器的更新，同时添加了`pickerAnimationTime`属性，表示执行动画的时间，当然不建议将时间设置的过长，优化了一些代码。

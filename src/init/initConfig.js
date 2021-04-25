@@ -2,6 +2,8 @@ import colorPickerConfig from '../config';
 import util from '../utils/util';
 import { ERROR_VARIABLE } from '../const/error';
 import { consoleInfo } from '../const/console';
+import zh from '../const/zh';
+import en from '../const/en';
 function filterConfig(config){
     config.hueDirection = config.hueDirection === 'horizontal' ? config.hueDirection : 'vertical';
     config.alphaDirection = config.alphaDirection === 'horizontal' ? config.alphaDirection : 'vertical';
@@ -35,6 +37,12 @@ export function initConfig(config){
             mergeConfig = defaultConfig;
             error = ERROR_VARIABLE.DOM_ERROR;
         }
+    }
+    let lang = mergeConfig.lang === "en" ? en : zh;
+    if(mergeConfig.userDefineText){
+        mergeConfig =  util.ewAssign(lang,mergeConfig);
+    }else{
+        mergeConfig =  util.ewAssign(mergeConfig,lang);
     }
     if (mergeConfig.isLog)consoleInfo();
     return {

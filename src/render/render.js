@@ -89,10 +89,10 @@ export function staticRender(element, config) {
         boxHTML = `<div class="ew-color-picker-box ${boxDisabledClassName}" tabIndex="0" style="${boxStyle}">${colorBox}</div>`;
     }
     if (config.hasClear) {
-        clearHTML = '<button class="ew-color-clear ew-color-drop-btn">清空</button>';
+        clearHTML = `<button class="ew-color-clear ew-color-drop-btn">${ config.clearText }</button>`;
     }
     if (config.hasSure) {
-        sureHTML = `<button class="ew-color-sure ew-color-drop-btn">确定</button>`;
+        sureHTML = `<button class="ew-color-sure ew-color-drop-btn">${ config.sureText }</button>`;
     }
     if (config.hasClear || config.hasSure) {
         btnGroupHTML = `<div class="ew-color-drop-btn-group">${clearHTML}${sureHTML}</div>`;

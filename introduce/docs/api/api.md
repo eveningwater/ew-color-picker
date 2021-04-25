@@ -14,7 +14,7 @@ const color = new ewColorPicker('div');
 
 ## 配置对象详解
 
-从1到20是值属性，而20后面的就是方法属性。
+从1到24是值属性，而24后面的就是方法属性。
 
 ### el属性
 
@@ -304,9 +304,66 @@ const color = new ewColorPicker({
 });
 ```
 
+### lang属性
+
+21.lang?(可选属性)
+
+该属性表示设置颜色选择器的语言模式，值为"zh"或"en",默认值是"zh"。即中文或英文模式。需要注意如果想要该模式生效，不能将`userDefineText`设置为true。如:
+
+```js
+const color = new ewColorPicker({
+    lang:"en"
+});
+```
+
+### clearText属性
+
+22.clearText?(可选属性)
+
+该属性表示清空按钮的文本，默认是"清空"值。如果想要自定义该属性的值，请将`userDefineText`设置为true,但是如果设置了该值之后，`lang`就会无效。如:
+
+```js
+const color = new ewColorPicker({
+    clearText:"点击清空",
+    userDefineText:true
+});
+```
+
+### sureText属性
+
+23.sureText?(可选属性)
+
+该属性表示清空按钮的文本，默认是"确定"值。如果想要自定义该属性的值，请将`userDefineText`设置为true,但是如果设置了该值之后，`lang`就会无效。如:
+
+```js
+const color = new ewColorPicker({
+    sureText:"点击确定",
+    userDefineText:true
+});
+```
+
+### userDefineText属性
+
+24.userDefineText?(可选属性)
+
+该属性表示是否自定义按钮的文本值，默认是false。但是如果设置了该值为true之后，`lang`就会无效。如:
+
+```js
+const color = new ewColorPicker({
+    clearText:"点击清空",
+    sureText:"点击确定",
+    userDefineText:true
+});
+```
+
+> 注意:如果将该值设置为true，并且没有设置`clearText`和`sureText`,lang仍然无效，`clearText`和`sureText`仍然是采用的默认值，即自定义传入的lang的时候中文模式下为清空和确定，英文模式下为clear和sure。
+
+> 注意: 从22到23的属性都必须在`hasClear`与`hasSure`都设置为true的情况下生效。
+
+
 ### sure属性
 
-21.sure?(可选属性)
+25.sure?(可选属性)
 
 该属性的值是一个函数或者方法，表示点击确定按钮所执行的回调，回调函数有两个参数，第一个是颜色值，第二个则是当前颜色选择器实例对象。如:
 
@@ -321,7 +378,7 @@ const colorPicker = new ewColorPicker({
 
 ### clear属性
 
-22.clear?(可选属性)
+26.clear?(可选属性)
 
 该属性的值是一个函数或者方法，类似`clear`属性，表示点击清空按钮所执行的回调，回调函数有二个参数，第一个是默认颜色值，第二个则是当前颜色选择器实例对象。如:
 
@@ -336,7 +393,7 @@ const colorPicker = new ewColorPicker({
 
 ### togglePicker属性
 
-23.togglePicker?(可选属性)
+27.togglePicker?(可选属性)
 
 该属性的值是一个函数或者方法，类似`clear`属性，表示点击色块的回调，回调函数有三个个参数，第一个是颜色选择器的实例化根元素，第二个则是代表当前颜色选择器是打开还是关闭的状态值，为布尔值，第三个则是当前颜色选择器实例对象。如:
 
@@ -356,7 +413,7 @@ const colorPicker = new ewColorPicker({
 
 ### changeColor属性
 
-24.changeColor?(可选属性)
+28.changeColor?(可选属性)
 
 该属性的值是一个函数或者方法，类似`clear`属性，表示颜色值改变所触发的回调，回调函数有一个参数，即更改后的颜色值。如:
 

@@ -2,6 +2,8 @@ import util from '../utils/util';
 import colorPickerConfig from '../config';
 import { ERROR_VARIABLE, NOT_DOM_ELEMENTS } from '../const/error';
 import { initError } from './startInit';
+import zh from '../const/zh';
+import en from '../const/en';
 // 不能是哪些标签元素
 const isNotDom = ele => {
     if (NOT_DOM_ELEMENTS.indexOf(ele.tagName.toLowerCase()) > -1) {
@@ -18,7 +20,13 @@ const isNotDom = ele => {
  * @returns 
  */
 export function beforeInit(element, config, errorText) {
-    config = util.ewAssign(colorPickerConfig,config);
+    let lang = config.lang === "zh" ? zh : en;
+    let newConfig;
+    if(config.userDefineText){
+        newConfig = util.ewAssign(colorPickerConfig,lang,config);
+    }else{
+        newConfig = util.ewAssign(colorPickerConfig,config,lang);
+    }   
     errorText = errorText || initError;
     let ele = util.isDom(element) ? element : util.isString(element) ? util.$(element) : util.isJQDom(element) ? element.get(0) : null;
     if (!ele) return util.ewError(errorText);
@@ -29,6 +37,6 @@ export function beforeInit(element, config, errorText) {
         if (config.openChangeColorMode) {
             this.colorMode = ["hex", "rgba", "hsla"];
         }
-        this.init(ele, config);
+        this.init(ele, newConfig);
     }
 }

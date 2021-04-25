@@ -77,8 +77,12 @@
       boxDisabled:true,//默认是false,设置为true并且hasBox为true，禁止点击色块打开颜色选择器
       openChangeColorMode:true,//是否打开颜色切换模式，注意打开这个模式必须要将alpha和hue设置为true
       changeBoxByChangeColor:false,//如果设置为true，则在色块显示的时候，打开颜色面板，色块会根据颜色的改变而变色
-       hueDirection:"horizontal",//或者vertical,默认是垂直布局显示,表示hue色阶柱是水平还是垂直布局显示
+      hueDirection:"horizontal",//或者vertical,默认是垂直布局显示,表示hue色阶柱是水平还是垂直布局显示
       alphaDirection:"horizontal",//或者vertical,默认是垂直布局显示,表示透明度柱是水平还是垂直布局显示
+      lang:"zh",//或en,表示启用中文模式还是英文模式
+      clearText:"清空",//清空按钮文本，如果想要自定义该值，需要设置userDefineText为true
+      sureText:"确定",//确定按钮文本,如果想要自定义该值，则需要设置userDefineText为true
+      userDefineText:false,//默认为false，设置为true之后，lang属性的切换将无效
   })
   //如果不喜欢实例化的方式来创建一个颜色选择器，也可以使用createColorPicker方法
   ewColorPicker.createColorPicker(config);//config为属性配置对象

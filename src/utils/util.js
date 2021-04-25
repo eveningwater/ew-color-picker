@@ -10,24 +10,20 @@ util.addMethod = addMethod;
 util.isShallowObject = value => typeof value === 'object' && !util.isNull(value);
 util['ewObjToArray'] = value => util.isShallowObject(value) ? Array.prototype.slice.call(value) : value;
 util.isNull = value => value === null;
-util.ewAssign = function (target, args) {
+util.ewAssign = function (target) {
     if (util.isNull(target)) return;
-    if (Object.assign) {
-        return Object.assign(target, args);
-    } else {
-        const _ = Object(target);
-        for (let j = 1, len = arguments.length; j < len; j += 1) {
-            const source = arguments[j];
-            if (source) {
-                for (let key in source) {
-                    if (Object.prototype.hasOwnProperty.call(source, key)) {
-                        _[key] = source[key];
-                    }
+    const _ = Object(target);
+    for (let j = 1, len = arguments.length; j < len; j += 1) {
+        const source = arguments[j];
+        if (source) {
+            for (let key in source) {
+                if (Object.prototype.hasOwnProperty.call(source, key)) {
+                    _[key] = source[key];
                 }
             }
         }
-        return _;
     }
+    return _;
 }
 util.addClass = (el, className) => el.classList.add(className);
 util.removeClass = (el, className) => el.classList.remove(className);
@@ -80,7 +76,7 @@ util['baseClickOutSide'] = (element, isUnbind = true, callback) => {
         if (!target) return;
         const targetRect = util.getRect(target);
         if (targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width && targetRect.height <= rect.height) return;
-        if(util.isFunction(callback))callback();
+        if (util.isFunction(callback)) callback();
         if (isUnbind) {
             // 延迟解除绑定
             setTimeout(() => {
