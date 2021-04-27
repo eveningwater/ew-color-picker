@@ -1,14 +1,20 @@
 {
   "name": "ew-color-picker",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "description": "一个基于原生js而封装的颜色选择器",
-  "main": "dist/ew-color-picker.js",
+  "main": "dist/ew-color-picker.min.js",
+  "module": "dist/ew-color-picker.esm.min.js",
+  "unpkg": "dist/ew-color-picker.min.js",
+  "typings":"types/index.d.ts",
   "scripts": {
     "build": "cross-env NODE_ENV=production rollup -c",
     "test": "jest",
     "doc": "vuepress dev introduce/.",
     "doc-build": "vuepress build introduce/."
   },
+  "files": [
+    "index.d.ts"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eveningwater/ew-color-picker.git"

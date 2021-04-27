@@ -3,14 +3,6 @@ const cssnano = require('cssnano');
 const postcss = require('rollup-plugin-postcss');
 import { terser } from 'rollup-plugin-terser';
 import cssNext from 'postcss-cssnext';
-const options = {
-    // 产出文件使用 umd 规范（即兼容 amd cjs 和 iife）
-    format: 'umd',
-    // iife 规范下的全局变量名称
-    name: 'ewColorPicker',
-    // 产出的未压缩的文件名
-    file: './dist/ew-color-picker.js'
-};
 const cssOption = {
     extensions: ['.css'],
     plugins: [
@@ -19,16 +11,42 @@ const cssOption = {
     ],
     extract: "ew-color-picker.min.css"
 }
+const optionEsm = {
+    format: 'esm',
+    // iife 规范下的全局变量名称
+    name: 'ewColorPicker',
+    // 产出的未压缩的文件名
+    file: './dist/ew-color-picker.esm.js'
+}
+const optionUMD = {
+    // 产出文件使用 umd 规范（即兼容 amd cjs 和 iife）
+    format: 'umd',
+    // iife 规范下的全局变量名称
+    name: 'ewColorPicker',
+    // 产出的未压缩的文件名
+    file: './dist/ew-color-picker.js'
+}
 export default [
     {
         // 入口文件
         input: './src/index.js',
         output: [
             {
-                ...options
+                ...optionEsm
             },
             {
-                ...options,
+                ...optionUMD
+            },
+            {
+                ...optionEsm,
+                // 产出的压缩的文件名
+                file: './dist/ew-color-picker.esm.min.js',
+                plugins: [
+                    terser()
+                ]
+            },
+            {
+                ...optionUMD,
                 // 产出的压缩的文件名
                 file: './dist/ew-color-picker.min.js',
                 plugins: [
