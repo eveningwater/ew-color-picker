@@ -3,3 +3,5 @@ npm-debug.log
 docs
 example
 introduce
+src
+rollup.config.js
