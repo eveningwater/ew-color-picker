@@ -86,5 +86,5 @@ export function handleOpenPicker(ani,time) {
     onRenderColorPicker(scope.config.defaultColor, scope._privateConfig.pickerFlag, el, scope);
     setColorValue(scope, scope.panelWidth, scope.panelHeight,false);
     openAndClose(scope);
-    if (util.isFunction(scope.config.openOrClosePicker))scope.config.togglePicker(el, scope._privateConfig.pickerFlag,scope);
+    if (util.isFunction(scope.config.togglePicker))scope.config.togglePicker(el, scope._privateConfig.pickerFlag,scope);
 }
