@@ -22,6 +22,7 @@
 
 颜色选择器插件如下:
 
+
 ```js
    //默认配置
    var color = new ewColorPicker('.demo');
@@ -34,11 +35,11 @@
    color.config.clear = function(defaultColor){
      //返回默认颜色值
    }
-  //  颜色值改变时触发
-   color.config.changeColor = function(color){
-     console.log(color)
-   }
-   //自定义配置
+  //  当颜色值改变时触发
+  color.config.changeColor = function(color){
+     //返回改变后的颜色值，即color
+  }
+     //自定义配置
    var color = new ewColorPicker({
       el:'.demo2',//绑定选择器的dom元素
       alpha:true,//是否开启透明度
@@ -46,24 +47,26 @@
       size:{
           width:100,
           height:50
-      },//颜色选择器类型，有四个字符串值normal,medium,small,mini或者一个对象自定义宽高
+      },//颜色选择器类型，有四个字符串值normal,medium,small,mini或者一个对象自定义宽高,如果自定义宽高，最小宽高为25px
       predefineColor:['#223456','rgba(122,35,77,.5)'],//预定义颜色是一个数组
-      disabled:false,//从1.7.2版本开始禁止颜色选择器的所有点击
+      disabled:false,//是否禁止所有的点击
       defaultColor:'#eeff22',//默认颜色
       pickerAnimation:'opacity',//或者'height'，开启颜色选择器面板的动画
-      pickerAnimationTime:300,//动画执行时间，默认是200
+      pickerAnimationTime:300,//动画执行时间，默认是200,最大动画时间为10000
       sure:function(color){
           console.log(color);
       },//点击确定按钮的回调
       clear:function(){
           console.log(this)
       },//点击清空按钮的回调
-      togglePicker:function(el,scope){
-         if(scope._privateConfig.pickerFlag){
-             console.log('打开颜色选择器')
-         }else{
-             console.log('关闭颜色选择器')
-         }
+      togglePicker:(el,flag,context) => {
+        console.log('当前根元素',el);
+        console.log('当前颜色选择器实例对象',context);
+        if(flag){
+            console.log("opened");
+        }else{
+            console.log("closed");
+        }
       },//点击色块事件回调,需要注意该事件触发必须要将hasBox设置为true
       isLog:false, //是否开启打印信息,默认是true如果不指定该值的话
       changeColor:(color) => {
@@ -76,7 +79,6 @@
       hasColorInput:true, //是否显示输入框,默认为true,不建议设置为false
       boxDisabled:true,//默认是false,设置为true并且hasBox为true，禁止点击色块打开颜色选择器
       openChangeColorMode:true,//是否打开颜色切换模式，注意打开这个模式必须要将alpha和hue设置为true
-      changeBoxByChangeColor:false,//如果设置为true，则在色块显示的时候，打开颜色面板，色块会根据颜色的改变而变色
       hueDirection:"horizontal",//或者vertical,默认是垂直布局显示,表示hue色阶柱是水平还是垂直布局显示
       alphaDirection:"horizontal",//或者vertical,默认是垂直布局显示,表示透明度柱是水平还是垂直布局显示
       lang:"zh",//或en,表示启用中文模式还是英文模式
