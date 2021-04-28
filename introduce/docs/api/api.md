@@ -448,6 +448,46 @@ const color = ewColorPicker.createColorPicker('div');
 ewColorPicker.getDefaultConfig();
 ```
 
+## 实例属性
+
+### $Dom
+
+1. $Dom
+
+有关颜色选择器的DOM元素集合。如:
+
+```js
+const color = new ewColorPicker();
+console.log(color.$Dom.pickerInput);//input 元素
+```
+### config
+
+2. config
+
+颜色选择器的配置对象，属性见前者。例如:
+
+```js
+const color = new ewColorPicker();
+color.config.togglePicker = function(el,flag,context){
+    if(flag){
+        console.log("颜色选择器opened");
+    }else{
+        console.log("颜色选择器closed");
+    }
+}
+```
+
+### 其它
+
+3.其它属性
+
+其它属性不建议使用。如:
+
+```js
+const color = new ewColorPicker();
+console.log(color.hsvaColor);//{ h:255,s:123,v:111,a:0.5}
+```
+
 ## 实例方法
 
 实例方法为实例化一个颜色选择器实例之后调用的方法。
