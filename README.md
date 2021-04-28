@@ -42,24 +42,26 @@
       size:{
           width:100,
           height:50
-      },//颜色选择器类型，有四个字符串值normal,medium,small,mini或者一个对象自定义宽高
+      },//颜色选择器类型，有四个字符串值normal,medium,small,mini或者一个对象自定义宽高,如果自定义宽高，最小宽高为25px
       predefineColor:['#223456','rgba(122,35,77,.5)'],//预定义颜色是一个数组
-      disabled:false,//是否禁止开启选择器面板
+      disabled:false,//是否禁止所有的点击
       defaultColor:'#eeff22',//默认颜色
       pickerAnimation:'opacity',//或者'height'，开启颜色选择器面板的动画
-      pickerAnimationTime:300,//动画执行时间，默认是200
+      pickerAnimationTime:300,//动画执行时间，默认是200,最大动画时间为10000
       sure:function(color){
           console.log(color);
       },//点击确定按钮的回调
       clear:function(){
           console.log(this)
       },//点击清空按钮的回调
-      togglePicker:function(el,scope){
-         if(scope._privateConfig.pickerFlag){
-             console.log('打开颜色选择器')
-         }else{
-             console.log('关闭颜色选择器')
-         }
+      togglePicker:(el,flag,context) => {
+        console.log('当前根元素',el);
+        console.log('当前颜色选择器实例对象',context);
+        if(flag){
+            console.log("opened");
+        }else{
+            console.log("closed");
+        }
       },//点击色块事件回调,需要注意该事件触发必须要将hasBox设置为true
       isLog:false, //是否开启打印信息,默认是true如果不指定该值的话
       changeColor:(color) => {
@@ -121,8 +123,7 @@ CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
 
 # 更新日志
 
-* 1.9.3 修改了依赖包配置
-* 1.9.0 修复了一些问题，并修改了依赖包的引入。
+* 1.9.0 ~ 1.9.3 修复了一些问题，并修改了依赖包的引入和配置。
 * 1.8.9 新增了`lang`语言配置属性，新增了`clearText`与`sureText`属性,用于自定义清空按钮和确定按钮的文本,新增了`userDefineText`属性，用于开启用户自定义清空按钮和确定按钮的文本，如果不开启该属性，那么手动设置`clearText`与`sureText`属性值无效，如果开启了该值，则语言模式失效。
 * 1.8.8 将el配置属性和isLog属性变成非响应式属性，修改了类型定义，修改了size的最小宽高限制，修改了动画执行时间的最大限制,并将`openAndClosePicker`配置对象属性方法名更改为`togglePicker`，修改了togglePicker的返回参数。
 * 1.8.7 修复了点击预定义颜色元素的问题

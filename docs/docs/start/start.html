@@ -8,7 +8,7 @@
     <link rel="icon" href="/ew-color-picker/logo.png">
     <meta name="description" content="一个基于原生js而编写的颜色选择器">
     
-    <link rel="preload" href="/ew-color-picker/assets/css/0.styles.86813eec.css" as="style"><link rel="preload" href="/ew-color-picker/assets/js/app.b92949d6.js" as="script"><link rel="preload" href="/ew-color-picker/assets/js/2.d8ad70d6.js" as="script"><link rel="preload" href="/ew-color-picker/assets/js/11.2dad9e4b.js" as="script"><link rel="prefetch" href="/ew-color-picker/assets/js/10.7d06a613.js"><link rel="prefetch" href="/ew-color-picker/assets/js/3.51b64af1.js"><link rel="prefetch" href="/ew-color-picker/assets/js/4.4ee39ceb.js"><link rel="prefetch" href="/ew-color-picker/assets/js/5.ad7e0b36.js"><link rel="prefetch" href="/ew-color-picker/assets/js/6.d9b2d002.js"><link rel="prefetch" href="/ew-color-picker/assets/js/7.427e792c.js"><link rel="prefetch" href="/ew-color-picker/assets/js/8.0198c9a1.js"><link rel="prefetch" href="/ew-color-picker/assets/js/9.13c47bb5.js">
+    <link rel="preload" href="/ew-color-picker/assets/css/0.styles.86813eec.css" as="style"><link rel="preload" href="/ew-color-picker/assets/js/app.a7983545.js" as="script"><link rel="preload" href="/ew-color-picker/assets/js/2.d8ad70d6.js" as="script"><link rel="preload" href="/ew-color-picker/assets/js/11.9aff19ea.js" as="script"><link rel="prefetch" href="/ew-color-picker/assets/js/10.30e5cba5.js"><link rel="prefetch" href="/ew-color-picker/assets/js/3.51b64af1.js"><link rel="prefetch" href="/ew-color-picker/assets/js/4.4ee39ceb.js"><link rel="prefetch" href="/ew-color-picker/assets/js/5.ad7e0b36.js"><link rel="prefetch" href="/ew-color-picker/assets/js/6.d9b2d002.js"><link rel="prefetch" href="/ew-color-picker/assets/js/7.761c6ba4.js"><link rel="prefetch" href="/ew-color-picker/assets/js/8.0ad01472.js"><link rel="prefetch" href="/ew-color-picker/assets/js/9.e5b2b419.js">
     <link rel="stylesheet" href="/ew-color-picker/assets/css/0.styles.86813eec.css">
   </head>
   <body>
@@ -55,11 +55,11 @@
    color<span class="token punctuation">.</span>config<span class="token punctuation">.</span><span class="token function-variable function">clear</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">defaultColor</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
      <span class="token comment">//返回默认颜色值</span>
    <span class="token punctuation">}</span>
-  <span class="token comment">//  颜色值改变时触发</span>
-   color<span class="token punctuation">.</span>config<span class="token punctuation">.</span><span class="token function-variable function">changeColor</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">color</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-     console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>color<span class="token punctuation">)</span>
-   <span class="token punctuation">}</span>
-   <span class="token comment">//自定义配置</span>
+  <span class="token comment">//  当颜色值改变时触发</span>
+  color<span class="token punctuation">.</span>config<span class="token punctuation">.</span><span class="token function-variable function">changeColor</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">color</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+     <span class="token comment">//返回改变后的颜色值，即color</span>
+  <span class="token punctuation">}</span>
+     <span class="token comment">//自定义配置</span>
    <span class="token keyword">var</span> color <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ewColorPicker</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
       el<span class="token operator">:</span><span class="token string">'.demo2'</span><span class="token punctuation">,</span><span class="token comment">//绑定选择器的dom元素</span>
       alpha<span class="token operator">:</span><span class="token boolean">true</span><span class="token punctuation">,</span><span class="token comment">//是否开启透明度</span>
@@ -67,24 +67,26 @@
       size<span class="token operator">:</span><span class="token punctuation">{</span>
           width<span class="token operator">:</span><span class="token number">100</span><span class="token punctuation">,</span>
           height<span class="token operator">:</span><span class="token number">50</span>
-      <span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token comment">//颜色选择器类型，有四个字符串值normal,medium,small,mini或者一个对象自定义宽高</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token comment">//颜色选择器类型，有四个字符串值normal,medium,small,mini或者一个对象自定义宽高,如果自定义宽高，最小宽高为25px</span>
       predefineColor<span class="token operator">:</span><span class="token punctuation">[</span><span class="token string">'#223456'</span><span class="token punctuation">,</span><span class="token string">'rgba(122,35,77,.5)'</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token comment">//预定义颜色是一个数组</span>
-      disabled<span class="token operator">:</span><span class="token boolean">false</span><span class="token punctuation">,</span><span class="token comment">//从1.7.2版本开始禁止颜色选择器的所有点击</span>
+      disabled<span class="token operator">:</span><span class="token boolean">false</span><span class="token punctuation">,</span><span class="token comment">//是否禁止所有的点击</span>
       defaultColor<span class="token operator">:</span><span class="token string">'#eeff22'</span><span class="token punctuation">,</span><span class="token comment">//默认颜色</span>
       pickerAnimation<span class="token operator">:</span><span class="token string">'opacity'</span><span class="token punctuation">,</span><span class="token comment">//或者'height'，开启颜色选择器面板的动画</span>
-      pickerAnimationTime<span class="token operator">:</span><span class="token number">300</span><span class="token punctuation">,</span><span class="token comment">//动画执行时间，默认是200</span>
+      pickerAnimationTime<span class="token operator">:</span><span class="token number">300</span><span class="token punctuation">,</span><span class="token comment">//动画执行时间，默认是200,最大动画时间为10000</span>
       <span class="token function-variable function">sure</span><span class="token operator">:</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">color</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
           console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>color<span class="token punctuation">)</span><span class="token punctuation">;</span>
       <span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token comment">//点击确定按钮的回调</span>
       <span class="token function-variable function">clear</span><span class="token operator">:</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
           console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span>
       <span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token comment">//点击清空按钮的回调</span>
-      <span class="token function-variable function">togglePicker</span><span class="token operator">:</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">el<span class="token punctuation">,</span>scope</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-         <span class="token keyword">if</span><span class="token punctuation">(</span>scope<span class="token punctuation">.</span>_privateConfig<span class="token punctuation">.</span>pickerFlag<span class="token punctuation">)</span><span class="token punctuation">{</span>
-             console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'打开颜色选择器'</span><span class="token punctuation">)</span>
-         <span class="token punctuation">}</span><span class="token keyword">else</span><span class="token punctuation">{</span>
-             console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'关闭颜色选择器'</span><span class="token punctuation">)</span>
-         <span class="token punctuation">}</span>
+      <span class="token function-variable function">togglePicker</span><span class="token operator">:</span><span class="token punctuation">(</span><span class="token parameter">el<span class="token punctuation">,</span>flag<span class="token punctuation">,</span>context</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'当前根元素'</span><span class="token punctuation">,</span>el<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'当前颜色选择器实例对象'</span><span class="token punctuation">,</span>context<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span>flag<span class="token punctuation">)</span><span class="token punctuation">{</span>
+            console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;opened&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token keyword">else</span><span class="token punctuation">{</span>
+            console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;closed&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
       <span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token comment">//点击色块事件回调,需要注意该事件触发必须要将hasBox设置为true</span>
       isLog<span class="token operator">:</span><span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token comment">//是否开启打印信息,默认是true如果不指定该值的话</span>
       <span class="token function-variable function">changeColor</span><span class="token operator">:</span><span class="token punctuation">(</span><span class="token parameter">color</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
@@ -97,7 +99,6 @@
       hasColorInput<span class="token operator">:</span><span class="token boolean">true</span><span class="token punctuation">,</span> <span class="token comment">//是否显示输入框,默认为true,不建议设置为false</span>
       boxDisabled<span class="token operator">:</span><span class="token boolean">true</span><span class="token punctuation">,</span><span class="token comment">//默认是false,设置为true并且hasBox为true，禁止点击色块打开颜色选择器</span>
       openChangeColorMode<span class="token operator">:</span><span class="token boolean">true</span><span class="token punctuation">,</span><span class="token comment">//是否打开颜色切换模式，注意打开这个模式必须要将alpha和hue设置为true</span>
-      changeBoxByChangeColor<span class="token operator">:</span><span class="token boolean">false</span><span class="token punctuation">,</span><span class="token comment">//如果设置为true，则在色块显示的时候，打开颜色面板，色块会根据颜色的改变而变色</span>
       hueDirection<span class="token operator">:</span><span class="token string">&quot;horizontal&quot;</span><span class="token punctuation">,</span><span class="token comment">//或者vertical,默认是垂直布局显示,表示hue色阶柱是水平还是垂直布局显示</span>
       alphaDirection<span class="token operator">:</span><span class="token string">&quot;horizontal&quot;</span><span class="token punctuation">,</span><span class="token comment">//或者vertical,默认是垂直布局显示,表示透明度柱是水平还是垂直布局显示</span>
       lang<span class="token operator">:</span><span class="token string">&quot;zh&quot;</span><span class="token punctuation">,</span><span class="token comment">//或en,表示启用中文模式还是英文模式</span>
@@ -135,6 +136,6 @@
    <span class="token keyword">import</span> <span class="token string">&quot;ew-color-picker/src/ew-color-picker.css&quot;</span><span class="token punctuation">;</span>
    <span class="token keyword">var</span> pluginName <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ewColorPicker</span><span class="token punctuation">(</span>option<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//option为配置对象，详情见前述</span>
 </code></pre></div></div> <footer class="page-edit"><!----> <!----></footer> <!----> </main></div><div class="global-ui"><!----></div></div>
-    <script src="/ew-color-picker/assets/js/app.b92949d6.js" defer></script><script src="/ew-color-picker/assets/js/2.d8ad70d6.js" defer></script><script src="/ew-color-picker/assets/js/11.2dad9e4b.js" defer></script>
+    <script src="/ew-color-picker/assets/js/app.a7983545.js" defer></script><script src="/ew-color-picker/assets/js/2.d8ad70d6.js" defer></script><script src="/ew-color-picker/assets/js/11.9aff19ea.js" defer></script>
   </body>
 </html>
