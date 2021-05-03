@@ -39,7 +39,7 @@ export function initFunction(bindElement, config) {
         return util.ewError(ERROR_VARIABLE.CONFIG_SIZE_ERROR);
     }
     this._privateConfig.boxSize.b_width = b_width;
-   this._privateConfig.boxSize.b_height = b_height;
+    this._privateConfig.boxSize.b_height = b_height;
     //渲染选择器
     this.render(bindElement, config);
 }

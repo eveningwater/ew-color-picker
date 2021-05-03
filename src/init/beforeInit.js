@@ -33,7 +33,9 @@ export function beforeInit(element, config, errorText) {
     ele = ele.length ? ele[0] : ele;
     if (!ele.tagName) return util.ewError(errorText);
     if (!isNotDom(ele)) {
-        this._color_picker_uid = util.createUUID();
+        if(!this._color_picker_uid){
+            this._color_picker_uid = util.createUUID();
+        }
         if (config.openChangeColorMode) {
             this.colorMode = ["hex", "rgba", "hsla"];
         }

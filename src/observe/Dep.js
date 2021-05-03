@@ -37,6 +37,3 @@ Dep.DepTarget = null;
 export function pushTarget(watcher){
     Dep.DepTarget = watcher;
 }
-export function popTarget(){
-    Dep.DepTarget = null;
-}

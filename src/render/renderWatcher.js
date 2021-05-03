@@ -1,5 +1,5 @@
 
-import { pushTarget,popTarget, remove } from '../observe/Dep';
+import { pushTarget, remove } from '../observe/dep';
 import util from '../utils/util';
 import { initError } from '../init/startInit';
 export default class RenderWatcher {
@@ -15,26 +15,32 @@ export default class RenderWatcher {
         pushTarget(this);
     }
     update(){
-        popTarget();
-        // 每次更新时清空依赖
-        this.cleanDeps();
-        let vm = this._colorPickerInstance;
-        let config = vm.config;
-        vm.beforeInit(vm.$Dom.rootElement,vm.config,initError);
+        const updateHandler = vm => {
+            setTimeout(() => {
+                vm.beforeInit(vm.$Dom.rootElement,vm.config,initError);
+                // 每次更新时清空依赖
+                this.cleanDeps();
+            },vm.config.pickerAnimationTime);
+        }
+        if(this.depIds.size === 1 || !this.dep.subs.length){
+            updateHandler(this._colorPickerInstance);
+        }else{
+            // 渲染的依赖有点奇怪?
+            const dep = this.dep.subs.filter(_ => _._watcher_id !== this._watcher_id)[0];
+            updateHandler(dep._colorPickerInstance);
+        }
     }
     cleanDeps(){
         if(this.dep){
             this.dep.subs = [];
-            this.dep = null;
-            this.depIds = new Set();
         }
     }
     addDep(dep){
         const id = dep.id;
+        this.dep = dep;
         if(!this.depIds.has(id)){
             this.depIds.add(id);
             dep.addSub(this);
-            this.dep = dep;
         }
     }
 }

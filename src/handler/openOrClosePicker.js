@@ -1,6 +1,5 @@
 import util from '../utils/util';
 import ani from '../utils/animation';
-import { onRenderColorPicker } from '../render/render';
 import { setColorValue } from '../layout/setColorValue';
 /**
  * 开启颜色选择器
@@ -64,15 +63,7 @@ export function handleOpenPicker(ani,time) {
     }
     if (!this._privateConfig.pickerFlag) {
         this._privateConfig.pickerFlag = true;
-        const funOpen = () => open(getHeiAni(this), this.$Dom.picker,this.config.pickerAnimationTime);
-        const funRender = () => onRenderColorPicker(this.config.defaultColor, this._privateConfig.pickerFlag, this.$Dom.rootElement, this);
-        if (this.config.hasBox) {
-            funRender();
-            funOpen();
-        } else {
-            funOpen();
-            funRender();
-        }
+        open(getHeiAni(this), this.$Dom.picker,this.config.pickerAnimationTime);
         setColorValue(this, this.panelWidth, this.panelHeight,false);
     }
 }
@@ -83,7 +74,6 @@ export function handleOpenPicker(ani,time) {
  */
  export function handlePicker(el, scope) {
     scope._privateConfig.pickerFlag = !scope._privateConfig.pickerFlag;
-    onRenderColorPicker(scope.config.defaultColor, scope._privateConfig.pickerFlag, el, scope);
     setColorValue(scope, scope.panelWidth, scope.panelHeight,false);
     openAndClose(scope);
     if (util.isFunction(scope.config.togglePicker))scope.config.togglePicker(el, scope._privateConfig.pickerFlag,scope);

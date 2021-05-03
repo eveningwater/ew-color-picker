@@ -1,7 +1,6 @@
 import util from '../utils/util';
-import Dep from './Dep';
-export function defineReactive(target) {
-    const dep = new Dep();
+import Dep from './dep';
+export function defineReactive(dep,target) {
     const notKeys = ["el","isLog"];
     const isNotKey = key => {
         return notKeys.indexOf(key) === -1;
@@ -59,6 +58,6 @@ export class Observer {
         this.walk(value);
     }
     walk(value) {
-        this.reactive = defineReactive(value);
+        this.reactive = defineReactive(this.dep,value);
     }
 }

@@ -62,7 +62,15 @@ function registerMethods(type, element, time) {
     function upAndDown() {
         const isDown = type.toLowerCase().indexOf('down') > -1;
         if (isDown) util.setCss(element, 'display', 'block');
-        let totalHeight = element.offsetHeight;
+        const getPropValue = function(item,prop){
+            let v = util.getCss(item,prop);
+            return util.removeAllSpace(v).length ? parseInt(v) : Number(v);
+        }
+        const elementChildHeight = [].reduce.call(element.children,(res,item) => {
+            res += item.offsetHeight + getPropValue(item,'margin-top') + getPropValue(item,'margin-bottom');
+            return res;
+        },0);
+        let totalHeight = Math.max(element.offsetHeight,elementChildHeight + 10);
         let currentHeight = isDown ? 0 : totalHeight;
         let unit = totalHeight / (time / 10);
         if (isDown) util.setCss(element, 'height', '0px');
@@ -74,7 +82,10 @@ function registerMethods(type, element, time) {
                 util.setCss(element, 'height', totalHeight + 'px');
                 runNext(element);
             }
-            if (!isDown && currentHeight <= 0) util.setCss(element, 'display', 'none');
+            if (!isDown && currentHeight <= 0){
+                util.setCss(element, 'display', 'none');
+                util.setCss(element, 'height', '0');
+            }
         }, 10);
     }
     function inAndOut() {
