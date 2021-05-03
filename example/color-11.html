@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>color 11</title>
+    <link rel="stylesheet" href="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.css">
+</head>
+
+<body>
+    <div></div>
+    <!-- <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div> -->
+    <script src="../dist/ew-color-picker.js"></script>
+    <script>
+        const div_elements = ewColorPicker.util.$("div");
+        div_elements.forEach(item => new ewColorPicker({
+            el: item,
+            sure: (color, context) => {
+                // console.log(color,context);
+            },
+            clear: (defaultColor) => {
+                // console.log(defaultColor)
+            }
+        }))
+    </script>
+</body>
+
+</html>

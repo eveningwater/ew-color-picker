@@ -78,14 +78,14 @@ export function startMain(ele, config) {
     let scope = this;
     this.$Dom = Object.create(null);
     this.$Dom.rootElement = ele;
-    this.$Dom.pickerPanel = getELByClass(ele, 'ew-color-panel');
-    this.$Dom.pickerCursor = getELByClass(ele, 'ew-color-cursor');
-    this.$Dom.picker = getELByClass(ele, 'ew-color-picker');
+    this.$Dom.picker =getELByClass(ele, 'ew-color-picker');
+    this.$Dom.pickerPanel =getELByClass(ele, 'ew-color-panel');
+    this.$Dom.pickerCursor =getELByClass(ele, 'ew-color-cursor');
     if (this.isHueHorizontal || this.isAlphaHorizontal) {
-        this.$Dom.horizontalSlider = getELByClass(ele, 'ew-is-horizontal');
+        this.$Dom.horizontalSlider =getELByClass(ele, 'ew-is-horizontal');
     }
     if (!this.isHueHorizontal || !this.isAlphaHorizontal) {
-        this.$Dom.verticalSlider = getELByClass(ele, 'ew-is-vertical');
+        this.$Dom.verticalSlider =getELByClass(ele, 'ew-is-vertical');
     }
     if (config.defaultColor) {
         this.hsvaColor = colorRegRGBA.test(config.defaultColor) ? colorRgbaToHsva(config.defaultColor) : colorRgbaToHsva(colorToRgba(config.defaultColor));
@@ -108,13 +108,13 @@ export function startMain(ele, config) {
     }
     this.panelLeft = left;
     this.panelTop = top + ele.offsetHeight;
-    this.$Dom.preDefineItem = getELByClass(ele, 'ew-pre-define-color', true);
+    this.$Dom.preDefineItem =getELByClass(ele, 'ew-pre-define-color', true);
     if (this.$Dom.preDefineItem.length) {
         initPreDefineHandler(util.ewObjToArray(this.$Dom.preDefineItem), scope);
     }
     if (config.hue) {
-        this.$Dom.hueBar = getELByClass(ele, 'ew-color-slider-bar');
-        this.$Dom.hueThumb = getELByClass(ele, 'ew-color-slider-thumb');
+        this.$Dom.hueBar =getELByClass(ele, 'ew-color-slider-bar');
+        this.$Dom.hueThumb =getELByClass(ele, 'ew-color-slider-thumb');
         if(!config.disabled){
             //hue的点击事件
             util.on(this.$Dom.hueBar, 'click', event => changeHue(scope, (this.isHueHorizontal ? event.x : event.y)))
@@ -123,9 +123,9 @@ export function startMain(ele, config) {
         }
     }
     if (config.alpha) {
-        this.$Dom.alphaBar = getELByClass(ele, 'ew-alpha-slider-bar');
-        this.$Dom.alphaBarBg = getELByClass(ele, 'ew-alpha-slider-bg');
-        this.$Dom.alphaBarThumb = getELByClass(ele, 'ew-alpha-slider-thumb');
+        this.$Dom.alphaBar =getELByClass(ele, 'ew-alpha-slider-bar');
+        this.$Dom.alphaBarBg =getELByClass(ele, 'ew-alpha-slider-bg');
+        this.$Dom.alphaBarThumb =getELByClass(ele, 'ew-alpha-slider-thumb');
         if (!config.disabled) {
             this.bindEvent(this.$Dom.alphaBarThumb, (scope, el, x, y) => changeAlpha(scope, (this.isAlphaHorizontal ? x : y)));
             util.on(this.$Dom.alphaBar, 'click', event => changeAlpha(scope, (this.isAlphaHorizontal ? event.x : event.y)));
@@ -134,13 +134,13 @@ export function startMain(ele, config) {
     initAnimation(scope);
     //获取颜色选择器的一些操作元素
     if (config.hasBox) {
-        this.$Dom.box = getELByClass(ele, 'ew-color-picker-box');
+        this.$Dom.box =getELByClass(ele, 'ew-color-picker-box');
         if (!config.boxDisabled && !config.disabled) util.on(this.$Dom.box, 'click', () => handlePicker(ele, scope));
     }else{
         showColorPickerWithNoBox(this);
     }
     if (config.hasColorInput) {
-        this.$Dom.pickerInput = getELByClass(ele, 'ew-color-input');
+        this.$Dom.pickerInput =getELByClass(ele, 'ew-color-input');
         util.on(this.$Dom.pickerInput, 'blur', event => onInputColor(scope, event.target.value));
     }
     if (config.disabled) {
@@ -159,17 +159,17 @@ export function startMain(ele, config) {
         handleClickOutSide(this, config);
     }
     if (config.hasClear) {
-        this.$Dom.pickerClear = getELByClass(ele, 'ew-color-clear');
-        util.on(this.$Dom.pickerClear, 'click', () => onClearColor(ele, scope));
+        this.$Dom.pickerClear =getELByClass(ele, 'ew-color-clear');
+        util.on(this.$Dom.pickerClear, 'click', () => onClearColor(scope));
     }
     if (config.hasSure) {
-        this.$Dom.pickerSure = getELByClass(ele, 'ew-color-sure');
-        util.on(this.$Dom.pickerSure, 'click', () => onSureColor(ele, scope));
+        this.$Dom.pickerSure =getELByClass(ele, 'ew-color-sure');
+        util.on(this.$Dom.pickerSure, 'click', () => onSureColor(scope));
     }
     if (config.openChangeColorMode) {
-        this.$Dom.modeUp = getELByClass(ele, 'ew-color-mode-up');
-        this.$Dom.modeDown = getELByClass(ele, 'ew-color-mode-down');
-        this.$Dom.modeTitle = getELByClass(ele, "ew-color-mode-title");
+        this.$Dom.modeUp =getELByClass(ele, 'ew-color-mode-up');
+        this.$Dom.modeDown =getELByClass(ele, 'ew-color-mode-down');
+        this.$Dom.modeTitle =getELByClass(ele, "ew-color-mode-title");
         if (config.hasColorInput) {
             this.modeCount = config.alpha ? 1 : 0;
             this.currentMode = this.colorMode[this.modeCount];
