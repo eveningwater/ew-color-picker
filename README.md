@@ -123,6 +123,7 @@ CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
 
 # 更新日志
 
+* 1.9.4 修复了响应式更新的问题。
 * 1.9.0 ~ 1.9.3 修复了一些问题，并修改了依赖包的引入和配置。
 * 1.8.9 新增了`lang`语言配置属性，新增了`clearText`与`sureText`属性,用于自定义清空按钮和确定按钮的文本,新增了`userDefineText`属性，用于开启用户自定义清空按钮和确定按钮的文本，如果不开启该属性，那么手动设置`clearText`与`sureText`属性值无效，如果开启了该值，则语言模式失效。
 * 1.8.8 将el配置属性和isLog属性变成非响应式属性，修改了类型定义，修改了size的最小宽高限制，修改了动画执行时间的最大限制,并将`openAndClosePicker`配置对象属性方法名更改为`togglePicker`，修改了togglePicker的返回参数。

@@ -246,7 +246,17 @@
       function upAndDown() {
         const isDown = type.toLowerCase().indexOf('down') > -1;
         if (isDown) util.setCss(element, 'display', 'block');
-        let totalHeight = element.offsetHeight;
+
+        const getPropValue = function (item, prop) {
+          let v = util.getCss(item, prop);
+          return util.removeAllSpace(v).length ? parseInt(v) : Number(v);
+        };
+
+        const elementChildHeight = [].reduce.call(element.children, (res, item) => {
+          res += item.offsetHeight + getPropValue(item, 'margin-top') + getPropValue(item, 'margin-bottom');
+          return res;
+        }, 0);
+        let totalHeight = Math.max(element.offsetHeight, elementChildHeight + 10);
         let currentHeight = isDown ? 0 : totalHeight;
         let unit = totalHeight / (time / 10);
         if (isDown) util.setCss(element, 'height', '0px');
@@ -260,7 +270,10 @@
             runNext(element);
           }
 
-          if (!isDown && currentHeight <= 0) util.setCss(element, 'display', 'none');
+          if (!isDown && currentHeight <= 0) {
+            util.setCss(element, 'display', 'none');
+            util.setCss(element, 'height', '0');
+          }
         }, 10);
       }
 
@@ -630,516 +643,6 @@
     });
 
     /**
-     * 
-     * @param {*} disabled 
-     * @returns 
-     */
-
-    function setPredefineDisabled(disabled) {
-      if (disabled) return ' ew-pre-define-color-disabled';
-      return '';
-    }
-    /**
-     * 
-     * @param {*} color 
-     * @returns 
-     */
-
-    function hasAlpha(color) {
-      let alpha = color.slice(color.indexOf('(') + 1, color.lastIndexOf(')')).split(',')[3];
-      if (isAlphaColor(color) && alpha < 1 && alpha > 0) return ' ew-has-alpha';
-      return '';
-    }
-
-    let depId = 0;
-    function remove(array, item) {
-      if (array.length) {
-        let idx = array.indexOf(item);
-
-        if (idx > -1) {
-          return array.splice(idx, 1);
-        }
-      }
-    }
-    class Dep {
-      constructor() {
-        this.id = depId++;
-        this.subs = [];
-      }
-
-      addSub(sub) {
-        this.subs.push(sub);
-      }
-
-      removeSub(sub) {
-        remove(this.subs, sub);
-      }
-
-      notify() {
-        const subs = this.subs.slice();
-
-        for (let i = 0, len = subs.length; i < len; i++) {
-          subs[i].update();
-        }
-      }
-
-      depend() {
-        if (Dep.DepTarget) {
-          Dep.DepTarget.addDep(this);
-        }
-      }
-
-    }
-    Dep.id = depId;
-    Dep.subs = [];
-    Dep.DepTarget = null;
-    function pushTarget(watcher) {
-      Dep.DepTarget = watcher;
-    }
-    function popTarget() {
-      Dep.DepTarget = null;
-    }
-
-    const emptyFun = function () {};
-
-    const baseDefaultConfig = {
-      hue: true,
-      alpha: false,
-      size: "normal",
-      predefineColor: [],
-      disabled: false,
-      defaultColor: "",
-      pickerAnimation: "height",
-      pickerAnimationTime: 200,
-      sure: emptyFun,
-      clear: emptyFun,
-      togglePicker: emptyFun,
-      isLog: true,
-      changeColor: emptyFun,
-      hasBox: true,
-      isClickOutside: true,
-      hasClear: true,
-      hasSure: true,
-      hasColorInput: true,
-      boxDisabled: false,
-      openChangeColorMode: false,
-      changeBoxByChangeColor: false,
-      hueDirection: "vertical",
-      //vertical or horizontal
-      alphaDirection: "vertical",
-      //vertical or horizontal
-      lang: "zh",
-      userDefineText: false
-    };
-
-    const consoleInfo = () => console.log(`%c ew-color-picker@1.9.3%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
-
-    var zh = {
-      clearText: "清空",
-      sureText: "确定"
-    };
-
-    var en = {
-      clearText: "clear",
-      sureText: "sure"
-    };
-
-    function filterConfig(config) {
-      config.hueDirection = config.hueDirection === 'horizontal' ? config.hueDirection : 'vertical';
-      config.alphaDirection = config.alphaDirection === 'horizontal' ? config.alphaDirection : 'vertical';
-    }
-    /**
-     * 初始化配置
-     * @param {*} config 
-     * @returns 
-     */
-
-
-    function initConfig(config) {
-      const defaultConfig = { ...baseDefaultConfig
-      };
-      let element,
-          error,
-          mergeConfig = null; //如果第二个参数传的是字符串，或DOM对象，则初始化默认的配置
-
-      if (util.isString(config) || util.isDom(config) || util.isJQDom(config)) {
-        mergeConfig = defaultConfig;
-        element = util.isJQDom(config) ? config.get(0) : config;
-        error = ERROR_VARIABLE.DOM_ERROR;
-      } //如果是对象，则自定义配置，自定义配置选项如下:
-      else if (util.isDeepObject(config) && (util.isString(config.el) || util.isDom(config.el) || util.isJQDom(config.el))) {
-          filterConfig(config);
-          mergeConfig = util.ewAssign(defaultConfig, config);
-          element = util.isJQDom(config.el) ? config.el.get(0) : config.el;
-          error = ERROR_VARIABLE.DOM_OBJECT_ERROR;
-        } else {
-          element = 'body';
-
-          if (util.isDeepObject(config)) {
-            filterConfig(config);
-            mergeConfig = util.ewAssign(defaultConfig, config);
-            error = ERROR_VARIABLE.DOM_OBJECT_ERROR;
-          } else {
-            mergeConfig = defaultConfig;
-            error = ERROR_VARIABLE.DOM_ERROR;
-          }
-        }
-
-      let lang = mergeConfig.lang === "en" ? en : zh;
-
-      if (mergeConfig.userDefineText) {
-        mergeConfig = util.ewAssign(lang, mergeConfig);
-      } else {
-        mergeConfig = util.ewAssign(mergeConfig, lang);
-      }
-
-      if (mergeConfig.isLog) consoleInfo();
-      return {
-        element,
-        config: mergeConfig,
-        error
-      };
-    }
-
-    let initError = null;
-    /**
-     *  开始初始化
-     * @param {*} context 
-     * @param {*} config 
-     * @returns 
-     */
-
-    function startInit(context, config) {
-      let initOptions = initConfig(config);
-      if (!initOptions) return;
-      context.config = initOptions.config;
-      initError = initOptions.error;
-      context._privateConfig = {
-        boxSize: {
-          b_width: null,
-          b_height: null
-        },
-        pickerFlag: false,
-        colorValue: ""
-      };
-      context.beforeInit(initOptions.element, initOptions.config, initError);
-    }
-
-    class RenderWatcher {
-      constructor(vm) {
-        this._colorPickerInstance = vm;
-        this._watcher_id = vm._color_picker_uid;
-        this.depIds = new Set();
-        this.dep = null;
-        vm._watcher = this;
-        this.get();
-      }
-
-      get() {
-        pushTarget(this);
-      }
-
-      update() {
-        popTarget(); // 每次更新时清空依赖
-
-        this.cleanDeps();
-        let vm = this._colorPickerInstance;
-        let config = vm.config;
-        vm.beforeInit(vm.$Dom.rootElement, vm.config, initError);
-      }
-
-      cleanDeps() {
-        if (this.dep) {
-          this.dep.subs = [];
-          this.dep = null;
-          this.depIds = new Set();
-        }
-      }
-
-      addDep(dep) {
-        const id = dep.id;
-
-        if (!this.depIds.has(id)) {
-          this.depIds.add(id);
-          dep.addSub(this);
-          this.dep = dep;
-        }
-      }
-
-    }
-
-    function defineReactive(target) {
-      const dep = new Dep();
-      const notKeys = ["el", "isLog"];
-
-      const isNotKey = key => {
-        return notKeys.indexOf(key) === -1;
-      };
-
-      const notify = k => {
-        if (Dep.DepTarget && isNotKey(k)) {
-          dep.notify();
-        }
-      };
-
-      let proxy = new Proxy(target, {
-        get(target, key, receiver) {
-          let val = Reflect.get(target, key, receiver);
-
-          if (Dep.DepTarget && isNotKey(key)) {
-            dep.depend();
-          }
-
-          return val;
-        },
-
-        set(target, key, receiver) {
-          let val = Reflect.set(target, key, receiver);
-          notify(key);
-          return val;
-        },
-
-        has(target, key) {
-          if (key in target && !(key in Object.prototype)) {
-            return Reflect.has(target, key);
-          } else {
-            return false;
-          }
-        },
-
-        deleteProperty(target, key) {
-          if (this.has(target, key)) {
-            let val = Reflect.deleteProperty(target, key);
-            notify(key);
-            return val;
-          }
-        }
-
-      });
-      return proxy;
-    }
-
-    function def(obj, key, value, enumerable) {
-      Object.defineProperty(obj, key, {
-        enumerable: !!enumerable,
-        value: value,
-        writable: true,
-        configurable: true
-      });
-    }
-
-    class Observer {
-      constructor(value) {
-        this.value = value;
-        this.reactive = null;
-        this.dep = new Dep(); // 为了区分于vue,添加独特的标志属性
-
-        def(value, '__ew__color__picker__ob__', this);
-        this.walk(value);
-      }
-
-      walk(value) {
-        this.reactive = defineReactive(value);
-      }
-
-    }
-
-    /**
-     * 重新渲染颜色选择器
-     * @param {*} color 
-     * @param {*} pickerFlag 
-     * @param {*} el 
-     * @param {*} scope 
-     */
-
-    function onRenderColorPicker(color, pickerFlag, el, scope) {
-      scope.config.defaultColor = scope._privateConfig.colorValue = color;
-      scope._privateConfig.pickerFlag = pickerFlag;
-      scope.render(el, scope.config);
-    }
-    /**
-     * 渲染
-     * @param {*} element 
-     * @param {*} config 
-     * @returns 
-     */
-
-    function staticRender(element, config) {
-      let predefineColorHTML = '',
-          alphaBar = '',
-          hueBar = '',
-          predefineHTML = '',
-          boxDisabledClassName = '',
-          boxBackground = '',
-          boxHTML = '',
-          clearHTML = '',
-          sureHTML = '',
-          inputHTML = '',
-          btnGroupHTML = '',
-          dropHTML = '',
-          openChangeColorModeHTML = '',
-          openChangeColorModeLabelHTML = '',
-          horizontalSliderHTML = '',
-          verticalSliderHTML = '';
-      const p_c = config.predefineColor;
-      if (!util.isDeepArray(p_c)) return util.ewError(ERROR_VARIABLE.PREDEFINE_COLOR_ERROR);
-
-      if (p_c.length) {
-        p_c.map((color, index) => {
-          let isValidColorString = util.isString(color) && isValidColor(color);
-          let isValidColorObj = util.isDeepObject(color) && color.hasOwnProperty('color') && isValidColor(color.color);
-          let renderColor = isValidColorString ? color : isValidColorObj ? color.color : '';
-          let renderDisabled = isValidColorObj ? setPredefineDisabled(color.disabled) : '';
-          predefineColorHTML += `
-            <div class="ew-pre-define-color${hasAlpha(renderColor)}${renderDisabled}" tabindex=${index}>
-                <div class="ew-pre-define-color-item" style="background-color:${renderColor};"></div>
-            </div>`;
-        });
-      }
-
-      const colorBox = config.defaultColor ? `<div class="ew-color-picker-arrow" style="width:${this._privateConfig.boxSize.b_width};height:${this._privateConfig.boxSize.b_height};">
-        <div class="ew-color-picker-arrow-left"></div>
-        <div class="ew-color-picker-arrow-right"></div>
-    </div>` : `<div class="ew-color-picker-no" style="width:${this._privateConfig.boxSize.b_width};height:${this._privateConfig.boxSize.b_height};line-height:${this._privateConfig.boxSize.b_height};">&times;</div>`; //透明度
-
-      if (config.alpha) {
-        alphaBar = `<div class="ew-alpha-slider-bar">
-            <div class="ew-alpha-slider-wrapper"></div>
-            <div class="ew-alpha-slider-bg"></div>
-            <div class="ew-alpha-slider-thumb"></div>
-        </div>`;
-      } // hue
-
-
-      if (config.hue) {
-        hueBar = `<div class="ew-color-slider-bar"><div class="ew-color-slider-thumb"></div></div>`;
-      }
-
-      if (predefineColorHTML) {
-        predefineHTML = `<div class="ew-pre-define-color-container">${predefineColorHTML}</div>`;
-      }
-
-      if (config.disabled || config.boxDisabled) boxDisabledClassName = 'ew-color-picker-box-disabled';
-
-      if (config.defaultColor) {
-        if (!isValidColor(config.defaultColor)) {
-          return util.ewError(ERROR_VARIABLE.DEFAULT_COLOR_ERROR);
-        } else {
-          config.defaultColor = colorToRgba(config.defaultColor);
-        }
-      }
-      this._privateConfig.colorValue = config.defaultColor;
-      if (!config.disabled && this._privateConfig.colorValue) boxBackground = `background:${this._privateConfig.colorValue}`; // 盒子样式
-
-      const boxStyle = `width:${this._privateConfig.boxSize.b_width};height:${this._privateConfig.boxSize.b_height};${boxBackground}`;
-
-      if (config.hasBox) {
-        boxHTML = `<div class="ew-color-picker-box ${boxDisabledClassName}" tabIndex="0" style="${boxStyle}">${colorBox}</div>`;
-      }
-
-      if (config.hasClear) {
-        clearHTML = `<button class="ew-color-clear ew-color-drop-btn">${config.clearText}</button>`;
-      }
-
-      if (config.hasSure) {
-        sureHTML = `<button class="ew-color-sure ew-color-drop-btn">${config.sureText}</button>`;
-      }
-
-      if (config.hasClear || config.hasSure) {
-        btnGroupHTML = `<div class="ew-color-drop-btn-group">${clearHTML}${sureHTML}</div>`;
-      }
-
-      if (config.hasColorInput) {
-        inputHTML = '<input type="text" class="ew-color-input">';
-      }
-
-      if (config.openChangeColorMode) {
-        if (!config.alpha || !config.hue) return util.ewError(ERROR_VARIABLE.COLOR_MODE_ERROR);
-        openChangeColorModeHTML = `<div class="ew-color-mode-container">
-        <div class="ew-color-mode-up"></div>
-        <div class="ew-color-mode-down"></div>
-        </div>`;
-        openChangeColorModeLabelHTML = `<label class="ew-color-mode-title">${this.colorMode[1]}</label>`;
-      }
-
-      if (config.hasColorInput || config.hasClear || config.hasSure) {
-        dropHTML = config.openChangeColorMode ? `<div class="ew-color-drop-container ew-has-mode-container">
-        ${openChangeColorModeLabelHTML}${inputHTML}${openChangeColorModeHTML}
-        </div><div class="ew-color-drop-container">
-        ${btnGroupHTML}
-        </div>` : `<div class="ew-color-drop-container">
-        ${inputHTML}${btnGroupHTML}
-        </div>`;
-      }
-
-      this.isAlphaHorizontal = config.alphaDirection === 'horizontal';
-      this.isHueHorizontal = config.hueDirection === 'horizontal';
-
-      if (this.isAlphaHorizontal && this.isHueHorizontal) {
-        horizontalSliderHTML = hueBar + alphaBar;
-      } else if (!this.isAlphaHorizontal && !this.isHueHorizontal) {
-        verticalSliderHTML = alphaBar + hueBar;
-      } else {
-        if (this.isHueHorizontal) {
-          horizontalSliderHTML = hueBar;
-          verticalSliderHTML = alphaBar;
-        } else {
-          horizontalSliderHTML = alphaBar;
-          verticalSliderHTML = hueBar;
-        }
-      }
-
-      if (horizontalSliderHTML) {
-        horizontalSliderHTML = `<div class="ew-color-slider ew-is-horizontal">${horizontalSliderHTML}</div>`;
-      }
-
-      if (verticalSliderHTML) {
-        verticalSliderHTML = `<div class="ew-color-slider ew-is-vertical">${verticalSliderHTML}</div>`;
-      } //颜色选择器
-
-
-      const html = `${boxHTML}
-        <div class="ew-color-picker">
-            <div class="ew-color-picker-content">
-                ${verticalSliderHTML}
-                <div class="ew-color-panel" style="background:red;">
-                    <div class="ew-color-white-panel"></div>
-                    <div class="ew-color-black-panel"></div>
-                    <div class="ew-color-cursor"></div>
-                </div>
-            </div>
-            ${horizontalSliderHTML}
-            ${dropHTML}
-            ${predefineHTML}
-        </div>`;
-      let isBody = element.tagName.toLowerCase() === 'body';
-      let container = document.createElement('div');
-      let mountElement = isBody ? container.cloneNode(true) : element;
-      let mountProp = isBody ? 'id' : 'color-picker-id';
-      let mountValue = isBody ? 'placeElement-' + this._color_picker_uid : this._color_picker_uid;
-      mountElement.setAttribute(mountProp, mountValue);
-
-      if (isBody) {
-        let hasDiv = util.$('#placeElement-' + this._color_picker_uid);
-        if (hasDiv) hasDiv.parentElement.removeChild(hasDiv);
-        mountElement.innerHTML = html;
-        util.addClass(container, 'ew-color-picker-container');
-        container.appendChild(mountElement);
-        element.appendChild(container);
-      } else {
-        element.innerHTML = `<div class="ew-color-picker-container">${html}</div>`;
-      }
-
-      this._watcher = new RenderWatcher(this); // 如果config上有__ob__属性，则表明是一个响应式对象
-
-      if (!('__ew__color__picker__ob__' in this.config)) {
-        this.config = new Observer(config).reactive;
-      }
-
-      this.startMain(mountElement, config);
-    }
-
-    /**
      * 转换颜色模式
      * @param {*} context 
      * @param {*} color 
@@ -1370,19 +873,7 @@
 
       if (!this._privateConfig.pickerFlag) {
         this._privateConfig.pickerFlag = true;
-
-        const funOpen = () => open(getHeiAni(this), this.$Dom.picker, this.config.pickerAnimationTime);
-
-        const funRender = () => onRenderColorPicker(this.config.defaultColor, this._privateConfig.pickerFlag, this.$Dom.rootElement, this);
-
-        if (this.config.hasBox) {
-          funRender();
-          funOpen();
-        } else {
-          funOpen();
-          funRender();
-        }
-
+        open(getHeiAni(this), this.$Dom.picker, this.config.pickerAnimationTime);
         setColorValue(this, this.panelWidth, this.panelHeight, false);
       }
     }
@@ -1394,10 +885,134 @@
 
     function handlePicker(el, scope) {
       scope._privateConfig.pickerFlag = !scope._privateConfig.pickerFlag;
-      onRenderColorPicker(scope.config.defaultColor, scope._privateConfig.pickerFlag, el, scope);
       setColorValue(scope, scope.panelWidth, scope.panelHeight, false);
       openAndClose(scope);
       if (util.isFunction(scope.config.togglePicker)) scope.config.togglePicker(el, scope._privateConfig.pickerFlag, scope);
+    }
+
+    const emptyFun = function () {};
+
+    const baseDefaultConfig = {
+      hue: true,
+      alpha: false,
+      size: "normal",
+      predefineColor: [],
+      disabled: false,
+      defaultColor: "",
+      pickerAnimation: "height",
+      pickerAnimationTime: 200,
+      sure: emptyFun,
+      clear: emptyFun,
+      togglePicker: emptyFun,
+      isLog: true,
+      changeColor: emptyFun,
+      hasBox: true,
+      isClickOutside: true,
+      hasClear: true,
+      hasSure: true,
+      hasColorInput: true,
+      boxDisabled: false,
+      openChangeColorMode: false,
+      changeBoxByChangeColor: false,
+      hueDirection: "vertical",
+      //vertical or horizontal
+      alphaDirection: "vertical",
+      //vertical or horizontal
+      lang: "zh",
+      userDefineText: false
+    };
+
+    const consoleInfo = () => console.log(`%c ew-color-picker@1.9.4%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+
+    var zh = {
+      clearText: "清空",
+      sureText: "确定"
+    };
+
+    var en = {
+      clearText: "clear",
+      sureText: "sure"
+    };
+
+    function filterConfig(config) {
+      config.hueDirection = config.hueDirection === 'horizontal' ? config.hueDirection : 'vertical';
+      config.alphaDirection = config.alphaDirection === 'horizontal' ? config.alphaDirection : 'vertical';
+    }
+    /**
+     * 初始化配置
+     * @param {*} config 
+     * @returns 
+     */
+
+
+    function initConfig(config) {
+      const defaultConfig = { ...baseDefaultConfig
+      };
+      let element,
+          error,
+          mergeConfig = null; //如果第二个参数传的是字符串，或DOM对象，则初始化默认的配置
+
+      if (util.isString(config) || util.isDom(config) || util.isJQDom(config)) {
+        mergeConfig = defaultConfig;
+        element = util.isJQDom(config) ? config.get(0) : config;
+        error = ERROR_VARIABLE.DOM_ERROR;
+      } //如果是对象，则自定义配置，自定义配置选项如下:
+      else if (util.isDeepObject(config) && (util.isString(config.el) || util.isDom(config.el) || util.isJQDom(config.el))) {
+          filterConfig(config);
+          mergeConfig = util.ewAssign(defaultConfig, config);
+          element = util.isJQDom(config.el) ? config.el.get(0) : config.el;
+          error = ERROR_VARIABLE.DOM_OBJECT_ERROR;
+        } else {
+          element = 'body';
+
+          if (util.isDeepObject(config)) {
+            filterConfig(config);
+            mergeConfig = util.ewAssign(defaultConfig, config);
+            error = ERROR_VARIABLE.DOM_OBJECT_ERROR;
+          } else {
+            mergeConfig = defaultConfig;
+            error = ERROR_VARIABLE.DOM_ERROR;
+          }
+        }
+
+      let lang = mergeConfig.lang === "en" ? en : zh;
+
+      if (mergeConfig.userDefineText) {
+        mergeConfig = util.ewAssign(lang, mergeConfig);
+      } else {
+        mergeConfig = util.ewAssign(mergeConfig, lang);
+      }
+
+      if (mergeConfig.isLog) consoleInfo();
+      return {
+        element,
+        config: mergeConfig,
+        error
+      };
+    }
+
+    let initError = null;
+    /**
+     *  开始初始化
+     * @param {*} context 
+     * @param {*} config 
+     * @returns 
+     */
+
+    function startInit(context, config) {
+      let initOptions = initConfig(config);
+      if (!initOptions) return;
+      context.config = initOptions.config;
+      initError = initOptions.error;
+      context._privateConfig = {
+        boxSize: {
+          b_width: null,
+          b_height: null
+        },
+        pickerFlag: false,
+        colorValue: ""
+      };
+      context.beforeInit(initOptions.element, initOptions.config, initError);
     }
 
     /**
@@ -1501,7 +1116,9 @@
       if (!ele.tagName) return util.ewError(errorText);
 
       if (!isNotDom(ele)) {
-        this._color_picker_uid = util.createUUID();
+        if (!this._color_picker_uid) {
+          this._color_picker_uid = util.createUUID();
+        }
 
         if (config.openChangeColorMode) {
           this.colorMode = ["hex", "rgba", "hsla"];
@@ -1602,8 +1219,11 @@
      * @param {*} prop 
      * @param {*} bool 
      */
+
     function getELByClass(el, prop, bool) {
-      return !bool ? el.querySelector('.' + prop) : el.querySelectorAll('.' + prop);
+      let child = el.firstElementChild;
+      if (!util.hasClass(child, 'ew-color-picker-container')) child = el;
+      return !bool ? child.querySelector('.' + prop) : child.querySelectorAll('.' + prop);
     }
 
     /**
@@ -1744,9 +1364,10 @@
      * @param {*} scope 
      */
 
-    function onClearColor(el, scope) {
-      onRenderColorPicker('', false, el, scope);
-      openAndClose(scope);
+    function onClearColor(scope) {
+      scope._privateConfig.pickerFlag = false;
+      close(getHeiAni(scope), scope.$Dom.picker, scope.config.pickerAnimationTime);
+      scope.config.defaultColor = scope._privateConfig.colorValue = "";
       scope.config.clear(scope.config.defaultColor, scope);
     }
     /**
@@ -1754,10 +1375,11 @@
      * @param {*} scope 
      */
 
-    function onSureColor(el, scope) {
+    function onSureColor(scope) {
       const result = scope.config.alpha ? colorHsvaToRgba(scope.hsvaColor) : colorRgbaToHex(colorHsvaToRgba(scope.hsvaColor));
-      onRenderColorPicker(result, false, el, scope);
-      openAndClose(scope);
+      scope._privateConfig.pickerFlag = false;
+      close(getHeiAni(scope), scope.$Dom.picker, scope.config.pickerAnimationTime);
+      scope.config.defaultColor = scope._privateConfig.colorValue = result;
       changeElementColor(scope);
       scope.config.sure(result, scope);
     }
@@ -1861,9 +1483,9 @@
       let scope = this;
       this.$Dom = Object.create(null);
       this.$Dom.rootElement = ele;
+      this.$Dom.picker = getELByClass(ele, 'ew-color-picker');
       this.$Dom.pickerPanel = getELByClass(ele, 'ew-color-panel');
       this.$Dom.pickerCursor = getELByClass(ele, 'ew-color-cursor');
-      this.$Dom.picker = getELByClass(ele, 'ew-color-picker');
 
       if (this.isHueHorizontal || this.isAlphaHorizontal) {
         this.$Dom.horizontalSlider = getELByClass(ele, 'ew-is-horizontal');
@@ -1963,12 +1585,12 @@
 
       if (config.hasClear) {
         this.$Dom.pickerClear = getELByClass(ele, 'ew-color-clear');
-        util.on(this.$Dom.pickerClear, 'click', () => onClearColor(ele, scope));
+        util.on(this.$Dom.pickerClear, 'click', () => onClearColor(scope));
       }
 
       if (config.hasSure) {
         this.$Dom.pickerSure = getELByClass(ele, 'ew-color-sure');
-        util.on(this.$Dom.pickerSure, 'click', () => onSureColor(ele, scope));
+        util.on(this.$Dom.pickerSure, 'click', () => onSureColor(scope));
       }
 
       if (config.openChangeColorMode) {
@@ -1992,6 +1614,376 @@
         const top = Math.max(0, Math.min(y - scope.panelTop, panelHeight));
         changeCursorColor(scope, left + 4, top + 4, panelWidth, panelHeight);
       });
+    }
+
+    /**
+     * 
+     * @param {*} disabled 
+     * @returns 
+     */
+
+    function setPredefineDisabled(disabled) {
+      if (disabled) return ' ew-pre-define-color-disabled';
+      return '';
+    }
+    /**
+     * 
+     * @param {*} color 
+     * @returns 
+     */
+
+    function hasAlpha(color) {
+      let alpha = color.slice(color.indexOf('(') + 1, color.lastIndexOf(')')).split(',')[3];
+      if (isAlphaColor(color) && alpha < 1 && alpha > 0) return ' ew-has-alpha';
+      return '';
+    }
+
+    let depId = 0;
+    function remove(array, item) {
+      if (array.length) {
+        let idx = array.indexOf(item);
+
+        if (idx > -1) {
+          return array.splice(idx, 1);
+        }
+      }
+    }
+    class Dep {
+      constructor() {
+        this.id = depId++;
+        this.subs = [];
+      }
+
+      addSub(sub) {
+        this.subs.push(sub);
+      }
+
+      removeSub(sub) {
+        remove(this.subs, sub);
+      }
+
+      notify() {
+        const subs = this.subs.slice();
+
+        for (let i = 0, len = subs.length; i < len; i++) {
+          subs[i].update();
+        }
+      }
+
+      depend() {
+        if (Dep.DepTarget) {
+          Dep.DepTarget.addDep(this);
+        }
+      }
+
+    }
+    Dep.id = depId;
+    Dep.subs = [];
+    Dep.DepTarget = null;
+    function pushTarget(watcher) {
+      Dep.DepTarget = watcher;
+    }
+
+    function defineReactive(dep, target) {
+      const notKeys = ["el", "isLog"];
+
+      const isNotKey = key => {
+        return notKeys.indexOf(key) === -1;
+      };
+
+      const notify = k => {
+        if (Dep.DepTarget && isNotKey(k)) {
+          dep.notify();
+        }
+      };
+
+      let proxy = new Proxy(target, {
+        get(target, key, receiver) {
+          let val = Reflect.get(target, key, receiver);
+
+          if (Dep.DepTarget && isNotKey(key)) {
+            dep.depend();
+          }
+
+          return val;
+        },
+
+        set(target, key, receiver) {
+          let val = Reflect.set(target, key, receiver);
+          notify(key);
+          return val;
+        },
+
+        has(target, key) {
+          if (key in target && !(key in Object.prototype)) {
+            return Reflect.has(target, key);
+          } else {
+            return false;
+          }
+        },
+
+        deleteProperty(target, key) {
+          if (this.has(target, key)) {
+            let val = Reflect.deleteProperty(target, key);
+            notify(key);
+            return val;
+          }
+        }
+
+      });
+      return proxy;
+    }
+
+    function def(obj, key, value, enumerable) {
+      Object.defineProperty(obj, key, {
+        enumerable: !!enumerable,
+        value: value,
+        writable: true,
+        configurable: true
+      });
+    }
+
+    class Observer {
+      constructor(value) {
+        this.value = value;
+        this.reactive = null;
+        this.dep = new Dep(); // 为了区分于vue,添加独特的标志属性
+
+        def(value, '__ew__color__picker__ob__', this);
+        this.walk(value);
+      }
+
+      walk(value) {
+        this.reactive = defineReactive(this.dep, value);
+      }
+
+    }
+
+    class RenderWatcher {
+      constructor(vm) {
+        this._colorPickerInstance = vm;
+        this._watcher_id = vm._color_picker_uid;
+        this.depIds = new Set();
+        this.dep = null;
+        vm._watcher = this;
+        this.get();
+      }
+
+      get() {
+        pushTarget(this);
+      }
+
+      update() {
+        const updateHandler = vm => {
+          setTimeout(() => {
+            vm.beforeInit(vm.$Dom.rootElement, vm.config, initError); // 每次更新时清空依赖
+
+            this.cleanDeps();
+          }, vm.config.pickerAnimationTime);
+        };
+
+        if (this.depIds.size === 1 || !this.dep.subs.length) {
+          updateHandler(this._colorPickerInstance);
+        } else {
+          // 渲染的依赖有点奇怪?
+          const dep = this.dep.subs.filter(_ => _._watcher_id !== this._watcher_id)[0];
+          updateHandler(dep._colorPickerInstance);
+        }
+      }
+
+      cleanDeps() {
+        if (this.dep) {
+          this.dep.subs = [];
+        }
+      }
+
+      addDep(dep) {
+        const id = dep.id;
+        this.dep = dep;
+
+        if (!this.depIds.has(id)) {
+          this.depIds.add(id);
+          dep.addSub(this);
+        }
+      }
+
+    }
+
+    /**
+     * 渲染
+     * @param {*} element 
+     * @param {*} config 
+     * @returns 
+     */
+
+    function staticRender(element, config) {
+      let predefineColorHTML = '',
+          alphaBar = '',
+          hueBar = '',
+          predefineHTML = '',
+          boxDisabledClassName = '',
+          boxBackground = '',
+          boxHTML = '',
+          clearHTML = '',
+          sureHTML = '',
+          inputHTML = '',
+          btnGroupHTML = '',
+          dropHTML = '',
+          openChangeColorModeHTML = '',
+          openChangeColorModeLabelHTML = '',
+          horizontalSliderHTML = '',
+          verticalSliderHTML = '';
+      const p_c = config.predefineColor;
+      if (!util.isDeepArray(p_c)) return util.ewError(ERROR_VARIABLE.PREDEFINE_COLOR_ERROR);
+
+      if (p_c.length) {
+        p_c.map((color, index) => {
+          let isValidColorString = util.isString(color) && isValidColor(color);
+          let isValidColorObj = util.isDeepObject(color) && color.hasOwnProperty('color') && isValidColor(color.color);
+          let renderColor = isValidColorString ? color : isValidColorObj ? color.color : '';
+          let renderDisabled = isValidColorObj ? setPredefineDisabled(color.disabled) : '';
+          predefineColorHTML += `
+            <div class="ew-pre-define-color${hasAlpha(renderColor)}${renderDisabled}" tabindex=${index}>
+                <div class="ew-pre-define-color-item" style="background-color:${renderColor};"></div>
+            </div>`;
+        });
+      }
+
+      const colorBox = config.defaultColor ? `<div class="ew-color-picker-arrow" style="width:${this._privateConfig.boxSize.b_width};height:${this._privateConfig.boxSize.b_height};">
+        <div class="ew-color-picker-arrow-left"></div>
+        <div class="ew-color-picker-arrow-right"></div>
+    </div>` : `<div class="ew-color-picker-no" style="width:${this._privateConfig.boxSize.b_width};height:${this._privateConfig.boxSize.b_height};line-height:${this._privateConfig.boxSize.b_height};">&times;</div>`; //透明度
+
+      if (config.alpha) {
+        alphaBar = `<div class="ew-alpha-slider-bar">
+            <div class="ew-alpha-slider-wrapper"></div>
+            <div class="ew-alpha-slider-bg"></div>
+            <div class="ew-alpha-slider-thumb"></div>
+        </div>`;
+      } // hue
+
+
+      if (config.hue) {
+        hueBar = `<div class="ew-color-slider-bar"><div class="ew-color-slider-thumb"></div></div>`;
+      }
+
+      if (predefineColorHTML) {
+        predefineHTML = `<div class="ew-pre-define-color-container">${predefineColorHTML}</div>`;
+      }
+
+      if (config.disabled || config.boxDisabled) boxDisabledClassName = 'ew-color-picker-box-disabled';
+
+      if (config.defaultColor) {
+        if (!isValidColor(config.defaultColor)) {
+          return util.ewError(ERROR_VARIABLE.DEFAULT_COLOR_ERROR);
+        } else {
+          config.defaultColor = colorToRgba(config.defaultColor);
+        }
+      }
+      this._privateConfig.colorValue = config.defaultColor;
+      if (!config.disabled && this._privateConfig.colorValue) boxBackground = `background:${this._privateConfig.colorValue}`; // 盒子样式
+
+      const boxStyle = `width:${this._privateConfig.boxSize.b_width};height:${this._privateConfig.boxSize.b_height};${boxBackground}`;
+
+      if (config.hasBox) {
+        boxHTML = `<div class="ew-color-picker-box ${boxDisabledClassName}" tabIndex="0" style="${boxStyle}">${colorBox}</div>`;
+      }
+
+      if (config.hasClear) {
+        clearHTML = `<button class="ew-color-clear ew-color-drop-btn">${config.clearText}</button>`;
+      }
+
+      if (config.hasSure) {
+        sureHTML = `<button class="ew-color-sure ew-color-drop-btn">${config.sureText}</button>`;
+      }
+
+      if (config.hasClear || config.hasSure) {
+        btnGroupHTML = `<div class="ew-color-drop-btn-group">${clearHTML}${sureHTML}</div>`;
+      }
+
+      if (config.hasColorInput) {
+        inputHTML = '<input type="text" class="ew-color-input">';
+      }
+
+      if (config.openChangeColorMode) {
+        if (!config.alpha || !config.hue) return util.ewError(ERROR_VARIABLE.COLOR_MODE_ERROR);
+        openChangeColorModeHTML = `<div class="ew-color-mode-container">
+        <div class="ew-color-mode-up"></div>
+        <div class="ew-color-mode-down"></div>
+        </div>`;
+        openChangeColorModeLabelHTML = `<label class="ew-color-mode-title">${this.colorMode[1]}</label>`;
+      }
+
+      if (config.hasColorInput || config.hasClear || config.hasSure) {
+        dropHTML = config.openChangeColorMode ? `<div class="ew-color-drop-container ew-has-mode-container">
+        ${openChangeColorModeLabelHTML}${inputHTML}${openChangeColorModeHTML}
+        </div><div class="ew-color-drop-container">
+        ${btnGroupHTML}
+        </div>` : `<div class="ew-color-drop-container">
+        ${inputHTML}${btnGroupHTML}
+        </div>`;
+      }
+
+      this.isAlphaHorizontal = config.alphaDirection === 'horizontal';
+      this.isHueHorizontal = config.hueDirection === 'horizontal';
+
+      if (this.isAlphaHorizontal && this.isHueHorizontal) {
+        horizontalSliderHTML = hueBar + alphaBar;
+      } else if (!this.isAlphaHorizontal && !this.isHueHorizontal) {
+        verticalSliderHTML = alphaBar + hueBar;
+      } else {
+        if (this.isHueHorizontal) {
+          horizontalSliderHTML = hueBar;
+          verticalSliderHTML = alphaBar;
+        } else {
+          horizontalSliderHTML = alphaBar;
+          verticalSliderHTML = hueBar;
+        }
+      }
+
+      if (horizontalSliderHTML) {
+        horizontalSliderHTML = `<div class="ew-color-slider ew-is-horizontal">${horizontalSliderHTML}</div>`;
+      }
+
+      if (verticalSliderHTML) {
+        verticalSliderHTML = `<div class="ew-color-slider ew-is-vertical">${verticalSliderHTML}</div>`;
+      } //颜色选择器
+
+
+      const html = `${boxHTML}
+        <div class="ew-color-picker">
+            <div class="ew-color-picker-content">
+                ${verticalSliderHTML}
+                <div class="ew-color-panel" style="background:red;">
+                    <div class="ew-color-white-panel"></div>
+                    <div class="ew-color-black-panel"></div>
+                    <div class="ew-color-cursor"></div>
+                </div>
+            </div>
+            ${horizontalSliderHTML}
+            ${dropHTML}
+            ${predefineHTML}
+        </div>`;
+      let isBody = element.tagName.toLowerCase() === 'body';
+      let container = document.createElement('div');
+      let mountElement = isBody ? container.cloneNode(true) : element;
+      mountElement.setAttribute("color-picker-id", this._color_picker_uid);
+
+      if (isBody) {
+        mountElement.setAttribute("id", 'placeElement-' + this._color_picker_uid);
+        let hasDiv = util.$('#placeElement-' + this._color_picker_uid);
+        if (hasDiv) hasDiv.parentElement.removeChild(hasDiv);
+        mountElement.innerHTML = html;
+        util.addClass(container, 'ew-color-picker-container');
+        container.appendChild(mountElement);
+        element.appendChild(container);
+      } else {
+        element.innerHTML = `<div class="ew-color-picker-container">${html}</div>`;
+      }
+
+      this._watcher = new RenderWatcher(this);
+      this.config = new Observer(config).reactive;
+      this.startMain(mountElement, config);
     }
 
     /**

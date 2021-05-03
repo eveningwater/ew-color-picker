@@ -2,20 +2,8 @@ import { setPredefineDisabled,hasAlpha } from '../layout/predefineColor';
 import util from '../utils/util';
 import { isValidColor,colorRegRGB,colorToRgba } from '../color/color';
 import { ERROR_VARIABLE } from '../const/error';
-import RenderWatcher from '../render/renderWatcher';
 import { Observer } from '../observe/proxy';
-/**
- * 重新渲染颜色选择器
- * @param {*} color 
- * @param {*} pickerFlag 
- * @param {*} el 
- * @param {*} scope 
- */
-export function onRenderColorPicker(color, pickerFlag, el, scope) {
-    scope.config.defaultColor = scope._privateConfig.colorValue = color;
-    scope._privateConfig.pickerFlag = pickerFlag;
-    scope.render(el, scope.config);
-}
+import RenderWatcher from './renderWatcher';
 /**
  * 渲染
  * @param {*} element 
@@ -156,10 +144,9 @@ export function staticRender(element, config) {
     let isBody = element.tagName.toLowerCase() === 'body';
     let container = document.createElement('div');
     let mountElement = isBody ? container.cloneNode(true) : element;
-    let mountProp = isBody ? 'id' : 'color-picker-id';
-    let mountValue = isBody ? 'placeElement-' + this._color_picker_uid : this._color_picker_uid;
-    mountElement.setAttribute(mountProp,mountValue);
+    mountElement.setAttribute("color-picker-id",this._color_picker_uid);
     if (isBody) {
+        mountElement.setAttribute("id",'placeElement-' + this._color_picker_uid);
         let hasDiv = util.$('#placeElement-' + this._color_picker_uid);
         if (hasDiv)hasDiv.parentElement.removeChild(hasDiv);
         mountElement.innerHTML = html;
@@ -170,9 +157,6 @@ export function staticRender(element, config) {
         element.innerHTML = `<div class="ew-color-picker-container">${ html }</div>`;
     }
     this._watcher = new RenderWatcher(this);
-    // 如果config上有__ob__属性，则表明是一个响应式对象
-    if(!('__ew__color__picker__ob__' in this.config)){
-        this.config = new Observer(config).reactive;
-    }
+    this.config = new Observer(config).reactive; 
     this.startMain(mountElement, config);
 }
