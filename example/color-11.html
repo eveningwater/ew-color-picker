@@ -11,23 +11,27 @@
 
 <body>
     <div></div>
-    <!-- <div></div>
     <div></div>
     <div></div>
     <div></div>
-    <div></div> -->
+    <div></div>
+    <div></div>
     <script src="../dist/ew-color-picker.js"></script>
     <script>
+        let a = {
+
+        }
         const div_elements = ewColorPicker.util.$("div");
         div_elements.forEach(item => new ewColorPicker({
             el: item,
-            sure: (color, context) => {
-                // console.log(color,context);
+            sure: function(color, context) {
+                a.color = color;
             },
-            clear: (defaultColor) => {
-                // console.log(defaultColor)
+            clear: function(defaultColor) {
+                console.log(defaultColor,this);
             }
         }))
+        
     </script>
 </body>
 
