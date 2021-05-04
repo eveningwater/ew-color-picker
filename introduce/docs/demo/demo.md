@@ -199,6 +199,8 @@
 
 ## 一个完整的示例
 
-这里有一个完整的示例。[完整示例](http://js.jirengu.com/fusicemita/3/)。
+这里有一个完整的示例。如下:
+
+[完整示例](https://eveningwater.github.io/ew-color-picker/example/all-color.html)。
 
 
