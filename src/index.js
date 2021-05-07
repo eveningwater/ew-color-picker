@@ -9,6 +9,7 @@ import { updateColor } from './layout/updateColor';
 import { initFunction } from './init/init';
 import { startMain } from './layout/main';
 import { staticRender } from './render/render';
+import { destroyInstance } from './destroy/destroy'
 /**
  * 构造函数
  * @param {*} config 
@@ -49,6 +50,10 @@ const methods = [
     {
         name: "closePicker",
         func: handleClosePicker 
+    },
+    {
+        name:"destroy",
+        func:destroyInstance
     }
 ];
 methods.forEach(method => util.addMethod(ewColorPicker, method.name, method.func));

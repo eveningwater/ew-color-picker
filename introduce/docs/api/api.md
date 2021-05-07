@@ -641,6 +641,17 @@ color.closePicker('height',300);
 //或color.closePicker('opacity',300);
 ```
 
+### destroy方法
+
+9.destroy方法
+
+该方法用于销毁一个颜色选择器实例，不用传任何参数。如:
+
+```js
+const color = new ewColorPicker();
+color.destroy();
+```
+
 ## 内置工具方法详解
 
 内置工具方法都被放在`ewColorPicker.util`对象中，一共有`41`个工具方法，可以通过在页面中引入插件的js文件，然后打印这个工具方法对象，下面让我们来看一看都有哪些工具方法吧！
