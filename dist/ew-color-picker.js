@@ -894,7 +894,6 @@
     }
 
     const emptyFun = function () {};
-
     const baseDefaultConfig = {
       hue: true,
       alpha: false,
@@ -925,7 +924,7 @@
       userDefineText: false
     };
 
-    const consoleInfo = () => console.log(`%c ew-color-picker@1.9.4%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+    const consoleInfo = () => console.log(`%c ew-color-picker@1.9.5%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
     var zh = {
       clearText: "清空",
@@ -1687,13 +1686,11 @@
       Dep.DepTarget = watcher;
     }
 
+    const notKeys = ["el", "isLog"];
+    const isNotKey = key => {
+      return notKeys.indexOf(key) === -1;
+    };
     function defineReactive(dep, target) {
-      const notKeys = ["el", "isLog"];
-
-      const isNotKey = key => {
-        return notKeys.indexOf(key) === -1;
-      };
-
       const notify = k => {
         if (Dep.DepTarget && isNotKey(k)) {
           dep.notify();
@@ -1748,12 +1745,13 @@
 
     class Observer {
       constructor(value) {
-        this.value = value;
+        this.value = { ...value
+        };
         this.reactive = null;
         this.dep = new Dep(); // 为了区分于vue,添加独特的标志属性
 
         def(value, '__ew__color__picker__ob__', this);
-        this.walk(value);
+        this.walk(this.value);
       }
 
       walk(value) {
@@ -1989,6 +1987,22 @@
       this.startMain(mountElement, config);
     }
 
+    function destroyInstance() {
+      const instance = this.$Dom.rootElement;
+      const instanceParentElement = instance.parentElement;
+      const isContainer = util.hasClass(instanceParentElement, 'ew-color-picker-container');
+
+      if (isContainer && instanceParentElement) {
+        removeNode(instanceParentElement);
+      } else if (instance) {
+        removeNode(instance);
+      }
+    }
+
+    function removeNode(node) {
+      return node.parentElement.removeChild(node);
+    }
+
     /**
      * 构造函数
      * @param {*} config 
@@ -2023,6 +2037,9 @@
     }, {
       name: "closePicker",
       func: handleClosePicker
+    }, {
+      name: "destroy",
+      func: destroyInstance
     }];
     methods$1.forEach(method => util.addMethod(ewColorPicker, method.name, method.func)); // 全局API注册
 

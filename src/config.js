@@ -1,4 +1,4 @@
-const emptyFun = function () { };
+export const emptyFun = function () { };
 const baseDefaultConfig = {
     hue: true,
     alpha: false,

@@ -10,6 +10,7 @@
 </head>
 
 <body>
+    <div></div>
     <!-- <script src="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.js"></script> -->
     <script src="../dist/ew-color-picker.js"></script>
     <script>
@@ -18,13 +19,14 @@
             console.log('el1',el);
         }
         const color2 = new ewColorPicker({
+            el:"div",
             alpha:true,
             pickerAnimation:"opacity",
             togglePicker:(el,flag,context) => {
                 console.log('el2',el);
             }
         });
-        
+        color1.destroy();
     </script>
 </body>
 

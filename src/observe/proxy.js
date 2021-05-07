@@ -1,10 +1,11 @@
 import util from '../utils/util';
 import Dep from './dep';
+import { emptyFun } from '../config'
+const notKeys = ["el","isLog"];
+export const isNotKey = key => {
+    return notKeys.indexOf(key) === -1;
+}
 export function defineReactive(dep,target) {
-    const notKeys = ["el","isLog"];
-    const isNotKey = key => {
-        return notKeys.indexOf(key) === -1;
-    }
     const notify = k => {
         if (Dep.DepTarget && isNotKey(k)) {
             dep.notify();
@@ -50,12 +51,12 @@ function def(obj, key, value, enumerable) {
 }
 export class Observer {
     constructor(value) {
-        this.value = value;
+        this.value = { ...value };
         this.reactive = null;
         this.dep = new Dep();
         // 为了区分于vue,添加独特的标志属性
         def(value, '__ew__color__picker__ob__', this);
-        this.walk(value);
+        this.walk(this.value);
     }
     walk(value) {
         this.reactive = defineReactive(this.dep,value);
