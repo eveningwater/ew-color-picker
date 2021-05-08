@@ -877,7 +877,7 @@ function handleOpenPicker(ani, time) {
  * @param {*} scope 
  */
 
-function handlePicker(el, scope) {
+function handlePicker(el, scope, callback) {
   scope._privateConfig.pickerFlag = !scope._privateConfig.pickerFlag;
   setColorValue(scope, scope.panelWidth, scope.panelHeight, false);
   openAndClose(scope);
@@ -885,6 +885,8 @@ function handlePicker(el, scope) {
   if (util.isFunction(scope.config.togglePicker)) {
     scope.config.togglePicker(el, scope._privateConfig.pickerFlag, scope);
   }
+
+  if (util.isFunction(callback)) callback(scope._privateConfig.pickerFlag);
 }
 
 const emptyFun = function () {};
@@ -918,7 +920,7 @@ const baseDefaultConfig = {
   userDefineText: false
 };
 
-const consoleInfo = () => console.log(`%c ew-color-picker@1.9.5%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+const consoleInfo = () => console.log(`%c ew-color-picker@1.9.6%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
 var zh = {
   clearText: "清空",
@@ -1062,6 +1064,24 @@ const getDefaultConfig = function () {
   return baseDefaultConfig;
 };
 
+const destroy = function (instances) {
+  let remove = vm => {
+    if (vm instanceof ewColorPicker) {
+      vm.destroy();
+    }
+  };
+
+  if (util$1.isDeepArray(instances)) {
+    let i = instances.length;
+
+    while (i--) {
+      remove(instances[i]);
+    }
+  } else {
+    remove(instances);
+  }
+};
+
 const util$1 = Object.create(null);
 [color, util, {
   bindEvent: bindEvent
@@ -1075,6 +1095,7 @@ const util$1 = Object.create(null);
 var globalAPI = {
   createColorPicker,
   getDefaultConfig,
+  destroy,
   util: util$1
 };
 
@@ -1550,7 +1571,11 @@ function startMain(ele, config) {
 
   if (config.hasBox) {
     this.$Dom.box = getELByClass(ele, 'ew-color-picker-box');
-    if (!config.boxDisabled && !config.disabled) util.on(this.$Dom.box, 'click', () => handlePicker(ele, scope));
+    if (!config.boxDisabled && !config.disabled) util.on(this.$Dom.box, 'click', () => handlePicker(ele, scope, flag => {
+      if (flag && scope.config.isClickOutside) {
+        handleClickOutSide(scope, scope.config);
+      }
+    }));
   } else {
     showColorPickerWithNoBox(this);
   }
@@ -1754,6 +1779,18 @@ class Observer {
 
 }
 
+/**
+ * 重新渲染颜色选择器
+ * @param {*} vm 
+ * @param {*} callback 
+ */
+
+function render(vm, callback) {
+  setTimeout(() => {
+    vm.beforeInit(vm.$Dom.rootElement, vm.config, initError);
+    if (util.isFunction(callback)) callback();
+  }, vm.config.pickerAnimationTime);
+}
 class RenderWatcher {
   constructor(vm) {
     this._colorPickerInstance = vm;
@@ -1770,20 +1807,10 @@ class RenderWatcher {
 
   update() {
     const updateHandler = vm => {
-      setTimeout(() => {
-        vm.beforeInit(vm.$Dom.rootElement, vm.config, initError); // 每次更新时清空依赖
-
-        this.cleanDeps();
-      }, vm.config.pickerAnimationTime);
+      render(vm, () => this.cleanDeps());
     };
 
-    if (this.depIds.size === 1 || !this.dep.subs.length) {
-      updateHandler(this._colorPickerInstance);
-    } else {
-      // 渲染的依赖有点奇怪?
-      const dep = this.dep.subs.filter(_ => _._watcher_id !== this._watcher_id)[0];
-      updateHandler(dep._colorPickerInstance);
-    }
+    updateHandler(this._colorPickerInstance);
   }
 
   cleanDeps() {
@@ -1981,6 +2008,10 @@ function staticRender(element, config) {
   this.startMain(mountElement, config);
 }
 
+/**
+ * 销毁颜色选择器实例
+ */
+
 function destroyInstance() {
   const instance = this.$Dom.rootElement;
   const instanceParentElement = instance.parentElement;
@@ -2002,7 +2033,7 @@ function removeNode(node) {
  * @param {*} config 
  */
 
-function ewColorPicker(config) {
+function ewColorPicker$1(config) {
   if (util.isUndefined(new.target)) return util.ewError(ERROR_VARIABLE.CONSTRUCTOR_ERROR);
   startInit(this, config);
 }
@@ -2035,10 +2066,10 @@ const methods$1 = [{
   name: "destroy",
   func: destroyInstance
 }];
-methods$1.forEach(method => util.addMethod(ewColorPicker, method.name, method.func)); // 全局API注册
+methods$1.forEach(method => util.addMethod(ewColorPicker$1, method.name, method.func)); // 全局API注册
 
 Object.keys(globalAPI).forEach(key => {
-  ewColorPicker[key] = globalAPI[key];
+  ewColorPicker$1[key] = globalAPI[key];
 });
 
-export default ewColorPicker;
+export default ewColorPicker$1;
