@@ -2,6 +2,17 @@
 import { pushTarget, remove } from '../observe/dep';
 import util from '../utils/util';
 import { initError } from '../init/startInit';
+/**
+ * 重新渲染颜色选择器
+ * @param {*} vm 
+ * @param {*} callback 
+ */
+ export function render(vm,callback){
+    setTimeout(() => {
+        vm.beforeInit(vm.$Dom.rootElement,vm.config,initError);
+        if(util.isFunction(callback))callback();
+    },vm.config.pickerAnimationTime);
+}
 export default class RenderWatcher {
     constructor(vm){
         this._colorPickerInstance = vm;
@@ -16,19 +27,9 @@ export default class RenderWatcher {
     }
     update(){
         const updateHandler = vm => {
-            setTimeout(() => {
-                vm.beforeInit(vm.$Dom.rootElement,vm.config,initError);
-                // 每次更新时清空依赖
-                this.cleanDeps();
-            },vm.config.pickerAnimationTime);
+            render(vm,() => this.cleanDeps());
         }
-        if(this.depIds.size === 1 || !this.dep.subs.length){
-            updateHandler(this._colorPickerInstance);
-        }else{
-            // 渲染的依赖有点奇怪?
-            const dep = this.dep.subs.filter(_ => _._watcher_id !== this._watcher_id)[0];
-            updateHandler(dep._colorPickerInstance);
-        }
+        updateHandler(this._colorPickerInstance);
     }
     cleanDeps(){
         if(this.dep){

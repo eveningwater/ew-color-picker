@@ -447,6 +447,27 @@ const color = ewColorPicker.createColorPicker('div');
 ```js
 ewColorPicker.getDefaultConfig();
 ```
+### destroy方法
+
+3.destroy方法
+
+该方法用于全局销毁颜色选择器实例,传入参数为需要消除的颜色选择器实例数组或实例对象。如:
+
+* 消除多个颜色选择器实例
+
+```js
+const color1 = ewColorPicker.createColorPicker();
+const color2 = ewColorPicker.createColorPicker();
+const color3 = new ewColorPicker();
+ewColorPicker.destroy([color1,color2,color3]);
+```
+
+* 消除单个颜色选择器实例
+
+```js
+const color1 = ewColorPicker.createColorPicker();
+ewColorPicker.destroy(color1);
+```
 
 ## 实例属性
 
