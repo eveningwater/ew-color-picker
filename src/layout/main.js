@@ -135,7 +135,11 @@ export function startMain(ele, config) {
     //获取颜色选择器的一些操作元素
     if (config.hasBox) {
         this.$Dom.box =getELByClass(ele, 'ew-color-picker-box');
-        if (!config.boxDisabled && !config.disabled) util.on(this.$Dom.box, 'click', () => handlePicker(ele, scope));
+        if (!config.boxDisabled && !config.disabled) util.on(this.$Dom.box, 'click', () => handlePicker(ele, scope,(flag) => {
+            if(flag && scope.config.isClickOutside){
+                handleClickOutSide(scope,scope.config);
+            }
+        }));
     }else{
         showColorPickerWithNoBox(this);
     }

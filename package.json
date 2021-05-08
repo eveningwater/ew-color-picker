@@ -1,10 +1,10 @@
 {
   "name": "ew-color-picker",
-  "version": "1.9.5",
+  "version": "1.9.6",
   "description": "一个基于原生js而封装的颜色选择器",
   "main": "dist/ew-color-picker.min.js",
   "module": "dist/ew-color-picker.esm.min.js",
-  "typings":"types/index.d.ts",
+  "typings": "types/index.d.ts",
   "scripts": {
     "build": "cross-env NODE_ENV=production rollup -c",
     "doc": "vuepress dev introduce/.",

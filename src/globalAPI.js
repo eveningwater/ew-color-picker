@@ -3,6 +3,7 @@ import { startInit } from './init/startInit';
 import * as color from './color/color';
 import base from './utils/util';
 import { bindEvent } from './handler/bindEvent';
+
 const createColorPicker = function (config) {
     const Super = this;
     const Sub = function(){
@@ -16,6 +17,21 @@ const createColorPicker = function (config) {
 const getDefaultConfig = function () {
     return colorPickerConfig;
 }
+const destroy = function(instances){
+    let remove = vm => {
+        if(vm instanceof ewColorPicker){
+            vm.destroy();
+        }
+    }
+    if(util.isDeepArray(instances)){
+        let i = instances.length;
+        while(i--){
+            remove(instances[i])
+        }
+    }else {
+        remove(instances);
+    }
+}
 const util = Object.create(null);
 [color,base,{ bindEvent:bindEvent }].forEach(module => {
     Object.keys(module).forEach(key => {
@@ -27,5 +43,6 @@ const util = Object.create(null);
 export default {
     createColorPicker,
     getDefaultConfig,
+    destroy,
     util
 }
