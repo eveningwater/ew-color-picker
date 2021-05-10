@@ -879,7 +879,6 @@ function handleOpenPicker(ani, time) {
 
 function handlePicker(el, scope, callback) {
   scope._privateConfig.pickerFlag = !scope._privateConfig.pickerFlag;
-  setColorValue(scope, scope.panelWidth, scope.panelHeight, false);
   openAndClose(scope);
 
   if (util.isFunction(scope.config.togglePicker)) {
@@ -920,7 +919,7 @@ const baseDefaultConfig = {
   userDefineText: false
 };
 
-const consoleInfo = () => console.log(`%c ew-color-picker@1.9.6%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+const consoleInfo = () => console.log(`%c ew-color-picker@1.9.7%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
 var zh = {
   clearText: "清空",
@@ -1488,6 +1487,19 @@ function initPreDefineHandler(items, context) {
     });
   });
 }
+
+function initColor(context, config) {
+  if (config.defaultColor) {
+    context.hsvaColor = colorRegRGBA.test(config.defaultColor) ? colorRgbaToHsva(config.defaultColor) : colorRgbaToHsva(colorToRgba(config.defaultColor));
+  } else {
+    context.hsvaColor = {
+      h: 0,
+      s: 100,
+      v: 100,
+      a: 1
+    };
+  }
+}
 /**
  * 主要功能
  * @param {*} ele 
@@ -1512,17 +1524,7 @@ function startMain(ele, config) {
     this.$Dom.verticalSlider = getELByClass(ele, 'ew-is-vertical');
   }
 
-  if (config.defaultColor) {
-    this.hsvaColor = colorRegRGBA.test(config.defaultColor) ? colorRgbaToHsva(config.defaultColor) : colorRgbaToHsva(colorToRgba(config.defaultColor));
-  } else {
-    this.hsvaColor = {
-      h: 0,
-      s: 100,
-      v: 100,
-      a: 1
-    };
-  }
-
+  initColor(this, config);
   const panelWidth = this.panelWidth = parseInt(util.getCss(this.$Dom.pickerPanel, 'width'));
   const panelHeight = this.panelHeight = parseInt(util.getCss(this.$Dom.pickerPanel, 'height')); //计算偏差
 
@@ -1573,6 +1575,8 @@ function startMain(ele, config) {
     this.$Dom.box = getELByClass(ele, 'ew-color-picker-box');
     if (!config.boxDisabled && !config.disabled) util.on(this.$Dom.box, 'click', () => handlePicker(ele, scope, flag => {
       if (flag && scope.config.isClickOutside) {
+        initColor(this, config);
+        setColorValue(scope, scope.panelWidth, scope.panelHeight, false);
         handleClickOutSide(scope, scope.config);
       }
     }));
