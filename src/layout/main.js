@@ -67,7 +67,18 @@ function initPreDefineHandler(items, context) {
         });
     })
 }
-
+function initColor(context,config){
+    if (config.defaultColor) {
+        context.hsvaColor = colorRegRGBA.test(config.defaultColor) ? colorRgbaToHsva(config.defaultColor) : colorRgbaToHsva(colorToRgba(config.defaultColor));
+    } else {
+        context.hsvaColor = {
+            h: 0,
+            s: 100,
+            v: 100,
+            a: 1
+        };
+    }
+}
 /**
  * 主要功能
  * @param {*} ele 
@@ -87,16 +98,7 @@ export function startMain(ele, config) {
     if (!this.isHueHorizontal || !this.isAlphaHorizontal) {
         this.$Dom.verticalSlider =getELByClass(ele, 'ew-is-vertical');
     }
-    if (config.defaultColor) {
-        this.hsvaColor = colorRegRGBA.test(config.defaultColor) ? colorRgbaToHsva(config.defaultColor) : colorRgbaToHsva(colorToRgba(config.defaultColor));
-    } else {
-        this.hsvaColor = {
-            h: 0,
-            s: 100,
-            v: 100,
-            a: 1
-        };
-    }
+    initColor(this,config);
     const panelWidth = this.panelWidth = parseInt(util.getCss(this.$Dom.pickerPanel, 'width'));
     const panelHeight = this.panelHeight = parseInt(util.getCss(this.$Dom.pickerPanel, 'height'));
     //计算偏差
@@ -137,6 +139,8 @@ export function startMain(ele, config) {
         this.$Dom.box =getELByClass(ele, 'ew-color-picker-box');
         if (!config.boxDisabled && !config.disabled) util.on(this.$Dom.box, 'click', () => handlePicker(ele, scope,(flag) => {
             if(flag && scope.config.isClickOutside){
+                initColor(this,config);
+                setColorValue(scope, scope.panelWidth, scope.panelHeight,false);
                 handleClickOutSide(scope,scope.config);
             }
         }));

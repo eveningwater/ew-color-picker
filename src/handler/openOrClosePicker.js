@@ -74,7 +74,6 @@ export function handleOpenPicker(ani,time) {
  */
  export function handlePicker(el, scope,callback) {
     scope._privateConfig.pickerFlag = !scope._privateConfig.pickerFlag;
-    setColorValue(scope, scope.panelWidth, scope.panelHeight,false);
     openAndClose(scope);
     if (util.isFunction(scope.config.togglePicker)){
         scope.config.togglePicker(el, scope._privateConfig.pickerFlag,scope);
