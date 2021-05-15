@@ -1526,20 +1526,10 @@ function startMain(ele, config) {
 
   initColor(this, config);
   const panelWidth = this.panelWidth = parseInt(util.getCss(this.$Dom.pickerPanel, 'width'));
-  const panelHeight = this.panelHeight = parseInt(util.getCss(this.$Dom.pickerPanel, 'height')); //计算偏差
-
-  let elem = ele,
-      top = elem.offsetTop,
-      left = elem.offsetLeft;
-
-  while (elem.offsetParent) {
-    top += elem.offsetParent.offsetTop;
-    left += elem.offsetParent.offsetLeft;
-    elem = elem.offsetParent;
-  }
-
-  this.panelLeft = left;
-  this.panelTop = top + ele.offsetHeight;
+  const panelHeight = this.panelHeight = parseInt(util.getCss(this.$Dom.pickerPanel, 'height'));
+  const rect = util.getRect(ele);
+  this.panelLeft = rect.left;
+  this.panelTop = rect.top + rect.height;
   this.$Dom.preDefineItem = getELByClass(ele, 'ew-pre-define-color', true);
 
   if (this.$Dom.preDefineItem.length) {
