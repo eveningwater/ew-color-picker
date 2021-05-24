@@ -24,6 +24,7 @@ const baseDefaultConfig = {
     hueDirection:"vertical",//vertical or horizontal
     alphaDirection:"vertical",//vertical or horizontal
     lang:"zh",
-    userDefineText:false
+    userDefineText:false,
+    panelAuto:true
 }
 export default baseDefaultConfig;

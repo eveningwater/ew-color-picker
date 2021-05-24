@@ -84,6 +84,21 @@ function initColor(context, config) {
         };
     }
 }
+function initPositionPicker(picker,boxRect){
+    util.setCss(picker,"position","fixed");
+    const pickerRect = util.getRect(picker);
+    let left,top;
+    if(boxRect.left + pickerRect.left < pickerRect.width){
+        left = boxRect.left + pickerRect.left;
+    }else{
+        left = Math.floor((pickerRect.width + pickerRect.left) / 2);
+    }
+    if(boxRect.top + pickerRect.top < pickerRect.height){
+        top = boxRect.top + pickerRect.top;
+    }else{
+        
+    }
+}
 /**
  * 主要功能
  * @param {*} ele 
@@ -140,6 +155,9 @@ export function startMain(ele, config) {
     // 色块
     if (config.hasBox) {
         this.$Dom.box = getELByClass(ele, 'ew-color-picker-box');
+        if(config.panelAuto){
+            initPositionPicker(this.$Dom.picker,rect);
+        }
         if (!config.boxDisabled && !config.disabled) util.on(this.$Dom.box, 'click', () => handlePicker(ele, scope, (flag) => {
             if (flag && scope.config.isClickOutside) {
                 initColor(this, config);
