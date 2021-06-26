@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>color demo 7</title>
+    <link rel="stylesheet" href="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        #picker {
+            display: inline-block;
+        }
+        .container {
+            height: 100vh;
+            max-width: 320px;
+            width: 100%;
+            margin: auto;
+        }
+        p {
+            margin: 10px 0;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        [cloak]{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" v-cloak>
+        <div class="container">
+            <h1>示例</h1>
+            <el-row style="height:300px;">
+                <el-col :span="24">
+                    <div id="picker"></div>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="24">
+                    <el-input v-model="color" @change="updateColor"></el-input>
+                </el-col>
+            </el-row>
+            <p>更改的颜色值:{{ color }}</p>
+        </div>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.js"></script>
+<script>
+    const app = new Vue({
+        el:"#app",
+        data(){
+            return {
+                color:"#2396ef",
+                picker:null
+            }
+        },
+        mounted(){
+            const config = {
+                el:"#picker",
+                alpha:true,
+                hasBox:false,
+                hasColorInput:false,
+                isClickOutside:false,
+                hasClear:false,
+                hasSure:false,
+                defaultColor:this.color,
+                predefineColor:[
+                    "#2396ef",
+                    "#fff",
+                    "green",
+                    "rgba(255,222,111,.4)"
+                ],
+                changeColor:(color) => {
+                    this.color = color;
+                }
+            }
+            this.picker = new ewColorPicker(config);
+        },
+        methods:{
+            updateColor(){
+                if(this.color){
+                    this.picker.updateColor(this.color);
+                }
+            }
+        }
+    })
+</script>
+</html>
