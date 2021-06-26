@@ -1,3 +1,6 @@
+
+English | [ewColorPicker](./README.md) | [简体中文](./README-zh_CN.md)
+
 # ew-color-picker
 
 一个基于原生js而封装的颜色选择器插件。
