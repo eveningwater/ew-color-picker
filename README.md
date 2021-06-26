@@ -1,3 +1,6 @@
+
+English | [ewColorPicker](./README.md) | [简体中文](./README-zh_CN.md)
+
 # ew-color-picker
 
 A colorPicker plugin packaged based on native js.
@@ -21,7 +24,7 @@ A colorPicker as follows:
 ```js
    //default configuration
    var color = new ewColorPicker('.demo');
-   或 var color = new ewColorPicker(document.getElementByClassName('demo'));
+   // or var color = new ewColorPicker(document.getElementByClassName('demo'));
    //click the sure button
    color.config.sure = function(color){
        //return color value
@@ -92,9 +95,12 @@ A colorPicker as follows:
 ```
 
 ## import from cdn
+
+```js
 //import the css
 CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.css
 CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
+```
 
 ## use in component
 
