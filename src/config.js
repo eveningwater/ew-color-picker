@@ -6,7 +6,7 @@ const baseDefaultConfig = {
     predefineColor: [],
     disabled: false,
     defaultColor: "",
-    pickerAnimation: "height",
+    pickerAnimation: "default",
     pickerAnimationTime:200,
     sure: emptyFun,
     clear: emptyFun,

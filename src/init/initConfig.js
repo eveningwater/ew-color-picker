@@ -45,6 +45,9 @@ export function initConfig(config){
         mergeConfig =  util.ewAssign(mergeConfig,lang);
     }
     if (mergeConfig.isLog)consoleInfo();
+    if(['height','opacity'].indexOf(mergeConfig.pickerAnimation) === -1){
+        mergeConfig.pickerAnimation = 'default';
+    }
     return {
         element,
         config:mergeConfig,

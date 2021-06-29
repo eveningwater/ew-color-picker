@@ -1,6 +1,7 @@
 import util from '../utils/util';
 import ani from '../utils/animation';
 import { setColorValue } from '../layout/setColorValue';
+import { initColor } from '../init/initColor';
 /**
  * 开启颜色选择器
  * @param {*} expression 
@@ -8,7 +9,18 @@ import { setColorValue } from '../layout/setColorValue';
  */
 export function open(expression, picker,time = 200) {
     time = time > 10000 ? 10000 : time;
-    return ani[expression ? 'slideDown' : 'fadeIn'](picker, time);
+    let animation = '';
+    switch(expression){
+        case 'height':
+            animation = 'slideDown';
+            break;
+        case 'opacity':
+            animation = 'fadeIn';
+            break;
+        default:
+            animation = 'show';
+    }
+    return ani[animation](picker, time);
 }
 /**
  * 关闭颜色选择器
@@ -17,14 +29,25 @@ export function open(expression, picker,time = 200) {
  */
 export function close(expression, picker,time = 200) {
     time = time > 10000 ? 10000 : time;
-    return ani[expression ? 'slideUp' : 'fadeOut'](picker, time);
+    let animation = '';
+    switch(expression){
+        case 'height':
+            animation = 'slideUp';
+            break;
+        case 'opacity':
+            animation = 'fadeOut';
+            break;
+        default:
+            animation = 'hide';
+    }
+    return ani[animation](picker, time);
 }
 /**
  * 获取动画类型
  * @param {*} scope 
  */
-export function getHeiAni(scope) {
-    return util.isString(scope.config.pickerAnimation) && scope.config.pickerAnimation.indexOf('height') > -1;
+export function getAnimationType(scope) {
+    return scope.config.pickerAnimation;
 }
 /**
  * 打开和关闭
@@ -32,7 +55,7 @@ export function getHeiAni(scope) {
  */
 export function openAndClose(scope) {
     const time = scope.config.pickerAnimationTime;
-    scope._privateConfig.pickerFlag ? open(getHeiAni(scope), scope.$Dom.picker,time) : close(getHeiAni(scope), scope.$Dom.picker,time);
+    scope._privateConfig.pickerFlag ? open(getAnimationType(scope), scope.$Dom.picker,time) : close(getAnimationType(scope), scope.$Dom.picker,time);
 }
 /**
  * 手动关闭颜色选择器
@@ -47,7 +70,7 @@ export function handleClosePicker(ani,time) {
     }
     if (this._privateConfig.pickerFlag) {
         this._privateConfig.pickerFlag = false;
-        close(getHeiAni(this), this.$Dom.picker,this.config.pickerAnimationTime);
+        close(getAnimationType(this), this.$Dom.picker,this.config.pickerAnimationTime);
     }
 }
 /**
@@ -63,7 +86,7 @@ export function handleOpenPicker(ani,time) {
     }
     if (!this._privateConfig.pickerFlag) {
         this._privateConfig.pickerFlag = true;
-        open(getHeiAni(this), this.$Dom.picker,this.config.pickerAnimationTime);
+        open(getAnimationType(this), this.$Dom.picker,this.config.pickerAnimationTime);
         setColorValue(this, this.panelWidth, this.panelHeight,false);
     }
 }
@@ -75,6 +98,8 @@ export function handleOpenPicker(ani,time) {
  export function handlePicker(el, scope,callback) {
     scope._privateConfig.pickerFlag = !scope._privateConfig.pickerFlag;
     openAndClose(scope);
+    initColor(scope, scope.config);
+    setColorValue(scope, scope.panelWidth, scope.panelHeight, false);
     if (util.isFunction(scope.config.togglePicker)){
         scope.config.togglePicker(el, scope._privateConfig.pickerFlag,scope);
     }

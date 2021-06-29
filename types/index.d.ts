@@ -42,6 +42,10 @@ declare namespace ewColorPicker {
     changeBoxByChangeColor?: boolean;
     hueDirection?: string;
     alphaDirection?: string;
+    lang?:string;
+    userDefineText?:boolean;
+    clearText?:string;
+    sureText?:string;
   };
 }
 export type WrapperType = ewColorPicker.WrapperType;

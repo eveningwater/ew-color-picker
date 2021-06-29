@@ -9,7 +9,9 @@ import { updateColor } from './layout/updateColor';
 import { initFunction } from './init/init';
 import { startMain } from './layout/main';
 import { staticRender } from './render/render';
-import { destroyInstance } from './destroy/destroy'
+import { destroyInstance } from './destroy/destroy';
+import "./style/ew-color-picker.css";
+
 /**
  * 构造函数
  * @param {*} config 

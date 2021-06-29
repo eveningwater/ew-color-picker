@@ -1,6 +1,5 @@
 import util from '../utils/util';
 import Dep from './dep';
-import { emptyFun } from '../config'
 const notKeys = ["el","isLog"];
 export const isNotKey = key => {
     return notKeys.indexOf(key) === -1;
