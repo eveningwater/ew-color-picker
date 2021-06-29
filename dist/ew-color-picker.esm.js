@@ -230,9 +230,12 @@ function registerMethods(type, element, time) {
     transition = "height" + time + ' ms';
     util.setCss(element, 'overflow', "hidden");
     upAndDown();
-  } else {
+  } else if (type.indexOf('fade') > -1) {
     transition = "opacity" + time + ' ms';
     inAndOut();
+  } else {
+    transition = "display" + time + ' ms';
+    showOrHide();
   }
 
   util.setCss(element, 'transition', transition);
@@ -254,21 +257,32 @@ function registerMethods(type, element, time) {
     let currentHeight = isDown ? 0 : totalHeight;
     let unit = totalHeight / (time / 10);
     if (isDown) util.setCss(element, 'height', '0px');
-    let timer = setInterval(() => {
+    let timer = null;
+
+    let handler = () => {
       currentHeight = isDown ? currentHeight + unit : currentHeight - unit;
       util.setCss(element, 'height', currentHeight + 'px');
 
       if (currentHeight >= totalHeight || currentHeight <= 0) {
-        clearInterval(timer);
+        clearTimeout(timer);
         util.setCss(element, 'height', totalHeight + 'px');
         runNext(element);
+      } else {
+        timer = setTimeout(handler, 10);
       }
 
       if (!isDown && currentHeight <= 0) {
-        util.setCss(element, 'display', 'none');
-        util.setCss(element, 'height', '0');
+        util.setSomeCss(element, [{
+          prop: "display",
+          value: 'none'
+        }, {
+          prop: "height",
+          value: 0
+        }]);
       }
-    }, 10);
+    };
+
+    handler();
   }
 
   function inAndOut() {
@@ -301,6 +315,11 @@ function registerMethods(type, element, time) {
 
     handleFade();
   }
+
+  function showOrHide() {
+    const isShow = type.indexOf('show') > -1;
+    util.setCss(element, 'display', isShow ? 'block' : 'none');
+  }
 }
 
 ['slideUp', 'slideDown', 'fadeIn', 'fadeOut'].forEach(method => {
@@ -309,6 +328,11 @@ function registerMethods(type, element, time) {
     element.TimerManage.add(function (element, time) {
       return registerMethods(method, element, time);
     }, arguments);
+  };
+});
+['show', 'hide'].forEach(method => {
+  animation[method] = function (element, time) {
+    return registerMethods(method, element, time);
   };
 });
 
@@ -796,6 +820,25 @@ function getSliderBarPosition(direction, bar, callback) {
 }
 
 /**
+ * 初始化颜色
+ * @param {*} context 
+ * @param {*} config 
+ */
+
+function initColor(context, config) {
+  if (config.defaultColor) {
+    context.hsvaColor = colorRegRGBA.test(config.defaultColor) ? colorRgbaToHsva(config.defaultColor) : colorRgbaToHsva(colorToRgba(config.defaultColor));
+  } else {
+    context.hsvaColor = {
+      h: 0,
+      s: 100,
+      v: 100,
+      a: 1
+    };
+  }
+}
+
+/**
  * 开启颜色选择器
  * @param {*} expression 
  * @param {*} picker 
@@ -803,7 +846,22 @@ function getSliderBarPosition(direction, bar, callback) {
 
 function open(expression, picker, time = 200) {
   time = time > 10000 ? 10000 : time;
-  return animation[expression ? 'slideDown' : 'fadeIn'](picker, time);
+  let animation$1 = '';
+
+  switch (expression) {
+    case 'height':
+      animation$1 = 'slideDown';
+      break;
+
+    case 'opacity':
+      animation$1 = 'fadeIn';
+      break;
+
+    default:
+      animation$1 = 'show';
+  }
+
+  return animation[animation$1](picker, time);
 }
 /**
  * 关闭颜色选择器
@@ -813,15 +871,30 @@ function open(expression, picker, time = 200) {
 
 function close(expression, picker, time = 200) {
   time = time > 10000 ? 10000 : time;
-  return animation[expression ? 'slideUp' : 'fadeOut'](picker, time);
+  let animation$1 = '';
+
+  switch (expression) {
+    case 'height':
+      animation$1 = 'slideUp';
+      break;
+
+    case 'opacity':
+      animation$1 = 'fadeOut';
+      break;
+
+    default:
+      animation$1 = 'hide';
+  }
+
+  return animation[animation$1](picker, time);
 }
 /**
  * 获取动画类型
  * @param {*} scope 
  */
 
-function getHeiAni(scope) {
-  return util.isString(scope.config.pickerAnimation) && scope.config.pickerAnimation.indexOf('height') > -1;
+function getAnimationType(scope) {
+  return scope.config.pickerAnimation;
 }
 /**
  * 打开和关闭
@@ -830,7 +903,7 @@ function getHeiAni(scope) {
 
 function openAndClose(scope) {
   const time = scope.config.pickerAnimationTime;
-  scope._privateConfig.pickerFlag ? open(getHeiAni(scope), scope.$Dom.picker, time) : close(getHeiAni(scope), scope.$Dom.picker, time);
+  scope._privateConfig.pickerFlag ? open(getAnimationType(scope), scope.$Dom.picker, time) : close(getAnimationType(scope), scope.$Dom.picker, time);
 }
 /**
  * 手动关闭颜色选择器
@@ -848,7 +921,7 @@ function handleClosePicker(ani, time) {
 
   if (this._privateConfig.pickerFlag) {
     this._privateConfig.pickerFlag = false;
-    close(getHeiAni(this), this.$Dom.picker, this.config.pickerAnimationTime);
+    close(getAnimationType(this), this.$Dom.picker, this.config.pickerAnimationTime);
   }
 }
 /**
@@ -867,7 +940,7 @@ function handleOpenPicker(ani, time) {
 
   if (!this._privateConfig.pickerFlag) {
     this._privateConfig.pickerFlag = true;
-    open(getHeiAni(this), this.$Dom.picker, this.config.pickerAnimationTime);
+    open(getAnimationType(this), this.$Dom.picker, this.config.pickerAnimationTime);
     setColorValue(this, this.panelWidth, this.panelHeight, false);
   }
 }
@@ -880,6 +953,8 @@ function handleOpenPicker(ani, time) {
 function handlePicker(el, scope, callback) {
   scope._privateConfig.pickerFlag = !scope._privateConfig.pickerFlag;
   openAndClose(scope);
+  initColor(scope, scope.config);
+  setColorValue(scope, scope.panelWidth, scope.panelHeight, false);
 
   if (util.isFunction(scope.config.togglePicker)) {
     scope.config.togglePicker(el, scope._privateConfig.pickerFlag, scope);
@@ -896,7 +971,7 @@ const baseDefaultConfig = {
   predefineColor: [],
   disabled: false,
   defaultColor: "",
-  pickerAnimation: "height",
+  pickerAnimation: "default",
   pickerAnimationTime: 200,
   sure: emptyFun,
   clear: emptyFun,
@@ -919,7 +994,7 @@ const baseDefaultConfig = {
   userDefineText: false
 };
 
-const consoleInfo = () => console.log(`%c ew-color-picker@1.9.7%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+const consoleInfo = () => console.log(`%c ew-color-picker@1.9.8%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
 var zh = {
   clearText: "清空",
@@ -981,6 +1056,11 @@ function initConfig(config) {
   }
 
   if (mergeConfig.isLog) consoleInfo();
+
+  if (['height', 'opacity'].indexOf(mergeConfig.pickerAnimation) === -1) {
+    mergeConfig.pickerAnimation = 'default';
+  }
+
   return {
     element,
     config: mergeConfig,
@@ -1218,7 +1298,7 @@ function handleClickOutSide(context, config) {
   util.clickOutSide(context, config, () => {
     if (context._privateConfig.pickerFlag) {
       context._privateConfig.pickerFlag = false;
-      close(getHeiAni({
+      close(getAnimationType({
         config: config
       }), context.$Dom.picker, config.pickerAnimationTime);
 
@@ -1382,7 +1462,7 @@ function onInputColor(scope, value) {
 
 function onClearColor(scope) {
   scope._privateConfig.pickerFlag = false;
-  close(getHeiAni(scope), scope.$Dom.picker, scope.config.pickerAnimationTime);
+  close(getAnimationType(scope), scope.$Dom.picker, scope.config.pickerAnimationTime);
   scope.config.defaultColor = scope._privateConfig.colorValue = "";
   scope.config.clear(scope.config.defaultColor, scope);
 }
@@ -1394,7 +1474,7 @@ function onClearColor(scope) {
 function onSureColor(scope) {
   const result = scope.config.alpha ? colorHsvaToRgba(scope.hsvaColor) : colorRgbaToHex(colorHsvaToRgba(scope.hsvaColor));
   scope._privateConfig.pickerFlag = false;
-  close(getHeiAni(scope), scope.$Dom.picker, scope.config.pickerAnimationTime);
+  close(getAnimationType(scope), scope.$Dom.picker, scope.config.pickerAnimationTime);
   scope.config.defaultColor = scope._privateConfig.colorValue = result;
   changeElementColor(scope);
   scope.config.sure(result, scope);
@@ -1402,7 +1482,7 @@ function onSureColor(scope) {
 
 function showColorPickerWithNoBox(context) {
   setTimeout(() => {
-    const ani = getHeiAni(context);
+    const ani = getAnimationType(context);
     context._privateConfig.pickerFlag = true;
 
     if (util.getCss(context.$Dom.picker, 'display') === 'none') {
@@ -1414,13 +1494,13 @@ function showColorPickerWithNoBox(context) {
 }
 
 /**
- *  
+ *  初始化动画
  * @param {*} context 
  */
 
 function initAnimation(context) {
   //颜色选择器打开的动画初始设置
-  const expression = getHeiAni(context);
+  const expression = getAnimationType(context);
   util.setCss(context.$Dom.picker, expression ? 'display' : 'opacity', expression ? 'none' : 0);
   let pickerWidth = 0,
       sliderWidth = 0,
@@ -1452,7 +1532,7 @@ function initAnimation(context) {
   }
 }
 /**
- * 
+ * 初始化预定义颜色
  * @param {*} items 
  * @param {*} context 
  */
@@ -1487,19 +1567,6 @@ function initPreDefineHandler(items, context) {
     });
   });
 }
-
-function initColor(context, config) {
-  if (config.defaultColor) {
-    context.hsvaColor = colorRegRGBA.test(config.defaultColor) ? colorRgbaToHsva(config.defaultColor) : colorRgbaToHsva(colorToRgba(config.defaultColor));
-  } else {
-    context.hsvaColor = {
-      h: 0,
-      s: 100,
-      v: 100,
-      a: 1
-    };
-  }
-}
 /**
  * 主要功能
  * @param {*} ele 
@@ -1509,6 +1576,7 @@ function initColor(context, config) {
 
 
 function startMain(ele, config) {
+  // 初始化逻辑
   let scope = this;
   this.$Dom = Object.create(null);
   this.$Dom.rootElement = ele;
@@ -1530,11 +1598,12 @@ function startMain(ele, config) {
   const rect = util.getRect(ele);
   this.panelLeft = rect.left;
   this.panelTop = rect.top + rect.height;
-  this.$Dom.preDefineItem = getELByClass(ele, 'ew-pre-define-color', true);
+  this.$Dom.preDefineItem = getELByClass(ele, 'ew-pre-define-color', true); // 预定义颜色逻辑
 
   if (this.$Dom.preDefineItem.length) {
     initPreDefineHandler(util.ewObjToArray(this.$Dom.preDefineItem), scope);
-  }
+  } // 色阶柱逻辑
+
 
   if (config.hue) {
     this.$Dom.hueBar = getELByClass(ele, 'ew-color-slider-bar');
@@ -1546,7 +1615,8 @@ function startMain(ele, config) {
 
       this.bindEvent(this.$Dom.hueThumb, (scope, el, x, y) => changeHue(scope, this.isHueHorizontal ? x : y));
     }
-  }
+  } // 透明度柱
+
 
   if (config.alpha) {
     this.$Dom.alphaBar = getELByClass(ele, 'ew-alpha-slider-bar');
@@ -1559,7 +1629,7 @@ function startMain(ele, config) {
     }
   }
 
-  initAnimation(scope); //获取颜色选择器的一些操作元素
+  initAnimation(scope); // 色块
 
   if (config.hasBox) {
     this.$Dom.box = getELByClass(ele, 'ew-color-picker-box');
@@ -1572,12 +1642,14 @@ function startMain(ele, config) {
     }));
   } else {
     showColorPickerWithNoBox(this);
-  }
+  } // 输入框
+
 
   if (config.hasColorInput) {
     this.$Dom.pickerInput = getELByClass(ele, 'ew-color-input');
     util.on(this.$Dom.pickerInput, 'blur', event => onInputColor(scope, event.target.value));
-  }
+  } // 禁用逻辑
+
 
   if (config.disabled) {
     if (config.hasColorInput) {
@@ -1592,21 +1664,25 @@ function startMain(ele, config) {
     }
 
     return false;
-  }
+  } // 点击目标区域之外逻辑
+
 
   if (config.isClickOutside) {
     handleClickOutSide(this, config);
-  }
+  } // 清空按钮逻辑
+
 
   if (config.hasClear) {
     this.$Dom.pickerClear = getELByClass(ele, 'ew-color-clear');
     util.on(this.$Dom.pickerClear, 'click', () => onClearColor(scope));
-  }
+  } // 确定按钮逻辑
+
 
   if (config.hasSure) {
     this.$Dom.pickerSure = getELByClass(ele, 'ew-color-sure');
     util.on(this.$Dom.pickerSure, 'click', () => onSureColor(scope));
-  }
+  } // 颜色转换模式逻辑
+
 
   if (config.openChangeColorMode) {
     this.$Dom.modeUp = getELByClass(ele, 'ew-color-mode-up');
@@ -1619,7 +1695,8 @@ function startMain(ele, config) {
       util.on(this.$Dom.modeUp, "click", event => onHandleChangeMode(scope, 'up', () => changeElementColor(scope)));
       util.on(this.$Dom.modeDown, "click", event => onHandleChangeMode(scope, 'down', () => changeElementColor(scope)));
     }
-  } //颜色面板点击事件
+  } // 颜色面板逻辑
+  //颜色面板点击事件
 
 
   util.on(this.$Dom.pickerPanel, 'click', event => onClickPanel(scope, event)); //颜色面板拖拽元素拖拽事件

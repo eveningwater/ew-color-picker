@@ -54,9 +54,12 @@ function registerMethods(type, element, time) {
         transition = "height" + time + ' ms';
         util.setCss(element, 'overflow', "hidden");
         upAndDown();
-    } else {
+    } else if(type.indexOf('fade') > -1){
         transition = "opacity" + time + ' ms';
         inAndOut();
+    }else{
+        transition = "display" + time + ' ms';
+        showOrHide();
     }
     util.setCss(element, 'transition', transition);
     function upAndDown() {
@@ -74,19 +77,31 @@ function registerMethods(type, element, time) {
         let currentHeight = isDown ? 0 : totalHeight;
         let unit = totalHeight / (time / 10);
         if (isDown) util.setCss(element, 'height', '0px');
-        let timer = setInterval(() => {
+        let timer = null;
+        let handler = () => {
             currentHeight = isDown ? currentHeight + unit : currentHeight - unit;
             util.setCss(element, 'height', currentHeight + 'px');
             if (currentHeight >= totalHeight || currentHeight <= 0) {
-                clearInterval(timer);
+                clearTimeout(timer);
                 util.setCss(element, 'height', totalHeight + 'px');
                 runNext(element);
+            }else{
+                timer = setTimeout(handler,10);
             }
             if (!isDown && currentHeight <= 0){
-                util.setCss(element, 'display', 'none');
-                util.setCss(element, 'height', '0');
+                util.setSomeCss(element, [
+                    {
+                        prop: "display",
+                        value: 'none'
+                    },
+                    {
+                        prop: "height",
+                        value:0
+                    }
+                ]);
             }
-        }, 10);
+        }
+        handler();
     }
     function inAndOut() {
         const isIn = type.toLowerCase().indexOf('in') > -1;
@@ -118,6 +133,10 @@ function registerMethods(type, element, time) {
         }
         handleFade();
     }
+    function showOrHide(){
+        const isShow = type.indexOf('show') > -1;
+        util.setCss(element,'display',(isShow ? 'block' : 'none'));
+    }
 }
 ['slideUp', 'slideDown', 'fadeIn', 'fadeOut'].forEach(method => {
     animation[method] = function (element) {
@@ -127,4 +146,9 @@ function registerMethods(type, element, time) {
         }, arguments);
     }
 });
+['show','hide'].forEach(method => {
+    animation[method] = function (element,time) {
+        return registerMethods(method, element, time);
+    }
+})
 export default animation;

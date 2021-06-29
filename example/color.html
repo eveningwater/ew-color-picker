@@ -12,6 +12,7 @@
 <body>
     <div class="demo"></div>
     <script src="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js"></script>
+    <!-- <script src="../dist/ew-color-picker.js"></script> -->
     <script>
         const colorConfig = {
             el:".demo",
@@ -19,10 +20,11 @@
             alphaDirection:"horizontal",
             openChangeColorMode:true,
             changeColor:(color) => {
-                console.log('颜色值改变',color)
+                // console.log('颜色值改变',color)
             },
             hueDirection:"horizontal",
             isClickOutside:false,
+            // pickerAnimation:"height",
             pickerAnimationTime:350,
             predefineColor:[
                 "red",
@@ -42,7 +44,7 @@
                 }
             ],
             togglePicker(el,flag,context) {
-                console.log(el,flag,context)
+                // console.log(el,flag,context)
             }
         }
         const color = new ewColorPicker(colorConfig);

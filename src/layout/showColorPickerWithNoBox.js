@@ -1,9 +1,9 @@
-import { open, getHeiAni } from '../handler/openOrClosePicker';
+import { open, getAnimationType } from '../handler/openOrClosePicker';
 import { setColorValue } from './setColorValue';
 import util from '../utils/util';
 export function showColorPickerWithNoBox(context) {
     setTimeout(() => {
-        const ani = getHeiAni(context);
+        const ani = getAnimationType(context);
         context._privateConfig.pickerFlag = true;
         if (util.getCss(context.$Dom.picker, 'display') === 'none') {
             open(ani, context.$Dom.picker, context.config.pickerAnimationTime);
