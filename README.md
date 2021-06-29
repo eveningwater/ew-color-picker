@@ -129,7 +129,7 @@ For more details, please refer to the official website of the document[ewColorPi
 
 # the update logs
 
-* 1.9.7 fixes some problems,add the animation type,now contains "height","opacity","default".
+* 1.9.8 fixes some problems,add the animation type,now contains "height","opacity","default".
 * 1.9.7 fixes some problems
 * 1.9.6 Fixed some problems of the color picker, and added the method `destroy` to destroy the color picker instance globally.
 * 1.9.5 Fixed the problem of multiple color selector configuration objects, and added the method `destroy` to destroy the color selector instance.
