@@ -126,6 +126,7 @@ CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
 
 # 更新日志
 
+* 1.9.8 修复了一些问题，增加了默认动画，动画选项值先包含"height","opacity","default"三种。
 * 1.9.7 修复了一些问题
 * 1.9.6 修复了颜色选择器的一些问题，并添加了全局销毁颜色选择器实例的方法`destroy`。
 * 1.9.5 修复了多个颜色选择器配置对象问题，并添加了销毁颜色选择器实例的方法`destroy`。

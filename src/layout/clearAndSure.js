@@ -1,5 +1,5 @@
 import { changeElementColor } from './changeElementColor';
-import { close, getHeiAni } from '../handler/openOrClosePicker';
+import { close, getAnimationType } from '../handler/openOrClosePicker';
 import { colorHsvaToRgba, colorRgbaToHex } from '../color/color';
 /**
  * 清空
@@ -8,7 +8,7 @@ import { colorHsvaToRgba, colorRgbaToHex } from '../color/color';
  */
 export function onClearColor(scope) {
     scope._privateConfig.pickerFlag = false;
-    close(getHeiAni(scope),scope.$Dom.picker,scope.config.pickerAnimationTime);
+    close(getAnimationType(scope),scope.$Dom.picker,scope.config.pickerAnimationTime);
     scope.config.defaultColor = scope._privateConfig.colorValue = "";
     scope.config.clear(scope.config.defaultColor, scope);
 }
@@ -19,7 +19,7 @@ export function onClearColor(scope) {
 export function onSureColor(scope) {
     const result = scope.config.alpha ? colorHsvaToRgba(scope.hsvaColor) : colorRgbaToHex(colorHsvaToRgba(scope.hsvaColor));
     scope._privateConfig.pickerFlag = false;
-    close(getHeiAni(scope),scope.$Dom.picker,scope.config.pickerAnimationTime);
+    close(getAnimationType(scope),scope.$Dom.picker,scope.config.pickerAnimationTime);
     scope.config.defaultColor = scope._privateConfig.colorValue = result;
     changeElementColor(scope);
     scope.config.sure(result, scope);

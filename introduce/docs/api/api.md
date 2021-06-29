@@ -143,7 +143,7 @@ const color = new ewColorPicker({
 
 8.pickerAnimation?(可选属性)
 
-该属性是一个字符串属性，有两个值`height`或`opacity`,默认值是`height`。表示打开颜色选择器或关闭颜色选择器所执行的动画类型。如:
+该属性是一个字符串属性，有三个值`default`,`height`或`opacity`,默认值是`default`。表示打开颜色选择器或关闭颜色选择器所执行的动画类型。如:
 
 ```js
 const color = new ewColorPicker({
@@ -642,7 +642,7 @@ color.bindEvent(demo, (context, el, x, y) => {
 
 7.openPicker方法
 
-该方法允许传入一个字符串参数和一个数值型参数，用于手动开启颜色选择器面板，这个字符串参数只能是`height`或者`opacity`,表示以什么样的动画方式去打开颜色选择器。而数值型参数则表示动画的执行时间，不建议设置的过大，在1000以内即可，因为1000以上会很慢。如:
+该方法允许传入一个字符串参数和一个数值型参数，用于手动开启颜色选择器面板，这个字符串参数等同pickerAnimation,表示以什么样的动画方式去打开颜色选择器。而数值型参数则表示动画的执行时间，不建议设置的过大，在1000以内即可，因为1000以上会很慢。如:
 
 ```js
     const color = new ewColorPicker();

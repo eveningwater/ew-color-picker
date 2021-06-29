@@ -6,7 +6,7 @@ const baseDefaultConfig = {
     predefineColor: [],
     disabled: false,
     defaultColor: "",
-    pickerAnimation: "height",
+    pickerAnimation: "default",
     pickerAnimationTime:200,
     sure: emptyFun,
     clear: emptyFun,
@@ -24,7 +24,6 @@ const baseDefaultConfig = {
     hueDirection:"vertical",//vertical or horizontal
     alphaDirection:"vertical",//vertical or horizontal
     lang:"zh",
-    userDefineText:false,
-    panelAuto:true
+    userDefineText:false
 }
 export default baseDefaultConfig;

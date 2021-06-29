@@ -1,7 +1,7 @@
 import { handleClickOutSide } from '../handler/clickOutSide';
 import { getELByClass } from '../utils/query';
-import { handlePicker, getHeiAni } from '../handler/openOrClosePicker';
-import { colorRegRGBA, colorRgbaToHsva, colorToRgba } from '../color/color';
+import { handlePicker, getAnimationType } from '../handler/openOrClosePicker';
+import { colorRgbaToHsva } from '../color/color';
 import { setColorValue } from './setColorValue';
 import { changeElementColor } from './changeElementColor';
 import { changeAlpha, changeHue } from './hueAndAlpha';
@@ -11,13 +11,14 @@ import { onInputColor } from './input';
 import { onClearColor, onSureColor } from './clearAndSure';
 import util from '../utils/util';
 import { showColorPickerWithNoBox } from './showColorPickerWithNoBox';
+import { initColor } from '../init/initColor';
 /**
  *  初始化动画
  * @param {*} context 
  */
 function initAnimation(context) {
     //颜色选择器打开的动画初始设置
-    const expression = getHeiAni(context);
+    const expression = getAnimationType(context);
     util.setCss(context.$Dom.picker, (expression ? 'display' : 'opacity'), (expression ? 'none' : 0))
     let pickerWidth = 0, sliderWidth = 0, sliderHeight = 0;
     let isVerticalAlpha = !context.isAlphaHorizontal;
@@ -67,38 +68,7 @@ function initPreDefineHandler(items, context) {
         });
     })
 }
-/**
- * 初始化颜色
- * @param {*} context 
- * @param {*} config 
- */
-function initColor(context, config) {
-    if (config.defaultColor) {
-        context.hsvaColor = colorRegRGBA.test(config.defaultColor) ? colorRgbaToHsva(config.defaultColor) : colorRgbaToHsva(colorToRgba(config.defaultColor));
-    } else {
-        context.hsvaColor = {
-            h: 0,
-            s: 100,
-            v: 100,
-            a: 1
-        };
-    }
-}
-function initPositionPicker(picker,boxRect){
-    util.setCss(picker,"position","fixed");
-    const pickerRect = util.getRect(picker);
-    let left,top;
-    if(boxRect.left + pickerRect.left < pickerRect.width){
-        left = boxRect.left + pickerRect.left;
-    }else{
-        left = Math.floor((pickerRect.width + pickerRect.left) / 2);
-    }
-    if(boxRect.top + pickerRect.top < pickerRect.height){
-        top = boxRect.top + pickerRect.top;
-    }else{
-        
-    }
-}
+
 /**
  * 主要功能
  * @param {*} ele 
@@ -155,9 +125,6 @@ export function startMain(ele, config) {
     // 色块
     if (config.hasBox) {
         this.$Dom.box = getELByClass(ele, 'ew-color-picker-box');
-        if(config.panelAuto){
-            initPositionPicker(this.$Dom.picker,rect);
-        }
         if (!config.boxDisabled && !config.disabled) util.on(this.$Dom.box, 'click', () => handlePicker(ele, scope, (flag) => {
             if (flag && scope.config.isClickOutside) {
                 initColor(this, config);
