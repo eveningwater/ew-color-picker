@@ -1,21 +1,21 @@
-## 无框架示例
+## no framework demo
 
-> 在线示例
+> online demo
 
-* [在线示例](https://eveningwater.github.io/ew-color-picker/example/color.html)
+* [online demo](https://eveningwater.github.io/ew-color-picker/example/color.html)
 
-## 响应式示例
+## reactivity demo
 
-> 响应式示例
+> reactivity demo
 
-* [在线示例](https://eveningwater.github.io/ew-color-picker/example/color-9.html)
+* [online demo](https://eveningwater.github.io/ew-color-picker/example/color-9.html)
 
-## vue2.x示例
+## vue2.x demo
 
-> 在vue中可以写如下代码:
+> in vue2.x we can write code as follow:
 
 ```html
-  <!--页面通常有一个根元素-->
+  <!--the page often has a root element-->
   <div id="app">
         <div class="container" :style="{ background:backgroundColor }">
           <div id="color-picker"></div>
@@ -50,14 +50,15 @@
   }).$mount("#app");
 ```
 
-[在vue2.0中使用的在线示例](https://eveningwater.github.io/ew-color-picker/example/vue-color-demo.html)
+[online demo used in vue2.x](https://eveningwater.github.io/ew-color-picker/example/vue-color-demo.html)
 
-## vue3.x示例
+## vue3.x demo
 
-> vue3.0 composition api写法
+> vue3.0 composition api
+
 ```html
     <div id="app">
-        <!-- 数据的绑定稍微变动一下即可 -->
+        <!-- change the data binding -->
         <div class="container" :style="{ background:state.backgroundColor }">
             <div id="color-picker"></div>
         </div>
@@ -91,14 +92,14 @@
     }).mount("#app")
 ```
 
-[在vue3.0中使用的在线示例](https://eveningwater.github.io/ew-color-picker/example/vue-next-color-demo.html)
+[online demo used in vue3.0](https://eveningwater.github.io/ew-color-picker/example/vue-next-color-demo.html)
 
-## react示例
+## react demo
 
-> 在react中可以写如下代码:
+> in react we can write code as follow:
 
 ```html
-  <!--页面通常有一个根元素-->
+  <!--the page often has a root element-->
   <div id="app"></div>
 ```
 
@@ -117,7 +118,7 @@
     bottom: 0;
   }
 ```
-> class写法
+> class
 
 ```js
   class ColorPicker extends React.Component {
@@ -153,7 +154,7 @@
     }
   }
 ```
-> hook写法
+> hook
 
 ```js
   const ColorPicker = (props) => {
@@ -180,27 +181,27 @@
       )
   }
 ```
-然后，绑定到根元素上，代码如下:
+then，bound it to the root element，the code as follow:
 
 ```js
   ReactDOM.render(<ColorPicker />, document.getElementById('#app'));
 ```
-[在react中使用的在线示例](https://eveningwater.github.io/ew-color-picker/example/react-color-demo.html)
+[online demo used in react](https://eveningwater.github.io/ew-color-picker/example/react-color-demo.html)
 
-## 特别说明
+## Special Note
 
-> 说明:在react的工程化如create-react-app以及vue的工程化如vue-cli使用方式同引入式开发差不多的。
+> note:The use of react such as `create-react-app` and vue such as `vue-cli` is similar to introductory development。
 
-还可以封装成一个颜色组件，如在`vue3.0`脚手架的示例[demo](https://github.com/eveningwater/website/blob/master/src/components/ColorPicker.vue)。
+We can also be packaged into a color component，such as `vue-cli` in `vue3.0`[demo](https://github.com/eveningwater/website/blob/master/src/components/ColorPicker.vue)。
 
-## 更多示例
+## more demo
 
-详见[更多示例](https://github.com/eveningwater/ew-color-picker/tree/master/example)。
+see [more demo](https://github.com/eveningwater/ew-color-picker/tree/master/example)。
 
-## 一个完整的示例
+## A complete example
 
-这里有一个完整的示例。如下:
+Here is a complete example。as follow:
 
-[完整示例](https://eveningwater.github.io/ew-color-picker/example/all-color.html)。
+[complete demo](https://eveningwater.github.io/ew-color-picker/example/all-color.html)。
 
 
