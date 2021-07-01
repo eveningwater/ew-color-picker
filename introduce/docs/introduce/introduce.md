@@ -1,47 +1,47 @@
 ## ewColorPicker
 
-一个使用原生JavaScript编写的灵活性高扩展强的颜色选择器。
+A colorPicker with high flexibility and strong extension written in native JavaScript.
 
-* [介绍文章---思否](https://segmentfault.com/a/1190000039670041)
-* [介绍文章---掘金](https://juejin.cn/post/6941184796991160356)
+* [Introduction article---segmentfault](https://segmentfault.com/a/1190000039670041)
+* [Introduction article---juejin](https://juejin.cn/post/6941184796991160356)
 
-## 使用场景
+## scenes to be used
 
-这个颜色选择器适用于中小型项目，例如主题的切换。不同于组件库中的颜色选择器组件，它的配置自主化，根据用户的需求来自定义。
+This color picker is suitable for small and medium-sized projects, such as theme switching. Different from the colorPicker component in the component library, its configuration is autonomous and customized according to the needs of users.
 
-## 特点
+## Features
 
-html5的原生颜色选择器样式不好看，而组件库的颜色选择器不够灵活多变，这样一来，就有了这个颜色选择器的诞生。
+The style of html5's native color picker is not good-looking, but the color picker of the component library is not flexible enough. In this way, this color picker was born.
 
-## 录制课程
+## Record lessons
 
-> tips:源码课程正在录制中。
+> tips:The source code course is being recorded
 
-作者相关录制课程
+Author-related recording courses
 
-* [玩转typescript1-表单验证](https://ke.sifou.com/course/1650000039393407?utm_source=recommend_web-live-new)
-* [玩转typescript2-电影选座](https://ke.segmentfault.com/course/1650000039798692#nav-live-intro)
+* [Have fun typescript1-the form validator](https://ke.sifou.com/course/1650000039393407?utm_source=recommend_web-live-new)
+* [Have fun typescript2-select the seat](https://ke.segmentfault.com/course/1650000039798692#nav-live-intro)
 
-## 源码文章
+## source code article
 
-暂无。
+Not yet.
 
-## 更新日志
+## update log
 
-见[ew-color-picker](https://www.npmjs.com/package/ew-color-picker)。
+see [ew-color-picker](https://www.npmjs.com/package/ew-color-picker)。
 
-## 友情链接
-
-----
-
-* [个人网站](https://www.eveningwater.com/)
-* [个人项目集合](https://www.eveningwater.com/my-web-projects/)
-* [代码集合](https://eveningwater.github.io/code-segment/#/)
+## links
 
 ----
-* [掘金](https://juejin.cn/user/4054654613988718)
-* [思否](https://segmentfault.com/u/xishui_5ac9a340a5484)
-* [博客](https://www.cnblogs.com/eveningwater/)
-* [门素材](https://www.17sucai.com/user/800544)
+
+* [my website](https://www.eveningwater.com/)
+* [my web projects](https://www.eveningwater.com/my-web-projects/)
+* [code segment](https://eveningwater.github.io/code-segment/#/)
+
+----
+* [juejin](https://juejin.cn/user/4054654613988718)
+* [segmentfault](https://segmentfault.com/u/xishui_5ac9a340a5484)
+* [blog](https://www.cnblogs.com/eveningwater/)
+* [17sucai](https://www.17sucai.com/user/800544)
 * [stack overflow](https://stackoverflow.com/users/10505577/eveningwater)
-* [知乎](https://www.zhihu.com/people/eveningwater)
+* [zhihu](https://www.zhihu.com/people/eveningwater)
