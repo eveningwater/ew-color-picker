@@ -49,7 +49,7 @@ A colorPicker as follows:
       predefineColor:['#223456','rgba(122,35,77,.5)'],//predefine color is an array
       disabled:false,//disabled all event
       defaultColor:'#eeff22',//the default color
-      pickerAnimation:'opacity',//or 'height'，the animation of open the colorPicker
+      pickerAnimation:'opacity',//or 'height',`default`，the animation of open the colorPicker,the default value is `default`
       pickerAnimationTime:300,//Animation execution time，200 is default,the max time is 10000
       sure:function(color){
           console.log(color);
