@@ -41,7 +41,7 @@ const apiSideBars = [
         children:[
             {
                 path:'api',
-                title:"api详解"
+                title:"接口详解"
             }
         ]
     }
