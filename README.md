@@ -123,9 +123,9 @@ CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
    })
 ```
 
-For more details, please refer to the official website of the document[ewColorPicker](https://eveningwater.github.io/ew-color-picker/);
+For more details, please refer to the official website of the document [ewColorPicker](https://eveningwater.github.io/ew-color-picker/);
 
-> Domestic access is slow and accessible[ewColorPicker](https://eveningwater.gitee.io/ew-color-picker/)
+> Domestic access is slow and accessible [ewColorPicker](https://eveningwater.gitee.io/ew-color-picker/)
 
 # the update logs
 
