@@ -318,7 +318,7 @@ function registerMethods(type, element, time) {
 
   function showOrHide() {
     const isShow = type.indexOf('show') > -1;
-    util.setCss(element, 'display', isShow ? 'block' : 'none');
+    setTimeout(() => util.setCss(element, 'display', isShow ? 'block' : 'none'), time);
   }
 }
 
@@ -1350,9 +1350,20 @@ function setAlphaHuePosition(direction, bar, thumb, position) {
 
 
 function changeAlpha(context, position) {
-  let value = setAlphaHuePosition(context.isAlphaHorizontal, context.$Dom.alphaBar, context.$Dom.alphaBarThumb, position);
-  let currentValue = value.barPosition - value.barThumbPosition <= 0 ? 0 : value.barPosition - value.barThumbPosition;
-  let alpha = context.isAlphaHorizontal ? 1 - currentValue / value.barPosition : currentValue / value.barPosition;
+  const {
+    isAlphaHorizontal,
+    $Dom: {
+      alphaBar,
+      alphaBarThumb
+    }
+  } = context;
+  const value = setAlphaHuePosition(isAlphaHorizontal, alphaBar, alphaBarThumb, position);
+  const {
+    barPosition,
+    barThumbPosition
+  } = value;
+  let currentValue = barPosition - barThumbPosition <= 0 ? 0 : barPosition - barThumbPosition;
+  let alpha = isAlphaHorizontal ? 1 - currentValue / barPosition : currentValue / barPosition;
   context.hsvaColor.a = alpha >= 1 ? 1 : alpha.toFixed(2);
   changeElementColor(context, true);
 }
@@ -1363,9 +1374,22 @@ function changeAlpha(context, position) {
  */
 
 function changeHue(context, position) {
-  let value = setAlphaHuePosition(context.isHueHorizontal, context.$Dom.hueBar, context.$Dom.hueThumb, position);
-  context.hsvaColor.h = cloneColor(context.hsvaColor).h = parseInt(360 * value.barThumbPosition / value.barPosition);
-  util.setCss(context.$Dom.pickerPanel, 'background', colorRgbaToHex(colorHsvaToRgba(cloneColor(context.hsvaColor))));
+  const {
+    isHueHorizontal,
+    $Dom: {
+      hueBar,
+      hueThumb,
+      pickerPanel
+    },
+    hsvaColor
+  } = context;
+  let value = setAlphaHuePosition(isHueHorizontal, hueBar, hueThumb, position);
+  const {
+    barThumbPosition,
+    barPosition
+  } = value;
+  context.hsvaColor.h = cloneColor(hsvaColor).h = parseInt(360 * barThumbPosition / barPosition);
+  util.setCss(pickerPanel, 'background', colorRgbaToHex(colorHsvaToRgba(cloneColor(context.hsvaColor))));
   changeElementColor(context);
 }
 

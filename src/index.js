@@ -10,14 +10,13 @@ import { initFunction } from './init/init';
 import { startMain } from './layout/main';
 import { staticRender } from './render/render';
 import { destroyInstance } from './destroy/destroy';
-import "./style/ew-color-picker.css";
 
 /**
  * 构造函数
  * @param {*} config 
  */
 function ewColorPicker(config) {
-    if (util.isUndefined(new.target)) return util.ewError(ERROR_VARIABLE.CONSTRUCTOR_ERROR);
+    if (util.isUndefined(new.target))return util.ewError(ERROR_VARIABLE.CONSTRUCTOR_ERROR);
     startInit(this,config);
 }
 const methods = [

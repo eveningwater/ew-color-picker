@@ -144,12 +144,12 @@ export function startMain(ele, config) {
     if (config.disabled) {
         if (config.hasColorInput) {
             if (!util.hasClass(this.$Dom.pickerInput, 'ew-input-disabled')) {
-                this.$Dom.pickerInput.classList.add('ew-input-disabled');
-                this.$Dom.pickerInput.disabled = true;
+                util.addClass(this.$Dom.pickerInput,'ew-input-disabled')
             }
+            this.$Dom.pickerInput.disabled = true;
         }
         if (!util.hasClass(this.$Dom.picker, 'ew-color-picker-disabled')) {
-            this.$Dom.picker.classList.add('ew-color-picker-disabled');
+            util.addClass(this.$Dom.picker,'ew-color-picker-disabled')
         }
         return false;
     }

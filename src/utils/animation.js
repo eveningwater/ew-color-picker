@@ -135,7 +135,7 @@ function registerMethods(type, element, time) {
     }
     function showOrHide(){
         const isShow = type.indexOf('show') > -1;
-        util.setCss(element,'display',(isShow ? 'block' : 'none'));
+        setTimeout(() => util.setCss(element,'display',(isShow ? 'block' : 'none')),time);
     }
 }
 ['slideUp', 'slideDown', 'fadeIn', 'fadeOut'].forEach(method => {
