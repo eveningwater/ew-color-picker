@@ -15,12 +15,13 @@ html5的原生颜色选择器样式不好看，而组件库的颜色选择器不
 
 ## 录制课程
 
-> tips:源码课程正在录制中。
+* [颜色选择器](https://ke.segmentfault.com/course/1650000040761646)
 
 作者相关录制课程
 
 * [玩转typescript1-表单验证](https://ke.sifou.com/course/1650000039393407?utm_source=recommend_web-live-new)
 * [玩转typescript2-电影选座](https://ke.segmentfault.com/course/1650000039798692#nav-live-intro)
+* [编译器](https://ke.segmentfault.com/course/1650000040358952)
 
 ## 源码文章
 

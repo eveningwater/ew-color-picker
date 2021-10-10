@@ -15,12 +15,13 @@ The style of html5's native color picker is not good-looking, but the color pick
 
 ## Record lessons
 
-> tips:The source code course is being recorded
+* [ew-color-picker](https://ke.segmentfault.com/course/1650000040761646)
 
 Author-related recording courses
 
 * [Have fun typescript1-the form validator](https://ke.sifou.com/course/1650000039393407?utm_source=recommend_web-live-new)
 * [Have fun typescript2-select the seat](https://ke.segmentfault.com/course/1650000039798692#nav-live-intro)
+* [Write a compiler](https://ke.segmentfault.com/course/1650000040358952)
 
 ## source code article
 
