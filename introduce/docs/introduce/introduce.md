@@ -25,7 +25,8 @@ Author-related recording courses
 
 ## source code article
 
-Not yet.
+* [source code article---segmentfault](https://segmentfault.com/a/1190000040789940)
+* [source code article---juejin](https://juejin.cn/post/7017408394831233031)
 
 ## update log
 
