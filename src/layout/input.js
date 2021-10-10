@@ -8,9 +8,7 @@ import util from '../utils/util';
  * @param {*} value 
  */
  export function onInputColor(scope, value) {
-    if (!isValidColor(value)) return;
-    // 两者相等，说明用户没有更改颜色
-    if (util.removeAllSpace(scope.prevInputValue) === util.removeAllSpace(value))return;
+    if (!isValidColor(value) || util.removeAllSpace(scope.prevInputValue) === util.removeAllSpace(value)) return;
     let color = null;
     if(scope.config.openChangeColorMode){
         switch (scope.currentMode) {
