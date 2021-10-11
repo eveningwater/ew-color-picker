@@ -32,7 +32,6 @@ import { colorHsvaToRgba,colorRgbaToHex } from '../color/color';
             value: colorRgbaToHex(colorHsvaToRgba(cloneColor(context.hsvaColor)))
         }
     ].forEach(item => util.setCss(item.el, item.prop, item.value));
-
     if (context.config.hue) {
         getSliderBarPosition(context.isHueHorizontal,context.$Dom.hueBar,(position,prop) => {
             util.setCss(context.$Dom.hueThumb, prop, parseInt(context.hsvaColor.h * position / 360) + 'px');
@@ -40,7 +39,7 @@ import { colorHsvaToRgba,colorRgbaToHex } from '../color/color';
     }
     if (context.config.alpha) {
         getSliderBarPosition(context.isAlphaHorizontal,context.$Dom.alphaBar,(position,prop) => {
-            util.setCss(context.$Dom.alphaBarThumb, prop, position - context.hsvaColor.a * position + 'px');
+            util.setCss(context.$Dom.alphaBarThumb, prop, (context.isAlphaHorizontal ? context.hsvaColor.a * position : position - context.hsvaColor.a * position) + 'px');
         });
     }
 }
