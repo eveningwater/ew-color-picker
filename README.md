@@ -3,6 +3,12 @@
 
 # ew-color-picker
 
+[![NPM version](https://img.shields.io/npm/v/ew-color-picker.svg?color=red)](https://www.npmjs.com/package/ew-color-picker)
+![npm](https://img.shields.io/npm/dw/ew-color-picker)
+![npm](https://img.shields.io/npm/dt/ew-color-picker)
+[![GitHub stars](https://img.shields.io/github/stars/eveningwater/ew-color-picker.svg?color=#42b983)](https://github.com/eveningwater/ew-color-picker/stargazers)
+[![GitHub stars](https://img.shields.io/github/forks/eveningwater/ew-color-picker.svg)](https://github.com/eveningwater/ew-color-picker/network/members)
+
 A colorPicker plugin packaged based on native js.
 
 ## Installation and use
