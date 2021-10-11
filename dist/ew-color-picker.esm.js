@@ -801,7 +801,7 @@ function setColorValue(context, panelWidth, panelHeight, boxChange) {
 
   if (context.config.alpha) {
     getSliderBarPosition(context.isAlphaHorizontal, context.$Dom.alphaBar, (position, prop) => {
-      util.setCss(context.$Dom.alphaBarThumb, prop, position - context.hsvaColor.a * position + 'px');
+      util.setCss(context.$Dom.alphaBarThumb, prop, (context.isAlphaHorizontal ? context.hsvaColor.a * position : position - context.hsvaColor.a * position) + 'px');
     });
   }
 }
@@ -1444,9 +1444,7 @@ function onClickPanel(scope, eve) {
  */
 
 function onInputColor(scope, value) {
-  if (!isValidColor(value)) return; // 两者相等，说明用户没有更改颜色
-
-  if (util.removeAllSpace(scope.prevInputValue) === util.removeAllSpace(value)) return;
+  if (!isValidColor(value) || util.removeAllSpace(scope.prevInputValue) === util.removeAllSpace(value)) return;
   let color = null;
 
   if (scope.config.openChangeColorMode) {
@@ -1678,13 +1676,14 @@ function startMain(ele, config) {
   if (config.disabled) {
     if (config.hasColorInput) {
       if (!util.hasClass(this.$Dom.pickerInput, 'ew-input-disabled')) {
-        this.$Dom.pickerInput.classList.add('ew-input-disabled');
-        this.$Dom.pickerInput.disabled = true;
+        util.addClass(this.$Dom.pickerInput, 'ew-input-disabled');
       }
+
+      this.$Dom.pickerInput.disabled = true;
     }
 
     if (!util.hasClass(this.$Dom.picker, 'ew-color-picker-disabled')) {
-      this.$Dom.picker.classList.add('ew-color-picker-disabled');
+      util.addClass(this.$Dom.picker, 'ew-color-picker-disabled');
     }
 
     return false;
