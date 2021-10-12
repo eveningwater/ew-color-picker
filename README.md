@@ -135,6 +135,7 @@ For more details, please refer to the official website of the document [ewColorP
 
 # the update logs
 
+* 1.9.9 Fixed the horizontal layout positioning problem of the alpha bar, adjusted the `$` tool method, and added the `$$` tool method.
 * 1.9.8 fixes some problems,add the animation type,now contains "height","opacity","default".
 * 1.9.7 fixes some problems
 * 1.9.6 Fixed some problems of the color picker, and added the method `destroy` to destroy the color picker instance globally.

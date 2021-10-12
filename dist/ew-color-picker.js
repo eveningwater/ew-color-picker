@@ -83,10 +83,9 @@
 
     util.getCss = (el, prop) => window.getComputedStyle(el, null)[prop];
 
-    util.$ = ident => {
-      if (!ident) return null;
-      return document[ident.indexOf('#') > -1 ? 'querySelector' : 'querySelectorAll'](ident);
-    };
+    util.$ = (selector, el = document) => el.querySelector(selector);
+
+    util.$$ = (selector, el = document) => el.querySelectorAll(selector);
 
     util["on"] = (element, type, handler, useCapture = false) => {
       if (element && type && handler) {
@@ -1324,8 +1323,12 @@
 
     function getELByClass(el, prop, bool) {
       let child = el.firstElementChild;
-      if (!util.hasClass(child, 'ew-color-picker-container')) child = el;
-      return !bool ? child.querySelector('.' + prop) : child.querySelectorAll('.' + prop);
+
+      if (!util.hasClass(child, 'ew-color-picker-container')) {
+        child = el;
+      }
+
+      return !bool ? util.$('.' + prop) : util.$$('.' + prop);
     }
 
     /**
@@ -1470,7 +1473,7 @@
               h: Number(hslaArr[0]),
               s: Number(hslaArr[1].replace(/%/g, "")),
               l: Number(hslaArr[2].replace(/%/g, "")),
-              a: Number(hslaArr[3]) | 1
+              a: Number(hslaArr[3]) || 1
             }));
             break;
         }

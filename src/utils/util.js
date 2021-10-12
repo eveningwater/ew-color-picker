@@ -54,10 +54,8 @@ util.deepCloneObjByRecursion = (function f(obj) {
     return cloneObj;
 });
 util.getCss = (el, prop) => window.getComputedStyle(el, null)[prop];
-util.$ = ident => {
-    if (!ident) return null;
-    return document[ident.indexOf('#') > -1 ? 'querySelector' : 'querySelectorAll'](ident);
-};
+util.$ = (selector,el = document) => el.querySelector(selector);
+util.$$ = (selector,el = document) => el.querySelectorAll(selector);
 util["on"] = (element, type, handler, useCapture = false) => {
     if (element && type && handler) {
         element.addEventListener(type, handler, useCapture);

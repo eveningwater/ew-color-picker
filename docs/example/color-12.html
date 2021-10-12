@@ -14,7 +14,10 @@
     <!-- <script src="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.js"></script> -->
     <script src="../dist/ew-color-picker.js"></script>
     <script>
-        const color1 = new ewColorPicker();
+        const color1 = new ewColorPicker({
+            alpha:true,
+            // alphaDirection:"horizontal"
+        });
         console.log(color1)
     </script>
 </body>
