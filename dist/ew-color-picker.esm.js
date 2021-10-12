@@ -77,10 +77,9 @@ util.deepCloneObjByRecursion = function f(obj) {
 
 util.getCss = (el, prop) => window.getComputedStyle(el, null)[prop];
 
-util.$ = ident => {
-  if (!ident) return null;
-  return document[ident.indexOf('#') > -1 ? 'querySelector' : 'querySelectorAll'](ident);
-};
+util.$ = (selector, el = document) => el.querySelector(selector);
+
+util.$$ = (selector, el = document) => el.querySelectorAll(selector);
 
 util["on"] = (element, type, handler, useCapture = false) => {
   if (element && type && handler) {
@@ -801,7 +800,7 @@ function setColorValue(context, panelWidth, panelHeight, boxChange) {
 
   if (context.config.alpha) {
     getSliderBarPosition(context.isAlphaHorizontal, context.$Dom.alphaBar, (position, prop) => {
-      util.setCss(context.$Dom.alphaBarThumb, prop, position - context.hsvaColor.a * position + 'px');
+      util.setCss(context.$Dom.alphaBarThumb, prop, (context.isAlphaHorizontal ? context.hsvaColor.a * position : position - context.hsvaColor.a * position) + 'px');
     });
   }
 }
@@ -1318,8 +1317,12 @@ function handleClickOutSide(context, config) {
 
 function getELByClass(el, prop, bool) {
   let child = el.firstElementChild;
-  if (!util.hasClass(child, 'ew-color-picker-container')) child = el;
-  return !bool ? child.querySelector('.' + prop) : child.querySelectorAll('.' + prop);
+
+  if (!util.hasClass(child, 'ew-color-picker-container')) {
+    child = el;
+  }
+
+  return !bool ? util.$('.' + prop) : util.$$('.' + prop);
 }
 
 /**
@@ -1444,9 +1447,7 @@ function onClickPanel(scope, eve) {
  */
 
 function onInputColor(scope, value) {
-  if (!isValidColor(value)) return; // 两者相等，说明用户没有更改颜色
-
-  if (util.removeAllSpace(scope.prevInputValue) === util.removeAllSpace(value)) return;
+  if (!isValidColor(value) || util.removeAllSpace(scope.prevInputValue) === util.removeAllSpace(value)) return;
   let color = null;
 
   if (scope.config.openChangeColorMode) {
@@ -1466,7 +1467,7 @@ function onInputColor(scope, value) {
           h: Number(hslaArr[0]),
           s: Number(hslaArr[1].replace(/%/g, "")),
           l: Number(hslaArr[2].replace(/%/g, "")),
-          a: Number(hslaArr[3]) | 1
+          a: Number(hslaArr[3]) || 1
         }));
         break;
     }
@@ -1678,13 +1679,14 @@ function startMain(ele, config) {
   if (config.disabled) {
     if (config.hasColorInput) {
       if (!util.hasClass(this.$Dom.pickerInput, 'ew-input-disabled')) {
-        this.$Dom.pickerInput.classList.add('ew-input-disabled');
-        this.$Dom.pickerInput.disabled = true;
+        util.addClass(this.$Dom.pickerInput, 'ew-input-disabled');
       }
+
+      this.$Dom.pickerInput.disabled = true;
     }
 
     if (!util.hasClass(this.$Dom.picker, 'ew-color-picker-disabled')) {
-      this.$Dom.picker.classList.add('ew-color-picker-disabled');
+      util.addClass(this.$Dom.picker, 'ew-color-picker-disabled');
     }
 
     return false;

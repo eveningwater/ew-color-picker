@@ -3,6 +3,12 @@
 
 # ew-color-picker
 
+[![NPM version](https://img.shields.io/npm/v/ew-color-picker.svg?color=red)](https://www.npmjs.com/package/ew-color-picker)
+![npm](https://img.shields.io/npm/dw/ew-color-picker)
+![npm](https://img.shields.io/npm/dt/ew-color-picker)
+[![GitHub stars](https://img.shields.io/github/stars/eveningwater/ew-color-picker.svg?color=#42b983)](https://github.com/eveningwater/ew-color-picker/stargazers)
+[![GitHub stars](https://img.shields.io/github/forks/eveningwater/ew-color-picker.svg)](https://github.com/eveningwater/ew-color-picker/network/members)
+
 A colorPicker plugin packaged based on native js.
 
 ## Installation and use
@@ -129,6 +135,7 @@ For more details, please refer to the official website of the document [ewColorP
 
 # the update logs
 
+* 1.9.9 Fixed the horizontal layout positioning problem of the alpha bar, adjusted the `$` tool method, and added the `$$` tool method.
 * 1.9.8 fixes some problems,add the animation type,now contains "height","opacity","default".
 * 1.9.7 fixes some problems
 * 1.9.6 Fixed some problems of the color picker, and added the method `destroy` to destroy the color picker instance globally.
