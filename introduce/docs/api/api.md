@@ -677,23 +677,33 @@ color.destroy();
 
 ## Detailed explanation of built-in tool method
 
-The built-in tool methods are all placed in the `ewColorPicker.util` object. There are a total of`41` tool methods. You can import the plug-in js file in the page, and then print the tool method object. Let’s take a look at them. What are the tool methods!
+The built-in tool methods are all placed in the `ewColorPicker.util` object. There are a total of`42` tool methods. You can import the plug-in js file in the page, and then print the tool method object. Let’s take a look at them. What are the tool methods!
 
 ### $ method
 
 1.`$`
 
-Get a DOM element, pass in a string parameter, if you pass in a DOM element string like `#demo`, it will return a DOM element, if it is other, it will return a DOM element collection (PS: Of course you must query Go to the DOM element, and return null if it is not found). Such as the following sample code:
+Get a DOM element, you can pass in 2 parameters, the first parameter is the DOM element string, the second parameter is the DOM element obtained (if not passed, the default parameter `document` element is used). Such as the following sample code:
 
 ```js
 const p = ewColorPicker.util.$('p');
 const test = ewColorPicker.util.$('#test');
-const elements = ewColorPicker.util.$('.element');
+const element = ewColorPicker.util.$('.element');
+```
+
+### `$$`方法
+
+2.`$$`
+
+Get a collection of NodeList elements, you can pass in 2 parameters, the first parameter is the DOM element string, the second parameter is the obtained DOM element (if not passed, the default parameter `document` element is used).Such as the following sample code:
+
+```js
+const elements = ewColorPicker.util.$$('.element');
 ```
 
 ### addClass method
 
-2.`addClass`:
+3.`addClass`:
 
 As the name suggests, this method is to add a class name to the element, with two parameters, the first parameter is the DOM element, and the second parameter is the class name string. Note that this el element must be an HTMLElement and cannot be a collection of elements. Such as:
 
@@ -704,7 +714,7 @@ As the name suggests, this method is to add a class name to the element, with tw
 
 ### addMethod method
 
-3.`addMethod`
+4.`addMethod`
 
 The method has three parameters, the first parameter is an object, the second parameter is the method name, and the third parameter is the method function, which means to add a prototype method to the object instance. E.g:
 
@@ -719,7 +729,7 @@ The method has three parameters, the first parameter is an object, the second pa
 
 ### baseClickOutSide method
 
-4.`baseClickOutSide` method
+5.`baseClickOutSide` method
 
 As the name suggests, this method is an operation performed outside the element of the target area. For example, in this colorPicker, click the area outside the color panel to close the function of the color panel. There are three parameters. The first parameter is the target element, which is a DOM element. The second element is a boolean value indicating whether to unbind the event after the callback function is executed. The default value is true, and the third parameter is A callback function, that is, the operation performed by clicking outside the target element area. You can look at the following example:
 
@@ -746,7 +756,7 @@ This feature is very commonly used.
 
 ### bindEvent method
 
-5.`bindEvent` method
+6.`bindEvent` method
 
 This method is the same as the `bindEvent` (ie color.bindEvent) on the instance. For example, the js code in the example introduced in the previous example method can be modified as follows:
 
@@ -775,7 +785,7 @@ In this way, a function of dragging within the box area to change the position o
 
 ### `colorHexToRgba` method
 
-6.`colorHexToRgba` method
+7.`colorHexToRgba` method
 
 The method is to convert a hex color (such as: `#fff`) into a `rgba` color. Two parameters are passed in, the first parameter is the hex color, and the second parameter is the transparency. E.g:
 
@@ -786,7 +796,7 @@ ewColorPicker.util.colorHexToRgba("#fff",0.4);
 
 ### colorHslaToRgba method
 
-7.`colorHslaToRgba` method
+8.`colorHslaToRgba` method
 
 The method is to convert a hsla color (such as: "hsla(123,22%,15%,.3)") into a `rgba` color. Pass in a parameter, the hsla color value object. E.g:
 
@@ -802,7 +812,7 @@ ewColorPicker.util.colorHslaToRgba({
 
 ### `colorHsvaToRgba` method
 
-8.`colorHsvaToRgba` method
+9.`colorHsvaToRgba` method
 
 The method is to convert a hsva color to rgba color. Pass in two parameters, the first parameter is the hsva color value object, the second parameter represents the transparency, the value is `0~1`. E.g:
 
@@ -818,7 +828,7 @@ ewColorPicker.util.colorHsvaToRgba({
 
 ### `colorRgbaToHex` method
 
-9.`colorRgbaToHex` method
+10.`colorRgbaToHex` method
 
 The method is to convert a rgba color into a hex color. Pass in a parameter, the rgba color string. E.g:
 
@@ -830,7 +840,7 @@ ewColorPicker.util.colorRgbaToHex("rgba(123,22,33,.6)");
 
 ### `colorRgbaToHsla` method
 
-10.`colorRgbaToHsla` method
+11.`colorRgbaToHsla` method
 
 The method is to convert a rgba color to hsla color. Pass in an rgba color string. E.g:
 
@@ -841,7 +851,7 @@ ewColorPicker.util.colorRgbaToHsla("rgba(123,22,33,.6)");
 
 ### `colorRgbaToHsva` method
 
-11.`colorRgbaToHsva` method
+12.`colorRgbaToHsva` method
 
 The method is to convert a rgba color to hsva color. Pass in an rgba color string. E.g:
 
@@ -852,7 +862,7 @@ ewColorPicker.util.colorRgbaToHsva("rgba(123,22,33,.6)");
 
 ### `colorToRgba` method
 
-12.`colorToRgba` method
+13.`colorToRgba` method
 
 Convert any color value to rgba color. Pass in a qualified color value, E.g:
 
@@ -867,7 +877,7 @@ ewColorPicker.util.colorToRgba("hsla(111,22%,11%,.4)");
 
 ### `createUUID` method
 
-13.`createUUID` method
+14.`createUUID` method
 
 The method does not need to pass in any parameters, and randomly returns a unique uuid. E.g:
 
@@ -877,7 +887,7 @@ The method does not need to pass in any parameters, and randomly returns a uniqu
 ```
 ### `deepCloneObjByJSON` method
 
-14.`deepCloneObjByJSON` method
+15.`deepCloneObjByJSON` method
 
 This method is used to copy an object and pass in an object parameter. Since the internal encapsulation of the `JSON.parse` and `JSON.stringify` methods, there will be some defects. E.g:
 
@@ -888,7 +898,7 @@ ewColorPicker.util.deepCloneObjByJSON({ name:"eveningwater"});
 
 ### `deepCloneObjByRecursion` method
 
-15.`deepCloneObjByRecursion` method
+16.`deepCloneObjByRecursion` method
 
 The function of this method is the same as `deepCloneObjByJSON`, the difference is that its internal implementation is recursively, so there are some differences from the `deepCloneObjByJSON` method. E.g:
 
@@ -899,7 +909,7 @@ ewColorPicker.util.deepCloneObjByRecursion({ name:"eveningwater"});
 
 ### `ewAssign` method
 
-16.`ewAssign` method
+17.`ewAssign` method
 
 The method passes in multiple object parameters, which means that multiple objects are merged, which is equivalent to the `Object.assign` method. E.g:
 
@@ -910,7 +920,7 @@ ewColorPicker.util.ewAssign({ name:"eveningwater"},{ name:"waterXi"});
 
 ### `ewError` method
 
-17.`ewError` method
+18.`ewError` method
 
 This method is used to print out error messages on the console. Pass in a string parameter. E.g:
 
@@ -921,7 +931,7 @@ ewColorPicker.util.ewError("error");
 
 ### `ewObjToArray` method
 
-18.`ewObjToArray` method
+19.`ewObjToArray` method
 
 This method is used to convert an array-like array into a real array, and the incoming parameter is an array-like object. E.g:
 
@@ -935,7 +945,7 @@ test(1,2,3);
 
 ### `ewWarn` method
 
-19.`ewWarn` method
+20.`ewWarn` method
 
 This method is used to print a warning message on the console, and the incoming parameter is a string. E.g:
 
@@ -946,7 +956,7 @@ ewColorPicker.util.ewWarn("warning");
 
 ### `getCss` method
 
-20.`getCss` method
+21.`getCss` method
 
 This method is used to obtain the css style of a DOM element, passing in two parameters, the first is the DOM element, and the second is the property name of the obtained css style. E.g:
 
@@ -958,7 +968,7 @@ ewColorPicker.util.getCss(test,"height");
 
 ### `getRect` method
 
-21.`getRect` method
+22.`getRect` method
 
 This method is used to return the coordinate-related information of a DOM element. Pass in the parameters of a DOM element. E.g:
 
@@ -970,7 +980,7 @@ ewColorPicker.util.getRect(test);
 
 ### `hasClass` method
 
-22.`hasClass` method
+23.`hasClass` method
 
 This method is used to determine whether a DOM element has certain class names. There are two parameters, the first parameter is a DOM element, and the second parameter is an array of class names or a string of class names. E.g:
 
@@ -983,7 +993,7 @@ ewColorPicker.util.hasClass(test,["test","demo"]);
 
 ### `isAlphaColor` method
 
-23.`isAlphaColor` method
+24.`isAlphaColor` method
 
 Determine whether a color value is a color with transparency. Pass in a color value parameter. E.g:
 
@@ -996,7 +1006,7 @@ ewColorPicker.util.isAlphaColor("rgba(255,222,11,.4)");
 
 ### `isBoolean` method
 
-24.`isBoolean` method
+25.`isBoolean` method
 
 Determine whether the value passed in is a Boolean value. E.g:
 
@@ -1009,7 +1019,7 @@ ewColorPicker.util.isBoolean(false);
 
 ### `isDeepArray` method
 
-25.`isDeepArray` method
+26.`isDeepArray` method
 
 Determine whether the value passed in is a array value. E.g:
 
@@ -1022,7 +1032,7 @@ ewColorPicker.util.isDeepArray([]);
 
 ### `isDeepObject` method
 
-26.`isDeepObject` method
+27.`isDeepObject` method
 
 Determine whether the value passed in is a object value. E.g:
 
@@ -1037,7 +1047,7 @@ ewColorPicker.util.isDeepObject({});
 
 ### `isDeepRegExp` method
 
-27.`isDeepRegExp` method
+28.`isDeepRegExp` method
 
 Determine whether the value passed in is a RegExp value. E.g:
 
@@ -1053,7 +1063,7 @@ ewColorPicker.util.isDeepRegExp(/123/g);
 
 ### `isDom` method
 
-28.`isDom` method
+29.`isDom` method
 
 Determine whether the value passed in is a dom element. E.g:
 
@@ -1068,7 +1078,7 @@ ewColorPicker.util.isDom(document.getElementById("demo"));
 
 ### `isFunction` method
 
-29.`isFunction` method
+30.`isFunction` method
 
 Determine whether the value passed in is a function value. E.g:
 
@@ -1083,7 +1093,7 @@ ewColorPicker.util.isFunction(() => {});
 
 ### `isJQDom` method
 
-30.isJQDom method
+31.isJQDom method
 
 Determine whether the value passed in is a jQuery object value. E.g:
 
@@ -1096,7 +1106,7 @@ ewColorPicker.util.isJQDom($(".test"));
 
 ### `isNull` method
 
-31.`isNull` method
+32.`isNull` method
 
 Determine whether the value passed in is a null value. E.g:
 
@@ -1109,7 +1119,7 @@ ewColorPicker.util.isNull(null);
 
 ### `isNumber` method
 
-32.`isNumber` method
+33.`isNumber` method
 
 Determine whether the value passed in is a number value. E.g:
 
@@ -1122,7 +1132,7 @@ ewColorPicker.util.isNumber(null);
 
 ### `isShallowObject` method
 
-33.`isShallowObject` method
+34.`isShallowObject` method
 
 This method is equivalent to `isDeepObject`. It means to judge whether a value is an object. The difference is that this method judges objects such as function arrays as true. E.g:
 
@@ -1137,7 +1147,7 @@ ewColorPicker.util.isShallowObject({});
 
 ### `isString` method
 
-34.`isString` method
+35.`isString` method
 
 Determine whether the value passed in is a string. E.g:
 
@@ -1152,7 +1162,7 @@ ewColorPicker.util.isString('aaa');
  
 ### `isUndefined` method
 
-35.`isUndefined` method
+36.`isUndefined` method
 
 Determine whether the value passed in is a undefined value. E.g:
 
@@ -1167,7 +1177,7 @@ ewColorPicker.util.isUndefined(undefined);
 
 ### `isValidColor` method
 
-36.`isValidColor` method
+37.`isValidColor` method
 
 Determine whether the incoming color value is a qualified color value. E.g:
 
@@ -1182,7 +1192,7 @@ ewColorPicker.util.isValidColor("rgba(123,111,22)");
 
 ### `off` method
 
-37.`off` method
+38.`off` method
 
 This method is used to remove an event listener and pass in four parameters, the first is the DOM element, the second is the event name, the third parameter is the event listener, and the fourth parameter is a Boolean value. E.g:
 
@@ -1194,7 +1204,7 @@ ewColorPicker.util.off(test,'click',handler);
 
 ### `on` method
 
-38.`on` method
+39.`on` method
 
 This method is used to add an event listener, and the parameters are equivalent to the `off` method. E.g:
 
@@ -1206,7 +1216,7 @@ ewColorPicker.util.on(test,'click',handler);
 
 ### `removeAllSpace` method
 
-39.`removeAllSpace` method
+40.`removeAllSpace` method
 
 This method is used to remove all blanks in a string, and the incoming parameter is a string. E.g:
 
@@ -1217,7 +1227,7 @@ ewColorPicker.util.removeAllSpace("a   b   c");
 
 ### `removeClass` method
 
-40.`removeClass` method
+41.`removeClass` method
 
 This method is used to remove the class name of an element. Pass in two parameters, the first parameter is the dom element, and the second parameter is the removed class name string. E.g:
 
@@ -1229,7 +1239,7 @@ ewColorPicker.util.removeClass(test,"test");
 
 ### `setCss` method
 
-41.`setCss` method
+42.`setCss` method
 
 This method is used to set a style for a DOM element, passing in three parameters, the first parameter is the DOM element, the second parameter is the style name, and the third parameter is the style value. E.g:
 
@@ -1240,7 +1250,7 @@ ewColorPicker.util.setCss(test,"width","100px");
 
 ### `setSomeCss` method
 
-42.`setSomeCss` method
+43.`setSomeCss` method
 
 This method is used to set multiple styles for a DOM element, passing in two parameters, the first parameter is the DOM element, the second parameter is the style array, the structure such as `[{ prop,"left",propValue:" 10px" }]`. E.g:
 

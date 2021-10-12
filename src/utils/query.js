@@ -8,6 +8,8 @@ import util from "./util";
  */
 export function getELByClass(el, prop, bool) {
     let child = el.firstElementChild;
-    if(!util.hasClass(child,'ew-color-picker-container'))child = el;
-    return !bool ? child.querySelector('.' + prop) : child.querySelectorAll('.' + prop);
+    if(!util.hasClass(child,'ew-color-picker-container')){
+        child = el;
+    }
+    return !bool ? util.$('.' + prop) : util.$$('.' + prop);
 }

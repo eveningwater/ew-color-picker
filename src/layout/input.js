@@ -25,7 +25,7 @@ import util from '../utils/util';
                     h: Number(hslaArr[0]),
                     s: Number(hslaArr[1].replace(/%/g, "")),
                     l: Number(hslaArr[2].replace(/%/g, "")),
-                    a: Number(hslaArr[3]) | 1
+                    a: Number(hslaArr[3]) || 1
                 }));
                 break;
         }

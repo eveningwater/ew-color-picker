@@ -675,23 +675,32 @@ color.destroy();
 
 ## 内置工具方法详解
 
-内置工具方法都被放在`ewColorPicker.util`对象中，一共有`41`个工具方法，可以通过在页面中引入插件的js文件，然后打印这个工具方法对象，下面让我们来看一看都有哪些工具方法吧！
+内置工具方法都被放在`ewColorPicker.util`对象中，一共有`42`个工具方法，可以通过在页面中引入插件的js文件，然后打印这个工具方法对象，下面让我们来看一看都有哪些工具方法吧！
 
 ### $方法
 
 1.`$`
 
-获取一个DOM元素，传入一个字符串参数，如果传入类似`#demo`的DOM元素字符串，则会返回一个DOM元素，如果是其它则会返回一个DOM元素集合（PS：当然必须要查询到DOM元素，如果没有查询到则返回null）。如以下示例代码:
+获取一个DOM元素，可传入2个参数，第一个参数为DOM元素字符串，第二个参数为获取的DOM元素（如果不传则使用默认参数document元素）。如以下示例代码:
 
 ```js
 const p = ewColorPicker.util.$('p');
 const test = ewColorPicker.util.$('#test');
-const elements = ewColorPicker.util.$('.element');
+const element = ewColorPicker.util.$('.element');
+```
+### `$$`方法
+
+2.`$$`
+
+获取一个NodeList元素集合，可传入2个参数，第一个参数为DOM元素字符串，第二个参数为获取的DOM元素（如果不传则使用默认参数document元素）。如以下示例代码:
+
+```js
+const elements = ewColorPicker.util.$$('.element');
 ```
 
 ### addClass方法
 
-2.`addClass`:
+3.`addClass`:
 
 顾名思义，该方法就是给元素添加一个类名，有二个参数，第一个参数为DOM元素，第二个参数则为类名字符串。注意这个el元素必须是一个HTMLElement不能是元素集合。如:
 
@@ -702,7 +711,7 @@ const elements = ewColorPicker.util.$('.element');
 
 ### addMethod方法
 
-3.`addMethod`
+4.`addMethod`
 
 该方法有三个参数，第一个参数为一个对象，第二个参数为方法名，第三个参数则为方法函数，表示往该对象实例上添加一个原型方法。如:
 
@@ -717,7 +726,7 @@ const elements = ewColorPicker.util.$('.element');
 
 ### baseClickOutSide方法
 
-4.`baseClickOutSide`方法
+5.`baseClickOutSide`方法
 
 顾名思义，该方法就是点击目标区域元素之外执行的操作。例如本颜色选择器中的点击颜色面板之外的区域关闭颜色面板的功能。有三个参数，第一个参数是目标元素，也就是一个DOM元素，第二个元素则是一个布尔值，表示是否在执行回调函数之后解绑事件，默认值是true,第三个参数则是一个回调函数，即点击目标元素区域之外所进行的操作。可以看如下一个示例:
 
@@ -744,7 +753,7 @@ ewColorPicker.util.baseClickOutSide(test,false,() => {
 
 ### bindEvent方法
 
-5.`bindEvent`方法
+6.`bindEvent`方法
 
 这个方法和实例上的`bindEvent`（即color.bindEvent）是一样的。例如前面的实例方法中介绍到的示例中的js代码我们可以修改成如下这样:
 
@@ -773,7 +782,7 @@ util.bindEvent(demo, (context, el, x, y) => {
 
 ### `colorHexToRgba`方法
 
-6.`colorHexToRgba`方法
+7.`colorHexToRgba`方法
 
 该方法就是将一个hex颜色(如:`#fff`)转换成`rgba`颜色。传入二个参数，第一个参数为hex颜色，第二个参数为透明度。如:
 
@@ -784,7 +793,7 @@ ewColorPicker.util.colorHexToRgba("#fff",0.4);
 
 ### colorHslaToRgba方法
 
-7.`colorHslaToRgba`方法
+8.`colorHslaToRgba`方法
 
 该方法就是将一个hsla颜色(如:"hsla(123,22%,15%,.3)")转换成`rgba`颜色。传入一个参数，即hsla颜色值对象。如:
 
@@ -800,7 +809,7 @@ ewColorPicker.util.colorHslaToRgba({
 
 ### `colorHsvaToRgba`方法
 
-8.`colorHsvaToRgba`方法
+9.`colorHsvaToRgba`方法
 
 该方法就是将一个hsva颜色转换成rgba颜色。传入二个参数,第一个参数为hsva颜色值对象，第二个参数代表透明度，取值`0~1`。如:
 
@@ -816,7 +825,7 @@ ewColorPicker.util.colorHsvaToRgba({
 
 ### `colorRgbaToHex`方法
 
-9.`colorRgbaToHex`方法
+10.`colorRgbaToHex`方法
 
 该方法就是将一个rgba颜色转换成hex颜色。传入一个参数，即rgba颜色字符串。如:
 
@@ -828,7 +837,7 @@ ewColorPicker.util.colorRgbaToHex("rgba(123,22,33,.6)");
 
 ### `colorRgbaToHsla`方法
 
-10.`colorRgbaToHsla`方法
+11.`colorRgbaToHsla`方法
 
 该方法就是将一个rgba颜色转换成hsla颜色。传入一个rgba颜色字符串。如:
 
@@ -839,7 +848,7 @@ ewColorPicker.util.colorRgbaToHsla("rgba(123,22,33,.6)");
 
 ### `colorRgbaToHsva`方法
 
-11.`colorRgbaToHsva`方法
+12.`colorRgbaToHsva`方法
 
 该方法就是将一个rgba颜色转换成hsva颜色。传入一个rgba颜色字符串。如:
 
@@ -850,7 +859,7 @@ ewColorPicker.util.colorRgbaToHsva("rgba(123,22,33,.6)");
 
 ### `colorToRgba`方法
 
-12.`colorToRgba`方法
+13.`colorToRgba`方法
 
 将任意颜色值转换成rgba颜色。传入一个合格的颜色值，如:
 
@@ -865,7 +874,7 @@ ewColorPicker.util.colorToRgba("hsla(111,22%,11%,.4)");
 
 ### `createUUID`方法
 
-13.`createUUID`方法
+14.`createUUID`方法
 
 该方法不用传入任何参数，随机返回一个唯一的`uuid`。如:
 
@@ -875,7 +884,7 @@ ewColorPicker.util.colorToRgba("hsla(111,22%,11%,.4)");
 ```
 ### `deepCloneObjByJSON`方法
 
-14.`deepCloneObjByJSON`方法
+15.`deepCloneObjByJSON`方法
 
 该方法用于复制一个对象，传入一个对象参数，由于内部是对`JSON.parse`与`JSON.stringify`方法的封装，因此会有一些缺陷。如:
 
@@ -886,7 +895,7 @@ ewColorPicker.util.deepCloneObjByJSON({ name:"eveningwater"});
 
 ### `deepCloneObjByRecursion`方法
 
-15.`deepCloneObjByRecursion`方法
+16.`deepCloneObjByRecursion`方法
 
 该方法作用等同`deepCloneObjByJSON`，不同的是它的内部是通过递归实现的，所以与`deepCloneObjByJSON`方法也有一些不同。如:
 
@@ -897,7 +906,7 @@ ewColorPicker.util.deepCloneObjByRecursion({ name:"eveningwater"});
 
 ### `ewAssign`方法
 
-16.`ewAssign`方法
+17.`ewAssign`方法
 
 该方法传入多个对象参数，表示将多个对象合并，作用等同`Object.assign`方法。如:
 
@@ -908,7 +917,7 @@ ewColorPicker.util.ewAssign({ name:"eveningwater"},{ name:"waterXi"});
 
 ### `ewError`方法
 
-17.`ewError`方法
+18.`ewError`方法
 
 该方法用于在控制台打印出错误信息。传入一个字符串参数。如:
 
@@ -919,7 +928,7 @@ ewColorPicker.util.ewError("error");
 
 ### `ewObjToArray`方法
 
-18.`ewObjToArray`方法
+19.`ewObjToArray`方法
 
 该方法用于将一个类数组转换成真正的数组,传入参数为一个类数组对象。如:
 
@@ -933,7 +942,7 @@ test(1,2,3);
 
 ### `ewWarn`方法
 
-19.`ewWarn`方法
+20.`ewWarn`方法
 
 该方法用于在控制台打印一个警告信息，传入参数为一个字符串。如:
 
@@ -944,7 +953,7 @@ ewColorPicker.util.ewWarn("warning");
 
 ### `getCss`方法
 
-20.`getCss`方法
+21.`getCss`方法
 
 该方法用于获取一个DOM元素的css样式，传入二个参数，第一个为DOM元素，第二个为获取的css样式属性名。如:
 
@@ -956,7 +965,7 @@ ewColorPicker.util.getCss(test,"height");
 
 ### `getRect`方法
 
-21.`getRect`方法
+22.`getRect`方法
 
 该方法用于返回一个DOM元素的坐标相关信息。传入一个DOM元素的参数。如:
 
@@ -968,7 +977,7 @@ ewColorPicker.util.getRect(test);
 
 ### `hasClass`方法
 
-22.`hasClass`方法
+23.`hasClass`方法
 
 该方法用于判断某个DOM元素是否拥有某些类名。有二个参数，第一个参数为DOM元素，第二个参数为一个类名数组或者一个类名字符串。如:
 
@@ -981,7 +990,7 @@ ewColorPicker.util.hasClass(test,["test","demo"]);
 
 ### `isAlphaColor`方法
 
-23.`isAlphaColor`方法
+24.`isAlphaColor`方法
 
 判断一个颜色值是否是含有透明度的颜色。传入一个颜色值参数。如:
 
@@ -994,7 +1003,7 @@ ewColorPicker.util.isAlphaColor("rgba(255,222,11,.4)");
 
 ### `isBoolean`方法
 
-24.`isBoolean`方法
+25.`isBoolean`方法
 
 判断传入的值是否是一个布尔值。如:
 
@@ -1007,7 +1016,7 @@ ewColorPicker.util.isBoolean(false);
 
 ### `isDeepArray`方法
 
-25.`isDeepArray`方法
+26.`isDeepArray`方法
 
 判断传入的值是否是一个数组。如:
 
@@ -1020,7 +1029,7 @@ ewColorPicker.util.isDeepArray([]);
 
 ### `isDeepObject`方法
 
-26.`isDeepObject`方法
+27.`isDeepObject`方法
 
 判断传入的值是否是一个对象。如:
 
@@ -1035,7 +1044,7 @@ ewColorPicker.util.isDeepObject({});
 
 ### `isDeepRegExp`方法
 
-27.`isDeepRegExp`方法
+28.`isDeepRegExp`方法
 
 判断传入的值是否是一个正则表达式。如:
 
@@ -1051,7 +1060,7 @@ ewColorPicker.util.isDeepRegExp(/123/g);
 
 ### `isDom`方法
 
-28.`isDom`方法
+29.`isDom`方法
 
 判断传入的值是否是一个DOM元素。如:
 
@@ -1066,7 +1075,7 @@ ewColorPicker.util.isDom(document.getElementById("demo"));
 
 ### `isFunction`方法
 
-29.`isFunction`方法
+30.`isFunction`方法
 
 判断传入的值是否是一个函数。如:
 
@@ -1081,7 +1090,7 @@ ewColorPicker.util.isFunction(() => {});
 
 ### `isJQDom`方法
 
-30.isJQDom方法
+31.isJQDom方法
 
 判断传入的值是否是一个jq对象。如:
 
@@ -1094,7 +1103,7 @@ ewColorPicker.util.isJQDom($(".test"));
 
 ### `isNull`方法
 
-31.`isNull`方法
+32.`isNull`方法
 
 判断传入的值是否是一个null值。如:
 
@@ -1107,7 +1116,7 @@ ewColorPicker.util.isNull(null);
 
 ### `isNumber`方法
 
-32.`isNumber`方法
+33.`isNumber`方法
 
 判断传入的值是否是一个数值。如:
 
@@ -1120,7 +1129,7 @@ ewColorPicker.util.isNumber(null);
 
 ### `isShallowObject`方法
 
-33.`isShallowObject`方法
+34.`isShallowObject`方法
 
 该方法作用等同`isDeepObject`。表示判断一个值是否是对象，不同的是该方法会将函数数组之类的对象判断为true。如:
 
@@ -1135,7 +1144,7 @@ ewColorPicker.util.isShallowObject({});
 
 ### `isString`方法
 
-34.`isString`方法
+35.`isString`方法
 
 判断传入的值是否是一个字符串。如:
 
@@ -1150,7 +1159,7 @@ ewColorPicker.util.isString('aaa');
  
 ### `isUndefined`方法
 
-35.`isUndefined`方法
+36.`isUndefined`方法
 
 判断传入的值是否是一个undefined值。如:
 
@@ -1165,7 +1174,7 @@ ewColorPicker.util.isUndefined(undefined);
 
 ### `isValidColor`方法
 
-36.`isValidColor`方法
+37.`isValidColor`方法
 
 判断传入的颜色值是否是一个合格的颜色值。如:
 
@@ -1180,7 +1189,7 @@ ewColorPicker.util.isValidColor("rgba(123,111,22)");
 
 ### `off`方法
 
-37.`off`方法
+38.`off`方法
 
 该方法用于给移除一个事件监听器，传入四个参数，第一个为DOM元素，第二个为事件名，第三个参数为事件监听器，第四个参数为一个布尔值。如:
 
@@ -1192,7 +1201,7 @@ ewColorPicker.util.off(test,'click',handler);
 
 ### `on`方法
 
-38.`on`方法
+39.`on`方法
 
 该方法用于添加一个事件监听器，参数等同`off`方法。如:
 
@@ -1204,7 +1213,7 @@ ewColorPicker.util.on(test,'click',handler);
 
 ### `removeAllSpace`方法
 
-39.`removeAllSpace`方法
+40.`removeAllSpace`方法
 
 该方法用于移除一个字符串的所有空白，传入参数即一个字符串。如:
 
@@ -1215,7 +1224,7 @@ ewColorPicker.util.removeAllSpace("a   b   c");
 
 ### `removeClass`方法
 
-40.`removeClass`方法
+41.`removeClass`方法
 
 该方法用于移除一个元素的类名。传入二个参数，第一个参数为dom元素，第二个参数为移除的类名字符串。如:
 
@@ -1227,7 +1236,7 @@ ewColorPicker.util.removeClass(test,"test");
 
 ### `setCss`方法
 
-41.`setCss`方法
+42.`setCss`方法
 
 该方法用于给一个DOM元素设置样式，传入三个参数，第一个参数为DOM元素，第二个参数为样式名，第三个参数为样式值。如:
 
