@@ -24,6 +24,6 @@
     "webpack-dev-server": "^3.11.1"
   },
   "dependencies": {
-    "ew-color-picker": "^1.9.3"
+    "ew-color-picker": "^1.9.9"
   }
 }
