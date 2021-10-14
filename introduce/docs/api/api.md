@@ -46,7 +46,7 @@ const color = new ewColorPicker(config);
 
 3.hue?(Optional property)
 
-Whether to open the hue bar, the default is false. E.g:
+Whether to open the hue bar, the default is true. E.g:
 
 ```js
 const config = {
