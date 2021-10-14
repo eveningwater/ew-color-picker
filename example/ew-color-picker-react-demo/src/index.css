@@ -1,0 +1,7 @@
+body {
+  font-family:'Press Start 2P', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+  margin: 0;
+}
