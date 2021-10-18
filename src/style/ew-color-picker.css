@@ -308,7 +308,7 @@
 }
 .ew-color-picker-box {
   border: 1px solid #dcdee2;
-  color: #535353;
+  color: #909399;
   border-radius: 4px;
   padding: 4px 7px;
   line-height: 1.5;
@@ -387,7 +387,4 @@
 .ew-color-mode-title::after {
   content: ":";
   display: inline-block;
-}
-.ew-color-picker-board {
-  
 }
