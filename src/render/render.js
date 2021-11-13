@@ -4,6 +4,7 @@ import { isValidColor,colorRegRGB,colorToRgba } from '../color/color';
 import { ERROR_VARIABLE } from '../const/error';
 import { Observer } from '../observe/proxy';
 import RenderWatcher from './renderWatcher';
+import { closeIcon,arrowIcon } from "../const/icon";
 /**
  * 渲染
  * @param {*} element 
@@ -28,24 +29,37 @@ export function staticRender(element, config) {
         horizontalSliderHTML = '',
         verticalSliderHTML = '';
     const p_c = config.predefineColor;
-    if (!util.isDeepArray(p_c)) return util.ewError(ERROR_VARIABLE.PREDEFINE_COLOR_ERROR);
+    // validate the predefineColor;
+    if (!util.isDeepArray(p_c)){
+        return util.ewError(ERROR_VARIABLE.PREDEFINE_COLOR_ERROR);
+    }
     if (p_c.length) {
-        p_c.map((color,index) => {
-            let isValidColorString = util.isString(color) && isValidColor(color);
-            let isValidColorObj = util.isDeepObject(color) && color.hasOwnProperty('color') && isValidColor(color.color);
-            let renderColor = isValidColorString ? color : isValidColorObj ? color.color : '';
-            let renderDisabled = isValidColorObj ? setPredefineDisabled(color.disabled) : '';
+        p_c.forEach((color,index) => {
+            const isValidColorString = util.isString(color) && isValidColor(color);
+            const isValidColorObj = util.isDeepObject(color) && color.hasOwnProperty('color') && isValidColor(color.color);
+            const renderColor = isValidColorString ? color : isValidColorObj ? color.color : '';
+            let preColorClassObject = {
+                "ew-pre-define-color":true,
+                ...hasAlpha(renderColor)
+            }
+            if(isValidColorObj){
+                preColorClassObject = util.ewAssign(preColorClassObject,setPredefineDisabled(color.disabled))
+            }
+            const preColorClassStr = util.classnames(preColorClassObject);
             predefineColorHTML += `
-            <div class="ew-pre-define-color${hasAlpha(renderColor)}${renderDisabled}" tabindex=${index}>
-                <div class="ew-pre-define-color-item" style="background-color:${renderColor};"></div>
-            </div>`;
+                <div class="${preColorClassStr}" tabindex=${index}>
+                    <div class="ew-pre-define-color-item" style="background-color:${renderColor};"></div>
+                </div>
+            `;
         })
     };
+    const { b_width,b_height } = this._privateConfig.boxSize;
+    const boxArrowStyle = `width:${b_width};height:${b_height};`;
+    const boxNoStyle = `${boxArrowStyle}line-height:${b_height};`;
     //打开颜色选择器的方框
-    const colorBox = config.defaultColor ? `<div class="ew-color-picker-arrow" style="width:${this._privateConfig.boxSize.b_width};height:${this._privateConfig.boxSize.b_height};">
-        <div class="ew-color-picker-arrow-left"></div>
-        <div class="ew-color-picker-arrow-right"></div>
-    </div>` : `<div class="ew-color-picker-no" style="width:${this._privateConfig.boxSize.b_width};height:${this._privateConfig.boxSize.b_height};line-height:${this._privateConfig.boxSize.b_height};">&times;</div>`;
+    const colorBox = config.defaultColor ? 
+    `<div class="ew-color-picker-arrow" style="${boxArrowStyle}">${ arrowIcon }</div>` : 
+    `<div class="ew-color-picker-no" style="${boxNoStyle}">${ closeIcon }</div>`;
     //透明度
     if (config.alpha) {
         alphaBar = `<div class="ew-alpha-slider-bar">
@@ -61,7 +75,9 @@ export function staticRender(element, config) {
     if (predefineColorHTML) {
         predefineHTML = `<div class="ew-pre-define-color-container">${predefineColorHTML}</div>`;
     }
-    if (config.disabled || config.boxDisabled) boxDisabledClassName = 'ew-color-picker-box-disabled';
+    if (config.disabled || config.boxDisabled){
+        boxDisabledClassName = 'ew-color-picker-box-disabled';
+    }
     if (config.defaultColor){
         if(!isValidColor(config.defaultColor)){
             return util.ewError(ERROR_VARIABLE.DEFAULT_COLOR_ERROR)
@@ -70,9 +86,11 @@ export function staticRender(element, config) {
         }
     };
     this._privateConfig.colorValue = config.defaultColor;
-    if (!config.disabled && this._privateConfig.colorValue) boxBackground = `background:${this._privateConfig.colorValue}`;
+    if (!config.disabled && this._privateConfig.colorValue){
+        boxBackground = `background:${this._privateConfig.colorValue}`;
+    }
     // 盒子样式
-    const boxStyle = `width:${this._privateConfig.boxSize.b_width};height:${this._privateConfig.boxSize.b_height};${boxBackground}`;
+    const boxStyle = `${ boxArrowStyle };${boxBackground}`;
     if (config.hasBox) {
         boxHTML = `<div class="ew-color-picker-box ${boxDisabledClassName}" tabIndex="0" style="${boxStyle}">${colorBox}</div>`;
     }
@@ -85,7 +103,7 @@ export function staticRender(element, config) {
     if (config.hasClear || config.hasSure) {
         btnGroupHTML = `<div class="ew-color-drop-btn-group">${clearHTML}${sureHTML}</div>`;
     }
-    if (config.hasColorInput) {
+    if (config.hasInput) {
         inputHTML = '<input type="text" class="ew-color-input">';
     }
     if (config.openChangeColorMode) {
@@ -96,7 +114,7 @@ export function staticRender(element, config) {
         </div>`;
         openChangeColorModeLabelHTML = `<label class="ew-color-mode-title">${this.colorMode[1]}</label>`;
     }
-    if (config.hasColorInput || config.hasClear || config.hasSure) {
+    if (config.hasInput || config.hasClear || config.hasSure) {
         dropHTML = config.openChangeColorMode ? `<div class="ew-color-drop-container ew-has-mode-container">
         ${openChangeColorModeLabelHTML}${inputHTML}${openChangeColorModeHTML}
         </div><div class="ew-color-drop-container">
@@ -130,12 +148,12 @@ export function staticRender(element, config) {
     const html = `${boxHTML}
         <div class="ew-color-picker">
             <div class="ew-color-picker-content">
-                ${ verticalSliderHTML }
                 <div class="ew-color-panel" style="background:red;">
                     <div class="ew-color-white-panel"></div>
                     <div class="ew-color-black-panel"></div>
                     <div class="ew-color-cursor"></div>
                 </div>
+                ${ verticalSliderHTML }
             </div>
             ${ horizontalSliderHTML }
             ${dropHTML}

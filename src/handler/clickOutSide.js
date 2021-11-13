@@ -8,10 +8,13 @@ import { close,getAnimationType } from '../handler/openOrClosePicker';
  */
  export function handleClickOutSide(context, config) {
     util.clickOutSide(context, config, () => {
+        if(!config.isClickOutside){
+            return;
+        }
         if (context._privateConfig.pickerFlag) {
             context._privateConfig.pickerFlag = false;
             close(getAnimationType({ config: config }), context.$Dom.picker,config.pickerAnimationTime);
-            if(config.hasBox && config.changeBoxByChangeColor){
+            if(config.hasBox && config.boxBgColor){
                 setBoxBackground(context.$Dom.box,config.defaultColor);
             }
         }

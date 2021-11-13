@@ -214,15 +214,15 @@ const color = new ewColorPicker({
 });
 ```
 
-### hasColorInput属性
+### hasInput属性
 
-14.hasColorInput?(可选属性)
+14.hasInput?(可选属性)
 
 该属性表示是否显示输入框，是一个布尔值，默认值是true。如:
 
 ```js
 const color = new ewColorPicker({
-    hasColorInput:false,
+    hasInput:false,
 });
 ```
 
@@ -254,15 +254,15 @@ const color = new ewColorPicker({
 
 > 注意:要开启颜色选择器的颜色转换模式，必须要将`alpha`和`hue`都设置为true，也就是必须要显示透明度柱和色阶柱，否则会在控制台提示错误。
 
-### changeBoxByChangeColor属性
+### boxBgColor属性
 
-17.changeBoxByChangeColor?(可选属性)
+17.boxBgColor?(可选属性)
 
 该属性表示是否允许色块的背景色随着颜色的改变而改变。也就是说当我们打开颜色选择器面板改变颜色的时候，将该值设置为true，我们就会看到色块的背景色随之而改变。默认值是false。如:
 
 ```js
 const color = new ewColorPicker({
-    changeBoxByChangeColor:true,
+    boxBgColor:true,
 });
 ```
 

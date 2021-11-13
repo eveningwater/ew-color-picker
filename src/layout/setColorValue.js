@@ -11,7 +11,9 @@ import { colorHsvaToRgba,colorRgbaToHex } from '../color/color';
  export function setColorValue(context, panelWidth, panelHeight,boxChange) {
     context.boxChange = boxChange;
     changeElementColor(context);
-    if(context.config.hasColorInput)context.prevInputValue = context.$Dom.pickerInput.value;
+    if(context.config.hasInput){
+        context.prevInputValue = context.$Dom.pickerInput.value;
+    }
     let sliderBarHeight = 0;
     let l = parseInt(context.hsvaColor.s * panelWidth / 100),
         t = parseInt(panelHeight - context.hsvaColor.v * panelHeight / 100);
@@ -32,6 +34,9 @@ import { colorHsvaToRgba,colorRgbaToHex } from '../color/color';
             value: colorRgbaToHex(colorHsvaToRgba(cloneColor(context.hsvaColor)))
         }
     ].forEach(item => util.setCss(item.el, item.prop, item.value));
+    setBarStyle(context);
+}
+export function setBarStyle(context){
     if (context.config.hue) {
         getSliderBarPosition(context.isHueHorizontal,context.$Dom.hueBar,(position,prop) => {
             util.setCss(context.$Dom.hueThumb, prop, parseInt(context.hsvaColor.h * position / 360) + 'px');

@@ -21,10 +21,10 @@ export default class Dep {
     removeSub(sub){
         remove(this.subs,sub);
     }
-    notify(){
+    notify(key){
         const subs = this.subs.slice();
         for(let i = 0,len = subs.length;i < len;i++){
-            subs[i].update();
+            subs[i].update(key);
         }
     }
     depend(){

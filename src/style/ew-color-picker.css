@@ -27,7 +27,8 @@
 .ew-color-slider-thumb,
 .ew-alpha-slider-thumb,
 .ew-color-input,
-.ew-color-drop-btn {
+.ew-color-drop-btn,
+.ew-color-picker-no  {
   box-sizing: border-box;
 }
 .ew-pre-define-color,
@@ -78,7 +79,7 @@
   text-align: center;
 }
 .ew-color-picker {
-  min-width: 320px;
+  max-width: 320px;
   box-sizing: content-box;
   border: 1px solid #ebeeff;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -92,7 +93,8 @@
   cursor: not-allowed;
 }
 .ew-color-picker-content {
-  margin-bottom: 6px;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .ew-color-panel {
@@ -121,13 +123,14 @@
 }
 
 .ew-color-slider.ew-is-vertical {
-  width: 27px;
+  max-width: 34px;
   height: 180px;
-  float: right;
+  padding-left: 6px;
 }
 .ew-color-slider.ew-is-horizontal {
   width: 100%;
-  height: 14px;
+  max-height: 28px;
+  padding-top: 6px;
 }
 .ew-color-slider.ew-is-vertical .ew-color-slider-bar {
   background: linear-gradient(
@@ -341,18 +344,6 @@
   justify-content: center;
   align-items: center;
 }
-.ew-color-picker-arrow-left,
-.ew-color-picker-arrow-right {
-  width: 12px;
-  height: 1px;
-}
-.ew-color-picker-arrow-left {
-  transform: rotate(45deg);
-}
-.ew-color-picker-arrow-right {
-  transform: rotate(-45deg);
-  right: 3px;
-}
 .ew-color-mode-container {
   display: inline-block;
   vertical-align: middle;
@@ -387,4 +378,7 @@
 .ew-color-mode-title::after {
   content: ":";
   display: inline-block;
+}
+.ew-color-picker-arrow-icon {
+   fill:#fff;
 }

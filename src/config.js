@@ -17,10 +17,10 @@ const baseDefaultConfig = {
     isClickOutside: true,
     hasClear:true,
     hasSure:true,
-    hasColorInput:true,
+    hasInput:true,
     boxDisabled:false,
     openChangeColorMode:false,
-    changeBoxByChangeColor:false,
+    boxBgColor:false,
     hueDirection:"vertical",//vertical or horizontal
     alphaDirection:"vertical",//vertical or horizontal
     lang:"zh",

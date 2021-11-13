@@ -5,8 +5,9 @@ import { isAlphaColor } from '../color/color';
  * @returns 
  */
  export function setPredefineDisabled(disabled){
-    if(disabled)return ' ew-pre-define-color-disabled';
-    return '';
+    return {
+        "ew-pre-define-color-disabled":disabled
+    }
 }
 /**
  * 
@@ -15,6 +16,7 @@ import { isAlphaColor } from '../color/color';
  */
 export function hasAlpha(color){
     let alpha = color.slice(color.indexOf('(') + 1, color.lastIndexOf(')')).split(',')[3];
-    if(isAlphaColor(color) && alpha < 1 && alpha > 0)return ' ew-has-alpha';
-    return '';
+    return {
+        "ew-has-alpha":(isAlphaColor(color) && alpha < 1 && alpha > 0)
+    }
 }

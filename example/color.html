@@ -12,43 +12,55 @@
 
 <body>
     <div class="demo"></div>
+    <button class="btn" style="float: right;">显示/隐藏hue</button>
+    <button class="btn" style="float: right;">显示/隐藏alpha</button>
+    <button class="btn" style="float: right;">设置色块盒子大小</button>
+    <button class="btn" style="float: right;">修改语言类型</button>
+    <select class="select" style="float: right;">
+        <option value="修改色块盒子的大小"></option>
+        <option value="mini">mini</option>
+        <option value="small">small</option>
+        <option value="medium">medium</option>
+        <option value="normal">normal</option>
+    </select>
     <!-- <script src="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js"></script> -->
     <script src="../dist/ew-color-picker.js"></script>
     <script>
+        const util = ewColorPicker.util;
         const colorConfig = {
             el:".demo",
-            alpha:true,
-            alphaDirection:"horizontal",
-            openChangeColorMode:true,
-            changeColor:(color) => {
-                // console.log('颜色值改变',color)
-            },
-            hueDirection:"horizontal",
             isClickOutside:false,
-            // pickerAnimation:"height",
-            pickerAnimationTime:350,
-            predefineColor:[
-                "red",
-                "#2396ef",
-                {
-                    color:"rgba(255,231,11,.3)"
-                },
-                {
-                    color:"hsla(255,23%,11%,.9)",
-                    disabled:true
-                },
-                {
-                    color:"hsla(125,53%,31%)",
-                },
-                {
-                    color:"rgb(105,53,31)",
-                }
-            ],
-            togglePicker(el,flag,context) {
-                // console.log(el,flag,context)
-            }
+            hueDirection:"horizontal",
+            // alphaDirection:"horizontal",
+            alpha:true,
+            defaultColor:"#2396ef",
+            predefineColor:["#2396ef",{ color:"#fff",disabled:true },{ color:"rgba(255,231,111,.3)"}],
+            clearText:"取消",
+            sureText:"确定",
+            userDefineText:true
         }
         const color = new ewColorPicker(colorConfig);
+        const btnGroup = util.$$(".btn");
+        btnGroup.forEach((btn,index) => {
+            util.on(btn,"click",() => {
+                if(index === 0){
+                    color.config.hue = !color.config.hue;
+                }else if(index === 1){
+                    color.config.alpha = !color.config.alpha;
+                }else if(index === 2){
+                    color.config.size = {
+                        width:100,
+                        height:50
+                    }
+                }else if(index === 3){
+                    color.config.lang = color.config.lang === "en" ? "zh" : "en";
+                }
+            })
+        })
+        util.on(util.$(".select"),"change",(e) => {
+             const value = e.target.value;
+             color.config.size = value;
+        })
     </script>
 </body>
 

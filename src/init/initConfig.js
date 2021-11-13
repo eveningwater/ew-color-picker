@@ -2,11 +2,20 @@ import colorPickerConfig from '../config';
 import util from '../utils/util';
 import { ERROR_VARIABLE } from '../const/error';
 import { consoleInfo } from '../const/console';
-import zh from '../const/zh';
-import en from '../const/en';
+import zhData from '../const/zh';
+import enData from '../const/en';
 function filterConfig(config){
     config.hueDirection = config.hueDirection === 'horizontal' ? config.hueDirection : 'vertical';
     config.alphaDirection = config.alphaDirection === 'horizontal' ? config.alphaDirection : 'vertical';
+}
+export function initLang(mergeConfig){
+    let langData = mergeConfig.lang === "en" ? enData : zhData;
+    if(mergeConfig.userDefineText){
+        mergeConfig =  util.ewAssign(mergeConfig,langData);
+    }else{
+        mergeConfig =  util.ewAssign(langData,mergeConfig);
+    }
+    return Promise.resolve(mergeConfig);
 }
 /**
  * 初始化配置
@@ -38,13 +47,10 @@ export function initConfig(config){
             error = ERROR_VARIABLE.DOM_ERROR;
         }
     }
-    let lang = mergeConfig.lang === "en" ? en : zh;
-    if(mergeConfig.userDefineText){
-        mergeConfig =  util.ewAssign(lang,mergeConfig);
-    }else{
-        mergeConfig =  util.ewAssign(mergeConfig,lang);
+    initLang(mergeConfig);
+    if (mergeConfig.isLog){
+        consoleInfo();
     }
-    if (mergeConfig.isLog)consoleInfo();
     if(['height','opacity'].indexOf(mergeConfig.pickerAnimation) === -1){
         mergeConfig.pickerAnimation = 'default';
     }

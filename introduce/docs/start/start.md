@@ -76,7 +76,7 @@ A colorPicker as follows:
       isClickOutside:true, //The default is true, or false,Indicates whether it is allowed to click outside the colorPicker area to close the colorPicker
       hasClear:true,//Whether to show the clear button，the default is true
       hasSure:true, //Whether to show the sure button，the default is true,it is not recommended to set to false
-      hasColorInput:true, //Whether to show the sure input,the default is true,it is not recommended to set to false
+      hasInput:true, //Whether to show the sure input,the default is true,it is not recommended to set to false
       boxDisabled:true,//The default is false,set it to true and set haxBox to true，then click on the box not to open the color picker
       openChangeColorMode:true,//Whether to turn on the color switching mode, note that you must set alpha and hue to true to turn on this mode
       hueDirection:"horizontal",//Or `vertical`, the default is a vertical layout display, indicating whether the hue color scale column is displayed in a horizontal or vertical layout

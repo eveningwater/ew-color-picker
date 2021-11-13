@@ -165,8 +165,8 @@
                     }
                     break;
                 case 15:
-                    color.config.hasColorInput = !color.config.hasColorInput;
-                    text = color.config.hasColorInput ? "隐藏输入框" : "显示输入框";
+                    color.config.hasInput = !color.config.hasInput;
+                    text = color.config.hasInput ? "隐藏输入框" : "显示输入框";
                     break;
                 case 16:
                     color.config.hasClear = !color.config.hasClear;
@@ -181,8 +181,8 @@
                     text = color.config.openChangeColorMode ? "隐藏颜色转换模式" : "显示颜色转换模式";
                     break;
                 case 19:
-                    color.config.changeBoxByChangeColor = !color.config.changeBoxByChangeColor;
-                    text = color.config.changeBoxByChangeColor ? "关闭box颜色值跟随改变" : "开启box颜色值跟随改变";
+                    color.config.boxBgColor = !color.config.boxBgColor;
+                    text = color.config.boxBgColor ? "关闭box颜色值跟随改变" : "开启box颜色值跟随改变";
                     break;
                 case 20:
                     color.config.lang = color.config.lang === "zh" ? "en" : "zh";

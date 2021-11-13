@@ -36,10 +36,10 @@ declare namespace ewColorPicker {
     isClickOutside?: boolean;
     hasClear?: boolean;
     hasSure?: boolean;
-    hasColorInput?: boolean;
+    hasInput?: boolean;
     boxDisabled?: boolean;
     openChangeColorMode?: boolean;
-    changeBoxByChangeColor?: boolean;
+    boxBgColor?: boolean;
     hueDirection?: string;
     alphaDirection?: string;
     lang?:string;

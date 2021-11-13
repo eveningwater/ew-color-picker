@@ -16,32 +16,10 @@ import { initColor } from '../init/initColor';
  *  初始化动画
  * @param {*} context 
  */
-function initAnimation(context) {
+export function initAnimation(context) {
     //颜色选择器打开的动画初始设置
     const expression = getAnimationType(context);
     util.setCss(context.$Dom.picker, (expression ? 'display' : 'opacity'), (expression ? 'none' : 0))
-    let pickerWidth = 0, sliderWidth = 0, sliderHeight = 0;
-    let isVerticalAlpha = !context.isAlphaHorizontal;
-    let isVerticalHue = !context.isHueHorizontal;
-    let isHue = context.config.hue;
-    let isAlpha = context.config.alpha;
-    if (isAlpha && isHue && isVerticalAlpha && isVerticalHue) {
-        pickerWidth = 320;
-        sliderWidth = 28;
-    } else if (isVerticalAlpha && isAlpha && (!isVerticalHue || !isHue) || (isVerticalHue && isHue && (!isVerticalAlpha || !isAlpha))) {
-        pickerWidth = 300;
-        sliderWidth = sliderHeight = 14;
-    } else {
-        pickerWidth = 280;
-        sliderHeight = isAlpha && isHue && !isVerticalHue && !isVerticalAlpha ? 30 : 14;
-    }
-    util.setCss(context.$Dom.picker, 'min-width', pickerWidth + 'px');
-    if (context.$Dom.horizontalSlider) {
-        util.setCss(context.$Dom.horizontalSlider, 'height', sliderHeight + 'px');
-    }
-    if (context.$Dom.verticalSlider) {
-        util.setCss(context.$Dom.verticalSlider, 'width', sliderWidth + 'px');
-    }
 }
 /**
  * 初始化预定义颜色
@@ -79,6 +57,8 @@ export function startMain(ele, config) {
     // 初始化逻辑
     let scope = this;
     this.$Dom = Object.create(null);
+    // cache the dom
+    this.$cacheDom = Object.create(null);
     this.$Dom.rootElement = ele;
     this.$Dom.picker = getELByClass(ele, 'ew-color-picker');
     this.$Dom.pickerPanel = getELByClass(ele, 'ew-color-panel');
@@ -98,12 +78,16 @@ export function startMain(ele, config) {
     this.$Dom.preDefineItem = getELByClass(ele, 'ew-pre-define-color', true);
     // 预定义颜色逻辑
     if (this.$Dom.preDefineItem.length) {
-        initPreDefineHandler(util.ewObjToArray(this.$Dom.preDefineItem), scope);
+        const preDefineItemArray = util.ewObjToArray(this.$Dom.preDefineItem);
+        this.$cacheDom.preDefineItemContainer = preDefineItemArray[0].parentElement;
+        initPreDefineHandler(preDefineItemArray, scope);
     }
     // 色阶柱逻辑
     if (config.hue) {
         this.$Dom.hueBar = getELByClass(ele, 'ew-color-slider-bar');
         this.$Dom.hueThumb = getELByClass(ele, 'ew-color-slider-thumb');
+        // cache the hue node
+        this.$cacheDom.hueContainer = this.$Dom.hueBar.parentElement;
         if (!config.disabled) {
             //hue的点击事件
             util.on(this.$Dom.hueBar, 'click', event => changeHue(scope, (this.isHueHorizontal ? event.x : event.y)))
@@ -116,6 +100,8 @@ export function startMain(ele, config) {
         this.$Dom.alphaBar = getELByClass(ele, 'ew-alpha-slider-bar');
         this.$Dom.alphaBarBg = getELByClass(ele, 'ew-alpha-slider-bg');
         this.$Dom.alphaBarThumb = getELByClass(ele, 'ew-alpha-slider-thumb');
+        // cache the alpha node
+        this.$cacheDom.alphaContainer = this.$Dom.alphaBar.parentElement;
         if (!config.disabled) {
             this.bindEvent(this.$Dom.alphaBarThumb, (scope, el, x, y) => changeAlpha(scope, (this.isAlphaHorizontal ? x : y)));
             util.on(this.$Dom.alphaBar, 'click', event => changeAlpha(scope, (this.isAlphaHorizontal ? event.x : event.y)));
@@ -125,24 +111,25 @@ export function startMain(ele, config) {
     // 色块
     if (config.hasBox) {
         this.$Dom.box = getELByClass(ele, 'ew-color-picker-box');
-        if (!config.boxDisabled && !config.disabled) util.on(this.$Dom.box, 'click', () => handlePicker(ele, scope, (flag) => {
-            if (flag && scope.config.isClickOutside) {
-                initColor(this, config);
-                setColorValue(scope, scope.panelWidth, scope.panelHeight, false);
-                handleClickOutSide(scope, scope.config);
-            }
-        }));
+        if (!config.boxDisabled && !config.disabled){
+            util.on(this.$Dom.box, 'click', () => handlePicker(ele, scope, (flag) => {
+                if (flag) {
+                    initColor(this, config);
+                    setColorValue(scope, scope.panelWidth, scope.panelHeight, false);
+                }
+            }));
+        }
     } else {
         showColorPickerWithNoBox(this);
     }
     // 输入框
-    if (config.hasColorInput) {
+    if (config.hasInput) {
         this.$Dom.pickerInput = getELByClass(ele, 'ew-color-input');
         util.on(this.$Dom.pickerInput, 'blur', event => onInputColor(scope, event.target.value));
     }
     // 禁用逻辑
     if (config.disabled) {
-        if (config.hasColorInput) {
+        if (config.hasInput) {
             if (!util.hasClass(this.$Dom.pickerInput, 'ew-input-disabled')) {
                 util.addClass(this.$Dom.pickerInput,'ew-input-disabled')
             }
@@ -154,9 +141,7 @@ export function startMain(ele, config) {
         return false;
     }
     // 点击目标区域之外逻辑
-    if (config.isClickOutside) {
-        handleClickOutSide(this, config);
-    }
+    handleClickOutSide(this, config);
     // 清空按钮逻辑
     if (config.hasClear) {
         this.$Dom.pickerClear = getELByClass(ele, 'ew-color-clear');
@@ -172,7 +157,7 @@ export function startMain(ele, config) {
         this.$Dom.modeUp = getELByClass(ele, 'ew-color-mode-up');
         this.$Dom.modeDown = getELByClass(ele, 'ew-color-mode-down');
         this.$Dom.modeTitle = getELByClass(ele, "ew-color-mode-title");
-        if (config.hasColorInput) {
+        if (config.hasInput) {
             this.modeCount = config.alpha ? 1 : 0;
             this.currentMode = this.colorMode[this.modeCount];
             util.on(this.$Dom.modeUp, "click", event => onHandleChangeMode(scope, 'up', () => changeElementColor(scope)));

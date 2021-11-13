@@ -80,7 +80,7 @@
       isClickOutside:true, //默认为true，或者设置为false,表示是否允许点击颜色选择器区域之外关闭颜色选择器
       hasClear:true,//是否显示清空按钮，默认为true
       hasSure:true, //是否显示确定按钮，默认为true,不建议设置为false
-      hasColorInput:true, //是否显示输入框,默认为true,不建议设置为false
+      hasInput:true, //是否显示输入框,默认为true,不建议设置为false
       boxDisabled:true,//默认是false,设置为true并且hasBox为true，禁止点击色块打开颜色选择器
       openChangeColorMode:true,//是否打开颜色切换模式，注意打开这个模式必须要将alpha和hue设置为true
       hueDirection:"horizontal",//或者vertical,默认是垂直布局显示,表示hue色阶柱是水平还是垂直布局显示
@@ -153,7 +153,7 @@ CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
 * 1.7.7 修复了预定义颜色的一些问题，优化了一些代码。
 * 1.7.6 修复了一些问题，开放了内部工具方法，可通过`ewColorPicker.util`访问到所有工具方法，并修改了颜色值的验证，支持英文颜色单词的传入，例如设置预定义颜色以及默认颜色。
 * 1.7.5 修复了透明度默认赋值问题，将原`openPicker`点击色块打开或关闭的回调更名为`openOrClosePicker`，优化了代码。
-* 1.7.4:修复了颜色模式切换透明度不改变问题，新增了`changeBoxByChangeColor`配置属性,该属性表示是否在打开颜色面板，颜色值触发的时候，色块的背景色更改，如果不点击确定按钮，关闭颜色面板后会恢复到默认颜色,预定义颜色数组`predefineColor`新增了可以传数组项为对象或字符串，对象定义为`{ color:"#123",disabled:true }(color为合格的颜色值,disabled为true或者false，表示是否禁用该预定义点击更换颜色)`。
+* 1.7.4:修复了颜色模式切换透明度不改变问题，新增了`boxBgColor`配置属性,该属性表示是否在打开颜色面板，颜色值触发的时候，色块的背景色更改，如果不点击确定按钮，关闭颜色面板后会恢复到默认颜色,预定义颜色数组`predefineColor`新增了可以传数组项为对象或字符串，对象定义为`{ color:"#123",disabled:true }(color为合格的颜色值,disabled为true或者false，表示是否禁用该预定义点击更换颜色)`。
 * 1.7.3:优化了颜色值算法，新增了`boxDisabled`和`openChangeColorMode`配置属性。
 * 1.7.2:新增了允许将颜色选择器添加到`body`中，但会生成一个容器元素来包含，将`disabled`配置属性更改成了全部禁止点击。
 * 1.3.3 ~ 1.7.1:添加了颜色选择器的基本功能。
