@@ -76,7 +76,7 @@
       isClickOutside:true, //默认为true，或者设置为false,表示是否允许点击颜色选择器区域之外关闭颜色选择器
       hasClear:true,//是否显示清空按钮，默认为true
       hasSure:true, //是否显示确定按钮，默认为true,不建议设置为false
-      hasColorInput:true, //是否显示输入框,默认为true,不建议设置为false
+      hasInput:true, //是否显示输入框,默认为true,不建议设置为false
       boxDisabled:true,//默认是false,设置为true并且hasBox为true，禁止点击色块打开颜色选择器
       openChangeColorMode:true,//是否打开颜色切换模式，注意打开这个模式必须要将alpha和hue设置为true
       hueDirection:"horizontal",//或者vertical,默认是垂直布局显示,表示hue色阶柱是水平还是垂直布局显示

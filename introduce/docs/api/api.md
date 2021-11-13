@@ -214,15 +214,15 @@ const color = new ewColorPicker({
 });
 ```
 
-### hasColorInput property
+### hasInput property
 
-14.hasColorInput?(Optional property)
+14.hasInput?(Optional property)
 
 The property indicates whether to display the input, a boolean value, and the default value is true. E.g:
 
 ```js
 const color = new ewColorPicker({
-    hasColorInput:false,
+    hasInput:false,
 });
 ```
 
@@ -254,15 +254,15 @@ const color = new ewColorPicker({
 
 > Note: To enable the color conversion mode of the colorPicker, both `alpha` and `hue` must be set to true, that is, the alpha bar and the hue bar must be displayed, otherwise an error will be prompted in the console.
 
-### changeBoxByChangeColor property
+### boxBgColor property
 
-17.changeBoxByChangeColor?(Optional property)
+17.boxBgColor?(Optional property)
 
 This property indicates whether to allow the background color of the color block to change as the color changes. That is to say, when we open the colorPicker panel to change the color, set the value to true, and we will see that the background color of the color block changes accordingly. The default value is false. E.g:
 
 ```js
 const color = new ewColorPicker({
-    changeBoxByChangeColor:true,
+    boxBgColor:true,
 });
 ```
 

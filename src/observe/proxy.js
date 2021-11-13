@@ -7,7 +7,7 @@ export const isNotKey = key => {
 export function defineReactive(dep,target) {
     const notify = k => {
         if (Dep.DepTarget && isNotKey(k)) {
-            dep.notify();
+            dep.notify(k);
         }
     };
     let proxy = new Proxy(target, {

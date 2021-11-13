@@ -80,7 +80,7 @@ A colorPicker as follows:
       isClickOutside:true, //The default is true, or false,Indicates whether it is allowed to click outside the colorPicker area to close the colorPicker
       hasClear:true,//Whether to show the clear button，the default is true
       hasSure:true, //Whether to show the sure button，the default is true,it is not recommended to set to false
-      hasColorInput:true, //Whether to show the sure input,the default is true,it is not recommended to set to false
+      hasInput:true, //Whether to show the sure input,the default is true,it is not recommended to set to false
       boxDisabled:true,//The default is false,set it to true and set haxBox to true，then click on the box not to open the color picker
       openChangeColorMode:true,//Whether to turn on the color switching mode, note that you must set alpha and hue to true to turn on this mode
       hueDirection:"horizontal",//Or `vertical`, the default is a vertical layout display, indicating whether the hue color scale column is displayed in a horizontal or vertical layout
@@ -156,7 +156,7 @@ For more details, please refer to the official website of the document [ewColorP
 * 1.7.7 Fixed some problems with predefined colors and optimized some codes.
 * 1.7.6 Fixed some problems, opened the internal tool methods, can access all tool methods through `ewColorPicker.util`, and modified the verification of the color value to support the input of English color words, such as setting predefined colors and The default color.
 * 1.7.5 Fixed the problem of default assignment of transparency, renamed the callback of the original `openPicker` to open or close the color block by clicking on it, and renamed it to `openOrClosePicker`, and optimized the code.
-* 1.7.4: Fixed the problem that the transparency of color mode switching does not change, and added the `changeBoxByChangeColor` configuration property, which indicates whether the background color of the color block changes when the color panel is opened and the color value is triggered. If you do not click OK Button, the color panel will be restored to the default color after closing the color panel. The predefined color array `predefineColor` has added an array item that can be passed as an object or a string. The object is defined as `{ color:"#123",disabled:true }(color Is a qualified color value, disabled is true or false, indicating whether to disable the predefined click to change color)`.
+* 1.7.4: Fixed the problem that the transparency of color mode switching does not change, and added the `boxBgColor` configuration property, which indicates whether the background color of the color block changes when the color panel is opened and the color value is triggered. If you do not click OK Button, the color panel will be restored to the default color after closing the color panel. The predefined color array `predefineColor` has added an array item that can be passed as an object or a string. The object is defined as `{ color:"#123",disabled:true }(color Is a qualified color value, disabled is true or false, indicating whether to disable the predefined click to change color)`.
 * 1.7.3: Optimized the color value algorithm, and added the `boxDisabled` and `openChangeColorMode` configuration properties.
 * 1.7.2: Added the ability to add a color selector to the `body`, but a container element will be generated to contain it, and the `disabled` configuration attribute is changed to prohibit all clicks.
 * 1.3.3 ~ 1.7.1: The basic function of the color picker has been added.

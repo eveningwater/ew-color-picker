@@ -55,7 +55,7 @@ export function getAnimationType(scope) {
  */
 export function openAndClose(scope) {
     const time = scope.config.pickerAnimationTime;
-    scope._privateConfig.pickerFlag ? open(getAnimationType(scope), scope.$Dom.picker,time) : close(getAnimationType(scope), scope.$Dom.picker,time);
+    return scope._privateConfig.pickerFlag ? open(getAnimationType(scope), scope.$Dom.picker,time) : close(getAnimationType(scope), scope.$Dom.picker,time);
 }
 /**
  * 手动关闭颜色选择器
@@ -97,11 +97,20 @@ export function handleOpenPicker(ani,time) {
  */
  export function handlePicker(el, scope,callback) {
     scope._privateConfig.pickerFlag = !scope._privateConfig.pickerFlag;
-    openAndClose(scope);
-    initColor(scope, scope.config);
-    setColorValue(scope, scope.panelWidth, scope.panelHeight, false);
+    const returnValue = openAndClose(scope);
     if (util.isFunction(scope.config.togglePicker)){
         scope.config.togglePicker(el, scope._privateConfig.pickerFlag,scope);
     }
-    if(util.isFunction(callback))callback(scope._privateConfig.pickerFlag);
+    if(util.isPromise(returnValue)){
+        returnValue.then(() => {
+            pickerCallBack(scope,callback);
+        })
+    }else {
+        pickerCallBack(scope,callback);
+    }
+}
+function pickerCallBack(scope,callback){
+    if(util.isFunction(callback)){
+        callback(scope._privateConfig.pickerFlag);
+    }
 }

@@ -2,20 +2,21 @@ let addMethod = (instance, method, func) => {
   instance.prototype[method] = func;
   return instance;
 };
-const util = Object.create(null);
-const _toString = Object.prototype.toString;
-['Number', 'String', 'Function', 'Undefined', 'Boolean'].forEach(type => util['is' + type] = value => typeof value === type.toLowerCase());
-util.addMethod = addMethod;
-['Object', 'Array', 'RegExp'].forEach(type => util['isDeep' + type] = value => _toString.call(value).slice(8, -1).toLowerCase() === type.toLowerCase());
+const util$1 = Object.create(null);
+const _toString = Object.prototype.toString,
+      hasOwn = Object.prototype.hasOwnProperty;
+['Number', 'String', 'Function', 'Undefined', 'Boolean'].forEach(type => util$1['is' + type] = value => typeof value === type.toLowerCase());
+util$1.addMethod = addMethod;
+['Object', 'Array', 'RegExp'].forEach(type => util$1['isDeep' + type] = value => _toString.call(value).slice(8, -1).toLowerCase() === type.toLowerCase());
 
-util.isShallowObject = value => typeof value === 'object' && !util.isNull(value);
+util$1.isShallowObject = value => typeof value === 'object' && !util$1.isNull(value);
 
-util['ewObjToArray'] = value => util.isShallowObject(value) ? Array.prototype.slice.call(value) : value;
+util$1['ewObjToArray'] = value => util$1.isShallowObject(value) ? Array.prototype.slice.call(value) : value;
 
-util.isNull = value => value === null;
+util$1.isNull = value => value === null;
 
-util.ewAssign = function (target) {
-  if (util.isNull(target)) return;
+util$1.ewAssign = function (target) {
+  if (util$1.isNull(target)) return;
 
   const _ = Object(target);
 
@@ -34,126 +35,178 @@ util.ewAssign = function (target) {
   return _;
 };
 
-util.addClass = (el, className) => el.classList.add(className);
+util$1.addClass = (el, className) => el.classList.add(className);
 
-util.removeClass = (el, className) => el.classList.remove(className);
+util$1.removeClass = (el, className) => el.classList.remove(className);
 
-util.hasClass = (el, className) => {
+util$1.hasClass = (el, className) => {
   let _hasClass = value => new RegExp(" " + el.className + " ").test(" " + value + " ");
 
-  if (util.isDeepArray(className)) {
+  if (util$1.isDeepArray(className)) {
     return className.some(name => _hasClass(name));
   } else {
     return _hasClass(className);
   }
 };
 
-util['setCss'] = (el, prop, value) => el.style.setProperty(prop, value);
+util$1['setCss'] = (el, prop, value) => el.style.setProperty(prop, value);
 
-util.setSomeCss = (el, propValue = []) => {
+util$1.setSomeCss = (el, propValue = []) => {
   if (propValue.length) {
-    propValue.forEach(p => util.setCss(el, p.prop, p.value));
+    propValue.forEach(p => util$1.setCss(el, p.prop, p.value));
   }
 };
 
-util.isDom = el => util.isShallowObject(HTMLElement) ? el instanceof HTMLElement : el && util.isShallowObject(el) && el.nodeType === 1 && util.isString(el.nodeName) || el instanceof HTMLCollection || el instanceof NodeList;
+util$1.isDom = el => util$1.isShallowObject(HTMLElement) ? el instanceof HTMLElement : el && util$1.isShallowObject(el) && el.nodeType === 1 && util$1.isString(el.nodeName) || el instanceof HTMLCollection || el instanceof NodeList;
 
-util.ewError = value => console.error('[ewColorPicker warn]\n' + new Error(value));
+util$1.ewError = value => console.error('[ewColorPicker warn]\n' + new Error(value));
 
-util.ewWarn = value => console.warn('[ewColorPicker warn]\n' + value);
+util$1.ewWarn = value => console.warn('[ewColorPicker warn]\n' + value);
 
-util.deepCloneObjByJSON = obj => JSON.parse(JSON.stringify(obj));
+util$1.deepCloneObjByJSON = obj => JSON.parse(JSON.stringify(obj));
 
-util.deepCloneObjByRecursion = function f(obj) {
-  if (!util.isShallowObject(obj)) return;
-  let cloneObj = util.isDeepArray(obj) ? [] : {};
+util$1.deepCloneObjByRecursion = function f(obj) {
+  if (!util$1.isShallowObject(obj)) return;
+  let cloneObj = util$1.isDeepArray(obj) ? [] : {};
 
   for (let k in obj) {
-    cloneObj[k] = util.isShallowObject(obj[k]) ? f(obj[k]) : obj[k];
+    cloneObj[k] = util$1.isShallowObject(obj[k]) ? f(obj[k]) : obj[k];
   }
 
   return cloneObj;
 };
 
-util.getCss = (el, prop) => window.getComputedStyle(el, null)[prop];
+util$1.getCss = (el, prop) => window.getComputedStyle(el, null)[prop];
 
-util.$ = (selector, el = document) => el.querySelector(selector);
+util$1.$ = (selector, el = document) => el.querySelector(selector);
 
-util.$$ = (selector, el = document) => el.querySelectorAll(selector);
+util$1.$$ = (selector, el = document) => el.querySelectorAll(selector);
 
-util["on"] = (element, type, handler, useCapture = false) => {
+util$1["on"] = (element, type, handler, useCapture = false) => {
   if (element && type && handler) {
     element.addEventListener(type, handler, useCapture);
   }
 };
 
-util["off"] = (element, type, handler, useCapture = false) => {
+util$1["off"] = (element, type, handler, useCapture = false) => {
   if (element && type && handler) {
     element.removeEventListener(type, handler, useCapture);
   }
 };
 
-util['getRect'] = el => el.getBoundingClientRect();
+util$1['getRect'] = el => el.getBoundingClientRect();
 
-util['baseClickOutSide'] = (element, isUnbind = true, callback) => {
+util$1['baseClickOutSide'] = (element, isUnbind = true, callback) => {
   const mouseHandler = event => {
-    const rect = util.getRect(element);
+    const rect = util$1.getRect(element);
     const target = event.target;
     if (!target) return;
-    const targetRect = util.getRect(target);
+    const targetRect = util$1.getRect(target);
     if (targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width && targetRect.height <= rect.height) return;
-    if (util.isFunction(callback)) callback();
+    if (util$1.isFunction(callback)) callback();
 
     if (isUnbind) {
       // 延迟解除绑定
       setTimeout(() => {
-        util.off(document, util.eventType[0], mouseHandler);
+        util$1.off(document, util$1.eventType[0], mouseHandler);
       }, 0);
     }
   };
 
-  util.on(document, util.eventType[0], mouseHandler);
+  util$1.on(document, util$1.eventType[0], mouseHandler);
 };
 
-util["clickOutSide"] = (context, config, callback) => {
+util$1["clickOutSide"] = (context, config, callback) => {
   const mouseHandler = event => {
-    const rect = util.getRect(context.$Dom.picker);
+    const rect = util$1.getRect(context.$Dom.picker);
     let boxRect = null;
 
     if (config.hasBox) {
-      boxRect = util.getRect(context.$Dom.box);
+      boxRect = util$1.getRect(context.$Dom.box);
     }
 
     const target = event.target;
-    if (!target) return;
-    const targetRect = util.getRect(target); // 利用rect来判断用户点击的地方是否在颜色选择器面板区域之内
+
+    if (!target) {
+      return;
+    }
+
+    const targetRect = util$1.getRect(target);
 
     if (config.hasBox) {
-      if (targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width) return; // 如果点击的是盒子元素
+      if (targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width) {
+        return;
+      }
 
-      if (targetRect.x >= boxRect.x && targetRect.y >= boxRect.y && targetRect.width <= boxRect.width && targetRect.height <= boxRect.height) return;
+      if (targetRect.x >= boxRect.x && targetRect.y >= boxRect.y && targetRect.width <= boxRect.width && targetRect.height <= boxRect.height) {
+        return;
+      }
+
       callback();
     } else {
-      if (targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width && targetRect.height <= rect.height) return;
+      if (targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width && targetRect.height <= rect.height) {
+        return;
+      }
+
       callback();
     }
 
     setTimeout(() => {
-      util.off(document, util.eventType[0], mouseHandler);
+      util$1.off(document, util$1.eventType[0], mouseHandler);
+      util$1.on(document, util$1.eventType[0], mouseHandler);
     }, 0);
   };
 
-  util.on(document, util.eventType[0], mouseHandler);
+  util$1.on(document, util$1.eventType[0], mouseHandler);
 };
 
-util['createUUID'] = () => (Math.random() * 10000000).toString(16).substr(0, 4) + '-' + new Date().getTime() + '-' + Math.random().toString().substr(2, 5);
+util$1['createUUID'] = () => (Math.random() * 10000000).toString(16).substr(0, 4) + '-' + new Date().getTime() + '-' + Math.random().toString().substr(2, 5);
 
-util.removeAllSpace = value => value.replace(/\s+/g, "");
+util$1.removeAllSpace = value => value.replace(/\s+/g, "");
 
-util.isJQDom = dom => typeof window.jQuery !== "undefined" && dom instanceof jQuery; //the event
+util$1.isJQDom = dom => typeof window.jQuery !== "undefined" && dom instanceof jQuery;
 
+util$1.isPromise = value => !util$1.isUndefined(value) && !util$1.isNull(value) && util$1.isFunction(value.then) && util$1.isFunction(value.catch);
 
-util.eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
+const classnames = function (...args) {
+  const classes = [];
+
+  for (let i = 0, l = args.length; i < l; i++) {
+    const arg = args[i];
+
+    if (!arg) {
+      continue;
+    }
+
+    if (util$1.isString(arg) || util$1.isNumber(arg)) {
+      classes.push(arg);
+    } else if (util$1.isDeepArray(arg)) {
+      if (arg.length) {
+        const __class = classnames.apply(null, arg);
+
+        if (__class) {
+          classes.push(__class);
+        }
+      }
+    } else {
+      if (arg.toString === _toString) {
+        for (let key in arg) {
+          if (hasOwn.call(arg, key) && arg[key]) {
+            classes.push(key);
+          }
+        }
+      } else {
+        classes.push(arg.toString());
+      }
+    }
+  }
+
+  return classes.join(" ");
+};
+
+util$1.classnames = classnames; //the event
+
+util$1.eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
 
 const NOT_DOM_ELEMENTS = ['html', 'head', 'meta', 'title', 'link', 'style', 'script'];
 const ERROR_VARIABLE = {
@@ -185,7 +238,7 @@ TimerManager.makeTimerManage = function (element) {
   }
 };
 
-const methods = [{
+const methods$1 = [{
   method: "add",
   func: function (timer, args) {
     this.timers.push(timer);
@@ -212,7 +265,7 @@ const methods = [{
     this.timerRun();
   }
 }];
-methods.forEach(method => util.addMethod(TimerManager, method.method, method.func));
+methods$1.forEach(method => util$1.addMethod(TimerManager, method.method, method.func));
 
 function runNext(element) {
   const elementTimerManage = element.TimerManage;
@@ -227,25 +280,25 @@ function registerMethods(type, element, time) {
 
   if (type.indexOf('slide') > -1) {
     transition = "height" + time + ' ms';
-    util.setCss(element, 'overflow', "hidden");
+    util$1.setCss(element, 'overflow', "hidden");
     upAndDown();
   } else if (type.indexOf('fade') > -1) {
     transition = "opacity" + time + ' ms';
     inAndOut();
   } else {
     transition = "display" + time + ' ms';
-    showOrHide();
+    return showOrHide();
   }
 
-  util.setCss(element, 'transition', transition);
+  util$1.setCss(element, 'transition', transition);
 
   function upAndDown() {
     const isDown = type.toLowerCase().indexOf('down') > -1;
-    if (isDown) util.setCss(element, 'display', 'block');
+    if (isDown) util$1.setCss(element, 'display', 'block');
 
     const getPropValue = function (item, prop) {
-      let v = util.getCss(item, prop);
-      return util.removeAllSpace(v).length ? parseInt(v) : Number(v);
+      let v = util$1.getCss(item, prop);
+      return util$1.removeAllSpace(v).length ? parseInt(v) : Number(v);
     };
 
     const elementChildHeight = [].reduce.call(element.children, (res, item) => {
@@ -255,23 +308,23 @@ function registerMethods(type, element, time) {
     let totalHeight = Math.max(element.offsetHeight, elementChildHeight + 10);
     let currentHeight = isDown ? 0 : totalHeight;
     let unit = totalHeight / (time / 10);
-    if (isDown) util.setCss(element, 'height', '0px');
+    if (isDown) util$1.setCss(element, 'height', '0px');
     let timer = null;
 
     let handler = () => {
       currentHeight = isDown ? currentHeight + unit : currentHeight - unit;
-      util.setCss(element, 'height', currentHeight + 'px');
+      util$1.setCss(element, 'height', currentHeight + 'px');
 
       if (currentHeight >= totalHeight || currentHeight <= 0) {
         clearTimeout(timer);
-        util.setCss(element, 'height', totalHeight + 'px');
+        util$1.setCss(element, 'height', totalHeight + 'px');
         runNext(element);
       } else {
         timer = setTimeout(handler, 10);
       }
 
       if (!isDown && currentHeight <= 0) {
-        util.setSomeCss(element, [{
+        util$1.setSomeCss(element, [{
           prop: "display",
           value: 'none'
         }, {
@@ -289,7 +342,7 @@ function registerMethods(type, element, time) {
     let timer = null;
     let unit = 1 * 100 / (time / 10);
     let curAlpha = isIn ? 0 : 100;
-    util.setSomeCss(element, [{
+    util$1.setSomeCss(element, [{
       prop: "display",
       value: isIn ? 'none' : 'block'
     }, {
@@ -299,14 +352,14 @@ function registerMethods(type, element, time) {
 
     let handleFade = function () {
       curAlpha = isIn ? curAlpha + unit : curAlpha - unit;
-      if (element.style.display === 'none' && isIn) util.setCss(element, 'display', 'block');
-      util.setCss(element, 'opacity', (curAlpha / 100).toFixed(2));
+      if (element.style.display === 'none' && isIn) util$1.setCss(element, 'display', 'block');
+      util$1.setCss(element, 'opacity', (curAlpha / 100).toFixed(2));
 
       if (curAlpha >= 100 || curAlpha <= 0) {
         if (timer) clearTimeout(timer);
         runNext(element);
-        if (curAlpha <= 0) util.setCss(element, 'display', 'none');
-        util.setCss(element, 'opacity', curAlpha >= 100 ? 1 : 0);
+        if (curAlpha <= 0) util$1.setCss(element, 'display', 'none');
+        util$1.setCss(element, 'opacity', curAlpha >= 100 ? 1 : 0);
       } else {
         timer = setTimeout(handleFade, 10);
       }
@@ -317,7 +370,12 @@ function registerMethods(type, element, time) {
 
   function showOrHide() {
     const isShow = type.indexOf('show') > -1;
-    setTimeout(() => util.setCss(element, 'display', isShow ? 'block' : 'none'), time);
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        util$1.setCss(element, 'display', isShow ? 'block' : 'none');
+        resolve();
+      }, Math.floor(time / 100));
+    });
   }
 }
 
@@ -373,9 +431,9 @@ function colorHexToRgba(hex, alpha) {
       rgbaColor.push(parseInt('0X' + hColor.slice(j, j + 2), 16));
     }
 
-    return util.removeAllSpace("rgba(" + rgbaColor.join(",") + ',' + a + ")");
+    return util$1.removeAllSpace("rgba(" + rgbaColor.join(",") + ',' + a + ")");
   } else {
-    return util.removeAllSpace(hColor);
+    return util$1.removeAllSpace(hColor);
   }
 }
 /**
@@ -409,7 +467,7 @@ function colorRgbaToHex(rgba) {
         color += hexColor(value);
       }
     });
-    return util.removeAllSpace(value + color);
+    return util$1.removeAllSpace(value + color);
   }
 }
 /**
@@ -468,7 +526,7 @@ function colorHsvaToRgba(hsva, alpha) {
   }
 
   if (alpha >= 0 || alpha <= 1) a = alpha;
-  return util.removeAllSpace('rgba(' + Math.ceil(r) + ',' + Math.ceil(g) + ',' + Math.ceil(b) + ',' + a + ')');
+  return util$1.removeAllSpace('rgba(' + Math.ceil(r) + ',' + Math.ceil(g) + ',' + Math.ceil(b) + ',' + a + ')');
 }
 /**
  * hsla to rgba
@@ -503,7 +561,7 @@ function colorHslaToRgba(hsla) {
     b = compareRGB(p, q, k - 1 / 3);
   }
 
-  return util.removeAllSpace(`rgba(${Math.ceil(r * 255)},${Math.ceil(g * 255)},${Math.ceil(b * 255)},${a})`);
+  return util$1.removeAllSpace(`rgba(${Math.ceil(r * 255)},${Math.ceil(g * 255)},${Math.ceil(b * 255)},${a})`);
 }
 /**
  * rgba to hsla
@@ -545,7 +603,7 @@ function colorRgbaToHsla(rgba) {
   }
 
   return {
-    colorStr: util.removeAllSpace('hsla(' + Math.ceil(h * 60) + ',' + Math.ceil(s * 100) + '%,' + Math.ceil(l * 100) + '%,' + a + ')'),
+    colorStr: util$1.removeAllSpace('hsla(' + Math.ceil(h * 60) + ',' + Math.ceil(s * 100) + '%,' + Math.ceil(l * 100) + '%,' + a + ')'),
     colorObj: {
       h,
       s,
@@ -613,13 +671,13 @@ function colorRgbaToHsva(rgba) {
 
 function colorToRgba(color) {
   const div = document.createElement('div');
-  util.setCss(div, 'background-color', color);
+  util$1.setCss(div, 'background-color', color);
   document.body.appendChild(div);
-  const c = util.getCss(div, 'background-color');
+  const c = util$1.getCss(div, 'background-color');
   document.body.removeChild(div);
   let isAlpha = c.match(/,/g) && c.match(/,/g).length > 2;
   let result = isAlpha ? c : c.slice(0, 2) + 'ba' + c.slice(3, c.length - 1) + ', 1)';
-  return util.removeAllSpace(result);
+  return util$1.removeAllSpace(result);
 }
 /**
  * 判断是否是合格的颜色值
@@ -719,11 +777,11 @@ function onHandleChangeMode(context, handleType, callback) {
 function changeAlphaBar(scope) {
   if (!scope.$Dom.alphaBarBg) return;
   let position = scope.isAlphaHorizontal ? 'to right' : 'to top';
-  util.setCss(scope.$Dom.alphaBarBg, 'background', 'linear-gradient(' + position + ',' + colorHsvaToRgba(scope.hsvaColor, 0) + ' 0%,' + colorHsvaToRgba(scope.hsvaColor, 1) + ' 100%)');
+  util$1.setCss(scope.$Dom.alphaBarBg, 'background', 'linear-gradient(' + position + ',' + colorHsvaToRgba(scope.hsvaColor, 0) + ' 0%,' + colorHsvaToRgba(scope.hsvaColor, 1) + ' 100%)');
 }
 
 function setBoxBackground(box, color) {
-  return util.setCss(box, 'background', color);
+  return util$1.setCss(box, 'background', color);
 }
 
 /**
@@ -740,18 +798,20 @@ function changeElementColor(scope, isAlpha) {
     newColor = changeMode(scope, color);
   }
 
-  if (scope.config.hasColorInput) {
+  if (scope.config.hasInput) {
     scope.$Dom.pickerInput.value = newColor;
     scope.prevInputValue = newColor;
   }
 
   changeAlphaBar(scope);
 
-  if (scope.config.hasBox && scope.config.changeBoxByChangeColor && scope.boxChange) {
+  if (scope.config.hasBox && scope.config.boxBgColor && scope.boxChange) {
     setBoxBackground(scope.$Dom.box, newColor);
   }
 
-  if (util.isFunction(scope.config.changeColor)) scope.config.changeColor(newColor);
+  if (util$1.isFunction(scope.config.changeColor)) {
+    scope.config.changeColor(newColor);
+  }
 }
 
 /**
@@ -760,7 +820,7 @@ function changeElementColor(scope, isAlpha) {
 */
 
 function cloneColor(color) {
-  const newColor = util.deepCloneObjByRecursion(color);
+  const newColor = util$1.deepCloneObjByRecursion(color);
   newColor.s = newColor.v = 100;
   return newColor;
 }
@@ -775,7 +835,10 @@ function cloneColor(color) {
 function setColorValue(context, panelWidth, panelHeight, boxChange) {
   context.boxChange = boxChange;
   changeElementColor(context);
-  if (context.config.hasColorInput) context.prevInputValue = context.$Dom.pickerInput.value;
+
+  if (context.config.hasInput) {
+    context.prevInputValue = context.$Dom.pickerInput.value;
+  }
   let l = parseInt(context.hsvaColor.s * panelWidth / 100),
       t = parseInt(panelHeight - context.hsvaColor.v * panelHeight / 100);
   [{
@@ -790,17 +853,19 @@ function setColorValue(context, panelWidth, panelHeight, boxChange) {
     el: context.$Dom.pickerPanel,
     prop: 'background',
     value: colorRgbaToHex(colorHsvaToRgba(cloneColor(context.hsvaColor)))
-  }].forEach(item => util.setCss(item.el, item.prop, item.value));
-
+  }].forEach(item => util$1.setCss(item.el, item.prop, item.value));
+  setBarStyle(context);
+}
+function setBarStyle(context) {
   if (context.config.hue) {
     getSliderBarPosition(context.isHueHorizontal, context.$Dom.hueBar, (position, prop) => {
-      util.setCss(context.$Dom.hueThumb, prop, parseInt(context.hsvaColor.h * position / 360) + 'px');
+      util$1.setCss(context.$Dom.hueThumb, prop, parseInt(context.hsvaColor.h * position / 360) + 'px');
     });
   }
 
   if (context.config.alpha) {
     getSliderBarPosition(context.isAlphaHorizontal, context.$Dom.alphaBar, (position, prop) => {
-      util.setCss(context.$Dom.alphaBarThumb, prop, (context.isAlphaHorizontal ? context.hsvaColor.a * position : position - context.hsvaColor.a * position) + 'px');
+      util$1.setCss(context.$Dom.alphaBarThumb, prop, (context.isAlphaHorizontal ? context.hsvaColor.a * position : position - context.hsvaColor.a * position) + 'px');
     });
   }
 }
@@ -902,7 +967,7 @@ function getAnimationType(scope) {
 
 function openAndClose(scope) {
   const time = scope.config.pickerAnimationTime;
-  scope._privateConfig.pickerFlag ? open(getAnimationType(scope), scope.$Dom.picker, time) : close(getAnimationType(scope), scope.$Dom.picker, time);
+  return scope._privateConfig.pickerFlag ? open(getAnimationType(scope), scope.$Dom.picker, time) : close(getAnimationType(scope), scope.$Dom.picker, time);
 }
 /**
  * 手动关闭颜色选择器
@@ -951,15 +1016,25 @@ function handleOpenPicker(ani, time) {
 
 function handlePicker(el, scope, callback) {
   scope._privateConfig.pickerFlag = !scope._privateConfig.pickerFlag;
-  openAndClose(scope);
-  initColor(scope, scope.config);
-  setColorValue(scope, scope.panelWidth, scope.panelHeight, false);
+  const returnValue = openAndClose(scope);
 
-  if (util.isFunction(scope.config.togglePicker)) {
+  if (util$1.isFunction(scope.config.togglePicker)) {
     scope.config.togglePicker(el, scope._privateConfig.pickerFlag, scope);
   }
 
-  if (util.isFunction(callback)) callback(scope._privateConfig.pickerFlag);
+  if (util$1.isPromise(returnValue)) {
+    returnValue.then(() => {
+      pickerCallBack(scope, callback);
+    });
+  } else {
+    pickerCallBack(scope, callback);
+  }
+}
+
+function pickerCallBack(scope, callback) {
+  if (util$1.isFunction(callback)) {
+    callback(scope._privateConfig.pickerFlag);
+  }
 }
 
 const emptyFun = function () {};
@@ -981,10 +1056,10 @@ const baseDefaultConfig = {
   isClickOutside: true,
   hasClear: true,
   hasSure: true,
-  hasColorInput: true,
+  hasInput: true,
   boxDisabled: false,
   openChangeColorMode: false,
-  changeBoxByChangeColor: false,
+  boxBgColor: false,
   hueDirection: "vertical",
   //vertical or horizontal
   alphaDirection: "vertical",
@@ -993,7 +1068,7 @@ const baseDefaultConfig = {
   userDefineText: false
 };
 
-const consoleInfo = () => console.log(`%c ew-color-picker@1.9.8%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
+const consoleInfo = () => console.log(`%c ew-color-picker@2.0.0%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `, 'background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff', 'background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff', 'background:transparent');
 
 var zh = {
   clearText: "清空",
@@ -1009,12 +1084,23 @@ function filterConfig(config) {
   config.hueDirection = config.hueDirection === 'horizontal' ? config.hueDirection : 'vertical';
   config.alphaDirection = config.alphaDirection === 'horizontal' ? config.alphaDirection : 'vertical';
 }
+
+function initLang(mergeConfig) {
+  let langData = mergeConfig.lang === "en" ? en : zh;
+
+  if (mergeConfig.userDefineText) {
+    mergeConfig = util$1.ewAssign(mergeConfig, langData);
+  } else {
+    mergeConfig = util$1.ewAssign(langData, mergeConfig);
+  }
+
+  return Promise.resolve(mergeConfig);
+}
 /**
  * 初始化配置
  * @param {*} config 
  * @returns 
  */
-
 
 function initConfig(config) {
   const defaultConfig = { ...baseDefaultConfig
@@ -1023,22 +1109,22 @@ function initConfig(config) {
       error,
       mergeConfig = null; //如果第二个参数传的是字符串，或DOM对象，则初始化默认的配置
 
-  if (util.isString(config) || util.isDom(config) || util.isJQDom(config)) {
+  if (util$1.isString(config) || util$1.isDom(config) || util$1.isJQDom(config)) {
     mergeConfig = defaultConfig;
-    element = util.isJQDom(config) ? config.get(0) : config;
+    element = util$1.isJQDom(config) ? config.get(0) : config;
     error = ERROR_VARIABLE.DOM_ERROR;
   } //如果是对象，则自定义配置，自定义配置选项如下:
-  else if (util.isDeepObject(config) && (util.isString(config.el) || util.isDom(config.el) || util.isJQDom(config.el))) {
+  else if (util$1.isDeepObject(config) && (util$1.isString(config.el) || util$1.isDom(config.el) || util$1.isJQDom(config.el))) {
       filterConfig(config);
-      mergeConfig = util.ewAssign(defaultConfig, config);
-      element = util.isJQDom(config.el) ? config.el.get(0) : config.el;
+      mergeConfig = util$1.ewAssign(defaultConfig, config);
+      element = util$1.isJQDom(config.el) ? config.el.get(0) : config.el;
       error = ERROR_VARIABLE.DOM_OBJECT_ERROR;
     } else {
       element = 'body';
 
-      if (util.isDeepObject(config)) {
+      if (util$1.isDeepObject(config)) {
         filterConfig(config);
-        mergeConfig = util.ewAssign(defaultConfig, config);
+        mergeConfig = util$1.ewAssign(defaultConfig, config);
         error = ERROR_VARIABLE.DOM_OBJECT_ERROR;
       } else {
         mergeConfig = defaultConfig;
@@ -1046,15 +1132,11 @@ function initConfig(config) {
       }
     }
 
-  let lang = mergeConfig.lang === "en" ? en : zh;
+  initLang(mergeConfig);
 
-  if (mergeConfig.userDefineText) {
-    mergeConfig = util.ewAssign(lang, mergeConfig);
-  } else {
-    mergeConfig = util.ewAssign(mergeConfig, lang);
+  if (mergeConfig.isLog) {
+    consoleInfo();
   }
-
-  if (mergeConfig.isLog) consoleInfo();
 
   if (['height', 'opacity'].indexOf(mergeConfig.pickerAnimation) === -1) {
     mergeConfig.pickerAnimation = 'default';
@@ -1102,8 +1184,8 @@ function bindEvent(el, callback, bool) {
   const context = this;
 
   const callResult = event => {
-    context.moveX = util.eventType[0].indexOf('touch') > -1 ? event.changedTouches[0].clientX : event.clientX;
-    context.moveY = util.eventType[0].indexOf('touch') > -1 ? event.changedTouches[0].clientY : event.clientY;
+    context.moveX = util$1.eventType[0].indexOf('touch') > -1 ? event.changedTouches[0].clientX : event.clientX;
+    context.moveY = util$1.eventType[0].indexOf('touch') > -1 ? event.changedTouches[0].clientY : event.clientY;
     bool ? callback(context, context.moveX, context.moveY) : callback(context, el, context.moveX, context.moveY);
   };
 
@@ -1114,15 +1196,15 @@ function bindEvent(el, callback, bool) {
     };
 
     const upFn = () => {
-      util.off(document, util.eventType[1], moveFn);
-      util.off(document, util.eventType[2], upFn);
+      util$1.off(document, util$1.eventType[1], moveFn);
+      util$1.off(document, util$1.eventType[2], upFn);
     };
 
-    util.on(document, util.eventType[1], moveFn);
-    util.on(document, util.eventType[2], upFn);
+    util$1.on(document, util$1.eventType[1], moveFn);
+    util$1.on(document, util$1.eventType[2], upFn);
   };
 
-  util.on(el, util.eventType[0], handler);
+  util$1.on(el, util$1.eventType[0], handler);
 }
 
 const createColorPicker = function (config) {
@@ -1149,7 +1231,7 @@ const destroy = function (instances) {
     }
   };
 
-  if (util$1.isDeepArray(instances)) {
+  if (util.isDeepArray(instances)) {
     let i = instances.length;
 
     while (i--) {
@@ -1160,13 +1242,13 @@ const destroy = function (instances) {
   }
 };
 
-const util$1 = Object.create(null);
-[color, util, {
+const util = Object.create(null);
+[color, util$1, {
   bindEvent: bindEvent
 }].forEach(module => {
   Object.keys(module).forEach(key => {
-    if (util.isFunction(module[key]) && key !== 'clickOutSide') {
-      util$1[key] = module[key];
+    if (util$1.isFunction(module[key]) && key !== 'clickOutSide') {
+      util[key] = module[key];
     }
   });
 });
@@ -1174,12 +1256,12 @@ var globalAPI = {
   createColorPicker,
   getDefaultConfig,
   destroy,
-  util: util$1
+  util
 };
 
 const isNotDom = ele => {
   if (NOT_DOM_ELEMENTS.indexOf(ele.tagName.toLowerCase()) > -1) {
-    util.ewError(ERROR_VARIABLE.DOM_NOT_ERROR);
+    util$1.ewError(ERROR_VARIABLE.DOM_NOT_ERROR);
     return true;
   }
 
@@ -1199,20 +1281,20 @@ function beforeInit(element, config, errorText) {
   let newConfig;
 
   if (config.userDefineText) {
-    newConfig = util.ewAssign(baseDefaultConfig, lang, config);
+    newConfig = util$1.ewAssign(baseDefaultConfig, lang, config);
   } else {
-    newConfig = util.ewAssign(baseDefaultConfig, config, lang);
+    newConfig = util$1.ewAssign(baseDefaultConfig, config, lang);
   }
 
   errorText = errorText || initError;
-  let ele = util.isDom(element) ? element : util.isString(element) ? util.$(element) : util.isJQDom(element) ? element.get(0) : null;
-  if (!ele) return util.ewError(errorText);
+  let ele = util$1.isDom(element) ? element : util$1.isString(element) ? util$1.$(element) : util$1.isJQDom(element) ? element.get(0) : null;
+  if (!ele) return util$1.ewError(errorText);
   ele = ele.length ? ele[0] : ele;
-  if (!ele.tagName) return util.ewError(errorText);
+  if (!ele.tagName) return util$1.ewError(errorText);
 
   if (!isNotDom(ele)) {
     if (!this._color_picker_uid) {
-      this._color_picker_uid = util.createUUID();
+      this._color_picker_uid = util$1.createUUID();
     }
 
     if (config.openChangeColorMode) {
@@ -1230,29 +1312,17 @@ function beforeInit(element, config, errorText) {
  */
 
 function updateColor(color) {
-  if (!isValidColor(color)) return util.ewError(ERROR_VARIABLE.UPDATE_PARAM_COLOR_ERROR);
-  if (!this._privateConfig.pickerFlag) util.ewWarn(ERROR_VARIABLE.UPDATE_PARAM_COLOR_WARN);
+  if (!isValidColor(color)) return util$1.ewError(ERROR_VARIABLE.UPDATE_PARAM_COLOR_ERROR);
+  if (!this._privateConfig.pickerFlag) util$1.ewWarn(ERROR_VARIABLE.UPDATE_PARAM_COLOR_WARN);
   let rgbaColor = colorToRgba(color);
   this.hsvaColor = colorRgbaToHsva(rgbaColor);
   setColorValue(this, this.panelWidth, this.panelHeight, true);
 }
 
-/**
- * 初始化
- * @param {*} bindElement 
- * @param {*} config 
- * @returns 
- */
-
-function initFunction(bindElement, config) {
-  if (!util.isDom(bindElement)) {
-    return this.beforeInit(bindElement, config, ERROR_VARIABLE.DOM_ERROR);
-  }
-
-  config = util.ewAssign(baseDefaultConfig, config);
+function initBoxSize(context, config) {
   let b_width, b_height; //自定义颜色选择器的类型
 
-  if (util.isString(config.size)) {
+  if (util$1.isString(config.size)) {
     switch (config.size) {
       case 'normal':
         b_width = b_height = '40px';
@@ -1274,15 +1344,31 @@ function initFunction(bindElement, config) {
         b_width = b_height = '40px';
         break;
     }
-  } else if (util.isDeepObject(config.size)) {
-    b_width = config.size.width && (util.isNumber(config.size.width) || util.isString(config.size.width)) ? (parseInt(config.size.width) <= 25 ? 25 : parseInt(config.size.width)) + 'px' : '40px';
-    b_height = config.size.height && (util.isNumber(config.size.height) || util.isString(config.size.height)) ? (parseInt(config.size.height) <= 25 ? 25 : parseInt(config.size.height)) + 'px' : '40px';
+  } else if (util$1.isDeepObject(config.size)) {
+    b_width = config.size.width && (util$1.isNumber(config.size.width) || util$1.isString(config.size.width)) ? (parseInt(config.size.width) <= 25 ? 25 : parseInt(config.size.width)) + 'px' : '40px';
+    b_height = config.size.height && (util$1.isNumber(config.size.height) || util$1.isString(config.size.height)) ? (parseInt(config.size.height) <= 25 ? 25 : parseInt(config.size.height)) + 'px' : '40px';
   } else {
-    return util.ewError(ERROR_VARIABLE.CONFIG_SIZE_ERROR);
+    return util$1.ewError(ERROR_VARIABLE.CONFIG_SIZE_ERROR);
   }
 
-  this._privateConfig.boxSize.b_width = b_width;
-  this._privateConfig.boxSize.b_height = b_height; //渲染选择器
+  context._privateConfig.boxSize.b_width = b_width;
+  context._privateConfig.boxSize.b_height = b_height;
+  return Promise.resolve(context._privateConfig.boxSize);
+}
+/**
+ * 初始化
+ * @param {*} bindElement 
+ * @param {*} config 
+ * @returns 
+ */
+
+function initFunction(bindElement, config) {
+  if (!util$1.isDom(bindElement)) {
+    return this.beforeInit(bindElement, config, ERROR_VARIABLE.DOM_ERROR);
+  }
+
+  config = util$1.ewAssign(baseDefaultConfig, config);
+  initBoxSize(this, config); //渲染选择器
 
   this.render(bindElement, config);
 }
@@ -1294,14 +1380,18 @@ function initFunction(bindElement, config) {
  */
 
 function handleClickOutSide(context, config) {
-  util.clickOutSide(context, config, () => {
+  util$1.clickOutSide(context, config, () => {
+    if (!config.isClickOutside) {
+      return;
+    }
+
     if (context._privateConfig.pickerFlag) {
       context._privateConfig.pickerFlag = false;
       close(getAnimationType({
         config: config
       }), context.$Dom.picker, config.pickerAnimationTime);
 
-      if (config.hasBox && config.changeBoxByChangeColor) {
+      if (config.hasBox && config.boxBgColor) {
         setBoxBackground(context.$Dom.box, config.defaultColor);
       }
     }
@@ -1318,11 +1408,11 @@ function handleClickOutSide(context, config) {
 function getELByClass(el, prop, bool) {
   let child = el.firstElementChild;
 
-  if (!util.hasClass(child, 'ew-color-picker-container')) {
+  if (!util$1.hasClass(child, 'ew-color-picker-container')) {
     child = el;
   }
 
-  return !bool ? util.$('.' + prop) : util.$$('.' + prop);
+  return !bool ? util$1.$('.' + prop) : util$1.$$('.' + prop);
 }
 
 /**
@@ -1337,9 +1427,9 @@ function setAlphaHuePosition(direction, bar, thumb, position) {
   const positionProp = direction ? 'x' : 'y';
   const barProp = direction ? 'left' : 'top';
   const barPosition = direction ? bar.offsetWidth : bar.offsetHeight,
-        barRect = util.getRect(bar);
+        barRect = util$1.getRect(bar);
   const barThumbPosition = Math.max(0, Math.min(position - barRect[positionProp], barPosition));
-  util.setCss(thumb, barProp, barThumbPosition + 'px');
+  util$1.setCss(thumb, barProp, barThumbPosition + 'px');
   return {
     barPosition,
     barThumbPosition
@@ -1392,7 +1482,7 @@ function changeHue(context, position) {
     barPosition
   } = value;
   context.hsvaColor.h = cloneColor(hsvaColor).h = parseInt(360 * barThumbPosition / barPosition);
-  util.setCss(pickerPanel, 'background', colorRgbaToHex(colorHsvaToRgba(cloneColor(context.hsvaColor))));
+  util$1.setCss(pickerPanel, 'background', colorRgbaToHex(colorHsvaToRgba(cloneColor(context.hsvaColor))));
   changeElementColor(context);
 }
 
@@ -1406,7 +1496,7 @@ function changeHue(context, position) {
  */
 
 function changeCursorColor(scope, left, top, panelWidth, panelHeight) {
-  util.setSomeCss(scope.$Dom.pickerCursor, [{
+  util$1.setSomeCss(scope.$Dom.pickerCursor, [{
     prop: 'left',
     value: left + 'px'
   }, {
@@ -1447,7 +1537,7 @@ function onClickPanel(scope, eve) {
  */
 
 function onInputColor(scope, value) {
-  if (!isValidColor(value) || util.removeAllSpace(scope.prevInputValue) === util.removeAllSpace(value)) return;
+  if (!isValidColor(value) || util$1.removeAllSpace(scope.prevInputValue) === util$1.removeAllSpace(value)) return;
   let color = null;
 
   if (scope.config.openChangeColorMode) {
@@ -1490,6 +1580,7 @@ function onClearColor(scope) {
   close(getAnimationType(scope), scope.$Dom.picker, scope.config.pickerAnimationTime);
   scope.config.defaultColor = scope._privateConfig.colorValue = "";
   scope.config.clear(scope.config.defaultColor, scope);
+  setBoxBackground(scope.$Dom.box, scope.config.defaultColor);
 }
 /**
  * 确定
@@ -1503,6 +1594,7 @@ function onSureColor(scope) {
   scope.config.defaultColor = scope._privateConfig.colorValue = result;
   changeElementColor(scope);
   scope.config.sure(result, scope);
+  setBoxBackground(scope.$Dom.box, scope.config.defaultColor);
 }
 
 function showColorPickerWithNoBox(context) {
@@ -1510,7 +1602,7 @@ function showColorPickerWithNoBox(context) {
     const ani = getAnimationType(context);
     context._privateConfig.pickerFlag = true;
 
-    if (util.getCss(context.$Dom.picker, 'display') === 'none') {
+    if (util$1.getCss(context.$Dom.picker, 'display') === 'none') {
       open(ani, context.$Dom.picker, context.config.pickerAnimationTime);
     }
 
@@ -1526,35 +1618,7 @@ function showColorPickerWithNoBox(context) {
 function initAnimation(context) {
   //颜色选择器打开的动画初始设置
   const expression = getAnimationType(context);
-  util.setCss(context.$Dom.picker, expression ? 'display' : 'opacity', expression ? 'none' : 0);
-  let pickerWidth = 0,
-      sliderWidth = 0,
-      sliderHeight = 0;
-  let isVerticalAlpha = !context.isAlphaHorizontal;
-  let isVerticalHue = !context.isHueHorizontal;
-  let isHue = context.config.hue;
-  let isAlpha = context.config.alpha;
-
-  if (isAlpha && isHue && isVerticalAlpha && isVerticalHue) {
-    pickerWidth = 320;
-    sliderWidth = 28;
-  } else if (isVerticalAlpha && isAlpha && (!isVerticalHue || !isHue) || isVerticalHue && isHue && (!isVerticalAlpha || !isAlpha)) {
-    pickerWidth = 300;
-    sliderWidth = sliderHeight = 14;
-  } else {
-    pickerWidth = 280;
-    sliderHeight = isAlpha && isHue && !isVerticalHue && !isVerticalAlpha ? 30 : 14;
-  }
-
-  util.setCss(context.$Dom.picker, 'min-width', pickerWidth + 'px');
-
-  if (context.$Dom.horizontalSlider) {
-    util.setCss(context.$Dom.horizontalSlider, 'height', sliderHeight + 'px');
-  }
-
-  if (context.$Dom.verticalSlider) {
-    util.setCss(context.$Dom.verticalSlider, 'width', sliderWidth + 'px');
-  }
+  util$1.setCss(context.$Dom.picker, expression ? 'display' : 'opacity', expression ? 'none' : 0);
 }
 /**
  * 初始化预定义颜色
@@ -1562,22 +1626,21 @@ function initAnimation(context) {
  * @param {*} context 
  */
 
-
 function initPreDefineHandler(items, context) {
   // get the siblings
   const siblings = el => Array.prototype.filter.call(el.parentElement.children, child => child !== el);
 
   items.map(item => {
     const clickHandler = event => {
-      util.addClass(item, 'ew-pre-define-color-active');
-      siblings(item).forEach(sibling => util.removeClass(sibling, 'ew-pre-define-color-active'));
-      const bgColor = util.getCss(event.target, 'background-color');
+      util$1.addClass(item, 'ew-pre-define-color-active');
+      siblings(item).forEach(sibling => util$1.removeClass(sibling, 'ew-pre-define-color-active'));
+      const bgColor = util$1.getCss(event.target, 'background-color');
       context.hsvaColor = colorRgbaToHsva(bgColor);
       setColorValue(context, context.panelWidth, context.panelHeight, true);
       changeElementColor(context);
     };
 
-    const blurHandler = event => util.removeClass(event.target, 'ew-pre-define-color-active');
+    const blurHandler = event => util$1.removeClass(event.target, 'ew-pre-define-color-active');
 
     [{
       type: "click",
@@ -1586,8 +1649,8 @@ function initPreDefineHandler(items, context) {
       type: "blur",
       handler: blurHandler
     }].forEach(t => {
-      if (!context.config.disabled && util.ewObjToArray(item.classList).indexOf('ew-pre-define-color-disabled') === -1) {
-        util.on(item, t.type, t.handler);
+      if (!context.config.disabled && util$1.ewObjToArray(item.classList).indexOf('ew-pre-define-color-disabled') === -1) {
+        util$1.on(item, t.type, t.handler);
       }
     });
   });
@@ -1603,7 +1666,9 @@ function initPreDefineHandler(items, context) {
 function startMain(ele, config) {
   // 初始化逻辑
   let scope = this;
-  this.$Dom = Object.create(null);
+  this.$Dom = Object.create(null); // cache the dom
+
+  this.$cacheDom = Object.create(null);
   this.$Dom.rootElement = ele;
   this.$Dom.picker = getELByClass(ele, 'ew-color-picker');
   this.$Dom.pickerPanel = getELByClass(ele, 'ew-color-panel');
@@ -1618,25 +1683,29 @@ function startMain(ele, config) {
   }
 
   initColor(this, config);
-  const panelWidth = this.panelWidth = parseInt(util.getCss(this.$Dom.pickerPanel, 'width'));
-  const panelHeight = this.panelHeight = parseInt(util.getCss(this.$Dom.pickerPanel, 'height'));
-  const rect = util.getRect(ele);
+  const panelWidth = this.panelWidth = parseInt(util$1.getCss(this.$Dom.pickerPanel, 'width'));
+  const panelHeight = this.panelHeight = parseInt(util$1.getCss(this.$Dom.pickerPanel, 'height'));
+  const rect = util$1.getRect(ele);
   this.panelLeft = rect.left;
   this.panelTop = rect.top + rect.height;
   this.$Dom.preDefineItem = getELByClass(ele, 'ew-pre-define-color', true); // 预定义颜色逻辑
 
   if (this.$Dom.preDefineItem.length) {
-    initPreDefineHandler(util.ewObjToArray(this.$Dom.preDefineItem), scope);
+    const preDefineItemArray = util$1.ewObjToArray(this.$Dom.preDefineItem);
+    this.$cacheDom.preDefineItemContainer = preDefineItemArray[0].parentElement;
+    initPreDefineHandler(preDefineItemArray, scope);
   } // 色阶柱逻辑
 
 
   if (config.hue) {
     this.$Dom.hueBar = getELByClass(ele, 'ew-color-slider-bar');
-    this.$Dom.hueThumb = getELByClass(ele, 'ew-color-slider-thumb');
+    this.$Dom.hueThumb = getELByClass(ele, 'ew-color-slider-thumb'); // cache the hue node
+
+    this.$cacheDom.hueContainer = this.$Dom.hueBar.parentElement;
 
     if (!config.disabled) {
       //hue的点击事件
-      util.on(this.$Dom.hueBar, 'click', event => changeHue(scope, this.isHueHorizontal ? event.x : event.y)); //hue 轨道的拖拽事件
+      util$1.on(this.$Dom.hueBar, 'click', event => changeHue(scope, this.isHueHorizontal ? event.x : event.y)); //hue 轨道的拖拽事件
 
       this.bindEvent(this.$Dom.hueThumb, (scope, el, x, y) => changeHue(scope, this.isHueHorizontal ? x : y));
     }
@@ -1646,11 +1715,13 @@ function startMain(ele, config) {
   if (config.alpha) {
     this.$Dom.alphaBar = getELByClass(ele, 'ew-alpha-slider-bar');
     this.$Dom.alphaBarBg = getELByClass(ele, 'ew-alpha-slider-bg');
-    this.$Dom.alphaBarThumb = getELByClass(ele, 'ew-alpha-slider-thumb');
+    this.$Dom.alphaBarThumb = getELByClass(ele, 'ew-alpha-slider-thumb'); // cache the alpha node
+
+    this.$cacheDom.alphaContainer = this.$Dom.alphaBar.parentElement;
 
     if (!config.disabled) {
       this.bindEvent(this.$Dom.alphaBarThumb, (scope, el, x, y) => changeAlpha(scope, this.isAlphaHorizontal ? x : y));
-      util.on(this.$Dom.alphaBar, 'click', event => changeAlpha(scope, this.isAlphaHorizontal ? event.x : event.y));
+      util$1.on(this.$Dom.alphaBar, 'click', event => changeAlpha(scope, this.isAlphaHorizontal ? event.x : event.y));
     }
   }
 
@@ -1658,55 +1729,54 @@ function startMain(ele, config) {
 
   if (config.hasBox) {
     this.$Dom.box = getELByClass(ele, 'ew-color-picker-box');
-    if (!config.boxDisabled && !config.disabled) util.on(this.$Dom.box, 'click', () => handlePicker(ele, scope, flag => {
-      if (flag && scope.config.isClickOutside) {
-        initColor(this, config);
-        setColorValue(scope, scope.panelWidth, scope.panelHeight, false);
-        handleClickOutSide(scope, scope.config);
-      }
-    }));
+
+    if (!config.boxDisabled && !config.disabled) {
+      util$1.on(this.$Dom.box, 'click', () => handlePicker(ele, scope, flag => {
+        if (flag) {
+          initColor(this, config);
+          setColorValue(scope, scope.panelWidth, scope.panelHeight, false);
+        }
+      }));
+    }
   } else {
     showColorPickerWithNoBox(this);
   } // 输入框
 
 
-  if (config.hasColorInput) {
+  if (config.hasInput) {
     this.$Dom.pickerInput = getELByClass(ele, 'ew-color-input');
-    util.on(this.$Dom.pickerInput, 'blur', event => onInputColor(scope, event.target.value));
+    util$1.on(this.$Dom.pickerInput, 'blur', event => onInputColor(scope, event.target.value));
   } // 禁用逻辑
 
 
   if (config.disabled) {
-    if (config.hasColorInput) {
-      if (!util.hasClass(this.$Dom.pickerInput, 'ew-input-disabled')) {
-        util.addClass(this.$Dom.pickerInput, 'ew-input-disabled');
+    if (config.hasInput) {
+      if (!util$1.hasClass(this.$Dom.pickerInput, 'ew-input-disabled')) {
+        util$1.addClass(this.$Dom.pickerInput, 'ew-input-disabled');
       }
 
       this.$Dom.pickerInput.disabled = true;
     }
 
-    if (!util.hasClass(this.$Dom.picker, 'ew-color-picker-disabled')) {
-      util.addClass(this.$Dom.picker, 'ew-color-picker-disabled');
+    if (!util$1.hasClass(this.$Dom.picker, 'ew-color-picker-disabled')) {
+      util$1.addClass(this.$Dom.picker, 'ew-color-picker-disabled');
     }
 
     return false;
   } // 点击目标区域之外逻辑
 
 
-  if (config.isClickOutside) {
-    handleClickOutSide(this, config);
-  } // 清空按钮逻辑
-
+  handleClickOutSide(this, config); // 清空按钮逻辑
 
   if (config.hasClear) {
     this.$Dom.pickerClear = getELByClass(ele, 'ew-color-clear');
-    util.on(this.$Dom.pickerClear, 'click', () => onClearColor(scope));
+    util$1.on(this.$Dom.pickerClear, 'click', () => onClearColor(scope));
   } // 确定按钮逻辑
 
 
   if (config.hasSure) {
     this.$Dom.pickerSure = getELByClass(ele, 'ew-color-sure');
-    util.on(this.$Dom.pickerSure, 'click', () => onSureColor(scope));
+    util$1.on(this.$Dom.pickerSure, 'click', () => onSureColor(scope));
   } // 颜色转换模式逻辑
 
 
@@ -1715,17 +1785,17 @@ function startMain(ele, config) {
     this.$Dom.modeDown = getELByClass(ele, 'ew-color-mode-down');
     this.$Dom.modeTitle = getELByClass(ele, "ew-color-mode-title");
 
-    if (config.hasColorInput) {
+    if (config.hasInput) {
       this.modeCount = config.alpha ? 1 : 0;
       this.currentMode = this.colorMode[this.modeCount];
-      util.on(this.$Dom.modeUp, "click", event => onHandleChangeMode(scope, 'up', () => changeElementColor(scope)));
-      util.on(this.$Dom.modeDown, "click", event => onHandleChangeMode(scope, 'down', () => changeElementColor(scope)));
+      util$1.on(this.$Dom.modeUp, "click", event => onHandleChangeMode(scope, 'up', () => changeElementColor(scope)));
+      util$1.on(this.$Dom.modeDown, "click", event => onHandleChangeMode(scope, 'down', () => changeElementColor(scope)));
     }
   } // 颜色面板逻辑
   //颜色面板点击事件
 
 
-  util.on(this.$Dom.pickerPanel, 'click', event => onClickPanel(scope, event)); //颜色面板拖拽元素拖拽事件
+  util$1.on(this.$Dom.pickerPanel, 'click', event => onClickPanel(scope, event)); //颜色面板拖拽元素拖拽事件
 
   this.bindEvent(this.$Dom.pickerCursor, (scope, el, x, y) => {
     const left = Math.max(0, Math.min(x - scope.panelLeft, panelWidth));
@@ -1741,8 +1811,9 @@ function startMain(ele, config) {
  */
 
 function setPredefineDisabled(disabled) {
-  if (disabled) return ' ew-pre-define-color-disabled';
-  return '';
+  return {
+    "ew-pre-define-color-disabled": disabled
+  };
 }
 /**
  * 
@@ -1752,8 +1823,9 @@ function setPredefineDisabled(disabled) {
 
 function hasAlpha(color) {
   let alpha = color.slice(color.indexOf('(') + 1, color.lastIndexOf(')')).split(',')[3];
-  if (isAlphaColor(color) && alpha < 1 && alpha > 0) return ' ew-has-alpha';
-  return '';
+  return {
+    "ew-has-alpha": isAlphaColor(color) && alpha < 1 && alpha > 0
+  };
 }
 
 let depId = 0;
@@ -1780,11 +1852,11 @@ class Dep {
     remove(this.subs, sub);
   }
 
-  notify() {
+  notify(key) {
     const subs = this.subs.slice();
 
     for (let i = 0, len = subs.length; i < len; i++) {
-      subs[i].update();
+      subs[i].update(key);
     }
   }
 
@@ -1809,7 +1881,7 @@ const isNotKey = key => {
 function defineReactive(dep, target) {
   const notify = k => {
     if (Dep.DepTarget && isNotKey(k)) {
-      dep.notify();
+      dep.notify(k);
     }
   };
 
@@ -1876,16 +1948,115 @@ class Observer {
 
 }
 
+const notUpdateKeys = ["pickerAnimation", "pickerAnimationTime", "sure", "clear", "togglePicker", "changeColor"];
+
+function handleNode(flag, node, parentNode) {
+  return new Promise((resolve, reject) => {
+    if (!flag) {
+      node.remove();
+    } else {
+      parentNode.appendChild(node);
+    }
+
+    resolve();
+  });
+}
+
+function updateBoxHandler(box, b_width, b_height) {
+  if (box) {
+    const firstChild = box.firstElementChild;
+
+    if (util$1.hasClass(firstChild, "ew-color-picker-no")) {
+      util$1.setCss(firstChild, "line-height", b_height);
+    }
+
+    [box, firstChild].forEach(el => {
+      util$1.setSomeCss(el, [{
+        prop: "width",
+        value: b_width
+      }, {
+        prop: "height",
+        value: b_height
+      }]);
+    });
+  }
+}
+
+function updateLangHandler(config, pickerClear, pickerSure) {
+  initLang(config).then(({
+    clearText,
+    sureText
+  }) => {
+    pickerClear.textContent = clearText;
+    pickerSure.textContent = sureText;
+  });
+}
 /**
  * 重新渲染颜色选择器
  * @param {*} vm 
  * @param {*} callback 
  */
 
-function render(vm, callback) {
+
+function render(vm, key, callback) {
+  if (notUpdateKeys.indexOf(key) > -1) {
+    return;
+  }
+
   setTimeout(() => {
-    vm.beforeInit(vm.$Dom.rootElement, vm.config, initError);
-    if (util.isFunction(callback)) callback();
+    const {
+      $Dom: {
+        hueBar,
+        alphaBar,
+        box,
+        pickerSure,
+        pickerClear
+      },
+      $cacheDom: {
+        hueContainer,
+        alphaContainer
+      },
+      config: {
+        hue,
+        alpha,
+        isClickOutside
+      }
+    } = vm;
+
+    switch (key) {
+      case "hue":
+        {
+          handleNode(hue, hueBar, hueContainer).then(() => setBarStyle(vm));
+          break;
+        }
+
+      case "alpha":
+        handleNode(alpha, alphaBar, alphaContainer).then(() => setBarStyle(vm));
+        break;
+
+      case "size":
+        initBoxSize(vm, vm.config).then(({
+          b_width,
+          b_height
+        }) => updateBoxHandler(box, b_width, b_height));
+        break;
+
+      case "isClickOutside":
+        handleClickOutSide(vm, vm.config);
+        break;
+
+      case "lang":
+        updateLangHandler(vm.config, pickerClear, pickerSure);
+        break;
+
+      case "userDefineText":
+        updateLangHandler(vm.config, pickerClear, pickerSure);
+        break;
+    }
+
+    if (util$1.isFunction(callback)) {
+      callback();
+    }
   }, vm.config.pickerAnimationTime);
 }
 class RenderWatcher {
@@ -1902,12 +2073,12 @@ class RenderWatcher {
     pushTarget(this);
   }
 
-  update() {
-    const updateHandler = vm => {
-      render(vm, () => this.cleanDeps());
+  update(key) {
+    const updateHandler = (vm, key) => {
+      render(vm, key);
     };
 
-    updateHandler(this._colorPickerInstance);
+    updateHandler(this._colorPickerInstance, key);
   }
 
   cleanDeps() {
@@ -1927,6 +2098,42 @@ class RenderWatcher {
   }
 
 }
+
+const closeIcon = `
+<svg 
+    t="1634963211095" 
+    class="ew-color-picker-close-icon" 
+    viewBox="0 0 1024 1024" 
+    version="1.1" 
+    xmlns="http://www.w3.org/2000/svg" 
+    p-id="2424">
+    <path 
+        d="M504.224 470.288l207.84-207.84a16 16 0 0 1 22.608 0l11.328 11.328a16 16 0 0 1 0 22.624l-207.84 
+        207.824 207.84 207.84a16 16 0 0 1 0 22.608l-11.328 11.328a16 16 0 0 1-22.624 0l-207.824-207.84-207.84 
+        207.84a16 16 0 0 1-22.608 0l-11.328-11.328a16 16 0 0 1 0-22.624l207.84-207.824-207.84-207.84a16 16 0 0 
+        1 0-22.608l11.328-11.328a16 16 0 0 1 22.624 0l207.824 207.84z" p-id="2425"
+    >
+    </path>
+    </svg>
+`;
+const arrowIcon = `
+<svg 
+    t="1634963310652" 
+    class="ew-color-picker-arrow-icon" 
+    viewBox="0 0 1024 1024" 
+    version="1.1" 
+    xmlns="http://www.w3.org/2000/svg" 
+    p-id="3223"
+>
+    <path 
+        d="M512 714.666667c-8.533333 0-17.066667-2.133333-23.466667-8.533334l-341.333333-341.333333c-12.8-12.8-12.8-32 
+        0-44.8 12.8-12.8 32-12.8 44.8 0l320 317.866667 317.866667-320c12.8-12.8 32-12.8 44.8 0 12.8 12.8 12.8 32 0 
+        44.8L533.333333 704c-4.266667 8.533333-12.8 10.666667-21.333333 10.666667z" 
+        p-id="3224"
+    >
+    </path>
+</svg>
+`;
 
 /**
  * 渲染
@@ -1952,26 +2159,42 @@ function staticRender(element, config) {
       openChangeColorModeLabelHTML = '',
       horizontalSliderHTML = '',
       verticalSliderHTML = '';
-  const p_c = config.predefineColor;
-  if (!util.isDeepArray(p_c)) return util.ewError(ERROR_VARIABLE.PREDEFINE_COLOR_ERROR);
+  const p_c = config.predefineColor; // validate the predefineColor;
 
-  if (p_c.length) {
-    p_c.map((color, index) => {
-      let isValidColorString = util.isString(color) && isValidColor(color);
-      let isValidColorObj = util.isDeepObject(color) && color.hasOwnProperty('color') && isValidColor(color.color);
-      let renderColor = isValidColorString ? color : isValidColorObj ? color.color : '';
-      let renderDisabled = isValidColorObj ? setPredefineDisabled(color.disabled) : '';
-      predefineColorHTML += `
-            <div class="ew-pre-define-color${hasAlpha(renderColor)}${renderDisabled}" tabindex=${index}>
-                <div class="ew-pre-define-color-item" style="background-color:${renderColor};"></div>
-            </div>`;
-    });
+  if (!util$1.isDeepArray(p_c)) {
+    return util$1.ewError(ERROR_VARIABLE.PREDEFINE_COLOR_ERROR);
   }
 
-  const colorBox = config.defaultColor ? `<div class="ew-color-picker-arrow" style="width:${this._privateConfig.boxSize.b_width};height:${this._privateConfig.boxSize.b_height};">
-        <div class="ew-color-picker-arrow-left"></div>
-        <div class="ew-color-picker-arrow-right"></div>
-    </div>` : `<div class="ew-color-picker-no" style="width:${this._privateConfig.boxSize.b_width};height:${this._privateConfig.boxSize.b_height};line-height:${this._privateConfig.boxSize.b_height};">&times;</div>`; //透明度
+  if (p_c.length) {
+    p_c.forEach((color, index) => {
+      const isValidColorString = util$1.isString(color) && isValidColor(color);
+      const isValidColorObj = util$1.isDeepObject(color) && color.hasOwnProperty('color') && isValidColor(color.color);
+      const renderColor = isValidColorString ? color : isValidColorObj ? color.color : '';
+      let preColorClassObject = {
+        "ew-pre-define-color": true,
+        ...hasAlpha(renderColor)
+      };
+
+      if (isValidColorObj) {
+        preColorClassObject = util$1.ewAssign(preColorClassObject, setPredefineDisabled(color.disabled));
+      }
+
+      const preColorClassStr = util$1.classnames(preColorClassObject);
+      predefineColorHTML += `
+                <div class="${preColorClassStr}" tabindex=${index}>
+                    <div class="ew-pre-define-color-item" style="background-color:${renderColor};"></div>
+                </div>
+            `;
+    });
+  }
+  const {
+    b_width,
+    b_height
+  } = this._privateConfig.boxSize;
+  const boxArrowStyle = `width:${b_width};height:${b_height};`;
+  const boxNoStyle = `${boxArrowStyle}line-height:${b_height};`; //打开颜色选择器的方框
+
+  const colorBox = config.defaultColor ? `<div class="ew-color-picker-arrow" style="${boxArrowStyle}">${arrowIcon}</div>` : `<div class="ew-color-picker-no" style="${boxNoStyle}">${closeIcon}</div>`; //透明度
 
   if (config.alpha) {
     alphaBar = `<div class="ew-alpha-slider-bar">
@@ -1990,19 +2213,25 @@ function staticRender(element, config) {
     predefineHTML = `<div class="ew-pre-define-color-container">${predefineColorHTML}</div>`;
   }
 
-  if (config.disabled || config.boxDisabled) boxDisabledClassName = 'ew-color-picker-box-disabled';
+  if (config.disabled || config.boxDisabled) {
+    boxDisabledClassName = 'ew-color-picker-box-disabled';
+  }
 
   if (config.defaultColor) {
     if (!isValidColor(config.defaultColor)) {
-      return util.ewError(ERROR_VARIABLE.DEFAULT_COLOR_ERROR);
+      return util$1.ewError(ERROR_VARIABLE.DEFAULT_COLOR_ERROR);
     } else {
       config.defaultColor = colorToRgba(config.defaultColor);
     }
   }
   this._privateConfig.colorValue = config.defaultColor;
-  if (!config.disabled && this._privateConfig.colorValue) boxBackground = `background:${this._privateConfig.colorValue}`; // 盒子样式
 
-  const boxStyle = `width:${this._privateConfig.boxSize.b_width};height:${this._privateConfig.boxSize.b_height};${boxBackground}`;
+  if (!config.disabled && this._privateConfig.colorValue) {
+    boxBackground = `background:${this._privateConfig.colorValue}`;
+  } // 盒子样式
+
+
+  const boxStyle = `${boxArrowStyle};${boxBackground}`;
 
   if (config.hasBox) {
     boxHTML = `<div class="ew-color-picker-box ${boxDisabledClassName}" tabIndex="0" style="${boxStyle}">${colorBox}</div>`;
@@ -2020,12 +2249,12 @@ function staticRender(element, config) {
     btnGroupHTML = `<div class="ew-color-drop-btn-group">${clearHTML}${sureHTML}</div>`;
   }
 
-  if (config.hasColorInput) {
+  if (config.hasInput) {
     inputHTML = '<input type="text" class="ew-color-input">';
   }
 
   if (config.openChangeColorMode) {
-    if (!config.alpha || !config.hue) return util.ewError(ERROR_VARIABLE.COLOR_MODE_ERROR);
+    if (!config.alpha || !config.hue) return util$1.ewError(ERROR_VARIABLE.COLOR_MODE_ERROR);
     openChangeColorModeHTML = `<div class="ew-color-mode-container">
         <div class="ew-color-mode-up"></div>
         <div class="ew-color-mode-down"></div>
@@ -2033,7 +2262,7 @@ function staticRender(element, config) {
     openChangeColorModeLabelHTML = `<label class="ew-color-mode-title">${this.colorMode[1]}</label>`;
   }
 
-  if (config.hasColorInput || config.hasClear || config.hasSure) {
+  if (config.hasInput || config.hasClear || config.hasSure) {
     dropHTML = config.openChangeColorMode ? `<div class="ew-color-drop-container ew-has-mode-container">
         ${openChangeColorModeLabelHTML}${inputHTML}${openChangeColorModeHTML}
         </div><div class="ew-color-drop-container">
@@ -2072,12 +2301,12 @@ function staticRender(element, config) {
   const html = `${boxHTML}
         <div class="ew-color-picker">
             <div class="ew-color-picker-content">
-                ${verticalSliderHTML}
                 <div class="ew-color-panel" style="background:red;">
                     <div class="ew-color-white-panel"></div>
                     <div class="ew-color-black-panel"></div>
                     <div class="ew-color-cursor"></div>
                 </div>
+                ${verticalSliderHTML}
             </div>
             ${horizontalSliderHTML}
             ${dropHTML}
@@ -2090,10 +2319,10 @@ function staticRender(element, config) {
 
   if (isBody) {
     mountElement.setAttribute("id", 'placeElement-' + this._color_picker_uid);
-    let hasDiv = util.$('#placeElement-' + this._color_picker_uid);
+    let hasDiv = util$1.$('#placeElement-' + this._color_picker_uid);
     if (hasDiv) hasDiv.parentElement.removeChild(hasDiv);
     mountElement.innerHTML = html;
-    util.addClass(container, 'ew-color-picker-container');
+    util$1.addClass(container, 'ew-color-picker-container');
     container.appendChild(mountElement);
     element.appendChild(container);
   } else {
@@ -2112,7 +2341,7 @@ function staticRender(element, config) {
 function destroyInstance() {
   const instance = this.$Dom.rootElement;
   const instanceParentElement = instance.parentElement;
-  const isContainer = util.hasClass(instanceParentElement, 'ew-color-picker-container');
+  const isContainer = util$1.hasClass(instanceParentElement, 'ew-color-picker-container');
 
   if (isContainer && instanceParentElement) {
     removeNode(instanceParentElement);
@@ -2131,11 +2360,11 @@ function removeNode(node) {
  */
 
 function ewColorPicker$1(config) {
-  if (util.isUndefined(new.target)) return util.ewError(ERROR_VARIABLE.CONSTRUCTOR_ERROR);
+  if (util$1.isUndefined(new.target)) return util$1.ewError(ERROR_VARIABLE.CONSTRUCTOR_ERROR);
   startInit(this, config);
 }
 
-const methods$1 = [{
+const methods = [{
   name: "beforeInit",
   func: beforeInit
 }, {
@@ -2163,10 +2392,10 @@ const methods$1 = [{
   name: "destroy",
   func: destroyInstance
 }];
-methods$1.forEach(method => util.addMethod(ewColorPicker$1, method.name, method.func)); // 全局API注册
+methods.forEach(method => util$1.addMethod(ewColorPicker$1, method.name, method.func)); // 全局API注册
 
 Object.keys(globalAPI).forEach(key => {
   ewColorPicker$1[key] = globalAPI[key];
 });
 
-export default ewColorPicker$1;
+export { ewColorPicker$1 as default };

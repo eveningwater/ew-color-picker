@@ -3,7 +3,8 @@ export let addMethod = (instance, method, func) => {
     return instance;
 }
 const util = Object.create(null);
-const _toString = Object.prototype.toString;
+const _toString = Object.prototype.toString,
+      hasOwn = Object.prototype.hasOwnProperty;
 ['Number', 'String', 'Function', 'Undefined', 'Boolean'].forEach(type => util['is' + type] = value => typeof value === type.toLowerCase());
 util.addMethod = addMethod;
 ['Object', 'Array', 'RegExp'].forEach(type => util['isDeep' + type] = value => _toString.call(value).slice(8, -1).toLowerCase() === type.toLowerCase());
@@ -92,27 +93,66 @@ util["clickOutSide"] = (context, config, callback) => {
             boxRect = util.getRect(context.$Dom.box);
         }
         const target = event.target;
-        if (!target) return;
+        if (!target){
+            return;
+        }
         const targetRect = util.getRect(target);
-        // 利用rect来判断用户点击的地方是否在颜色选择器面板区域之内
         if (config.hasBox) {
-            if (targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width) return;
-            // 如果点击的是盒子元素
-            if (targetRect.x >= boxRect.x && targetRect.y >= boxRect.y && targetRect.width <= boxRect.width && targetRect.height <= boxRect.height) return;
+            if (targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width){
+                return;
+            }
+            if (targetRect.x >= boxRect.x && targetRect.y >= boxRect.y && targetRect.width <= boxRect.width && targetRect.height <= boxRect.height){
+                return;
+            }
             callback();
         } else {
-            if (targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width && targetRect.height <= rect.height) return;
+            if (targetRect.x >= rect.x && targetRect.y >= rect.y && targetRect.width <= rect.width && targetRect.height <= rect.height){
+                return;
+            }
             callback();
         }
         setTimeout(() => {
-            util.off(document, util.eventType[0], mouseHandler);
-        }, 0);
+            util.off(document,util.eventType[0],mouseHandler);
+            util.on(document, util.eventType[0], mouseHandler);
+        },0);
     }
     util.on(document, util.eventType[0], mouseHandler);
 }
 util['createUUID'] = () => (Math.random() * 10000000).toString(16).substr(0, 4) + '-' + (new Date()).getTime() + '-' + Math.random().toString().substr(2, 5);
 util.removeAllSpace = (value) => value.replace(/\s+/g, "");
 util.isJQDom = dom => typeof window.jQuery !== "undefined" && dom instanceof jQuery;
+util.isPromise = value => !util.isUndefined(value) && !util.isNull(value) && util.isFunction(value.then) && util.isFunction(value.catch);
+const classnames = function(...args){
+    const classes = [];
+    for(let i = 0,l = args.length;i < l;i++){
+        const arg = args[i];
+        if(!arg){
+            continue;
+        }
+        if(util.isString(arg) || util.isNumber(arg)){
+            classes.push(arg);
+        }else if(util.isDeepArray(arg)){
+            if(arg.length){
+                const __class = classnames.apply(null,arg);
+                if(__class){
+                    classes.push(__class);
+                }
+            }
+        }else{
+            if(arg.toString === _toString){
+                for(let key in arg){
+                    if(hasOwn.call(arg,key) && arg[key]){
+                        classes.push(key);
+                    }
+                }
+            }else {
+                classes.push(arg.toString())
+            }
+        }
+    }
+    return classes.join(" ");
+}
+util.classnames = classnames;
 //the event
 util.eventType = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i) ? ['touchstart', 'touchmove', 'touchend'] : ['mousedown', 'mousemove', 'mouseup'];
 export default util;

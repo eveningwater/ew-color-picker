@@ -14,13 +14,15 @@ import { setBoxBackground } from './box';
     if (scope.config.openChangeColorMode) {
         newColor = changeMode(scope, color);
     }
-    if (scope.config.hasColorInput) {
+    if (scope.config.hasInput) {
         scope.$Dom.pickerInput.value = newColor;
         scope.prevInputValue = newColor;
     }
     changeAlphaBar(scope);
-    if(scope.config.hasBox && scope.config.changeBoxByChangeColor && scope.boxChange){
+    if(scope.config.hasBox && scope.config.boxBgColor && scope.boxChange){
         setBoxBackground(scope.$Dom.box,newColor);
     }
-    if (util.isFunction(scope.config.changeColor)) scope.config.changeColor(newColor);
+    if (util.isFunction(scope.config.changeColor)){
+        scope.config.changeColor(newColor);
+    }
 }

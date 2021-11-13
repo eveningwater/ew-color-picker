@@ -59,7 +59,7 @@ function registerMethods(type, element, time) {
         inAndOut();
     }else{
         transition = "display" + time + ' ms';
-        showOrHide();
+        return showOrHide();
     }
     util.setCss(element, 'transition', transition);
     function upAndDown() {
@@ -135,7 +135,12 @@ function registerMethods(type, element, time) {
     }
     function showOrHide(){
         const isShow = type.indexOf('show') > -1;
-        setTimeout(() => util.setCss(element,'display',(isShow ? 'block' : 'none')),time);
+        return new Promise((resolve,reject) => {
+            setTimeout(() => {
+                util.setCss(element,'display',(isShow ? 'block' : 'none'));
+                resolve();
+            },Math.floor(time / 100));
+        })
     }
 }
 ['slideUp', 'slideDown', 'fadeIn', 'fadeOut'].forEach(method => {

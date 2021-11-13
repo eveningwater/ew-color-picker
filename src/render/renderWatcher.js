@@ -1,16 +1,86 @@
 
 import { pushTarget, remove } from '../observe/dep';
 import util from '../utils/util';
-import { initError } from '../init/startInit';
+import { setBarStyle } from "../layout/setColorValue";
+import { initBoxSize } from "../init/init";
+import { notUpdateKeys } from "../const/notUpdateKeys";
+import { handleClickOutSide } from "../handler/clickOutSide";
+import { initLang } from "../init/initConfig"
+function handleNode(flag,node,parentNode){
+    return new Promise((resolve,reject) => {
+        if(!flag){
+            node.remove();
+        }else{
+            parentNode.appendChild(node);
+        }
+        resolve();
+    });
+}
+function updateBoxHandler(box,b_width,b_height){
+    if(box){
+        const firstChild = box.firstElementChild;
+        if(util.hasClass(firstChild,"ew-color-picker-no")){
+            util.setCss(firstChild,"line-height",b_height);
+        }
+        [box,firstChild].forEach(el => {
+            util.setSomeCss(el,[
+                {
+                    prop:"width",
+                    value:b_width
+                },
+                {
+                    prop:"height",
+                    value:b_height
+                }
+            ])
+        })
+    }
+}
+function updateLangHandler(config,pickerClear,pickerSure){
+    initLang(config).then(({ clearText,sureText }) => {
+        pickerClear.textContent = clearText;
+        pickerSure.textContent = sureText;
+   });
+}
 /**
  * 重新渲染颜色选择器
  * @param {*} vm 
  * @param {*} callback 
  */
- export function render(vm,callback){
+ export function render(vm,key,callback){
+    if(notUpdateKeys.indexOf(key) > -1){
+        return;
+    }
     setTimeout(() => {
-        vm.beforeInit(vm.$Dom.rootElement,vm.config,initError);
-        if(util.isFunction(callback))callback();
+        const { 
+            $Dom:{ hueBar,alphaBar,box,pickerSure,pickerClear },
+            $cacheDom:{ hueContainer,alphaContainer },
+            config:{ hue,alpha,isClickOutside }
+        } = vm;
+        switch(key){
+            case "hue":{
+                handleNode(hue,hueBar,hueContainer).then(() => setBarStyle(vm));
+                break;
+            }
+            case "alpha":
+                handleNode(alpha,alphaBar,alphaContainer,vm).then(() => setBarStyle(vm));
+                break;
+            case "size":
+                initBoxSize(vm,vm.config).then(({ b_width,b_height }) => updateBoxHandler(box,b_width,b_height));
+                break;
+            case "isClickOutside":
+                handleClickOutSide(vm,vm.config);
+                break;
+            case "lang":
+                updateLangHandler(vm.config,pickerClear,pickerSure);
+                break;
+            case "userDefineText":
+                updateLangHandler(vm.config,pickerClear,pickerSure);
+                break;
+        }
+        if(util.isFunction(callback)){
+            callback();
+        }
     },vm.config.pickerAnimationTime);
 }
 export default class RenderWatcher {
@@ -25,11 +95,11 @@ export default class RenderWatcher {
     get(){
         pushTarget(this);
     }
-    update(){
-        const updateHandler = vm => {
-            render(vm,() => this.cleanDeps());
+    update(key){
+        const updateHandler = (vm,key) => {
+            render(vm,key);
         }
-        updateHandler(this._colorPickerInstance);
+        updateHandler(this._colorPickerInstance,key);
     }
     cleanDeps(){
         if(this.dep){

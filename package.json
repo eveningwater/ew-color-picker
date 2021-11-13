@@ -1,6 +1,6 @@
 {
   "name": "ew-color-picker",
-  "version": "1.9.9",
+  "version": "2.0.0",
   "description": "一个基于原生js而封装的颜色选择器",
   "main": "dist/ew-color-picker.min.js",
   "module": "dist/ew-color-picker.esm.min.js",
