@@ -130,7 +130,8 @@ CDN:
 
 ```js
    import ewColorPicker from 'ew-color-picker';
+  //  导入样式
    import "ew-color-picker/dist/ew-color-picker.min.css";
-   import "ew-color-picker/src/style/ew-color-picker.css";
-   var pluginName = new ewColorPicker(option);//option为配置对象，详情见前述
+  //或者  import "ew-color-picker/src/style/ew-color-picker.css";
+   const colorPicker = new ewColorPicker(option);//option为配置对象，详情见前述
 ```

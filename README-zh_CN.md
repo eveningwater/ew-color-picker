@@ -15,7 +15,7 @@
 
 ### 安装
 ```
-  npm install ew-color-picker --save-dev
+  npm install ew-color-picker --save-dev//或者 yarn add ew-color-picker
 
 ```
 ### 引入
@@ -110,9 +110,10 @@ CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
 
 ```js
    import ewColorPicker from 'ewColorPicker';
+  //  导入样式
    import "ew-color-picker/dist/ew-color-picker.min.css"
-   import "ew-color-picker/src/style/ew-color-picker.css"
-   var pluginName = new ewColorPicker(option);//option为配置对象，详情见前述
+  //或者  import "ew-color-picker/src/style/ew-color-picker.css"
+   const colorPicker = new ewColorPicker(option);//option为配置对象，详情见前述
 
 ```
 > tips: 需要注意的是，从1.6.4版本开始，如果传入的dom元素是多个，则只有第一个dom元素渲染成颜色选择器，如果需要渲染多个颜色选择器，可使用一个数组来实例化。例如:
