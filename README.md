@@ -134,6 +134,10 @@ For more details, please refer to the official website of the document [ewColorP
 
 > Domestic access is slow and accessible [ewColorPicker](https://eveningwater.gitee.io/ew-color-picker/)
 
+# About the source code
+
+the lesson of source code about ew-color-picker can see [here](https://ke.segmentfault.com/course/1650000040761646)。
+
 # the update logs
 
 * 1.9.9 Fixed the horizontal layout positioning problem of the alpha bar, adjusted the `$` tool method, and added the `$$` tool method.
