@@ -15,14 +15,14 @@ A colorPicker plugin packaged based on native js.
 
 ### Installation
 ```
-  npm install ew-color-picker --save-dev
+  npm install ew-color-picker --save-dev // or yarn add ew-color-picker
 
 ```
 ### import
 
 ```js
   <script src="./dist/ew-color-picker.min.js"></script>
-  
+
 ```
 
 A colorPicker as follows:
@@ -113,14 +113,15 @@ CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
 
 ```js
    import ewColorPicker from 'ewColorPicker';
+  //  import the style
    import "ew-color-picker/dist/ew-color-picker.min.css"
-   import "ew-color-picker/src/style/ew-color-picker.css"
-   var pluginName = new ewColorPicker(option);//option is the configuration object, see above for details
+  //or  import "ew-color-picker/src/style/ew-color-picker.css"
+   const colorPicker = new ewColorPicker(option);//option is the configuration object, see above for details
 
 ```
 > tips: It should be noted that starting from version 1.6.4, if there are multiple dom elements passed in, only the first dom element will be rendered as a colorPicker. If multiple colorPickers need to be rendered, an array can be used for instance. E.g:
 ```js
-   let els = document.querySelectorAll('.demo');
+   const els = document.querySelectorAll('.demo');
    els.forEach(item => {
      new ewColorPicker(item);
      //or new ewColorPicker({

@@ -131,7 +131,8 @@ CDN:
 
 ```js
    import ewColorPicker from 'ew-color-picker';
+  //  import the style
    import "ew-color-picker/dist/ew-color-picker.min.css";
-   import "ew-color-picker/src/style/ew-color-picker.css";
-   var pluginName = new ewColorPicker(option);//option is the configuration object, see above for details
+  //or  import "ew-color-picker/src/style/ew-color-picker.css";
+   const colorPicker = new ewColorPicker(option);//option is the configuration object, see above for details
 ```
