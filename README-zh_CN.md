@@ -131,6 +131,10 @@ CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
 
 > 国内访问速度慢可访问[ewColorPicker](https://eveningwater.gitee.io/ew-color-picker/)
 
+# 源码相关
+
+关于颜色选择器的源码视频，可以看[这里](https://ke.segmentfault.com/course/1650000040761646)。
+
 # 更新日志
 
 * 1.9.9 修复了透明度柱的横向布局定位问题，调整了`$`工具方法，增加了`$$`工具方法。
