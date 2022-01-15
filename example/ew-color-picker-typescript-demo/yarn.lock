@@ -997,12 +997,10 @@ eventsource@^1.0.7:
   dependencies:
     original "^1.0.0"
 
-ew-color-picker@^1.9.3:
-  version "1.9.3"
-  resolved "https://registry.npmjs.org/ew-color-picker/-/ew-color-picker-1.9.3.tgz#2c202a3d6ea1562eea1d351c8e46213f4ebb07b7"
-  integrity sha512-43I8FZPxfvGh4qSkDhqKVlbIsq06oovOEUTrZmRjBtbdjeK5huKEZOuKT73iBWRpVM/bpLtrG0SXkwbXFjUWmg==
-  dependencies:
-    user "0.0.0"
+ew-color-picker@^1.9.9:
+  version "1.9.9"
+  resolved "https://registry.yarnpkg.com/ew-color-picker/-/ew-color-picker-1.9.9.tgz#b391c45136da1c43c004b0ebdeb78bfcda475f87"
+  integrity sha512-lcbCWkKHZcAL9Is22p0VXuB+33eFJ6u4F2izfGcYGDR2/w9L5NpbefY4hLCQKDqNBn+s3EvasUocjJ2L8ulraA==
 
 execa@^1.0.0:
   version "1.0.0"
@@ -1183,9 +1181,9 @@ find-up@^4.0.0:
     path-exists "^4.0.0"
 
 follow-redirects@^1.0.0:
-  version "1.14.0"
-  resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.14.0.tgz#f5d260f95c5f8c105894491feee5dc8993b402fe"
-  integrity sha512-0vRwd7RKQBTt+mgu87mtYeofLFZpTas2S9zY+jIeuLJMNvudIgF52nr19q40HOwH5RrhWIPuj9puybzSJiRrVg==
+  version "1.14.7"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.7.tgz#2004c02eb9436eee9a21446a6477debf17e81685"
+  integrity sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==
 
 for-in@^1.0.2:
   version "1.0.2"
@@ -3187,11 +3185,6 @@ use@^3.1.0:
   version "3.1.1"
   resolved "https://registry.npmjs.org/use/-/use-3.1.1.tgz#d50c8cac79a19fbc20f2911f56eb973f4e10070f"
   integrity sha512-cwESVXlO3url9YWlFW/TA9cshCEhtu7IKJ/p5soJ/gGpj7vbvFrAY/eIioQ6Dw23KjZhYgiIo8HOs1nQ2vr/oQ==
-
-user@0.0.0:
-  version "0.0.0"
-  resolved "https://registry.npmjs.org/user/-/user-0.0.0.tgz#f27f1b23fc511f2a8efa40db55cfba123824e02a"
-  integrity sha1-8n8bI/xRHyqO+kDbVc+6Ejgk4Co=
 
 util-deprecate@^1.0.1, util-deprecate@^1.0.2, util-deprecate@~1.0.1:
   version "1.0.2"
