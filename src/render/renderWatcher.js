@@ -6,6 +6,7 @@ import { initBoxSize } from "../init/init";
 import { notUpdateKeys } from "../const/notUpdateKeys";
 import { handleClickOutSide } from "../handler/clickOutSide";
 import { initLang } from "../init/initConfig"
+import { close, getAnimationType } from '../handler/openOrClosePicker';
 function handleNode(flag,node,parentNode){
     return new Promise((resolve,reject) => {
         if(!flag){
@@ -53,9 +54,9 @@ function updateLangHandler(config,pickerClear,pickerSure){
     }
     setTimeout(() => {
         const { 
-            $Dom:{ hueBar,alphaBar,box,pickerSure,pickerClear },
+            $Dom:{ hueBar,alphaBar,box,pickerSure,pickerClear,rootElement,pickerInput,picker },
             $cacheDom:{ hueContainer,alphaContainer },
-            config:{ hue,alpha,isClickOutside }
+            config:{ hue,alpha,isClickOutside,hasInput,pickerAnimationTime }
         } = vm;
         switch(key){
             case "hue":{
@@ -76,6 +77,33 @@ function updateLangHandler(config,pickerClear,pickerSure){
                 break;
             case "userDefineText":
                 updateLangHandler(vm.config,pickerClear,pickerSure);
+                break;
+            case "disabled":
+                vm.config[key] ? util.addClass(box,"ew-color-picker-box-disabled") : util.removeClass(box,"ew-color-picker-box-disabled");
+                util.setCss(box,"background",vm.config[key] ? "" : vm.config.defaultColor);
+                if(vm.config[key]){
+                    if(vm._privateConfig.pickerFlag){
+                        vm._privateConfig.pickerFlag = false;
+                        close(getAnimationType(vm), picker,pickerAnimationTime);
+                    }
+                    util.off(box,"click",box.clickHandler);
+                    if (hasInput) {
+                        if (!util.hasClass(pickerInput, 'ew-input-disabled')) {
+                            util.addClass(pickerInput,'ew-input-disabled')
+                        }
+                        pickerInput.disabled = true;
+                    }
+                    if (!util.hasClass(picker, 'ew-color-picker-disabled')) {
+                        util.addClass(picker,'ew-color-picker-disabled');
+                    }
+                }else{
+                    if (hasInput) {
+                        util.removeClass(pickerInput,'ew-input-disabled')
+                        pickerInput.disabled = false;
+                    }
+                    util.removeClass(picker,'ew-color-picker-disabled');
+                    util.on(box,"click",box.clickHandler);
+                }
                 break;
         }
         if(util.isFunction(callback)){

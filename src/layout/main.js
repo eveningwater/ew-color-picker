@@ -112,12 +112,13 @@ export function startMain(ele, config) {
     if (config.hasBox) {
         this.$Dom.box = getELByClass(ele, 'ew-color-picker-box');
         if (!config.boxDisabled && !config.disabled){
-            util.on(this.$Dom.box, 'click', () => handlePicker(ele, scope, (flag) => {
+            this.$Dom.box.clickHandler = () => handlePicker(ele, scope, (flag) => {
                 if (flag) {
                     initColor(this, config);
                     setColorValue(scope, scope.panelWidth, scope.panelHeight, false);
                 }
-            }));
+            });
+            util.on(this.$Dom.box, 'click', this.$Dom.box.clickHandler);
         }
     } else {
         showColorPickerWithNoBox(this);

@@ -23,6 +23,7 @@
         <option value="medium">medium</option>
         <option value="normal">normal</option>
     </select>
+    <button class="btn" style="float: right;">设置选择器禁用</button>
     <!-- <script src="https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js"></script> -->
     <script src="../dist/ew-color-picker.js"></script>
     <script>
@@ -54,6 +55,8 @@
                     }
                 }else if(index === 3){
                     color.config.lang = color.config.lang === "en" ? "zh" : "en";
+                }else if(index === 4){
+                    color.config.disabled = !color.config.disabled;
                 }
             })
         })
