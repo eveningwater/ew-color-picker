@@ -1,12 +1,17 @@
 import { defineConfig } from 'vitepress'
 
-const SITE = 'https://eveningwater.github.io/ew-color-picker/'
+
+const SITE = process.env.DOCS_SITE || 'https://eveningwater.github.io/ew-color-picker/'
+const CLEAN = process.env.DOCS_CLEAN_URLS !== 'false'
 
 const BASE = process.env.DOCS_BASE || '/'
 
 const GITHUB = 'https://github.com/eveningwater/ew-color-picker'
 
 const joinUrl = (path: string) => `${SITE}${path.replace(/^\/+/, '')}`
+
+const pageUrl = (path: string) =>
+  joinUrl(!CLEAN && path && !path.endsWith('/') ? `${path}.html` : path)
 
 const zhNav = [
   { text: '指南', link: '/guide/', activeMatch: '/guide/' },
@@ -185,14 +190,14 @@ function transformHead({ pageData }: any) {
     .replace(/(^|\/)index\.md$/, '$1')
     .replace(/\.md$/, '')
 
-  const cleanUrl = joinUrl(path)
+  const cleanUrl = pageUrl(path)
 
   const isEn = path.startsWith('en/')
   const zhPath = isEn ? path.replace(/^en\//, '') : path
   const enPath = isEn ? path : `en/${path}`
 
-  const zhUrl = joinUrl(zhPath)
-  const enUrl = joinUrl(enPath)
+  const zhUrl = pageUrl(zhPath)
+  const enUrl = pageUrl(enPath)
 
   const title = pageData.frontmatter?.title
     ? `${pageData.frontmatter.title} | ew-color-picker`
@@ -244,7 +249,7 @@ export default defineConfig({
   titleTemplate: ':title | ew-color-picker',
   description: '事件驱动 + 插件化的现代颜色选择器，支持 Hex / RGB / HSL 与透明度调节',
   base: BASE,
-  cleanUrls: true,
+  cleanUrls: CLEAN,
   outDir: '../gh-pages',
   sitemap: {
     hostname: SITE,
