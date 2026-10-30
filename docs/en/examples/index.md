@@ -11,7 +11,7 @@ Twelve minimal recipes. Runnable HTML files live in the repository's `examples/`
 
 ```html
 <div id="app"></div>
-<script src="@ew-color-picker/ewColorPicker/dist/index.js"></script>
+<script src="@ew-color-picker/ewColorPicker/dist/index.min.js"></script>
 <script>
   const picker = new ewColorPicker({ el: '#app', defaultColor: '#3b82f6' })
   picker.on('change', (color) => console.log(color))

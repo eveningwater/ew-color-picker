@@ -78,7 +78,7 @@ new ewColorPicker({ el: '#picker' })
 <link rel="stylesheet" href="node_modules/@ew-color-picker/style/dist/index.css" />
 <link rel="stylesheet" href="node_modules/@ew-color-picker/style/dist/input-number.css" />
 
-<script src="node_modules/@ew-color-picker/ewColorPicker/dist/index.js"></script>
+<script src="node_modules/@ew-color-picker/ewColorPicker/dist/index.min.js"></script>
 <script>
   new ewColorPicker({ el: '#picker' })
 </script>

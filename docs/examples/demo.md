@@ -17,7 +17,7 @@ description: 在浏览器中直接体验 EW Color Picker：取色、开合面板
 ::: tip 演示资源从哪来？
 `docs/scripts/prepare-demo.mjs` 会在 `dev` / `build` 前把以下产物复制到 `docs/public/assets/`：
 
-- `packages/ew-color-picker/dist/index.js`
+- `packages/ew-color-picker/dist/index.min.js`
 - `packages/style/dist/index.css`
 - `packages/style/dist/input-number.css`
 

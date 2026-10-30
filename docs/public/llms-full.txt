@@ -1344,7 +1344,7 @@ Source: https://eveningwater.github.io/ew-color-picker/examples/demo
 ::: tip 演示资源从哪来？
 `docs/scripts/prepare-demo.mjs` 会在 `dev` / `build` 前把以下产物复制到 `docs/public/assets/`：
 
-- `packages/ew-color-picker/dist/index.js`
+- `packages/ew-color-picker/dist/index.min.js`
 - `packages/style/dist/index.css`
 - `packages/style/dist/input-number.css`
 
@@ -1386,7 +1386,7 @@ Source: https://eveningwater.github.io/ew-color-picker/examples/
 
 ```html
 <div id="app"></div>
-<script src="@ew-color-picker/ewColorPicker/dist/index.js"></script>
+<script src="@ew-color-picker/ewColorPicker/dist/index.min.js"></script>
 <script>
   const picker = new ewColorPicker({ el: '#app', defaultColor: '#3b82f6' })
   picker.on('change', (color) => console.log(color))
@@ -1985,7 +1985,7 @@ new ewColorPicker({ el: '#picker' })
 <link rel="stylesheet" href="node_modules/@ew-color-picker/style/dist/index.css" />
 <link rel="stylesheet" href="node_modules/@ew-color-picker/style/dist/input-number.css" />
 
-<script src="node_modules/@ew-color-picker/ewColorPicker/dist/index.js"></script>
+<script src="node_modules/@ew-color-picker/ewColorPicker/dist/index.min.js"></script>
 <script>
   new ewColorPicker({ el: '#picker' })
 </script>
@@ -2468,7 +2468,7 @@ picker.on('change', (color) => console.log('颜色：', color))
   </head>
   <body>
     <div id="app"></div>
-    <script src="/node_modules/@ew-color-picker/ewColorPicker/dist/index.js"></script>
+    <script src="/node_modules/@ew-color-picker/ewColorPicker/dist/index.min.js"></script>
     <script>
       const picker = new ewColorPicker({
         el: '#app',
@@ -4534,7 +4534,7 @@ The page below loads real build artifacts: a full picker, a current-color previe
 ::: tip Where do the assets come from?
 `docs/scripts/prepare-demo.mjs` copies these before `dev` / `build`:
 
-- `packages/ew-color-picker/dist/index.js`
+- `packages/ew-color-picker/dist/index.min.js`
 - `packages/style/dist/index.css`
 - `packages/style/dist/input-number.css`
 
@@ -4573,7 +4573,7 @@ Twelve minimal recipes. Runnable HTML files live in the repository's `examples/`
 
 ```html
 <div id="app"></div>
-<script src="@ew-color-picker/ewColorPicker/dist/index.js"></script>
+<script src="@ew-color-picker/ewColorPicker/dist/index.min.js"></script>
 <script>
   const picker = new ewColorPicker({ el: '#app', defaultColor: '#3b82f6' })
   picker.on('change', (color) => console.log(color))
@@ -5158,7 +5158,7 @@ new ewColorPicker({ el: '#app' })
 
 <div id="app"></div>
 
-<script src="https://unpkg.com/@ew-color-picker/ewColorPicker/dist/index.js"></script>
+<script src="https://unpkg.com/@ew-color-picker/ewColorPicker/dist/index.min.js"></script>
 <script>
   const picker = new ewColorPicker({ el: '#app', defaultColor: '#3b82f6' })
 </script>

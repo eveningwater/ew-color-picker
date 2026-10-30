@@ -79,7 +79,7 @@ new ewColorPicker({ el: '#colorPicker' })
 <link rel="stylesheet" href="https://unpkg.com/@ew-color-picker/style/dist/input-number.css" />
 
 <div id="colorPicker"></div>
-<script src="https://unpkg.com/@ew-color-picker/ewColorPicker/dist/index.js"></script>
+<script src="https://unpkg.com/@ew-color-picker/ewColorPicker/dist/index.min.js"></script>
 <script>
   new ewColorPicker({ el: '#colorPicker', defaultColor: '#ff0000' })
 </script>

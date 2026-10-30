@@ -30,5 +30,13 @@
     "url": "git+https://github.com/eveningwater/ew-color-picker.git",
     "directory": "packages/utils"
   },
-  "types": "dist/packages/utils/src/index.d.ts"
+  "types": "dist/packages/utils/src/index.d.ts",
+  "peerDependencies": {
+    "@ew-color-picker/core": "workspace:^2.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@ew-color-picker/core": {
+      "optional": true
+    }
+  }
 }

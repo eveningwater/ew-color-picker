@@ -17,7 +17,7 @@ The page below loads real build artifacts: a full picker, a current-color previe
 ::: tip Where do the assets come from?
 `docs/scripts/prepare-demo.mjs` copies these before `dev` / `build`:
 
-- `packages/ew-color-picker/dist/index.js`
+- `packages/ew-color-picker/dist/index.min.js`
 - `packages/style/dist/index.css`
 - `packages/style/dist/input-number.css`
 

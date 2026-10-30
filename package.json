@@ -37,7 +37,7 @@
     "test:ui": "vitest --ui",
     "test:watch": "vitest"
   },
-  "main": "packages/ew-color-picker/dist/index.js",
+  "main": "packages/ew-color-picker/dist/index.min.js",
   "module": "packages/ew-color-picker/dist/index.esm.js",
   "types": "packages/ew-color-picker/dist/ew-color-picker/src/index.d.ts",
   "repository": {

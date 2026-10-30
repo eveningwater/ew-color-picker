@@ -64,7 +64,7 @@ new ewColorPicker({ el: '#app' })
 
 <div id="app"></div>
 
-<script src="https://unpkg.com/@ew-color-picker/ewColorPicker/dist/index.js"></script>
+<script src="https://unpkg.com/@ew-color-picker/ewColorPicker/dist/index.min.js"></script>
 <script>
   const picker = new ewColorPicker({ el: '#app', defaultColor: '#3b82f6' })
 </script>

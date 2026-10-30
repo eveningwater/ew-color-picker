@@ -108,6 +108,9 @@ importers:
 
   packages/box:
     dependencies:
+      '@ew-color-picker/core':
+        specifier: workspace:^2.0.0
+        version: link:../core
       '@ew-color-picker/utils':
         specifier: workspace:^2.0.0
         version: link:../utils
@@ -337,7 +340,11 @@ importers:
         specifier: ^1.60.0
         version: 1.83.0
 
-  packages/utils: {}
+  packages/utils:
+    dependencies:
+      '@ew-color-picker/core':
+        specifier: workspace:^2.0.0
+        version: link:../core
 
 packages:
 

@@ -29,14 +29,75 @@ export const PACKAGES = {
   'input-number': { pkgName: 'input-number', globalName: 'InputNumber', external: [UTILS], exports: 'named' },
   predefine: { pkgName: 'predefine', globalName: 'Predefine', external: [CORE, UTILS], exports: 'default' },
   'color-mode': { pkgName: 'colorMode', globalName: 'ColorMode', distName: 'colorMode', external: [CORE, UTILS], exports: 'default' },
-  'ew-color-picker': { pkgName: 'ewColorPicker', globalName: 'ewColorPicker', distName: 'index', external: [] },
+  'ew-color-picker': {
+    pkgName: 'ewColorPicker',
+    globalName: 'ewColorPicker',
+    distName: 'index',
+    external: [],
+    // ESM 产物把内置插件交给打包工具解析，避免与各子包重复打包
+    esmExternal: [
+      CORE,
+      UTILS,
+      '@ew-color-picker/alpha',
+      '@ew-color-picker/hue',
+      '@ew-color-picker/panel',
+      '@ew-color-picker/box',
+      '@ew-color-picker/button',
+      '@ew-color-picker/input',
+      '@ew-color-picker/input-number',
+      '@ew-color-picker/predefine',
+      '@ew-color-picker/colorMode',
+    ],
+  },
 };
 
+// 产出两份：UMD（压缩，供 script 标签/CDN）与 ESM（供打包工具）
 const BUILD_TYPES = [
-  { format: 'umd', ext: '.js', minify: false },
   { format: 'umd', ext: '.min.js', minify: true },
   { format: 'es', ext: '.esm.js', minify: false },
 ];
+
+// rollup-plugin-typescript2 会把整个 monorepo 源码的声明文件都写进 dist，
+// 这里只保留当前包自身（package.json types 入口所在目录）的 .d.ts，
+// 并移除仅开发期可用的 .d.ts.map
+function pruneForeignDeclarations(pkgDir) {
+  return {
+    name: 'prune-foreign-declarations',
+    closeBundle() {
+      const pkgJson = JSON.parse(
+        fs.readFileSync(path.join(pkgDir, 'package.json'), 'utf8'),
+      );
+      const typesEntry = pkgJson.types || pkgJson.typings;
+      if (!typesEntry) return;
+
+      const distDir = path.join(pkgDir, 'dist');
+      if (!fs.existsSync(distDir)) return;
+      const keepDir = path.dirname(path.join(pkgDir, typesEntry));
+
+      const walk = (dir) => {
+        fs.readdirSync(dir, { withFileTypes: true }).forEach((entry) => {
+          const full = path.join(dir, entry.name);
+          if (entry.isDirectory()) {
+            walk(full);
+            return;
+          }
+          const isOwnDeclaration = full.startsWith(keepDir + path.sep);
+          const shouldRemove =
+            entry.name.endsWith('.d.ts.map') ||
+            (entry.name.endsWith('.d.ts') && !isOwnDeclaration);
+          if (shouldRemove) {
+            fs.unlinkSync(full);
+          }
+        });
+        if (dir !== distDir && fs.readdirSync(dir).length === 0) {
+          fs.rmdirSync(dir);
+        }
+      };
+
+      walk(distDir);
+    },
+  };
+}
 
 export function getBanner(pkgName) {
   return `/*!
@@ -46,7 +107,7 @@ export function getBanner(pkgName) {
  */`;
 }
 
-// 生成单个包的 rollup 配置（umd / umd.min / esm 三份）
+// 生成单个包的 rollup 配置（umd.min / esm 两份）
 export function createPackageConfigs(pkgDir) {
   const dirName = path.basename(pkgDir);
   const spec = PACKAGES[dirName];
@@ -72,9 +133,11 @@ export function createPackageConfigs(pkgDir) {
         'process.env.NODE_ENV': minify ? 'production' : 'development',
         preventAssignment: true,
       }),
+      pruneForeignDeclarations(pkgDir),
     ];
     if (minify) plugins.push(uglify());
 
+    const externals = format === 'es' && spec.esmExternal ? spec.esmExternal : spec.external;
     const globals = {};
     spec.external.forEach((dep) => {
       if (GLOBAL_NAMES[dep]) globals[dep] = GLOBAL_NAMES[dep];
@@ -91,7 +154,7 @@ export function createPackageConfigs(pkgDir) {
         globals,
       },
       plugins,
-      external: spec.external,
+      external: externals,
     };
   });
 }

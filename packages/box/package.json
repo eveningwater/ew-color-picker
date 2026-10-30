@@ -30,6 +30,7 @@
     "directory": "packages/box"
   },
   "dependencies": {
+    "@ew-color-picker/core": "workspace:^2.0.0",
     "@ew-color-picker/utils": "workspace:^2.0.0"
   },
   "types": "dist/packages/box/src/index.d.ts"
