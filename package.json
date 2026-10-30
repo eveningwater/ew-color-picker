@@ -1,5 +1,5 @@
 {
-  "name": "ew-color-picker",
+  "name": "ew-color-picker-monorepo",
   "private": true,
   "version": "2.0.0",
   "description": "一个基于typescript封装的颜色选择器",
@@ -48,7 +48,7 @@
     "ew-color-picker"
   ],
   "author": "eveningwater(854806732@qq.com)",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/eveningwater/ew-color-picker/issues"
   },

@@ -40,6 +40,8 @@ Event-driven, plugin-based modern color picker. The core only keeps color state 
 
 ```bash
 pnpm add @ew-color-picker/ewColorPicker @ew-color-picker/style
+# or the v1-compatible entry package (forwards to the two packages above)
+pnpm add ew-color-picker
 ```
 
 ```ts

@@ -40,6 +40,8 @@
 
 ```bash
 pnpm add @ew-color-picker/ewColorPicker @ew-color-picker/style
+# 或使用兼容 v1 的入口包（内部指向上面两个包）
+pnpm add ew-color-picker
 ```
 
 ```ts
