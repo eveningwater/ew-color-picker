@@ -81,7 +81,6 @@
         color: var(--demo-muted);
       }
       .picker-stage { display: flex; flex-direction: column; gap: 18px; align-items: flex-start; }
-      .picker-slot { position: relative; width: 100%; transition: height 0.22s ease; }
       .swatch-row { display: flex; align-items: center; gap: 16px; }
       .swatch {
         width: 72px;
@@ -158,9 +157,6 @@
         <section class="card">
           <h2 class="card__title">Picker</h2>
           <div class="picker-stage">
-            <div class="picker-slot" id="picker-slot">
-              <div id="picker"></div>
-            </div>
             <div class="swatch-row">
               <div class="swatch" id="swatch"></div>
               <div class="swatch-meta">
@@ -174,6 +170,7 @@
               <button class="btn" id="close" type="button">关闭面板</button>
               <button class="btn" id="reset" type="button">恢复默认</button>
             </div>
+            <div id="picker"></div>
           </div>
         </section>
 
@@ -255,23 +252,6 @@
           clear: function () { log('clear') },
         })
 
-        var slotEl = document.getElementById('picker-slot')
-        var pickerEl = document.getElementById('picker')
-
-        function syncSlot(open) {
-          if (!open) {
-            slotEl.style.height = ''
-            return
-          }
-          setTimeout(function () {
-            var panel = pickerEl.querySelector('.ew-color-picker-panel-container')
-            if (!panel) return
-            var top = slotEl.getBoundingClientRect().top
-            var bottom = panel.getBoundingClientRect().bottom
-            slotEl.style.height = Math.max(bottom - top + 8, 0) + 'px'
-          }, 260)
-        }
-
         function renderColor(color) {
           if (!color) {
             swatch.style.background = 'transparent'
@@ -286,10 +266,7 @@
           renderColor(color)
           log('change', color)
         })
-        picker.on('toggle', function (open) {
-          log('toggle', open ? 'open' : 'close')
-          syncSlot(open)
-        })
+        picker.on('toggle', function (open) { log('toggle', open ? 'open' : 'close') })
         picker.on('clear', function () { log('clear', '') })
         picker.on('sure', function (color) { log('sure', color) })
         picker.on('mode-change', function (mode) { log('mode-change', mode) })
