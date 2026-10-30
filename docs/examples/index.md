@@ -11,7 +11,7 @@ description: EW Color Picker 的 12 个典型用法：基础、布局、预设�
 
 ```html
 <div id="app"></div>
-<script src="@ew-color-picker/ewColorPicker/dist/index.min.js"></script>
+<script src="@ew-color-picker/ew-color-picker/dist/index.min.js"></script>
 <script>
   const picker = new ewColorPicker({ el: '#app', defaultColor: '#3b82f6' })
   picker.on('change', (color) => console.log(color))

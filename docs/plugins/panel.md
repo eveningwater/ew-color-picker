@@ -142,7 +142,7 @@ picker.on('change', (color) => console.log(color))
 ## 完整示例
 
 ```ts
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 

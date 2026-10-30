@@ -19,7 +19,7 @@ ewColorPicker.use(Alpha)
 const picker = new ewColorPicker({ el: '#picker' })
 ```
 
-通常更推荐直接使用聚合包 `@ew-color-picker/ewColorPicker`，内置插件已全部注册。
+通常更推荐直接使用聚合包 `@ew-color-picker/ew-color-picker`，内置插件已全部注册。
 
 ## 相关链接
 

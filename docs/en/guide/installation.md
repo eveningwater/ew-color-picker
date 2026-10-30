@@ -16,11 +16,11 @@ description: Install EW Color Picker via npm, pnpm, yarn, UMD script, or per-pac
 ## All-in-one bundle
 
 ```bash
-pnpm add @ew-color-picker/ewColorPicker @ew-color-picker/style
+pnpm add @ew-color-picker/ew-color-picker @ew-color-picker/style
 ```
 
 ```ts
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 
@@ -38,7 +38,7 @@ npm install ew-color-picker
 ```
 
 ::: tip About the package name
-`ew-color-picker` is a thin compatibility entry for v2. It only forwards to `@ew-color-picker/ewColorPicker` and `@ew-color-picker/style`; it contains no implementation code.
+`ew-color-picker` is a thin compatibility entry for v2. It only forwards to `@ew-color-picker/ew-color-picker` and `@ew-color-picker/style`; it contains no implementation code.
 :::
 
 ## Upgrading from v1
@@ -46,7 +46,7 @@ npm install ew-color-picker
 v2 is a breaking rewrite; v1 and v2 APIs cannot be mixed:
 
 - **Architecture**: v1 was a single configurable package; v2 splits into 13 packages where every UI part is a plugin, composable via `Core.use(Plugin)`
-- **Package name**: `ew-color-picker` remains the entry, but now points to `@ew-color-picker/ewColorPicker`
+- **Package name**: `ew-color-picker` remains the entry, but now points to `@ew-color-picker/ew-color-picker`
 - **Styles**: both `index.css` and `input-number.css` must be imported explicitly
 - **Options and events**: plugin options such as `hasAlpha` and `hasBox` differ from v1; re-integrate against the live demo on this site
 
@@ -85,7 +85,7 @@ new ewColorPicker({ el: '#app' })
 
 <div id="app"></div>
 
-<script src="https://unpkg.com/@ew-color-picker/ewColorPicker/dist/index.min.js"></script>
+<script src="https://unpkg.com/@ew-color-picker/ew-color-picker/dist/index.min.js"></script>
 <script>
   const picker = new ewColorPicker({ el: '#app', defaultColor: '#3b82f6' })
 </script>

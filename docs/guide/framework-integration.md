@@ -18,7 +18,7 @@ EW Color Picker 只依赖原生 DOM 与事件，没有任何框架运行时依�
 5. **SSR 场景延迟挂载**：只在浏览器端的生命周期里创建实例（`useEffect` / `onMounted` / `ngAfterViewInit` / `onMount`），避免服务端渲染时访问 DOM。
 
 ```ts
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 ```
@@ -27,7 +27,7 @@ import '@ew-color-picker/style/dist/input-number.css'
 
 ```tsx
 import { useEffect, useRef } from 'react'
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 
@@ -69,7 +69,7 @@ React 19 的 StrictMode 会执行两次挂载，上面的 `return () => picker.d
 ```vue
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 
@@ -124,7 +124,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core'
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 
 @Component({
   selector: 'ew-color-field',
@@ -162,7 +162,7 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
 
 ```tsx
 import { onCleanup, onMount } from 'solid-js'
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 

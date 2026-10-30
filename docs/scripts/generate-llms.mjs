@@ -66,7 +66,7 @@ index += `> 事件驱动 + 插件化的现代颜色选择器，支持 Hex / RGB 
 index += `Event-driven, plugin-based color picker with Hex / RGB / HSL support, alpha channel, and full plugin architecture.\n\n`
 index += `- 官网 / Website: ${SITE}\n`
 index += `- 仓库 / Repository: https://github.com/eveningwater/ew-color-picker\n`
-index += `- npm: https://www.npmjs.com/package/@ew-color-picker/ewColorPicker\n\n`
+index += `- npm: https://www.npmjs.com/package/@ew-color-picker/ew-color-picker\n\n`
 
 for (const section of SECTIONS) {
   const list = files.filter((file) => section.match(relative(DOCS_DIR, file).split('\\').join('/')))

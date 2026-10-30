@@ -28,9 +28,9 @@ export const PACKAGES = {
   input: { pkgName: 'input', globalName: 'Input', external: [CORE, UTILS], exports: 'default' },
   'input-number': { pkgName: 'input-number', globalName: 'InputNumber', external: [UTILS], exports: 'named' },
   predefine: { pkgName: 'predefine', globalName: 'Predefine', external: [CORE, UTILS], exports: 'default' },
-  'color-mode': { pkgName: 'colorMode', globalName: 'ColorMode', distName: 'colorMode', external: [CORE, UTILS], exports: 'default' },
+  'color-mode': { pkgName: 'color-mode', globalName: 'ColorMode', distName: 'colorMode', external: [CORE, UTILS], exports: 'default' },
   'ew-color-picker': {
-    pkgName: 'ewColorPicker',
+    pkgName: 'ew-color-picker',
     globalName: 'ewColorPicker',
     distName: 'index',
     external: [],
@@ -46,7 +46,7 @@ export const PACKAGES = {
       '@ew-color-picker/input',
       '@ew-color-picker/input-number',
       '@ew-color-picker/predefine',
-      '@ew-color-picker/colorMode',
+      '@ew-color-picker/color-mode',
     ],
   },
 };

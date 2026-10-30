@@ -34,7 +34,7 @@ Core (@ew-color-picker/core)
 | `@ew-color-picker/core` | Color state, event bus, mount points, plugin registry |
 | `@ew-color-picker/utils` | DOM/color/animation helpers, `EventEmitter`, `Console` plugin |
 | `@ew-color-picker/style` | CSS (`index.css` + `input-number.css`) |
-| `@ew-color-picker/ewColorPicker` | All-in-one bundle: registers all plugins and re-exports the core |
+| `@ew-color-picker/ew-color-picker` | All-in-one bundle: registers all plugins and re-exports the core |
 | `@ew-color-picker/box` | Trigger swatch that opens/closes the panel |
 | `@ew-color-picker/panel` | Saturation/value 2D panel |
 | `@ew-color-picker/hue` | Hue slider (0–360°) |

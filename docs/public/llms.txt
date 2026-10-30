@@ -6,7 +6,7 @@ Event-driven, plugin-based color picker with Hex / RGB / HSL support, alpha chan
 
 - 官网 / Website: https://eveningwater.github.io/ew-color-picker/
 - 仓库 / Repository: https://github.com/eveningwater/ew-color-picker
-- npm: https://www.npmjs.com/package/@ew-color-picker/ewColorPicker
+- npm: https://www.npmjs.com/package/@ew-color-picker/ew-color-picker
 
 ## 中文文档
 
