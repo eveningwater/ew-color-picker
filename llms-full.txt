@@ -796,7 +796,6 @@ new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
 | --- | --- | --- |
 | `ewColorPickerPanel` | `boolean` | `false` 等价 `hasPanel: false` |
 | `ewColorPickerColorMode` | `false \| { defaultMode?, changeMode?, showColorMode? }` | 颜色模式配置 |
-| `ewColorPickerBox` | `{ onClick?, onMouseEnter?, onMouseLeave?, disabled?, readonly?, className?, style? }` | 颜色盒配置 |
 
 ### 回调
 
@@ -3564,7 +3563,7 @@ Source: https://eveningwater.github.io/ew-color-picker/plugins/panel
 | `alphaDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | 同上，两者都水平时面板宽 320px |
 | `autoPanelPosition` | `boolean` | `false` | 是否根据触发器位置自动定位面板 |
 | `panelPlacement` | `string` | `'bottom'` | 自动定位时的方向，见下表 |
-| `ewColorPickerBox` | `boolean` | `true` | 自动定位必须是 `true`（需要读取 Box 尺寸） |
+| `hasBox` | `boolean` | `true` | 自动定位需要显示 Box 触发器（读取其尺寸） |
 | `alpha` | `boolean` | 由插件是否存在决定 | 有无透明度插件会影响默认颜色格式 |
 | `disabled` | `boolean` | `false` | 禁用后拖拽不生效 |
 
@@ -4335,7 +4334,7 @@ Every option below can be passed to the constructor. Defaults come from `default
 | Labels | `clearText`, `sureText` |
 | Animation | `togglePickerAnimation`, `pickerAnimationTime` |
 | Plugin switches | `hasBox`, `hasPanel`, `hasInput`, `hasClear`, `hasSure`, `hue`, `alpha`, `showButton`, `showColorMode`, `showInputNumber` |
-| Plugin config objects | `ewColorPickerPanel`, `ewColorPickerPredefine`, `ewColorPickerColorMode`, `ewColorPickerBox` |
+| Plugin config objects | `ewColorPickerPanel`, `ewColorPickerPredefine`, `ewColorPickerColorMode` |
 | Box extras | `boxNoColorIcon`, `boxHasColorIcon`, `readonly`, `className`, `style` |
 | Callbacks | `changeColor`, `sure`, `clear`, `togglePicker` |
 | Color mode | `defaultMode`, `changeMode` |
@@ -4419,7 +4418,7 @@ Controls slider orientation. When both are horizontal, the panel width becomes 3
 
 | Type | Default | Description |
 | --- | --- | --- |
-| `boolean` | `false` | Position the panel relative to the box automatically. Requires `ewColorPickerBox !== false`. |
+| `boolean` | `false` | Position the panel relative to the box automatically. Requires the Box plugin with `hasBox: true`. |
 
 ### panelPlacement
 
@@ -4493,7 +4492,6 @@ new ewColorPicker({
 | --- | --- | --- |
 | `ewColorPickerPanel` | `boolean \| object` | `false` disables the panel; object merges panel options |
 | `ewColorPickerColorMode` | `boolean \| object` | `false` disables mode switching |
-| `ewColorPickerBox` | `boolean \| object` | `false` disables the box (also affects auto positioning) |
 
 ## Box extras
 
@@ -6642,7 +6640,7 @@ Source: https://eveningwater.github.io/ew-color-picker/en/plugins/panel
 | `alphaDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | Affects width |
 | `autoPanelPosition` | `boolean` | `false` | Auto placement |
 | `panelPlacement` | `string` | `'bottom'` | See below |
-| `ewColorPickerBox` | `boolean` | `true` | Required for auto placement |
+| `hasBox` | `boolean` | `true` | Auto placement needs the Box trigger (reads its size) |
 | `alpha` | `boolean` | derived | Affects default color format |
 | `disabled` | `boolean` | `false` | Blocks dragging |
 
