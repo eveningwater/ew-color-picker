@@ -1,0 +1,748 @@
+@charset "UTF-8";
+:root {
+  --panel-width: 285px;
+  --panel-height: 180px;
+}
+
+.ew-color-picker-alpha-slider-bg,
+.ew-color-picker-alpha-slider-thumb,
+.ew-color-picker-alpha-slider-wrapper,
+.ew-color-picker-black-panel,
+.ew-color-picker-panel-cursor,
+.ew-color-picker-panel-container,
+.ew-color-picker-arrow,
+.ew-color-picker-no,
+.ew-color-picker-slider-thumb,
+.ew-color-picker-white-panel {
+  position: absolute;
+}
+
+.ew-color-picker-alpha-slider-bar,
+.ew-color-picker-drop-container,
+.ew-color-mode-container .ew-color-mode-down,
+.ew-color-mode-container .ew-color-mode-up,
+.ew-color-picker-panel,
+.ew-color-picker-arrow-left,
+.ew-color-picker-arrow-right,
+.ew-color-picker-box,
+.ew-color-picker-slider,
+.ew-color-picker-slider-bar {
+  position: relative;
+}
+
+.ew-color-picker-alpha-slider-thumb,
+.ew-color-picker-drop-btn,
+.ew-color-picker-input,
+.ew-color-picker-no,
+.ew-color-picker-slider,
+.ew-color-picker-slider-thumb {
+  box-sizing: border-box;
+}
+
+.ew-color-picker-alpha-slider-bar,
+.ew-color-picker-alpha-slider-thumb,
+.ew-color-picker-drop-btn,
+.ew-color-picker-panel,
+.ew-color-picker-box,
+.ew-color-picker-slider-bar,
+.ew-color-picker-slider-thumb,
+.ew-color-picker-predefine-color {
+  cursor: pointer;
+}
+
+.ew-color-picker-input,
+.ew-color-picker-panel-container,
+.ew-color-picker-arrow-left,
+.ew-color-picker-arrow-right,
+.ew-color-picker-box,
+.ew-color-picker-sure-btn {
+  background-color: #fff;
+}
+
+.ew-color-picker-drop-btn,
+.ew-color-picker-input,
+.ew-color-picker-box,
+.ew-color-picker-predefine-color {
+  outline: none;
+}
+
+.ew-color-picker-drop-btn,
+.ew-color-picker-input,
+.ew-color-picker-arrow-left,
+.ew-color-picker-arrow-right,
+.ew-color-picker-box {
+  display: inline-block;
+}
+
+.ew-color-picker-panel-container .ew-color-picker-content:after,
+.ew-color-picker-predefine-container:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.ew-color-picker-slider.ew-color-picker-is-vertical .ew-color-picker-alpha-slider-bar,
+.ew-color-picker-slider.ew-color-picker-is-vertical .ew-color-picker-slider-bar,
+.ew-color-picker-predefine-color {
+  float: left;
+}
+
+.ew-color-picker-drop-btn,
+.ew-color-picker-no {
+  text-align: center;
+}
+
+.ew-color-picker {
+  display: inline-block;
+  position: relative;
+}
+
+.ew-color-picker-panel-container {
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  border: 1px solid #e5e6eb;
+  min-width: 320px;
+  overflow: visible;
+  z-index: 1000;
+  transition: opacity 0.2s, transform 0.2s;
+  opacity: 1;
+}
+
+.ew-fade-in {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.ew-fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ew-color-picker-panel-container.ew-fade-in {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.ew-color-picker-panel-container.ew-fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ew-color-picker-content {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.ew-color-picker-panel {
+  width: 280px;
+  height: 180px;
+  border-radius: 8px;
+  margin-bottom: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  display: inline-block;
+}
+
+.ew-color-picker-alpha-slider-bg,
+.ew-color-picker-alpha-slider-wrapper,
+.ew-color-picker-black-panel,
+.ew-color-picker-arrow,
+.ew-color-picker-no,
+.ew-color-picker-white-panel {
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.ew-color-picker-white-panel {
+  background: linear-gradient(90deg, #fff, hsla(0, 0%, 100%, 0));
+}
+
+.ew-color-picker-black-panel {
+  background: linear-gradient(0deg, #000, transparent);
+}
+
+.ew-color-picker-slider.ew-color-picker-is-vertical {
+  margin-left: 4px;
+  margin-top: 0;
+  height: 180px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.ew-color-picker-slider.ew-color-picker-is-horizontal {
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+.ew-color-picker-slider.ew-color-picker-is-vertical .ew-color-picker-slider-bar {
+  background: linear-gradient(180deg, red, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, red);
+  margin-left: 3px;
+}
+
+.ew-color-picker-slider.ew-color-picker-is-horizontal .ew-color-picker-slider-bar {
+  background: linear-gradient(90deg, red, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, red);
+}
+
+.ew-color-picker-slider.ew-color-picker-is-vertical .ew-color-picker-alpha-slider-bar,
+.ew-color-picker-slider.ew-color-picker-is-vertical .ew-color-picker-slider-bar {
+  width: 12px;
+  height: 100%;
+}
+
+.ew-color-picker-slider.ew-color-picker-is-horizontal .ew-color-picker-alpha-slider-bar,
+.ew-color-picker-slider.ew-color-picker-is-horizontal .ew-color-picker-slider-bar {
+  width: 100%;
+  height: 12px;
+}
+
+.ew-color-picker-slider.ew-color-picker-is-horizontal .ew-color-picker-alpha-slider-bar {
+  margin-top: 3px;
+}
+
+.ew-color-picker-alpha-slider-wrapper,
+.ew-color-picker-predefine-color.ew-color-picker-has-alpha {
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGUlEQVQYV2M4gwH+YwCGIasIUwhT25BVBADtzYNYrHvv4gAAAABJRU5ErkJggg==");
+}
+
+.ew-color-picker-alpha-slider-thumb,
+.ew-color-picker-slider-thumb {
+  left: 0;
+  top: 0;
+  border-radius: 1px;
+  background: #fff;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+}
+
+.ew-color-picker-slider.ew-color-picker-is-horizontal .ew-color-picker-alpha-slider-thumb,
+.ew-color-picker-slider.ew-color-picker-is-horizontal .ew-color-picker-slider-thumb {
+  width: 4px;
+  height: 100%;
+}
+
+.ew-color-picker-slider.ew-color-picker-is-vertical .ew-color-picker-alpha-slider-thumb,
+.ew-color-picker-slider.ew-color-picker-is-vertical .ew-color-picker-slider-thumb {
+  width: 12px;
+  height: 4px;
+}
+
+.ew-color-picker-panel-cursor {
+  left: 0;
+  top: 0;
+  cursor: default;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px #fff, inset 0 0 2px 2px rgba(0, 0, 0, 0.4), 0 0 2px 3px rgba(0, 0, 0, 0.5);
+  transform: translate(-50%, -50%);
+}
+
+.ew-color-picker-drop-container {
+  margin-top: 6px;
+  padding-top: 4px;
+  min-height: 28px;
+  border-top: 1px solid #cdcdcd;
+}
+
+.ew-has-mode-container .ew-color-picker-input {
+  width: 210px;
+}
+
+.ew-has-mode-container .ew-color-mode-container {
+  margin-left: 3px;
+}
+
+.ew-color-picker-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.ew-color-picker-bottom-row input {
+  flex: 1 1 auto;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.ew-color-picker-drop-btn-group {
+  display: flex;
+  gap: 2px;
+}
+
+.ew-color-picker-drop-btn-group button {
+  min-width: 60px;
+  box-sizing: border-box;
+}
+
+.ew-color-picker-input {
+  width: 100%;
+  height: 32px;
+  line-height: 32px;
+  border: 1px solid #dcdfe6;
+  border-radius: 5px;
+  padding: 0 8px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.ew-color-picker-input:focus {
+  border-color: #4096ef;
+}
+
+.ew-color-picker-drop-btn {
+  padding: 5px;
+  font-size: 12px;
+  border-radius: 3px;
+  transition: 0.1s;
+  font-weight: 500;
+  margin: 0;
+  white-space: nowrap;
+  color: #606266;
+  border: 1px solid #dcdfe6;
+  letter-spacing: 1px;
+}
+
+.ew-color-picker-clear-btn {
+  color: #4096ef;
+  border-color: transparent;
+  background-color: transparent;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.ew-color-picker-clear-btn:active,
+.ew-color-picker-clear-btn:hover {
+  color: #66b1ff;
+}
+
+.ew-color-picker-sure-btn:active,
+.ew-color-picker-sure-btn:hover {
+  border-color: #4096ef;
+  color: #4096ef;
+}
+
+.ew-color-picker-predefine-container {
+  width: 100%;
+  font-size: 12px;
+  margin-top: 12px;
+}
+
+.ew-color-picker-predefine-container:after {
+  visibility: hidden;
+  height: 0;
+}
+
+.ew-color-picker-predefine-color {
+  margin: 0 0 8px 8px;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid #9b979b;
+}
+
+.ew-color-picker-predefine-color-item {
+  height: 100%;
+  border-radius: 3px;
+}
+
+.ew-color-picker-predefine-color.ew-color-picker-predefine-color-disabled {
+  cursor: not-allowed;
+}
+
+.ew-color-picker-predefine-color:nth-child(10n+1) {
+  margin-left: 0;
+}
+
+.ew-color-picker-predefine-color:not(.ew-color-picker-predefine-color-disabled):active,
+.ew-color-picker-predefine-color:not(.ew-color-picker-predefine-color-disabled):hover {
+  opacity: 0.8;
+}
+
+.ew-color-picker-predefine-color-active {
+  box-shadow: 0 0 3px 2px #409eff;
+}
+
+.ew-color-picker-box {
+  display: inline-block;
+  border: 1.5px solid #dcdfe6;
+  border-radius: 6px;
+  background: #fff;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+  vertical-align: middle;
+  text-align: center;
+  /* 图标默认颜色，有背景色时由脚本按对比度覆盖 */
+  color: #666666;
+}
+
+.ew-color-picker-box:hover {
+  border-color: #4096ef;
+  box-shadow: 0 0 0 2px rgba(64, 150, 239, 0.12);
+}
+
+.ew-color-picker-box.is-disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.ew-color-picker-box:hover {
+  border-color: #4096ef;
+}
+
+.ew-color-picker-box:active {
+  border-color: #4096ef;
+  box-shadow: 0 0 0 2px rgba(64, 150, 239, 0.2);
+}
+
+.ew-color-picker-input.ew-input-disabled,
+.ew-color-picker-box-disabled {
+  background-color: #ebe7e7;
+  cursor: not-allowed;
+}
+
+.ew-color-picker-arrow,
+.ew-color-picker-no {
+  width: 20px;
+  height: 20px;
+  margin: auto;
+  z-index: 3;
+}
+
+.ew-color-picker-no {
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  line-height: 40px;
+  color: #5e535f;
+  border: 1px solid #e2dfe2;
+  border-radius: 2px;
+}
+
+.ew-color-picker-arrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ew-color-mode-container {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 6px;
+  border-radius: 2px;
+}
+
+.ew-color-mode-container:hover {
+  background-color: #ebe7e7;
+}
+
+.ew-color-mode-container .ew-color-mode-down,
+.ew-color-mode-container .ew-color-mode-up {
+  width: 0;
+  height: 0;
+  border-width: 6px;
+  border-style: solid;
+  cursor: pointer;
+}
+
+.ew-color-mode-container .ew-color-mode-up {
+  bottom: 5px;
+  border-color: transparent transparent #606266;
+}
+
+.ew-color-mode-container .ew-color-mode-down {
+  top: 5px;
+  border-color: #606266 transparent transparent;
+}
+
+.ew-color-mode-title {
+  color: #535455;
+  font-size: 16px;
+  display: inline-block;
+  padding-right: 2px;
+}
+
+.ew-color-mode-title:after {
+  content: ":";
+  display: inline-block;
+}
+
+.ew-color-picker-arrow-icon {
+  fill: #fff;
+}
+
+@media (max-width: 768px) {
+  .ew-color-picker-panel-container {
+    padding: 10px 8px 10px 8px;
+  }
+  .ew-color-picker-panel {
+    width: 200px;
+    height: 120px;
+  }
+  .ew-color-picker-input {
+    width: 120px;
+  }
+  .ew-color-picker-predefine-container {
+    width: 200px;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes slideDown {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes slideUp {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+}
+.ew-fade-in {
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.ew-fade-out {
+  animation: fadeOut 0.2s ease-in-out;
+}
+
+.ew-slide-down {
+  animation: slideDown 0.2s ease-in-out;
+}
+
+.ew-slide-up {
+  animation: slideUp 0.2s ease-in-out;
+}
+
+.ew-color-picker-panel-container * {
+  box-sizing: border-box;
+}
+
+.ew-color-picker-white-panel,
+.ew-color-picker-black-panel {
+  border-radius: inherit;
+}
+
+.ew-color-picker-panel-container .ew-color-picker-mode-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  padding: 8px;
+  border: 1px solid #e5e6eb;
+  border-radius: 6px;
+  background-color: #fafafa;
+}
+
+.ew-color-picker-mode-up-btn,
+.ew-color-picker-mode-down-btn {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+/* 防止图标在 flex 布局中被压缩到 0 宽度 */
+.ew-color-picker-mode-up-btn svg,
+.ew-color-picker-mode-down-btn svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+}
+
+.ew-color-picker-mode-text {
+  min-width: 60px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  user-select: none;
+  padding: 0 8px;
+}
+
+.ew-color-picker-inputs-group {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  align-items: flex-end;
+  margin-bottom: 0;
+  width: 100%;
+}
+
+.ew-color-picker-inputs-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.ew-color-picker-input-label {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  margin-bottom: 2px;
+  letter-spacing: 1px;
+  font-weight: bold;
+  height: 18px;
+  line-height: 18px;
+  user-select: none;
+}
+
+.ew-color-picker-input-container-flex {
+  flex: 1;
+  min-width: 0;
+}
+
+.ew-color-picker-input-default {
+  width: 100%;
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 12px;
+  text-align: center;
+}
+
+.ew-color-picker-drop-btn-group-multi {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.ew-color-picker-drop-btn-group-single {
+  display: flex;
+  gap: 4px;
+}
+
+.ew-color-picker-bottom-row-multi {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.ew-color-picker-bottom-row-single {
+  flex-direction: row;
+  align-items: center;
+}
+
+.ew-input-number-size-small {
+  height: 24px;
+}
+
+.ew-input-number-size-large {
+  height: 32px;
+}
+
+.ew-input-number-size-default {
+  height: 28px;
+}
+
+.ew-input-number-input-size-small {
+  font-size: 12px;
+  padding: 2px 6px;
+}
+
+.ew-input-number-input-size-large {
+  font-size: 16px;
+  padding: 6px 10px;
+}
+
+.ew-color-picker-panel-dynamic-size {
+  width: var(--panel-width, 285px); /* 使用 CSS 变量，默认值 285px */
+  height: var(--panel-height, 180px); /* 使用 CSS 变量，默认值 180px */
+}
+
+.ew-color-picker-panel-container-hidden {
+  display: none;
+}
+
+.ew-color-picker-panel-container .ew-color-picker-bottom-row-multi {
+  justify-content: center;
+}
+
+.ew-color-picker-panel-container .ew-color-picker-inputs-group {
+  display: flex;
+  width: 100%;
+  max-width: 320px;
+  min-width: 280px;
+  gap: 6px;
+  justify-content: center;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+}
+
+.ew-color-picker-panel-container .ew-color-picker-hsl-h-input,
+.ew-color-picker-panel-container .ew-color-picker-hsl-s-input,
+.ew-color-picker-panel-container .ew-color-picker-hsl-l-input,
+.ew-color-picker-panel-container .ew-color-picker-hsl-a-input {
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  box-sizing: border-box;
+}
+
+.ew-color-picker-panel-container .ew-color-picker-hsl-h-input.ew-input-number,
+.ew-color-picker-panel-container .ew-color-picker-hsl-a-input.ew-input-number {
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+}
+
+.ew-color-picker-panel-container .ew-color-picker-hsl-s-input.ew-color-picker-input,
+.ew-color-picker-panel-container .ew-color-picker-hsl-l-input.ew-color-picker-input {
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  line-height: 32px;
+  width: 100%;
+}
