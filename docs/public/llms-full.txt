@@ -795,9 +795,7 @@ new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
 | 配置项 | 类型 | 说明 |
 | --- | --- | --- |
 | `ewColorPickerPanel` | `boolean` | `false` 等价 `hasPanel: false` |
-| `ewColorPickerPredefine` | `false \| { predefineColor?, changeColor? }` | 预定义色板配置 |
 | `ewColorPickerColorMode` | `false \| { defaultMode?, changeMode?, showColorMode? }` | 颜色模式配置 |
-| `ewColorPickerBox` | `{ onClick?, onMouseEnter?, onMouseLeave?, disabled?, readonly?, className?, style? }` | 颜色盒配置 |
 
 ### 回调
 
@@ -877,12 +875,15 @@ new ewColorPicker({ el: '#picker', size: { width: 56, height: 40 } })
 - **类型**：`(string | { color: string; disabled?: boolean })[]`
 - **默认值**：`[]`
 
-预定义色板数据。字符串数组会自动归一化；对象形式可以单独禁用某个色块（禁用后置灰且不可点击）。
+预定义色板数据。字符串数组会自动归一化；对象形式可以单独禁用某个色块（禁用后置灰且不可点击）。点击任意色块后会调用顶层的 `changeColor` 回调。
 
 ```ts
 new ewColorPicker({
   el: '#picker',
   predefineColor: ['#6366f1', '#8b5cf6', { color: '#ef4444', disabled: true }],
+  changeColor(color) {
+    console.log('选择预定义颜色：', color)
+  },
 })
 ```
 
@@ -1069,24 +1070,6 @@ new ewColorPicker({
 - **类型**：`boolean`
 
 `false` 时不渲染颜色面板，等价于 `hasPanel: false`。
-
-## ewColorPickerPredefine
-
-- **类型**：`false | { predefineColor?: (string | { color, disabled? })[]; changeColor?: (color: string) => void }`
-
-预定义色板的嵌套配置。传对象时会与顶层配置合并；`false` 时不渲染色板。
-
-```ts
-new ewColorPicker({
-  el: '#picker',
-  ewColorPickerPredefine: {
-    predefineColor: ['#111827', '#f9fafb'],
-    changeColor(color) {
-      console.log('选择预定义颜色：', color)
-    },
-  },
-})
-```
 
 ## ewColorPickerColorMode
 
@@ -3580,7 +3563,7 @@ Source: https://eveningwater.github.io/ew-color-picker/plugins/panel
 | `alphaDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | 同上，两者都水平时面板宽 320px |
 | `autoPanelPosition` | `boolean` | `false` | 是否根据触发器位置自动定位面板 |
 | `panelPlacement` | `string` | `'bottom'` | 自动定位时的方向，见下表 |
-| `ewColorPickerBox` | `boolean` | `true` | 自动定位必须是 `true`（需要读取 Box 尺寸） |
+| `hasBox` | `boolean` | `true` | 自动定位需要显示 Box 触发器（读取其尺寸） |
 | `alpha` | `boolean` | 由插件是否存在决定 | 有无透明度插件会影响默认颜色格式 |
 | `disabled` | `boolean` | `false` | 禁用后拖拽不生效 |
 
@@ -3746,7 +3729,6 @@ Source: https://eveningwater.github.io/ew-color-picker/plugins/predefine
 | `predefineColor` | `(string \| { color: string; disabled?: boolean })[]` | `[]` | 预定义颜色列表；**为空时不渲染** |
 | `changeColor` | `(rgba: string) => void` | — | 点击色块后的回调，参数为 `rgba()` 字符串 |
 | `disabled` | `boolean` | `false` | 全局禁用后点击无效 |
-| `ewColorPickerPredefine` | `object` | — | 嵌套配置写法，会合并进插件配置 |
 
 ### 两种数组写法
 
@@ -4352,7 +4334,7 @@ Every option below can be passed to the constructor. Defaults come from `default
 | Labels | `clearText`, `sureText` |
 | Animation | `togglePickerAnimation`, `pickerAnimationTime` |
 | Plugin switches | `hasBox`, `hasPanel`, `hasInput`, `hasClear`, `hasSure`, `hue`, `alpha`, `showButton`, `showColorMode`, `showInputNumber` |
-| Plugin config objects | `ewColorPickerPanel`, `ewColorPickerPredefine`, `ewColorPickerColorMode`, `ewColorPickerBox` |
+| Plugin config objects | `ewColorPickerPanel`, `ewColorPickerPredefine`, `ewColorPickerColorMode` |
 | Box extras | `boxNoColorIcon`, `boxHasColorIcon`, `readonly`, `className`, `style` |
 | Callbacks | `changeColor`, `sure`, `clear`, `togglePicker` |
 | Color mode | `defaultMode`, `changeMode` |
@@ -4408,9 +4390,9 @@ Numbers are treated as pixels; objects accept `width`/`height`; CSS strings are 
 
 ### predefineColor
 
-| Type | Default | Description |
-| --- | --- | --- |
-| `(string \| { color: string; disabled?: boolean })[]` | `[]` | Predefined swatches. Empty array renders nothing. |
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `predefineColor` | `(string \| { color: string; disabled?: boolean })[]` | `[]` | Predefined swatches. Empty array renders nothing. Clicking a swatch calls the top-level `changeColor` callback. |
 
 ```ts
 predefineColor: ['#ef4444', '#22c55e', { color: '#0f172a', disabled: true }]
@@ -4436,7 +4418,7 @@ Controls slider orientation. When both are horizontal, the panel width becomes 3
 
 | Type | Default | Description |
 | --- | --- | --- |
-| `boolean` | `false` | Position the panel relative to the box automatically. Requires `ewColorPickerBox !== false`. |
+| `boolean` | `false` | Position the panel relative to the box automatically. Requires the Box plugin with `hasBox: true`. |
 
 ### panelPlacement
 
@@ -4509,9 +4491,7 @@ new ewColorPicker({
 | Option | Type | Notes |
 | --- | --- | --- |
 | `ewColorPickerPanel` | `boolean \| object` | `false` disables the panel; object merges panel options |
-| `ewColorPickerPredefine` | `object` | Merged into predefine plugin options |
 | `ewColorPickerColorMode` | `boolean \| object` | `false` disables mode switching |
-| `ewColorPickerBox` | `boolean \| object` | `false` disables the box (also affects auto positioning) |
 
 ## Box extras
 
@@ -6660,7 +6640,7 @@ Source: https://eveningwater.github.io/ew-color-picker/en/plugins/panel
 | `alphaDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | Affects width |
 | `autoPanelPosition` | `boolean` | `false` | Auto placement |
 | `panelPlacement` | `string` | `'bottom'` | See below |
-| `ewColorPickerBox` | `boolean` | `true` | Required for auto placement |
+| `hasBox` | `boolean` | `true` | Auto placement needs the Box trigger (reads its size) |
 | `alpha` | `boolean` | derived | Affects default color format |
 | `disabled` | `boolean` | `false` | Blocks dragging |
 
@@ -6761,7 +6741,6 @@ Source: https://eveningwater.github.io/ew-color-picker/en/plugins/predefine
 | `predefineColor` | `(string \| { color: string; disabled?: boolean })[]` | `[]` | Swatches; empty renders nothing |
 | `changeColor` | `(rgba: string) => void` | — | Swatch applied |
 | `disabled` | `boolean` | `false` | Block all clicks |
-| `ewColorPickerPredefine` | `object` | — | Nested config merged in |
 
 ```ts
 predefineColor: [
