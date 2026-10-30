@@ -16,7 +16,7 @@ Every option below can be passed to the constructor. Defaults come from `default
 | Labels | `clearText`, `sureText` |
 | Animation | `togglePickerAnimation`, `pickerAnimationTime` |
 | Plugin switches | `hasBox`, `hasPanel`, `hasInput`, `hasClear`, `hasSure`, `hue`, `alpha`, `showButton`, `showColorMode`, `showInputNumber` |
-| Plugin config objects | `ewColorPickerPanel`, `ewColorPickerPredefine`, `ewColorPickerColorMode` |
+| Plugin config objects | `ewColorPickerPanel`, `ewColorPickerColorMode` |
 | Box extras | `boxNoColorIcon`, `boxHasColorIcon`, `readonly`, `className`, `style` |
 | Callbacks | `changeColor`, `sure`, `clear`, `togglePicker` |
 | Color mode | `defaultMode`, `changeMode` |
@@ -154,7 +154,7 @@ Values above 10000 are clamped.
 | `alpha` | `boolean` | `true` | Hide the alpha slider |
 | `showButton` | `boolean` | `true` | Hide clear + sure buttons at once |
 | `showColorMode` | `boolean` | `true` | Hide the Hex/RGB/HSL switcher |
-| `showInputNumber` | `boolean` | `true` | Hide numeric inputs |
+| `showInputNumber` | `boolean` | `true` | Skip the InputNumber plugin's own numeric input; ColorMode channel inputs are unaffected |
 
 ```ts
 new ewColorPicker({
@@ -172,8 +172,8 @@ new ewColorPicker({
 
 | Option | Type | Notes |
 | --- | --- | --- |
-| `ewColorPickerPanel` | `boolean \| object` | `false` disables the panel; object merges panel options |
-| `ewColorPickerColorMode` | `boolean \| object` | `false` disables mode switching |
+| `ewColorPickerPanel` | `boolean` | `false` disables the panel (same as `hasPanel: false`) |
+| `ewColorPickerColorMode` | `boolean \| object` | `false` disables mode switching; object merges color-mode options |
 
 ## Box extras
 

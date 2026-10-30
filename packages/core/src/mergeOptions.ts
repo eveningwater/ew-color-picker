@@ -88,10 +88,10 @@ export default class ewColorPickerMergeOptions
     pluginNameProp?: ewColorPickerBindPluginOptions
   ): ewColorPickerOptions {
     const { el, ...rest } = options || {};
-    return extend({}, defaultConfig, {
+    // pluginNameProp 只作为插件开关的默认值，用户传入的同名配置必须优先
+    return extend({}, defaultConfig, pluginNameProp ?? {}, {
       ...rest,
       el: checkContainer(el),
-      ...pluginNameProp,
     });
   }
   bindOptions(

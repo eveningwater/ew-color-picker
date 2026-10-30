@@ -33,7 +33,7 @@ new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
 | `sureText` | `string` | `'确定'` | 确定按钮文本 |
 | `togglePickerAnimation` | `'default' \| 'height' \| 'opacity'` | `'default'` | 面板开合动画 |
 | `pickerAnimationTime` | `number` | `200` | 动画时长（毫秒，上限 10000） |
-| `autoPanelPosition` | `boolean` | `false` | 面板自动定位（需配置 `ewColorPickerBox`） |
+| `autoPanelPosition` | `boolean` | `false` | 面板自动定位（需注册 Box 插件且未关闭 `hasBox`） |
 | `panelPlacement` | 见下文 | `'bottom'` | 面板相对盒子的位置 |
 
 ### 显示开关
@@ -216,13 +216,12 @@ picker.plugins.ewColorPickerButton.setSureText('应用')
 
 是否启用面板自动定位。启用后根据盒子在视口中的位置自动调整面板方向，并在空间不足时翻转。
 
-> **注意**：该能力依赖颜色盒插件。只有同时配置了 `ewColorPickerBox`（任意对象，例如 `{}`）时才会生效。
+> **注意**：该能力依赖 Box 插件。聚合包默认已注册 Box 插件；若单独按需引入，需要注册 `@ew-color-picker/box`，并保持 `hasBox` 不为 `false`，否则没有可参照的盒子，自动定位会跳过。
 
 ```ts
 new ewColorPicker({
   el: '#picker',
   autoPanelPosition: true,
-  ewColorPickerBox: {},
 })
 ```
 
@@ -296,7 +295,7 @@ picker.plugins.ewColorPickerAlpha.enableAlpha(false)
 - **类型**：`boolean`
 - **默认值**：`true`
 
-为 `false` 时不创建数字输入框组件（RGB / HSL 模式下的分量输入框仍由 ColorMode 插件渲染，但其数字步进控件会被跳过）。
+为 `false` 时 InputNumber 插件不再挂载它自带的默认数字输入框；RGB / HSL 模式下的分通道输入框由 ColorMode 插件自行创建，不受该开关影响。
 
 ## 颜色模式相关
 
@@ -338,35 +337,32 @@ new ewColorPicker({
 
 颜色模式插件的嵌套配置。`false` 时关闭模式切换；传对象时会覆盖对应字段。
 
-## ewColorPickerBox
+## 颜色盒相关
 
-- **类型**：对象
-
-颜色盒的扩展配置，同时也是 `autoPanelPosition` 生效的前提。
+颜色盒的扩展配置全部是顶层字段，直接与其它配置平铺传入（没有 `ewColorPickerBox` 嵌套对象写法）：
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
+| `className` | `string` | 追加到盒子上的类名 |
+| `style` | `Partial<CSSStyleDeclaration>` | 追加内联样式 |
+| `readonly` | `boolean` | 只读（保留样式，不响应点击） |
+| `boxNoColorIcon` | `string` | 无颜色时的自定义图标（HTML 字符串） |
+| `boxHasColorIcon` | `string` | 有颜色时的自定义图标（HTML 字符串） |
 | `onClick` | `(plugin) => void` | 点击颜色盒时调用（在默认开合行为之外） |
 | `onMouseEnter` | `(plugin) => void` | 鼠标移入 |
 | `onMouseLeave` | `(plugin) => void` | 鼠标移出 |
-| `disabled` | `boolean` | 盒子禁用 |
-| `readonly` | `boolean` | 只读（保留样式，不响应点击） |
-| `className` | `string` | 追加到盒子上的类名 |
-| `style` | `Partial<CSSStyleDeclaration>` | 追加内联样式 |
-| `boxNoColorIcon` | `string` | 无颜色时的自定义图标（HTML 字符串） |
-| `boxHasColorIcon` | `string` | 有颜色时的自定义图标（HTML 字符串） |
 
 ```ts
 new ewColorPicker({
   el: '#picker',
-  ewColorPickerBox: {
-    onClick(plugin) {
-      console.log('盒子被点击', plugin)
-    },
-    className: 'my-box',
+  onClick(plugin) {
+    console.log('盒子被点击', plugin)
   },
+  className: 'my-box',
 })
 ```
+
+完整说明见 [Box 颜色盒插件](../plugins/box)。
 
 ## 完整示例
 

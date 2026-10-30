@@ -20,7 +20,7 @@ description: The Panel plugin renders the saturation/value area with drag, touch
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
 | `hasPanel` | `boolean` | `true` | Hide the 2D panel |
-| `ewColorPickerPanel` | `boolean \| object` | `true` | `false` disables; object merges |
+| `ewColorPickerPanel` | `boolean` | `true` | Legacy switch: `false` disables the panel; pass other panel options at the top level |
 | `hueDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | Affects width |
 | `alphaDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | Affects width |
 | `autoPanelPosition` | `boolean` | `false` | Auto placement |

@@ -93,10 +93,11 @@ import '@ew-color-picker/style/dist/input-number.css'
 
 | 类名 | 说明 |
 | --- | --- |
-| `.ew-color-picker-predefine` | 色板容器 |
-| `.ew-color-picker-predefine-item` | 单个色块 |
-| `.ew-color-picker-predefine-item-disabled` | 禁用色块 |
-| `.ew-color-picker-predefine-item-active` | 当前选中色块 |
+| `.ew-color-picker-predefine-container` | 色板容器 |
+| `.ew-color-picker-predefine-color` | 单个色块外层 |
+| `.ew-color-picker-predefine-color-item` | 颜色填充层 |
+| `.ew-color-picker-predefine-color-disabled` | 禁用色块 |
+| `.ew-color-picker-predefine-color-active` | 当前选中色块 |
 
 ### 数字输入框
 
@@ -104,7 +105,9 @@ import '@ew-color-picker/style/dist/input-number.css'
 | --- | --- |
 | `.ew-input-number` | 数字输入框根节点 |
 | `.ew-input-number--default` / `--small` / `--large` | 尺寸修饰 |
-| `.ew-input-number__decrease` / `__increase` | 减少 / 增加按钮 |
+| `.ew-input-number--focused` / `--disabled` | 聚焦 / 禁用态 |
+| `.ew-input-number__buttons` | 步进按钮容器 |
+| `.ew-input-number__button--up` / `--down` | 增加 / 减少按钮 |
 | `.ew-input-number__input` | 内部 input |
 
 ### 状态类
@@ -137,7 +140,7 @@ import '@ew-color-picker/style/dist/input-number.css'
 }
 
 /* 自定义选中色块描边 */
-#picker .ew-color-picker-predefine-item-active {
+#picker .ew-color-picker-predefine-color-active {
   outline: 2px solid #6366f1;
   outline-offset: 2px;
 }
