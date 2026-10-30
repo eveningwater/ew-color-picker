@@ -1,6 +1,6 @@
 # ew-color-picker
 
-EW Color Picker v2 的聚合入口包，兼容 v1 的包名。
+ew-color-picker v2 的聚合入口包，兼容 v1 的包名。
 
 ```bash
 npm i ew-color-picker

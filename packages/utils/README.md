@@ -1,6 +1,6 @@
 # @ew-color-picker/utils
 
-EW Color Picker 的公共工具库：DOM、颜色转换、动画、断言与 `EventEmitter`。
+ew-color-picker 的公共工具库：DOM、颜色转换、动画、断言与 `EventEmitter`。
 
 ## 安装
 

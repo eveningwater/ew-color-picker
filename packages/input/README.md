@@ -1,6 +1,6 @@
 # @ew-color-picker/input
 
-EW Color Picker 的输入框插件，提供颜色值输入功能。
+ew-color-picker 的输入框插件，提供颜色值输入功能。
 
 ## 功能特性
 
