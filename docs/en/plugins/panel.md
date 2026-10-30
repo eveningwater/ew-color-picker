@@ -25,7 +25,7 @@ description: The Panel plugin renders the saturation/value area with drag, touch
 | `alphaDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | Affects width |
 | `autoPanelPosition` | `boolean` | `false` | Auto placement |
 | `panelPlacement` | `string` | `'bottom'` | See below |
-| `ewColorPickerBox` | `boolean` | `true` | Required for auto placement |
+| `hasBox` | `boolean` | `true` | Auto placement needs the Box trigger (reads its size) |
 | `alpha` | `boolean` | derived | Affects default color format |
 | `disabled` | `boolean` | `false` | Blocks dragging |
 
