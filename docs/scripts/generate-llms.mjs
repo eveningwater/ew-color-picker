@@ -11,7 +11,8 @@ import { fileURLToPath } from 'node:url'
 
 const DOCS_DIR = join(dirname(fileURLToPath(import.meta.url)), '..')
 const PUBLIC_DIR = join(DOCS_DIR, 'public')
-const SITE = 'https://eveningwater.github.io/ew-color-picker/'
+const SITE = process.env.DOCS_SITE || 'https://eveningwater.github.io/ew-color-picker/'
+const CLEAN = process.env.DOCS_CLEAN_URLS !== 'false'
 
 const EXCLUDED_DIRS = new Set(['.vitepress', 'node_modules', 'public', 'scripts'])
 
@@ -47,7 +48,8 @@ function toUrl(relPath) {
   const normalized = relPath.split('\\').join('/')
   const withoutExt = normalized.replace(/\.md$/, '')
   const cleaned = withoutExt.replace(/(^|\/)index$/, '$1')
-  return `${SITE}${cleaned}`.replace(/\/{2,}/g, '/').replace('https:/', 'https://')
+  const suffix = !CLEAN && cleaned && !cleaned.endsWith('/') ? '.html' : ''
+  return `${SITE}${cleaned}${suffix}`.replace(/\/{2,}/g, '/').replace('https:/', 'https://')
 }
 
 const SECTIONS = [
