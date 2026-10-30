@@ -24,17 +24,18 @@
   "author": "eveningwater(854806732@qq.com)",
   "license": "MIT",
   "dependencies": {
-    "@ew-color-picker/core": "workspace:*",
-    "@ew-color-picker/box": "workspace:*",
-    "@ew-color-picker/panel": "workspace:*",
-    "@ew-color-picker/input": "workspace:*",
-    "@ew-color-picker/button": "workspace:*",
-    "@ew-color-picker/predefine": "workspace:*",
-    "@ew-color-picker/style": "workspace:*",
-    "@ew-color-picker/colorMode": "workspace:*"
-  },
-  "peerDependencies": {
-    "@ew-color-picker/utils": "workspace:*"
+    "@ew-color-picker/core": "workspace:^2.0.0",
+    "@ew-color-picker/utils": "workspace:^2.0.0",
+    "@ew-color-picker/box": "workspace:^2.0.0",
+    "@ew-color-picker/panel": "workspace:^2.0.0",
+    "@ew-color-picker/hue": "workspace:^2.0.0",
+    "@ew-color-picker/alpha": "workspace:^2.0.0",
+    "@ew-color-picker/input": "workspace:^2.0.0",
+    "@ew-color-picker/input-number": "workspace:^2.0.0",
+    "@ew-color-picker/button": "workspace:^2.0.0",
+    "@ew-color-picker/predefine": "workspace:^2.0.0",
+    "@ew-color-picker/style": "workspace:^2.0.0",
+    "@ew-color-picker/colorMode": "workspace:^2.0.0"
   },
   "devDependencies": {
     "@ew-color-picker/utils": "workspace:*",

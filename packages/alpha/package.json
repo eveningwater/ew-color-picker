@@ -22,12 +22,8 @@
   "author": "eveningwater(854806732@qq.com)",
   "license": "MIT",
   "dependencies": {
-    "@ew-color-picker/core": "workspace:*",
-    "@ew-color-picker/utils": "workspace:*"
-  },
-  "peerDependencies": {
-    "@ew-color-picker/core": "workspace:*",
-    "@ew-color-picker/utils": "workspace:*"
+    "@ew-color-picker/core": "workspace:^2.0.0",
+    "@ew-color-picker/utils": "workspace:^2.0.0"
   },
   "devDependencies": {
     "rollup": "^3.0.0",
