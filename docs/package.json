@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "private": true,
   "type": "module",
-  "description": "EW Color Picker 官方文档",
+  "description": "ew-color-picker 官方文档",
   "scripts": {
     "predev": "node scripts/prepare-demo.mjs && node scripts/generate-llms.mjs",
     "dev": "vitepress dev",

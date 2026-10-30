@@ -1,6 +1,6 @@
 ---
 title: 安装
-description: 通过 pnpm/npm/yarn、UMD 脚本或按需子包安装 EW Color Picker，开发环境需要 Node 20.10+。
+description: 通过 pnpm/npm/yarn、UMD 脚本或按需子包安装 ew-color-picker，开发环境需要 Node 20.10+。
 ---
 
 # 安装

@@ -1,6 +1,6 @@
 ---
 title: Live Demo
-description: 'Try EW Color Picker in the browser: pick colors, toggle the panel and watch the realtime event log.'
+description: 'Try ew-color-picker in the browser: pick colors, toggle the panel and watch the realtime event log.'
 ---
 
 # Live Demo
@@ -10,7 +10,7 @@ The page below loads real build artifacts: a full picker, a current-color previe
 <iframe
   class="demo-frame"
   src="../../demo.html"
-  title="EW Color Picker live demo"
+  title="ew-color-picker live demo"
   loading="lazy"
 ></iframe>
 

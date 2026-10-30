@@ -1,11 +1,11 @@
 ---
 title: Introduction
-description: EW Color Picker is an event-driven, plugin-based color picker. Learn what the core does and how the 13 packages fit together.
+description: ew-color-picker is an event-driven, plugin-based color picker. Learn what the core does and how the 13 packages fit together.
 ---
 
 # Introduction
 
-EW Color Picker is a modern color picker built around two ideas:
+ew-color-picker is a modern color picker built around two ideas:
 
 1. **Event-driven** — every action becomes an event (`change`, `sure`, `clear`, `toggle`, `mode-change`, `options-update`, `destroy`).
 2. **Plugin-based** — the core owns color state and mount points; every piece of UI is a plugin.

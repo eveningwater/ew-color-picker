@@ -1,6 +1,6 @@
 ---
 title: Alpha 透明度滑块插件
-description: Alpha 插件为 EW Color Picker 增加 0–1 透明度滑块，输出 rgba 颜色，支持水平/垂直方向与运行时开关。
+description: Alpha 插件为 ew-color-picker 增加 0–1 透明度滑块，输出 rgba 颜色，支持水平/垂直方向与运行时开关。
 ---
 
 # Alpha 透明度滑块

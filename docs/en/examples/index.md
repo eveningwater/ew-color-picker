@@ -1,6 +1,6 @@
 ---
 title: Examples
-description: 'Twelve typical EW Color Picker scenarios: basic, layout, presets, buttons, events, placement, animation, disabled, modes, API, numeric inputs, multiple instances.'
+description: 'Twelve typical ew-color-picker scenarios: basic, layout, presets, buttons, events, placement, animation, disabled, modes, API, numeric inputs, multiple instances.'
 ---
 
 # Examples

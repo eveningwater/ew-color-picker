@@ -2,12 +2,12 @@
 layout: home
 
 hero:
-  name: EW Color Picker
+  name: ew-color-picker
   text: Event-driven · Plugin-based Color Picker
   tagline: Small, composable, extensible. The core only owns color state and events — the UI is assembled from plugins.
   image:
     src: /logo.svg
-    alt: EW Color Picker
+    alt: ew-color-picker
   actions:
     - theme: brand
       text: Quick Start
@@ -43,7 +43,7 @@ features:
 <div class="doc-section">
   <h2>Try it now</h2>
   <p class="subtitle">A real, running color picker rendered directly from the built artifacts.</p>
-  <iframe class="demo-frame" src="../demo.html" title="EW Color Picker live demo" loading="lazy"></iframe>
+  <iframe class="demo-frame" src="../demo.html" title="ew-color-picker live demo" loading="lazy"></iframe>
 </div>
 
 <div class="doc-section">

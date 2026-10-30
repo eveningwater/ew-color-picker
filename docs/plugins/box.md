@@ -1,6 +1,6 @@
 ---
 title: Box 颜色盒插件
-description: Box 插件是 EW Color Picker 的触发器：渲染当前颜色色块，点击打开或关闭面板，并负责图标颜色随背景自适应。
+description: Box 插件是 ew-color-picker 的触发器：渲染当前颜色色块，点击打开或关闭面板，并负责图标颜色随背景自适应。
 ---
 
 # Box 颜色盒

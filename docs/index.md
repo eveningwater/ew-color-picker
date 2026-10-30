@@ -2,12 +2,12 @@
 layout: home
 
 hero:
-  name: EW Color Picker
+  name: ew-color-picker
   text: 事件驱动 · 插件化颜色选择器
   tagline: 体积小、可组合、可扩展。核心只管颜色与事件，界面交给插件自由拼装。
   image:
     src: /logo.svg
-    alt: EW Color Picker
+    alt: ew-color-picker
   actions:
     - theme: brand
       text: 快速开始
@@ -43,7 +43,7 @@ features:
 <div class="doc-section">
   <h2>立即体验</h2>
   <p class="subtitle">下面是一个真实运行的颜色选择器，由本站直接加载构建产物渲染。</p>
-  <iframe class="demo-frame" src="./demo.html" title="EW Color Picker 在线演示" loading="lazy"></iframe>
+  <iframe class="demo-frame" src="./demo.html" title="ew-color-picker 在线演示" loading="lazy"></iframe>
 </div>
 
 <div class="doc-section">

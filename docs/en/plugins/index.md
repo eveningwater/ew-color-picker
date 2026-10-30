@@ -1,6 +1,6 @@
 ---
 title: Plugin Overview
-description: 'The EW Color Picker plugin system: 11 built-in plugins, registration order, mount points and collaboration.'
+description: 'The ew-color-picker plugin system: 11 built-in plugins, registration order, mount points and collaboration.'
 ---
 
 # Plugin Overview

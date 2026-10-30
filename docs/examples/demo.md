@@ -1,6 +1,6 @@
 ---
 title: 在线演示
-description: 在浏览器中直接体验 EW Color Picker：取色、开合面板、查看实时事件日志。
+description: 在浏览器中直接体验 ew-color-picker：取色、开合面板、查看实时事件日志。
 ---
 
 # 在线演示
@@ -10,7 +10,7 @@ description: 在浏览器中直接体验 EW Color Picker：取色、开合面板
 <iframe
   class="demo-frame"
   src="../demo.html"
-  title="EW Color Picker 在线演示"
+  title="ew-color-picker 在线演示"
   loading="lazy"
 ></iframe>
 

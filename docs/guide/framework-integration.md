@@ -1,11 +1,11 @@
 ---
 title: 框架集成
-description: 在 React、Vue 3、Angular 与 Solid 中集成 EW Color Picker 的最小封装写法、生命周期清理与受控同步。
+description: 在 React、Vue 3、Angular 与 Solid 中集成 ew-color-picker 的最小封装写法、生命周期清理与受控同步。
 ---
 
 # 框架集成
 
-EW Color Picker 只依赖原生 DOM 与事件，没有任何框架运行时依赖，因此在任意框架里都能用同一套方式接入：**挂载时创建实例、卸载时 `destroy()`、受控值通过 `setColor()` 同步**。
+ew-color-picker 只依赖原生 DOM 与事件，没有任何框架运行时依赖，因此在任意框架里都能用同一套方式接入：**挂载时创建实例、卸载时 `destroy()`、受控值通过 `setColor()` 同步**。
 
 本页给出四个框架的最小可用封装，可直接复制到项目中。官方不单独发布框架封装包，原因见[竞品对比与定位](./comparison)。
 

@@ -1,6 +1,6 @@
 ---
 title: Comparison & Positioning
-description: 'How EW Color Picker compares with Pickr, iro.js, Coloris, react-colorful and react-color, and where it fits.'
+description: 'How ew-color-picker compares with Pickr, iro.js, Coloris, react-colorful and react-color, and where it fits.'
 ---
 
 # Comparison & Positioning
@@ -9,7 +9,7 @@ Choosing a color picker is rarely about feature count — it is about whether th
 
 ## Positioning in one sentence
 
-EW Color Picker is not a ready-made skin. It is an **assemblable color picker foundation**: the core only keeps color state and events, and every UI element is an independent plugin. Teams keep what they need, replace what they do not, or write their own UI on the same plugin contract.
+ew-color-picker is not a ready-made skin. It is an **assemblable color picker foundation**: the core only keeps color state and events, and every UI element is an independent plugin. Teams keep what they need, replace what they do not, or write their own UI on the same plugin contract.
 
 Good fit: admin dashboards, low-code platforms, component libraries, and products that must merge deeply with an existing design system.
 Poor fit: a one-off color input where customization is unnecessary — the native `input[type=color]` or Coloris is simpler.
@@ -20,7 +20,7 @@ The numbers below come from the npm registry (`unpackedSize` and last publish da
 
 | Option | Shape | Framework lock-in | Extension model | Unpacked size | Last publish |
 | --- | --- | --- | --- | --- | --- |
-| **EW Color Picker** | 13 npm packages, plugin-based | None (plain DOM) | Plugin registration / custom plugins | Aggregate 543.8 KB; `core.min` 11 KB (gzip 3 KB) | 2026-10 |
+| **ew-color-picker** | 13 npm packages, plugin-based | None (plain DOM) | Plugin registration / custom plugins | Aggregate 543.8 KB; `core.min` 11 KB (gzip 3 KB) | 2026-10 |
 | [Pickr](https://github.com/Simonwep/pickr) | Single package (UMD/ESM) | None | Themes (classic/monolith/nano) + options | 280.3 KB | 2026-09 |
 | [iro.js](https://github.com/jaames/iro.js) | Single package | None | Options + component composition | 231.4 KB | 2021-07 |
 | [Coloris](https://github.com/melloware/coloris) | Single package + CSS | None | CSS variables + options | 152.2 KB | 2026-10 |
@@ -31,13 +31,13 @@ The numbers below come from the npm registry (`unpackedSize` and last publish da
 | Native `input[type=color]` | Built into browsers | None | None (styling is not controllable) | 0 | with browser updates |
 | Spectrum | jQuery plugin | jQuery | Options | 1804.2 KB | 2020-05 |
 
-One caveat: unpacked size is not runtime cost. Most of EW Color Picker's aggregate weight comes from three artifacts (UMD, UMD.min, ESM) plus `.d.ts` declarations. The smallest runtime you can ship is `index.min.js` at **79 KB (gzip 18 KB)**, or **11 KB (gzip 3 KB)** when using the core alone.
+One caveat: unpacked size is not runtime cost. Most of ew-color-picker's aggregate weight comes from three artifacts (UMD, UMD.min, ESM) plus `.d.ts` declarations. The smallest runtime you can ship is `index.min.js` at **79 KB (gzip 18 KB)**, or **11 KB (gzip 3 KB)** when using the core alone.
 
-## Where EW Color Picker stands out
+## Where ew-color-picker stands out
 
 ### 1. Structural replaceability, not just theming
 
-Most alternatives let you restyle the widget via themes, CSS variables or options while the structure stays fixed. EW Color Picker splits the trigger box, saturation panel, hue slider, alpha slider, text input, number input, buttons, predefined swatches and mode switcher into separate plugins. You decide which ones are registered, in what order, and whether your own plugin replaces them.
+Most alternatives let you restyle the widget via themes, CSS variables or options while the structure stays fixed. ew-color-picker splits the trigger box, saturation panel, hue slider, alpha slider, text input, number input, buttons, predefined swatches and mode switcher into separate plugins. You decide which ones are registered, in what order, and whether your own plugin replaces them.
 
 ```ts
 import ewColorPicker from '@ew-color-picker/core'
@@ -84,8 +84,8 @@ Bilingual documentation, per-API references, one page per plugin, plus `llms.txt
 | React project that only needs a panel or slider | react-colorful |
 | Vue project that wants ready-made components | vue-color or @uiw/react-color |
 | Gradients, color-space work, games or visualizations | iro.js |
-| Admin / low-code / component library needing deep design-system integration, partial UI replacement and instance isolation | **EW Color Picker** |
-| Embedding color selection into your own plugin system or runtime | **EW Color Picker** (11 KB core, keep the core and write your own plugins) |
+| Admin / low-code / component library needing deep design-system integration, partial UI replacement and instance isolation | **ew-color-picker** |
+| Embedding color selection into your own plugin system or runtime | **ew-color-picker** (11 KB core, keep the core and write your own plugins) |
 
 ## See also
 

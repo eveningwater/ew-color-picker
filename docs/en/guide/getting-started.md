@@ -1,6 +1,6 @@
 ---
 title: Quick Start
-description: 'Create your first EW Color Picker instance in minutes: container, options, events, methods and cleanup.'
+description: 'Create your first ew-color-picker instance in minutes: container, options, events, methods and cleanup.'
 ---
 
 # Quick Start

@@ -1,4 +1,4 @@
-# EW Color Picker 完整文档 / Full Documentation
+# ew-color-picker 完整文档 / Full Documentation
 
 > 事件驱动 + 插件化的现代颜色选择器。Event-driven, plugin-based color picker.
 
@@ -1337,7 +1337,7 @@ Source: https://eveningwater.github.io/ew-color-picker/examples/demo
 <iframe
   class="demo-frame"
   src="../demo.html"
-  title="EW Color Picker 在线演示"
+  title="ew-color-picker 在线演示"
   loading="lazy"
 ></iframe>
 
@@ -1539,7 +1539,7 @@ Source: https://eveningwater.github.io/ew-color-picker/guide/comparison
 
 ## 一句话定位
 
-EW Color Picker 不是一套「成品皮肤」，而是一个 **可组装的颜色选择器底座**：核心只维护颜色与事件，所有界面部件都是独立插件，团队可以保留需要的部分、替换不需要的部分，或者基于同一套插件协议写自己的 UI。
+ew-color-picker 不是一套「成品皮肤」，而是一个 **可组装的颜色选择器底座**：核心只维护颜色与事件，所有界面部件都是独立插件，团队可以保留需要的部分、替换不需要的部分，或者基于同一套插件协议写自己的 UI。
 
 适合：中后台系统、低代码平台、组件库、需要和现有设计体系深度融合的产品。
 不适合：只想要一个开箱即用、无需定制的单点选色场景（这类需求用原生 `input[type=color]` 或 Coloris 更省事）。
@@ -1550,7 +1550,7 @@ EW Color Picker 不是一套「成品皮肤」，而是一个 **可组装的颜�
 
 | 方案 | 形态 | 框架约束 | 扩展方式 | 体积（unpacked） | 最近发布 |
 | --- | --- | --- | --- | --- | --- |
-| **EW Color Picker** | 13 个 npm 包，插件化 | 无（原生 DOM） | 插件注册 / 自写插件 | 聚合包 543.8 KB，核心包 `core.min` 11 KB（gzip 3 KB） | 2026-10 |
+| **ew-color-picker** | 13 个 npm 包，插件化 | 无（原生 DOM） | 插件注册 / 自写插件 | 聚合包 543.8 KB，核心包 `core.min` 11 KB（gzip 3 KB） | 2026-10 |
 | [Pickr](https://github.com/Simonwep/pickr) | 单包，UMD/ESM | 无 | 主题（classic/monolith/nano）+ 选项 | 280.3 KB | 2026-09 |
 | [iro.js](https://github.com/jaames/iro.js) | 单包 | 无 | 选项 + 组件组合 | 231.4 KB | 2021-07 |
 | [Coloris](https://github.com/melloware/coloris) | 单包 + 一份 CSS | 无 | CSS 变量主题 + 选项 | 152.2 KB | 2026-10 |
@@ -1561,13 +1561,13 @@ EW Color Picker 不是一套「成品皮肤」，而是一个 **可组装的颜�
 | 原生 `input[type=color]` | 浏览器内置 | 无 | 无（样式不可控） | 0 | 随浏览器 |
 | Spectrum | jQuery 插件 | jQuery | 选项 | 1804.2 KB | 2020-05 |
 
-需要强调的一点：体量数字不能直接等价为运行时开销。EW Color Picker 的聚合包体积主要来自三份产物（UMD、UMD.min、ESM）和 `.d.ts` 声明，实际引入的最小运行时是 `index.min.js` **79 KB（gzip 18 KB）**，按需只用核心时是 **11 KB（gzip 3 KB）**。
+需要强调的一点：体量数字不能直接等价为运行时开销。ew-color-picker 的聚合包体积主要来自三份产物（UMD、UMD.min、ESM）和 `.d.ts` 声明，实际引入的最小运行时是 `index.min.js` **79 KB（gzip 18 KB）**，按需只用核心时是 **11 KB（gzip 3 KB）**。
 
-## EW Color Picker 的优势
+## ew-color-picker 的优势
 
 ### 1. 插件是「结构可替换」，不只是「主题可换」
 
-多数同类库的定制方式是换主题、改 CSS 变量或改配置项，UI 的组成结构固定。EW Color Picker 把颜色盒、面板、色相滑块、透明度滑块、输入框、数字输入框、按钮、预定义色板、模式切换器都拆成独立插件，注册哪些、顺序如何、要不要自己的插件，都由使用者决定。
+多数同类库的定制方式是换主题、改 CSS 变量或改配置项，UI 的组成结构固定。ew-color-picker 把颜色盒、面板、色相滑块、透明度滑块、输入框、数字输入框、按钮、预定义色板、模式切换器都拆成独立插件，注册哪些、顺序如何、要不要自己的插件，都由使用者决定。
 
 ```ts
 import ewColorPicker from '@ew-color-picker/core'
@@ -1614,8 +1614,8 @@ ewColorPicker.use(Panel).use(Hue)
 | React 项目只要一个面板/滑块 | react-colorful |
 | Vue 项目需要现成组件集 | vue-color 或 @uiw/react-color |
 | 需要渐变、色彩空间转换、游戏/可视化场景 | iro.js |
-| 中后台 / 低代码 / 组件库，需要和设计体系深度融合、替换局部 UI、多实例隔离 | **EW Color Picker** |
-| 需要把选色能力嵌进自己的插件体系或运行时 | **EW Color Picker**（核心 11 KB，可只保留核心 + 自写插件） |
+| 中后台 / 低代码 / 组件库，需要和设计体系深度融合、替换局部 UI、多实例隔离 | **ew-color-picker** |
+| 需要把选色能力嵌进自己的插件体系或运行时 | **ew-color-picker**（核心 11 KB，可只保留核心 + 自写插件） |
 
 ## 相关链接
 
@@ -1732,7 +1732,7 @@ Source: https://eveningwater.github.io/ew-color-picker/guide/framework-integrati
 
 # 框架集成
 
-EW Color Picker 只依赖原生 DOM 与事件，没有任何框架运行时依赖，因此在任意框架里都能用同一套方式接入：**挂载时创建实例、卸载时 `destroy()`、受控值通过 `setColor()` 同步**。
+ew-color-picker 只依赖原生 DOM 与事件，没有任何框架运行时依赖，因此在任意框架里都能用同一套方式接入：**挂载时创建实例、卸载时 `destroy()`、受控值通过 `setColor()` 同步**。
 
 本页给出四个框架的最小可用封装，可直接复制到项目中。官方不单独发布框架封装包，原因见[竞品对比与定位](./comparison)。
 
@@ -2046,7 +2046,7 @@ Source: https://eveningwater.github.io/ew-color-picker/guide/
 
 # 项目介绍
 
-EW Color Picker 是一个基于 **事件驱动 + 插件系统** 的颜色选择器。核心包只做三件事：
+ew-color-picker 是一个基于 **事件驱动 + 插件系统** 的颜色选择器。核心包只做三件事：
 
 1. 维护当前颜色（`currentColor`）与 HSVA 状态（`hsvaColor`）；
 2. 通过实例级 `EventEmitter` 派发事件；
@@ -2368,7 +2368,7 @@ Source: https://eveningwater.github.io/ew-color-picker/
 <div class="doc-section">
   <h2>立即体验</h2>
   <p class="subtitle">下面是一个真实运行的颜色选择器，由本站直接加载构建产物渲染。</p>
-  <iframe class="demo-frame" src="./demo.html" title="EW Color Picker 在线演示" loading="lazy"></iframe>
+  <iframe class="demo-frame" src="./demo.html" title="ew-color-picker 在线演示" loading="lazy"></iframe>
 </div>
 
 <div class="doc-section">
@@ -3166,7 +3166,7 @@ Source: https://eveningwater.github.io/ew-color-picker/plugins/
 
 # 插件总览
 
-EW Color Picker 的核心（`@ew-color-picker/core`）只负责三件事：维护颜色状态、派发事件、管理挂载点。**所有可见的 UI 都由插件渲染**，因此你可以按需组合出完全不同的选择器形态。
+ew-color-picker 的核心（`@ew-color-picker/core`）只负责三件事：维护颜色状态、派发事件、管理挂载点。**所有可见的 UI 都由插件渲染**，因此你可以按需组合出完全不同的选择器形态。
 
 ## 插件是怎么工作的
 
@@ -4746,7 +4746,7 @@ The page below loads real build artifacts: a full picker, a current-color previe
 <iframe
   class="demo-frame"
   src="../../demo.html"
-  title="EW Color Picker live demo"
+  title="ew-color-picker live demo"
   loading="lazy"
 ></iframe>
 
@@ -4935,7 +4935,7 @@ Choosing a color picker is rarely about feature count — it is about whether th
 
 ## Positioning in one sentence
 
-EW Color Picker is not a ready-made skin. It is an **assemblable color picker foundation**: the core only keeps color state and events, and every UI element is an independent plugin. Teams keep what they need, replace what they do not, or write their own UI on the same plugin contract.
+ew-color-picker is not a ready-made skin. It is an **assemblable color picker foundation**: the core only keeps color state and events, and every UI element is an independent plugin. Teams keep what they need, replace what they do not, or write their own UI on the same plugin contract.
 
 Good fit: admin dashboards, low-code platforms, component libraries, and products that must merge deeply with an existing design system.
 Poor fit: a one-off color input where customization is unnecessary — the native `input[type=color]` or Coloris is simpler.
@@ -4946,7 +4946,7 @@ The numbers below come from the npm registry (`unpackedSize` and last publish da
 
 | Option | Shape | Framework lock-in | Extension model | Unpacked size | Last publish |
 | --- | --- | --- | --- | --- | --- |
-| **EW Color Picker** | 13 npm packages, plugin-based | None (plain DOM) | Plugin registration / custom plugins | Aggregate 543.8 KB; `core.min` 11 KB (gzip 3 KB) | 2026-10 |
+| **ew-color-picker** | 13 npm packages, plugin-based | None (plain DOM) | Plugin registration / custom plugins | Aggregate 543.8 KB; `core.min` 11 KB (gzip 3 KB) | 2026-10 |
 | [Pickr](https://github.com/Simonwep/pickr) | Single package (UMD/ESM) | None | Themes (classic/monolith/nano) + options | 280.3 KB | 2026-09 |
 | [iro.js](https://github.com/jaames/iro.js) | Single package | None | Options + component composition | 231.4 KB | 2021-07 |
 | [Coloris](https://github.com/melloware/coloris) | Single package + CSS | None | CSS variables + options | 152.2 KB | 2026-10 |
@@ -4957,13 +4957,13 @@ The numbers below come from the npm registry (`unpackedSize` and last publish da
 | Native `input[type=color]` | Built into browsers | None | None (styling is not controllable) | 0 | with browser updates |
 | Spectrum | jQuery plugin | jQuery | Options | 1804.2 KB | 2020-05 |
 
-One caveat: unpacked size is not runtime cost. Most of EW Color Picker's aggregate weight comes from three artifacts (UMD, UMD.min, ESM) plus `.d.ts` declarations. The smallest runtime you can ship is `index.min.js` at **79 KB (gzip 18 KB)**, or **11 KB (gzip 3 KB)** when using the core alone.
+One caveat: unpacked size is not runtime cost. Most of ew-color-picker's aggregate weight comes from three artifacts (UMD, UMD.min, ESM) plus `.d.ts` declarations. The smallest runtime you can ship is `index.min.js` at **79 KB (gzip 18 KB)**, or **11 KB (gzip 3 KB)** when using the core alone.
 
-## Where EW Color Picker stands out
+## Where ew-color-picker stands out
 
 ### 1. Structural replaceability, not just theming
 
-Most alternatives let you restyle the widget via themes, CSS variables or options while the structure stays fixed. EW Color Picker splits the trigger box, saturation panel, hue slider, alpha slider, text input, number input, buttons, predefined swatches and mode switcher into separate plugins. You decide which ones are registered, in what order, and whether your own plugin replaces them.
+Most alternatives let you restyle the widget via themes, CSS variables or options while the structure stays fixed. ew-color-picker splits the trigger box, saturation panel, hue slider, alpha slider, text input, number input, buttons, predefined swatches and mode switcher into separate plugins. You decide which ones are registered, in what order, and whether your own plugin replaces them.
 
 ```ts
 import ewColorPicker from '@ew-color-picker/core'
@@ -5010,8 +5010,8 @@ Bilingual documentation, per-API references, one page per plugin, plus `llms.txt
 | React project that only needs a panel or slider | react-colorful |
 | Vue project that wants ready-made components | vue-color or @uiw/react-color |
 | Gradients, color-space work, games or visualizations | iro.js |
-| Admin / low-code / component library needing deep design-system integration, partial UI replacement and instance isolation | **EW Color Picker** |
-| Embedding color selection into your own plugin system or runtime | **EW Color Picker** (11 KB core, keep the core and write your own plugins) |
+| Admin / low-code / component library needing deep design-system integration, partial UI replacement and instance isolation | **ew-color-picker** |
+| Embedding color selection into your own plugin system or runtime | **ew-color-picker** (11 KB core, keep the core and write your own plugins) |
 
 ## See also
 
@@ -5134,7 +5134,7 @@ Source: https://eveningwater.github.io/ew-color-picker/en/guide/framework-integr
 
 # Framework Integration
 
-EW Color Picker depends only on plain DOM and events — no framework runtime — so the same approach works everywhere: **create the instance on mount, call `destroy()` on unmount, and sync controlled values through `setColor()`**.
+ew-color-picker depends only on plain DOM and events — no framework runtime — so the same approach works everywhere: **create the instance on mount, call `destroy()` on unmount, and sync controlled values through `setColor()`**.
 
 Below are minimal, copy-paste wrappers for four frameworks. No official framework packages are published; the reasoning is covered in [Comparison & Positioning](./comparison).
 
@@ -5435,7 +5435,7 @@ Source: https://eveningwater.github.io/ew-color-picker/en/guide/
 
 # Introduction
 
-EW Color Picker is a modern color picker built around two ideas:
+ew-color-picker is a modern color picker built around two ideas:
 
 1. **Event-driven** — every action becomes an event (`change`, `sure`, `clear`, `toggle`, `mode-change`, `options-update`, `destroy`).
 2. **Plugin-based** — the core owns color state and mount points; every piece of UI is a plugin.
@@ -5761,7 +5761,7 @@ Source: https://eveningwater.github.io/ew-color-picker/en/
 <div class="doc-section">
   <h2>Try it now</h2>
   <p class="subtitle">A real, running color picker rendered directly from the built artifacts.</p>
-  <iframe class="demo-frame" src="../demo.html" title="EW Color Picker live demo" loading="lazy"></iframe>
+  <iframe class="demo-frame" src="../demo.html" title="ew-color-picker live demo" loading="lazy"></iframe>
 </div>
 
 <div class="doc-section">
