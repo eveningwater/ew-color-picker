@@ -84,16 +84,14 @@ new ewColorPicker({
 
 ### Box
 
-通过 `ewColorPickerBox` 配置。
+颜色盒回调是顶层配置项（没有 `ewColorPickerBox` 嵌套对象写法）。
 
 ```ts
 new ewColorPicker({
   el: '#picker',
-  ewColorPickerBox: {
-    onClick(plugin) {},      // 点击颜色盒
-    onMouseEnter(plugin) {}, // 鼠标移入
-    onMouseLeave(plugin) {}, // 鼠标移出
-  },
+  onClick(plugin) {},      // 点击颜色盒
+  onMouseEnter(plugin) {}, // 鼠标移入
+  onMouseLeave(plugin) {}, // 鼠标移出
 })
 ```
 

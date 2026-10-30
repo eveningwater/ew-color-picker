@@ -113,7 +113,7 @@ new ewColorPicker({ el: '#picker' })
 
 ```bash
 pnpm install          # 安装依赖
-pnpm run build:all    # 构建全部 13 个包
+pnpm run build:all    # 构建全部 14 个包
 pnpm run test         # 运行测试
 pnpm run dev:preview  # 启动 examples 预览（Vite）
 ```

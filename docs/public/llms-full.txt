@@ -95,16 +95,14 @@ new ewColorPicker({
 
 ### Box
 
-通过 `ewColorPickerBox` 配置。
+颜色盒回调是顶层配置项（没有 `ewColorPickerBox` 嵌套对象写法）。
 
 ```ts
 new ewColorPicker({
   el: '#picker',
-  ewColorPickerBox: {
-    onClick(plugin) {},      // 点击颜色盒
-    onMouseEnter(plugin) {}, // 鼠标移入
-    onMouseLeave(plugin) {}, // 鼠标移出
-  },
+  onClick(plugin) {},      // 点击颜色盒
+  onMouseEnter(plugin) {}, // 鼠标移入
+  onMouseLeave(plugin) {}, // 鼠标移出
 })
 ```
 
@@ -772,7 +770,7 @@ new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
 | `sureText` | `string` | `'确定'` | 确定按钮文本 |
 | `togglePickerAnimation` | `'default' \| 'height' \| 'opacity'` | `'default'` | 面板开合动画 |
 | `pickerAnimationTime` | `number` | `200` | 动画时长（毫秒，上限 10000） |
-| `autoPanelPosition` | `boolean` | `false` | 面板自动定位（需配置 `ewColorPickerBox`） |
+| `autoPanelPosition` | `boolean` | `false` | 面板自动定位（需注册 Box 插件且未关闭 `hasBox`） |
 | `panelPlacement` | 见下文 | `'bottom'` | 面板相对盒子的位置 |
 
 ### 显示开关
@@ -955,13 +953,12 @@ picker.plugins.ewColorPickerButton.setSureText('应用')
 
 是否启用面板自动定位。启用后根据盒子在视口中的位置自动调整面板方向，并在空间不足时翻转。
 
-> **注意**：该能力依赖颜色盒插件。只有同时配置了 `ewColorPickerBox`（任意对象，例如 `{}`）时才会生效。
+> **注意**：该能力依赖 Box 插件。聚合包默认已注册 Box 插件；若单独按需引入，需要注册 `@ew-color-picker/box`，并保持 `hasBox` 不为 `false`，否则没有可参照的盒子，自动定位会跳过。
 
 ```ts
 new ewColorPicker({
   el: '#picker',
   autoPanelPosition: true,
-  ewColorPickerBox: {},
 })
 ```
 
@@ -1035,7 +1032,7 @@ picker.plugins.ewColorPickerAlpha.enableAlpha(false)
 - **类型**：`boolean`
 - **默认值**：`true`
 
-为 `false` 时不创建数字输入框组件（RGB / HSL 模式下的分量输入框仍由 ColorMode 插件渲染，但其数字步进控件会被跳过）。
+为 `false` 时 InputNumber 插件不再挂载它自带的默认数字输入框；RGB / HSL 模式下的分通道输入框由 ColorMode 插件自行创建，不受该开关影响。
 
 ## 颜色模式相关
 
@@ -1077,35 +1074,32 @@ new ewColorPicker({
 
 颜色模式插件的嵌套配置。`false` 时关闭模式切换；传对象时会覆盖对应字段。
 
-## ewColorPickerBox
+## 颜色盒相关
 
-- **类型**：对象
-
-颜色盒的扩展配置，同时也是 `autoPanelPosition` 生效的前提。
+颜色盒的扩展配置全部是顶层字段，直接与其它配置平铺传入（没有 `ewColorPickerBox` 嵌套对象写法）：
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
+| `className` | `string` | 追加到盒子上的类名 |
+| `style` | `Partial<CSSStyleDeclaration>` | 追加内联样式 |
+| `readonly` | `boolean` | 只读（保留样式，不响应点击） |
+| `boxNoColorIcon` | `string` | 无颜色时的自定义图标（HTML 字符串） |
+| `boxHasColorIcon` | `string` | 有颜色时的自定义图标（HTML 字符串） |
 | `onClick` | `(plugin) => void` | 点击颜色盒时调用（在默认开合行为之外） |
 | `onMouseEnter` | `(plugin) => void` | 鼠标移入 |
 | `onMouseLeave` | `(plugin) => void` | 鼠标移出 |
-| `disabled` | `boolean` | 盒子禁用 |
-| `readonly` | `boolean` | 只读（保留样式，不响应点击） |
-| `className` | `string` | 追加到盒子上的类名 |
-| `style` | `Partial<CSSStyleDeclaration>` | 追加内联样式 |
-| `boxNoColorIcon` | `string` | 无颜色时的自定义图标（HTML 字符串） |
-| `boxHasColorIcon` | `string` | 有颜色时的自定义图标（HTML 字符串） |
 
 ```ts
 new ewColorPicker({
   el: '#picker',
-  ewColorPickerBox: {
-    onClick(plugin) {
-      console.log('盒子被点击', plugin)
-    },
-    className: 'my-box',
+  onClick(plugin) {
+    console.log('盒子被点击', plugin)
   },
+  className: 'my-box',
 })
 ```
+
+完整说明见 [Box 颜色盒插件](../plugins/box)。
 
 ## 完整示例
 
@@ -1236,10 +1230,11 @@ import '@ew-color-picker/style/dist/input-number.css'
 
 | 类名 | 说明 |
 | --- | --- |
-| `.ew-color-picker-predefine` | 色板容器 |
-| `.ew-color-picker-predefine-item` | 单个色块 |
-| `.ew-color-picker-predefine-item-disabled` | 禁用色块 |
-| `.ew-color-picker-predefine-item-active` | 当前选中色块 |
+| `.ew-color-picker-predefine-container` | 色板容器 |
+| `.ew-color-picker-predefine-color` | 单个色块外层 |
+| `.ew-color-picker-predefine-color-item` | 颜色填充层 |
+| `.ew-color-picker-predefine-color-disabled` | 禁用色块 |
+| `.ew-color-picker-predefine-color-active` | 当前选中色块 |
 
 ### 数字输入框
 
@@ -1247,7 +1242,9 @@ import '@ew-color-picker/style/dist/input-number.css'
 | --- | --- |
 | `.ew-input-number` | 数字输入框根节点 |
 | `.ew-input-number--default` / `--small` / `--large` | 尺寸修饰 |
-| `.ew-input-number__decrease` / `__increase` | 减少 / 增加按钮 |
+| `.ew-input-number--focused` / `--disabled` | 聚焦 / 禁用态 |
+| `.ew-input-number__buttons` | 步进按钮容器 |
+| `.ew-input-number__button--up` / `--down` | 增加 / 减少按钮 |
 | `.ew-input-number__input` | 内部 input |
 
 ### 状态类
@@ -1280,7 +1277,7 @@ import '@ew-color-picker/style/dist/input-number.css'
 }
 
 /* 自定义选中色块描边 */
-#picker .ew-color-picker-predefine-item-active {
+#picker .ew-color-picker-predefine-color-active {
   outline: 2px solid #6366f1;
   outline-offset: 2px;
 }
@@ -2202,7 +2199,7 @@ new ewColorPicker({ el: '#picker' })
 
 ```bash
 pnpm install          # 安装依赖
-pnpm run build:all    # 构建全部 13 个包
+pnpm run build:all    # 构建全部 14 个包
 pnpm run test         # 运行测试
 pnpm run dev:preview  # 启动 examples 预览（Vite）
 ```
@@ -3558,7 +3555,7 @@ Source: https://eveningwater.github.io/ew-color-picker/plugins/panel
 | 配置 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `hasPanel` | `boolean` | `true` | `false` 时不渲染二维面板 |
-| `ewColorPickerPanel` | `boolean \| object` | `true` | 兼容写法：`false` 等价于关闭面板；对象形式可合并面板配置 |
+| `ewColorPickerPanel` | `boolean` | `true` | 兼容写法：`false` 等价于关闭面板，其余面板配置请直接放在顶层 |
 | `hueDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | 影响面板计算宽度（水平布局更宽） |
 | `alphaDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | 同上，两者都水平时面板宽 320px |
 | `autoPanelPosition` | `boolean` | `false` | 是否根据触发器位置自动定位面板 |
@@ -4334,7 +4331,7 @@ Every option below can be passed to the constructor. Defaults come from `default
 | Labels | `clearText`, `sureText` |
 | Animation | `togglePickerAnimation`, `pickerAnimationTime` |
 | Plugin switches | `hasBox`, `hasPanel`, `hasInput`, `hasClear`, `hasSure`, `hue`, `alpha`, `showButton`, `showColorMode`, `showInputNumber` |
-| Plugin config objects | `ewColorPickerPanel`, `ewColorPickerPredefine`, `ewColorPickerColorMode` |
+| Plugin config objects | `ewColorPickerPanel`, `ewColorPickerColorMode` |
 | Box extras | `boxNoColorIcon`, `boxHasColorIcon`, `readonly`, `className`, `style` |
 | Callbacks | `changeColor`, `sure`, `clear`, `togglePicker` |
 | Color mode | `defaultMode`, `changeMode` |
@@ -4472,7 +4469,7 @@ Values above 10000 are clamped.
 | `alpha` | `boolean` | `true` | Hide the alpha slider |
 | `showButton` | `boolean` | `true` | Hide clear + sure buttons at once |
 | `showColorMode` | `boolean` | `true` | Hide the Hex/RGB/HSL switcher |
-| `showInputNumber` | `boolean` | `true` | Hide numeric inputs |
+| `showInputNumber` | `boolean` | `true` | Skip the InputNumber plugin's own numeric input; ColorMode channel inputs are unaffected |
 
 ```ts
 new ewColorPicker({
@@ -4490,8 +4487,8 @@ new ewColorPicker({
 
 | Option | Type | Notes |
 | --- | --- | --- |
-| `ewColorPickerPanel` | `boolean \| object` | `false` disables the panel; object merges panel options |
-| `ewColorPickerColorMode` | `boolean \| object` | `false` disables mode switching |
+| `ewColorPickerPanel` | `boolean` | `false` disables the panel (same as `hasPanel: false`) |
+| `ewColorPickerColorMode` | `boolean \| object` | `false` disables mode switching; object merges color-mode options |
 
 ## Box extras
 
@@ -6635,7 +6632,7 @@ Source: https://eveningwater.github.io/ew-color-picker/en/plugins/panel
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
 | `hasPanel` | `boolean` | `true` | Hide the 2D panel |
-| `ewColorPickerPanel` | `boolean \| object` | `true` | `false` disables; object merges |
+| `ewColorPickerPanel` | `boolean` | `true` | Legacy switch: `false` disables the panel; pass other panel options at the top level |
 | `hueDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | Affects width |
 | `alphaDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | Affects width |
 | `autoPanelPosition` | `boolean` | `false` | Auto placement |

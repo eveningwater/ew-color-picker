@@ -17,7 +17,7 @@ Event-driven, plugin-based modern color picker. The core only keeps color state 
 - **Multiple color spaces** — Hex, RGB and HSL input modes with alpha support
 - **Fully typed** — every package is written in TypeScript and ships declarations
 - **Instance isolation** — each instance owns its event bus, DOM and plugin instances
-- **Tree-shakeable** — 13 packages; import only the plugins you need
+- **Tree-shakeable** — 14 packages; import only the plugins you need
 
 ## Packages
 

@@ -20,7 +20,7 @@ description: Panel 插件渲染饱和度/明度二维选择面板，支持拖拽
 | 配置 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `hasPanel` | `boolean` | `true` | `false` 时不渲染二维面板 |
-| `ewColorPickerPanel` | `boolean \| object` | `true` | 兼容写法：`false` 等价于关闭面板；对象形式可合并面板配置 |
+| `ewColorPickerPanel` | `boolean` | `true` | 兼容写法：`false` 等价于关闭面板，其余面板配置请直接放在顶层 |
 | `hueDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | 影响面板计算宽度（水平布局更宽） |
 | `alphaDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | 同上，两者都水平时面板宽 320px |
 | `autoPanelPosition` | `boolean` | `false` | 是否根据触发器位置自动定位面板 |
