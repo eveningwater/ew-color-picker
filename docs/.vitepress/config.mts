@@ -13,6 +13,8 @@ const joinUrl = (path: string) => `${SITE}${path.replace(/^\/+/, '')}`
 const pageUrl = (path: string) =>
   joinUrl(!CLEAN && path && !path.endsWith('/') ? `${path}.html` : path)
 
+const CN_MIRROR = 'https://ew-color-picker.eveningwater.com/'
+
 const zhNav = [
   { text: '指南', link: '/guide/', activeMatch: '/guide/' },
   { text: 'API', link: '/api/options', activeMatch: '/api/' },
@@ -20,6 +22,7 @@ const zhNav = [
   { text: '示例', link: '/examples/', activeMatch: '/examples/' },
   { text: '框架集成', link: '/guide/framework-integration', activeMatch: '/guide/framework-integration' },
   { text: '在线演示', link: '/examples/demo', activeMatch: '/examples/demo' },
+  { text: '国内访问', link: CN_MIRROR, target: '_blank', rel: 'noopener' },
   { text: '其他项目', link: 'https://www.eveningwater.com', target: '_blank', rel: 'noopener' },
 ]
 
@@ -30,6 +33,7 @@ const enNav = [
   { text: 'Examples', link: '/en/examples/', activeMatch: '/en/examples/' },
   { text: 'Frameworks', link: '/en/guide/framework-integration', activeMatch: '/en/guide/framework-integration' },
   { text: 'Live Demo', link: '/en/examples/demo', activeMatch: '/en/examples/demo' },
+  { text: 'China Site', link: `${CN_MIRROR}en/`, target: '_blank', rel: 'noopener' },
   { text: 'More Projects', link: 'https://www.eveningwater.com', target: '_blank', rel: 'noopener' },
 ]
 
@@ -283,7 +287,7 @@ export default defineConfig({
         search: zhSearch,
         socialLinks: [{ icon: 'github', link: GITHUB }],
         footer: {
-          message: `基于 MIT 许可发布 · <a href="${BASE}llms.txt">llms.txt</a> · <a href="https://www.eveningwater.com" target="_blank" rel="noopener">其他项目</a>`,
+          message: `基于 MIT 许可发布 · <a href="${BASE}llms.txt">llms.txt</a> · <a href="${CN_MIRROR}" target="_blank" rel="noopener">国内访问</a> · <a href="https://www.eveningwater.com" target="_blank" rel="noopener">其他项目</a>`,
           copyright: 'Copyright © 2024-present eveningwater',
         },
       },
@@ -306,7 +310,7 @@ export default defineConfig({
         search: enSearch,
         socialLinks: [{ icon: 'github', link: GITHUB }],
         footer: {
-          message: `Released under the MIT License · <a href="${BASE}llms.txt">llms.txt</a> · <a href="https://www.eveningwater.com" target="_blank" rel="noopener">More projects</a>`,
+          message: `Released under the MIT License · <a href="${BASE}llms.txt">llms.txt</a> · <a href="${CN_MIRROR}en/" target="_blank" rel="noopener">China site</a> · <a href="https://www.eveningwater.com" target="_blank" rel="noopener">More projects</a>`,
           copyright: 'Copyright © 2024-present eveningwater',
         },
       },

@@ -5,6 +5,7 @@
 事件驱动 + 插件化的现代颜色选择器。核心只维护颜色状态与事件，界面全部由插件组装，可按需组合、替换与扩展。
 
 - 官网文档：https://eveningwater.github.io/ew-color-picker/
+- 国内访问（阿里云 ESA）：https://ew-color-picker.eveningwater.com/
 - 在线演示：https://eveningwater.github.io/ew-color-picker/examples/demo
 - 其他项目：https://www.eveningwater.com
 - AI 文档索引：[llms.txt](https://eveningwater.github.io/ew-color-picker/llms.txt) · [llms-full.txt](https://eveningwater.github.io/ew-color-picker/llms-full.txt)
@@ -213,6 +214,7 @@ pnpm run docs:build  # 构建文档
 
 - 中文：https://eveningwater.github.io/ew-color-picker/
 - English：https://eveningwater.github.io/ew-color-picker/en/
+- 国内访问（阿里云 ESA）：https://ew-color-picker.eveningwater.com/
 - 示例：https://eveningwater.github.io/ew-color-picker/examples/
 - 演示：https://eveningwater.github.io/ew-color-picker/examples/demo
 
