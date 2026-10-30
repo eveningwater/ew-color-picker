@@ -45,7 +45,7 @@ import Panel from '@ew-color-picker/panel'
 ewColorPicker.use(Box).use(Panel)
 ```
 
-如果使用聚合包 `@ew-color-picker/ewColorPicker`，Console 已经注册，无法通过 options 关闭。
+如果使用聚合包 `@ew-color-picker/ew-color-picker`，Console 已经注册，无法通过 options 关闭。
 
 ## 输出内容
 

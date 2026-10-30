@@ -1,5 +1,5 @@
 {
-  "name": "@ew-color-picker/colorMode",
+  "name": "@ew-color-picker/color-mode",
   "version": "2.0.0",
   "description": "Color mode conversion plugin for ew-color-picker",
   "main": "dist/colorMode.min.js",

@@ -1,25 +1,25 @@
-# @ew-color-picker/colorMode
+# @ew-color-picker/color-mode
 
 颜色选择器的颜色模式切换插件，支持 Hex / RGB / HSL 三种输入模式。
 
 ## 安装
 
 ```bash
-pnpm add @ew-color-picker/colorMode
+pnpm add @ew-color-picker/color-mode
 ```
 
 ## 使用
 
 ```ts
 import ewColorPicker from '@ew-color-picker/core'
-import ColorMode from '@ew-color-picker/colorMode'
+import ColorMode from '@ew-color-picker/color-mode'
 
 ewColorPicker.use(ColorMode)
 
 const picker = new ewColorPicker({ el: '#picker' })
 ```
 
-通常更推荐直接使用聚合包 `@ew-color-picker/ewColorPicker`，内置插件已全部注册。
+通常更推荐直接使用聚合包 `@ew-color-picker/ew-color-picker`，内置插件已全部注册。
 
 ## 相关链接
 

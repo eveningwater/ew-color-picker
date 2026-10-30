@@ -1,17 +1,17 @@
-# @ew-color-picker/ewColorPicker
+# @ew-color-picker/ew-color-picker
 
 EW Color Picker 聚合包：注册全部内置插件并导出核心，开箱即用。
 
 ## 安装
 
 ```bash
-pnpm add @ew-color-picker/ewColorPicker
+pnpm add @ew-color-picker/ew-color-picker
 ```
 
 ## 使用
 
 ```ts
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 

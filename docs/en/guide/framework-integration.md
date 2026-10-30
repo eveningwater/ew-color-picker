@@ -18,7 +18,7 @@ Below are minimal, copy-paste wrappers for four frameworks. No official framewor
 5. **SSR safety**: create the instance only in browser-side lifecycle hooks (`useEffect` / `onMounted` / `ngAfterViewInit` / `onMount`).
 
 ```ts
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 ```
@@ -27,7 +27,7 @@ import '@ew-color-picker/style/dist/input-number.css'
 
 ```tsx
 import { useEffect, useRef } from 'react'
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 
@@ -69,7 +69,7 @@ React 19 StrictMode mounts effects twice; the `return () => picker.destroy()` cl
 ```vue
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 
@@ -124,7 +124,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core'
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 
 @Component({
   selector: 'ew-color-field',
@@ -162,7 +162,7 @@ Use it with two-way binding:
 
 ```tsx
 import { onCleanup, onMount } from 'solid-js'
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 

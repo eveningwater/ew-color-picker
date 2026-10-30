@@ -25,7 +25,7 @@
 | `@ew-color-picker/core` | 颜色状态、事件总线、挂载点、插件注册 |
 | `@ew-color-picker/utils` | DOM / 颜色 / 动画工具、`EventEmitter`、`Console` 插件 |
 | `@ew-color-picker/style` | 样式产物（`index.css` + `input-number.css`） |
-| `@ew-color-picker/ewColorPicker` | 聚合包：注册全部插件并导出核心 |
+| `@ew-color-picker/ew-color-picker` | 聚合包：注册全部插件并导出核心 |
 | `@ew-color-picker/box` | 触发器色块 |
 | `@ew-color-picker/panel` | 饱和度 / 明度面板 |
 | `@ew-color-picker/hue` | 色相滑块 |
@@ -39,13 +39,13 @@
 ## 安装
 
 ```bash
-pnpm add @ew-color-picker/ewColorPicker @ew-color-picker/style
+pnpm add @ew-color-picker/ew-color-picker @ew-color-picker/style
 # 或使用兼容 v1 的入口包（内部指向上面两个包）
 pnpm add ew-color-picker
 ```
 
 ```ts
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 
@@ -81,7 +81,7 @@ new ewColorPicker({ el: '#colorPicker' })
 <link rel="stylesheet" href="https://unpkg.com/@ew-color-picker/style/dist/input-number.css" />
 
 <div id="colorPicker"></div>
-<script src="https://unpkg.com/@ew-color-picker/ewColorPicker/dist/index.min.js"></script>
+<script src="https://unpkg.com/@ew-color-picker/ew-color-picker/dist/index.min.js"></script>
 <script>
   new ewColorPicker({ el: '#colorPicker', defaultColor: '#ff0000' })
 </script>

@@ -30,7 +30,7 @@ new ewColorPicker({ el: '#app' })
 
 ## 内置插件一览
 
-聚合包 `@ew-color-picker/ewColorPicker` 的注册顺序如下（顺序决定默认的 DOM 排布）：
+聚合包 `@ew-color-picker/ew-color-picker` 的注册顺序如下（顺序决定默认的 DOM 排布）：
 
 | # | 插件 | `pluginName` | 包 | 职责 |
 | --- | --- | --- | --- | --- |

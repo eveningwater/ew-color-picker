@@ -80,7 +80,7 @@ features:
 <div id="picker"></div>
 
 <script type="module">
-  import ewColorPicker from '@ew-color-picker/ewColorPicker'
+  import ewColorPicker from '@ew-color-picker/ew-color-picker'
 
   const picker = new ewColorPicker({
     el: '#picker',

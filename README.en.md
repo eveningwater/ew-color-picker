@@ -25,7 +25,7 @@ Event-driven, plugin-based modern color picker. The core only keeps color state 
 | `@ew-color-picker/core` | Color state, event bus, mount points, plugin registry |
 | `@ew-color-picker/utils` | DOM / color / animation helpers, `EventEmitter`, `Console` plugin |
 | `@ew-color-picker/style` | CSS (`index.css` + `input-number.css`) |
-| `@ew-color-picker/ewColorPicker` | All-in-one bundle: registers all plugins, exports the core |
+| `@ew-color-picker/ew-color-picker` | All-in-one bundle: registers all plugins, exports the core |
 | `@ew-color-picker/box` | Trigger swatch |
 | `@ew-color-picker/panel` | Saturation/value panel |
 | `@ew-color-picker/hue` | Hue slider |
@@ -39,13 +39,13 @@ Event-driven, plugin-based modern color picker. The core only keeps color state 
 ## Install
 
 ```bash
-pnpm add @ew-color-picker/ewColorPicker @ew-color-picker/style
+pnpm add @ew-color-picker/ew-color-picker @ew-color-picker/style
 # or the v1-compatible entry package (forwards to the two packages above)
 pnpm add ew-color-picker
 ```
 
 ```ts
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 
@@ -81,7 +81,7 @@ new ewColorPicker({ el: '#colorPicker' })
 <link rel="stylesheet" href="https://unpkg.com/@ew-color-picker/style/dist/input-number.css" />
 
 <div id="colorPicker"></div>
-<script src="https://unpkg.com/@ew-color-picker/ewColorPicker/dist/index.min.js"></script>
+<script src="https://unpkg.com/@ew-color-picker/ew-color-picker/dist/index.min.js"></script>
 <script>
   new ewColorPicker({ el: '#colorPicker', defaultColor: '#ff0000' })
 </script>

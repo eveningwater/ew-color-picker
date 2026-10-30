@@ -189,7 +189,7 @@ importers:
       '@ew-color-picker/button':
         specifier: workspace:^2.0.0
         version: link:../button
-      '@ew-color-picker/colorMode':
+      '@ew-color-picker/color-mode':
         specifier: workspace:^2.0.0
         version: link:../color-mode
       '@ew-color-picker/core':
@@ -232,7 +232,7 @@ importers:
 
   packages/ew-color-picker-compat:
     dependencies:
-      '@ew-color-picker/ewColorPicker':
+      '@ew-color-picker/ew-color-picker':
         specifier: workspace:^2.0.0
         version: link:../ew-color-picker
       '@ew-color-picker/style':

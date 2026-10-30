@@ -12,14 +12,14 @@ description: 通过 pnpm/npm/yarn、UMD 脚本或按需子包安装 EW Color Pic
 
 ## 方式一：聚合包（推荐）
 
-聚合包 `@ew-color-picker/ewColorPicker` 已注册全部内置插件，安装后即可获得完整功能。
+聚合包 `@ew-color-picker/ew-color-picker` 已注册全部内置插件，安装后即可获得完整功能。
 
 ```bash
-pnpm add @ew-color-picker/ewColorPicker @ew-color-picker/style
+pnpm add @ew-color-picker/ew-color-picker @ew-color-picker/style
 # 或
-npm install @ew-color-picker/ewColorPicker @ew-color-picker/style
+npm install @ew-color-picker/ew-color-picker @ew-color-picker/style
 # 或
-yarn add @ew-color-picker/ewColorPicker @ew-color-picker/style
+yarn add @ew-color-picker/ew-color-picker @ew-color-picker/style
 ```
 
 引入样式：
@@ -38,7 +38,7 @@ npm install ew-color-picker
 ```
 
 ::: tip 关于包名
-`ew-color-picker` 是 v2 提供的兼容入口包，只做转发，内部依赖 `@ew-color-picker/ewColorPicker` 与 `@ew-color-picker/style`。适合从 v1 升级，或希望安装命令更简短的用户。
+`ew-color-picker` 是 v2 提供的兼容入口包，只做转发，内部依赖 `@ew-color-picker/ew-color-picker` 与 `@ew-color-picker/style`。适合从 v1 升级，或希望安装命令更简短的用户。
 :::
 
 ## 从 v1 升级到 v2
@@ -46,7 +46,7 @@ npm install ew-color-picker
 v2 是破坏性重构，v1 与 v2 的 API 不能混用：
 
 - **架构**：v1 是配置式单包；v2 拆分为 13 个包，界面全部由插件组装，可通过 `Core.use(Plugin)` 自由组合与替换
-- **包名**：`ew-color-picker` 仍是入口，但内部指向 `@ew-color-picker/ewColorPicker`
+- **包名**：`ew-color-picker` 仍是入口，但内部指向 `@ew-color-picker/ew-color-picker`
 - **样式**：需要显式引入 `index.css` 与 `input-number.css` 两个文件
 - **配置与事件**：插件相关配置项（如 `hasAlpha`、`hasBox`）与 v1 有差异，请按本站在线演示重新接入
 
@@ -73,7 +73,7 @@ pnpm add @ew-color-picker/box @ew-color-picker/panel
 | `@ew-color-picker/input-number` | 数字输入框组件 |
 | `@ew-color-picker/button` | 清空 / 确定按钮 |
 | `@ew-color-picker/predefine` | 预定义色板 |
-| `@ew-color-picker/colorMode` | 颜色模式切换 |
+| `@ew-color-picker/color-mode` | 颜色模式切换 |
 
 手动注册插件：
 
@@ -99,7 +99,7 @@ new ewColorPicker({ el: '#picker' })
 <link rel="stylesheet" href="node_modules/@ew-color-picker/style/dist/index.css" />
 <link rel="stylesheet" href="node_modules/@ew-color-picker/style/dist/input-number.css" />
 
-<script src="node_modules/@ew-color-picker/ewColorPicker/dist/index.min.js"></script>
+<script src="node_modules/@ew-color-picker/ew-color-picker/dist/index.min.js"></script>
 <script>
   new ewColorPicker({ el: '#picker' })
 </script>

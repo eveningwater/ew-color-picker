@@ -159,7 +159,7 @@ picker.on('change', (color) => console.log('颜色：', color))
   </head>
   <body>
     <div id="app"></div>
-    <script src="/node_modules/@ew-color-picker/ewColorPicker/dist/index.min.js"></script>
+    <script src="/node_modules/@ew-color-picker/ew-color-picker/dist/index.min.js"></script>
     <script>
       const picker = new ewColorPicker({
         el: '#app',

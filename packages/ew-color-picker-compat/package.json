@@ -1,7 +1,7 @@
 {
   "name": "ew-color-picker",
   "version": "2.0.0",
-  "description": "EW Color Picker 聚合入口，内部指向 @ew-color-picker/ewColorPicker",
+  "description": "EW Color Picker 聚合入口，内部指向 @ew-color-picker/ew-color-picker",
   "main": "index.cjs",
   "module": "index.mjs",
   "types": "index.d.ts",
@@ -20,7 +20,7 @@
   "author": "eveningwater(854806732@qq.com)",
   "license": "MIT",
   "dependencies": {
-    "@ew-color-picker/ewColorPicker": "workspace:^2.0.0",
+    "@ew-color-picker/ew-color-picker": "workspace:^2.0.0",
     "@ew-color-picker/style": "workspace:^2.0.0"
   },
   "publishConfig": {

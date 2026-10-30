@@ -28,7 +28,7 @@ new ewColorPicker({ el: '#app' })
 
 ## Built-in plugins
 
-Registration order in `@ew-color-picker/ewColorPicker`:
+Registration order in `@ew-color-picker/ew-color-picker`:
 
 | # | Plugin | `pluginName` | Package | Role |
 | --- | --- | --- | --- | --- |

@@ -16,7 +16,7 @@ description: 几分钟内创建第一个 EW Color Picker 实例：容器、配�
 ## 2. 初始化
 
 ```ts
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 
