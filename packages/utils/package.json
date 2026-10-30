@@ -4,7 +4,6 @@
   "description": "utils for ew-color-picker",
   "main": "dist/utils.min.js",
   "module": "dist/utils.esm.js",
-  "typings": "dist/packages/utils/src/index.d.ts",
   "files": [
     "dist"
   ],
@@ -18,17 +17,18 @@
   "bugs": {
     "url": "https://github.com/eveningwater/ew-color-picker/issues"
   },
-  "homepage": "https://github.com/eveningwater/ew-color-picker",
+  "homepage": "https://eveningwater.github.io/ew-color-picker/",
   "keywords": [
     "ew-color-picker",
     "utils",
     "ew-color-picker-utils"
   ],
   "author": "eveningwater(854806732@qq.com)",
-  "license": "ISC",
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/eveningwater/ew-color-picker.git",
+    "url": "git+https://github.com/eveningwater/ew-color-picker.git",
     "directory": "packages/utils"
-  }
+  },
+  "types": "dist/packages/utils/src/index.d.ts"
 }

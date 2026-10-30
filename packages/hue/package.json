@@ -5,13 +5,20 @@
   "main": "dist/hue.min.js",
   "module": "dist/hue.esm.js",
   "types": "dist/packages/hue/src/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "rollup -c ../../scripts/rollup.config.mjs",
     "dev": "rollup -c ../../scripts/rollup.config.mjs -w",
     "clean": "rimraf dist"
   },
-  "keywords": ["color-picker", "hue", "plugin", "typescript"],
+  "keywords": [
+    "color-picker",
+    "hue",
+    "plugin",
+    "typescript"
+  ],
   "author": "eveningwater(854806732@qq.com)",
   "license": "MIT",
   "dependencies": {
@@ -30,5 +37,14 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eveningwater/ew-color-picker.git",
+    "directory": "packages/hue"
+  },
+  "homepage": "https://eveningwater.github.io/ew-color-picker/",
+  "bugs": {
+    "url": "https://github.com/eveningwater/ew-color-picker/issues"
   }
-} 
+}

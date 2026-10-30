@@ -39,5 +39,14 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eveningwater/ew-color-picker.git",
+    "directory": "packages/input"
+  },
+  "homepage": "https://eveningwater.github.io/ew-color-picker/",
+  "bugs": {
+    "url": "https://github.com/eveningwater/ew-color-picker/issues"
   }
-} 
+}

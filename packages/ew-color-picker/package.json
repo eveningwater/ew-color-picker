@@ -48,10 +48,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ew-color-picker/ew-color-picker.git"
+    "url": "git+https://github.com/eveningwater/ew-color-picker.git",
+    "directory": "packages/ew-color-picker"
   },
   "bugs": {
-    "url": "https://github.com/ew-color-picker/ew-color-picker/issues"
+    "url": "https://github.com/eveningwater/ew-color-picker/issues"
   },
-  "homepage": "https://github.com/ew-color-picker/ew-color-picker#readme"
+  "homepage": "https://eveningwater.github.io/ew-color-picker/"
 }
