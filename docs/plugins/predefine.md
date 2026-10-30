@@ -22,7 +22,6 @@ description: 用 predefineColor 配置一组快捷色块，支持逐项禁用、
 | `predefineColor` | `(string \| { color: string; disabled?: boolean })[]` | `[]` | 预定义颜色列表；**为空时不渲染** |
 | `changeColor` | `(rgba: string) => void` | — | 点击色块后的回调，参数为 `rgba()` 字符串 |
 | `disabled` | `boolean` | `false` | 全局禁用后点击无效 |
-| `ewColorPickerPredefine` | `object` | — | 嵌套配置写法，会合并进插件配置 |
 
 ### 两种数组写法
 

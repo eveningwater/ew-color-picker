@@ -72,9 +72,9 @@ Numbers are treated as pixels; objects accept `width`/`height`; CSS strings are 
 
 ### predefineColor
 
-| Type | Default | Description |
-| --- | --- | --- |
-| `(string \| { color: string; disabled?: boolean })[]` | `[]` | Predefined swatches. Empty array renders nothing. |
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `predefineColor` | `(string \| { color: string; disabled?: boolean })[]` | `[]` | Predefined swatches. Empty array renders nothing. Clicking a swatch calls the top-level `changeColor` callback. |
 
 ```ts
 predefineColor: ['#ef4444', '#22c55e', { color: '#0f172a', disabled: true }]
@@ -173,7 +173,6 @@ new ewColorPicker({
 | Option | Type | Notes |
 | --- | --- | --- |
 | `ewColorPickerPanel` | `boolean \| object` | `false` disables the panel; object merges panel options |
-| `ewColorPickerPredefine` | `object` | Merged into predefine plugin options |
 | `ewColorPickerColorMode` | `boolean \| object` | `false` disables mode switching |
 | `ewColorPickerBox` | `boolean \| object` | `false` disables the box (also affects auto positioning) |
 

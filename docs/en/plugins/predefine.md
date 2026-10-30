@@ -22,7 +22,6 @@ description: Configure quick swatches with predefineColor, disable individual it
 | `predefineColor` | `(string \| { color: string; disabled?: boolean })[]` | `[]` | Swatches; empty renders nothing |
 | `changeColor` | `(rgba: string) => void` | — | Swatch applied |
 | `disabled` | `boolean` | `false` | Block all clicks |
-| `ewColorPickerPredefine` | `object` | — | Nested config merged in |
 
 ```ts
 predefineColor: [
