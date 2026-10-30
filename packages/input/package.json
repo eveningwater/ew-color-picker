@@ -1,0 +1,43 @@
+{
+  "name": "@ew-color-picker/input",
+  "version": "2.0.0",
+  "description": "EW Color Picker Input Plugin",
+  "main": "dist/input.min.js",
+  "module": "dist/input.esm.js",
+  "types": "dist/packages/input/src/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c ../../scripts/rollup.config.mjs",
+    "dev": "rollup -c ../../scripts/rollup.config.mjs -w",
+    "clean": "rimraf dist"
+  },
+  "keywords": [
+    "color-picker",
+    "input",
+    "plugin",
+    "typescript"
+  ],
+  "author": "eveningwater(854806732@qq.com)",
+  "license": "MIT",
+  "dependencies": {
+    "@ew-color-picker/core": "workspace:*",
+    "@ew-color-picker/utils": "workspace:*"
+  },
+  "peerDependencies": {
+    "@ew-color-picker/core": "workspace:*",
+    "@ew-color-picker/utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@ew-color-picker/core": "workspace:*",
+    "@ew-color-picker/utils": "workspace:*",
+    "rollup": "^3.0.0",
+    "rollup-plugin-typescript2": "^0.34.0",
+    "typescript": "^4.9.0",
+    "rimraf": "^3.0.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+} 

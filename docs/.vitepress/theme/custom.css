@@ -1,0 +1,177 @@
+/**
+ * EW Color Picker 文档主题
+ * 在 VitePress 默认主题之上做品牌化定制
+ */
+
+:root {
+  --ew-brand: #6366f1;
+  --ew-brand-2: #8b5cf6;
+  --ew-brand-3: #06b6d4;
+  --ew-brand-soft: rgba(99, 102, 241, 0.12);
+  --vp-c-brand-1: #6366f1;
+  --vp-c-brand-2: #4f46e5;
+  --vp-c-brand-3: #4338ca;
+  --vp-c-brand-soft: rgba(99, 102, 241, 0.14);
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(
+    100deg,
+    #6366f1 10%,
+    #8b5cf6 45%,
+    #06b6d4 90%
+  );
+  --vp-home-hero-image-background-image: linear-gradient(
+    -45deg,
+    rgba(99, 102, 241, 0.55) 30%,
+    rgba(6, 182, 212, 0.45) 100%
+  );
+  --vp-home-hero-image-filter: blur(56px);
+}
+
+.dark {
+  --vp-c-brand-1: #818cf8;
+  --vp-c-brand-2: #a5b4fc;
+  --vp-c-brand-3: #c7d2fe;
+  --vp-c-brand-soft: rgba(129, 140, 248, 0.16);
+}
+
+/* 首页 Hero 动效 */
+.VPHero .name .clip {
+  animation: ewGradient 8s ease-in-out infinite;
+  background-size: 200% 200%;
+}
+
+@keyframes ewGradient {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.VPHero .image-bg {
+  opacity: 0.6;
+}
+
+/* 特性卡片 */
+.VPFeature {
+  border: 1px solid transparent;
+  background-image: linear-gradient(var(--vp-c-bg-soft), var(--vp-c-bg-soft)),
+    linear-gradient(120deg, rgba(99, 102, 241, 0.35), rgba(6, 182, 212, 0.35));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.VPFeature:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(79, 70, 229, 0.18);
+}
+
+.VPFeature .icon {
+  background: var(--ew-brand-soft);
+  border-radius: 12px;
+}
+
+/* 首页自定义区块 */
+.doc-section {
+  max-width: 1152px;
+  margin: 0 auto;
+  padding: 8px 24px 56px;
+}
+
+.doc-section h2 {
+  font-size: 28px;
+  letter-spacing: -0.02em;
+  border: none;
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.doc-section .subtitle {
+  color: var(--vp-c-text-2);
+  margin-bottom: 24px;
+}
+
+.doc-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.doc-card {
+  display: block;
+  padding: 20px;
+  border-radius: 14px;
+  border: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg-soft);
+  text-decoration: none !important;
+  color: inherit;
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.doc-card:hover {
+  border-color: var(--ew-brand);
+  transform: translateY(-2px);
+}
+
+.doc-card h3 {
+  margin: 0 0 8px;
+  font-size: 17px;
+  border: none;
+  padding: 0;
+}
+
+.doc-card p {
+  margin: 0;
+  color: var(--vp-c-text-2);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.demo-frame {
+  width: 100%;
+  height: 500px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 18px;
+  overflow: hidden;
+  background: #0b1020;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+}
+
+/* 代码块与表格微调 */
+.vp-doc div[class*='language-'] {
+  border-radius: 12px;
+}
+
+.vp-doc table {
+  display: table;
+  width: 100%;
+}
+
+.vp-doc th {
+  white-space: nowrap;
+}
+
+.vp-doc h2 {
+  margin-top: 40px;
+  border-top: 1px solid var(--vp-c-divider);
+  padding-top: 24px;
+}
+
+/* 搜索框 */
+.VPNavBarSearch .DocSearch-Button,
+.VPNavBarSearch button {
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .demo-frame {
+    height: 640px;
+  }
+
+  .doc-section {
+    padding: 0 20px 40px;
+  }
+}

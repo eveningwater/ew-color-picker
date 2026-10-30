@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>03. 预定义颜色</title>
+    <link rel="stylesheet" href="../packages/style/dist/index.css">
+    <link rel="stylesheet" href="../packages/style/dist/input-number.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f5; }
+        .demo { max-width: 800px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; }
+        .item { margin-bottom: 24px; padding: 15px; border: 1px solid #e8e8e8; border-radius: 6px; }
+        .title { font-weight: 600; margin-bottom: 10px; }
+        .result { margin-top: 10px; padding: 8px; background: #f8f9fa; border-radius: 4px; font-family: monospace; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <div class="demo">
+        <h2>03. 预定义颜色 predefineColor</h2>
+        <div class="item">
+            <div class="title">1. 字符串数组</div>
+            <div id="picker1"></div>
+            <div class="result" id="result1">颜色: 无</div>
+        </div>
+        <div class="item">
+            <div class="title">2. 对象数组（含 disabled 禁用项）</div>
+            <div id="picker2"></div>
+            <div class="result" id="result2">颜色: 无</div>
+        </div>
+        <div class="item">
+            <div class="title">3. rgba 颜色（配合透明度滑杆）</div>
+            <div id="picker3"></div>
+            <div class="result" id="result3">颜色: 无</div>
+        </div>
+    </div>
+    <script type="module">
+        import ewColorPicker from '../packages/ew-color-picker/src/index.ts';
+
+        const p1 = new ewColorPicker({
+            el: '#picker1',
+            predefineColor: ['#ff4d4f', '#faad14', '#52c41a', '#1890ff', '#722ed1', '#000000']
+        });
+        p1.on('change', c => document.getElementById('result1').textContent = '颜色: ' + c);
+
+        const p2 = new ewColorPicker({
+            el: '#picker2',
+            predefineColor: [
+                { color: '#ff4d4f' },
+                { color: '#faad14', disabled: true },
+                { color: '#52c41a' },
+                { color: '#1890ff', disabled: true }
+            ]
+        });
+        p2.on('change', c => document.getElementById('result2').textContent = '颜色: ' + c);
+
+        const p3 = new ewColorPicker({
+            el: '#picker3',
+            predefineColor: ['rgba(255,77,79,0.8)', 'rgba(24,144,255,0.5)', 'rgba(82,196,26,1)']
+        });
+        p3.on('change', c => document.getElementById('result3').textContent = '颜色: ' + c);
+    </script>
+</body>
+</html>

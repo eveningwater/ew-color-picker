@@ -1,0 +1,134 @@
+@import './variable.scss';
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flex-start {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.flex-end {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.fixed {
+    position: fixed;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.visible {
+    display: block !important;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.full-height {
+    height: 100%;
+}
+
+.no-border {
+    border: none !important;
+}
+
+.rounded {
+    border-radius: $border-radius;
+}
+
+.rounded-lg {
+    border-radius: $border-radius-lg;
+}
+
+.rounded-sm {
+    border-radius: $border-radius-sm;
+}
+
+.shadow {
+    box-shadow: $box-shadow;
+}
+
+.shadow-light {
+    box-shadow: $box-shadow-light;
+}
+
+.no-shadow {
+    box-shadow: none !important;
+}
+
+.transition {
+    transition: all 0.3s ease;
+}
+
+.transition-fast {
+    transition: all 0.15s ease;
+}
+
+.transition-slow {
+    transition: all 0.5s ease;
+}
+
+.disabled {
+    opacity: 0.6;
+    cursor: not-allowed !important;
+    pointer-events: none;
+}
+
+.clearfix {
+    &::after {
+        content: '';
+        display: table;
+        clear: both;
+    }
+}

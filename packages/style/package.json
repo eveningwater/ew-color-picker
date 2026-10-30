@@ -1,0 +1,31 @@
+{
+  "name": "@ew-color-picker/style",
+  "version": "2.0.0",
+  "description": "EW Color Picker Styles",
+  "main": "dist/index.css",
+  "style": "dist/index.css",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "rollup -c rollup.config.mjs",
+    "dev": "sass src/index.scss dist/index.css --watch",
+    "clean": "rimraf dist"
+  },
+  "keywords": [
+    "color-picker",
+    "styles",
+    "scss",
+    "css"
+  ],
+  "author": "eveningwater(854806732@qq.com)",
+  "license": "MIT",
+  "devDependencies": {
+    "sass": "^1.60.0",
+    "rimraf": "^3.0.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

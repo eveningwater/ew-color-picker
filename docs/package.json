@@ -1,0 +1,17 @@
+{
+  "name": "ew-color-picker-docs",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "EW Color Picker 官方文档",
+  "scripts": {
+    "predev": "node scripts/prepare-demo.mjs && node scripts/generate-llms.mjs",
+    "dev": "vitepress dev",
+    "prebuild": "node scripts/prepare-demo.mjs && node scripts/generate-llms.mjs",
+    "build": "vitepress build",
+    "preview": "vitepress preview --port 4277"
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.4"
+  }
+}
