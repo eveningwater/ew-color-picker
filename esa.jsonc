@@ -1,0 +1,9 @@
+{
+  "name": "ew-color-picker-docs",
+  "installCommand": "pnpm install --no-frozen-lockfile",
+  "buildCommand": "pnpm run build:all && cd docs && pnpm run build",
+  "assets": {
+    "directory": "./gh-pages",
+    "notFoundStrategy": "404Page"
+  }
+}
