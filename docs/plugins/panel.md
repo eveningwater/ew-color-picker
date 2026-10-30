@@ -25,7 +25,7 @@ description: Panel 插件渲染饱和度/明度二维选择面板，支持拖拽
 | `alphaDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | 同上，两者都水平时面板宽 320px |
 | `autoPanelPosition` | `boolean` | `false` | 是否根据触发器位置自动定位面板 |
 | `panelPlacement` | `string` | `'bottom'` | 自动定位时的方向，见下表 |
-| `ewColorPickerBox` | `boolean` | `true` | 自动定位必须是 `true`（需要读取 Box 尺寸） |
+| `hasBox` | `boolean` | `true` | 自动定位需要显示 Box 触发器（读取其尺寸） |
 | `alpha` | `boolean` | 由插件是否存在决定 | 有无透明度插件会影响默认颜色格式 |
 | `disabled` | `boolean` | `false` | 禁用后拖拽不生效 |
 

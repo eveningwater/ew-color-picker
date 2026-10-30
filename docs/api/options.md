@@ -57,7 +57,6 @@ new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
 | --- | --- | --- |
 | `ewColorPickerPanel` | `boolean` | `false` 等价 `hasPanel: false` |
 | `ewColorPickerColorMode` | `false \| { defaultMode?, changeMode?, showColorMode? }` | 颜色模式配置 |
-| `ewColorPickerBox` | `{ onClick?, onMouseEnter?, onMouseLeave?, disabled?, readonly?, className?, style? }` | 颜色盒配置 |
 
 ### 回调
 

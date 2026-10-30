@@ -16,7 +16,7 @@ Every option below can be passed to the constructor. Defaults come from `default
 | Labels | `clearText`, `sureText` |
 | Animation | `togglePickerAnimation`, `pickerAnimationTime` |
 | Plugin switches | `hasBox`, `hasPanel`, `hasInput`, `hasClear`, `hasSure`, `hue`, `alpha`, `showButton`, `showColorMode`, `showInputNumber` |
-| Plugin config objects | `ewColorPickerPanel`, `ewColorPickerPredefine`, `ewColorPickerColorMode`, `ewColorPickerBox` |
+| Plugin config objects | `ewColorPickerPanel`, `ewColorPickerPredefine`, `ewColorPickerColorMode` |
 | Box extras | `boxNoColorIcon`, `boxHasColorIcon`, `readonly`, `className`, `style` |
 | Callbacks | `changeColor`, `sure`, `clear`, `togglePicker` |
 | Color mode | `defaultMode`, `changeMode` |
@@ -100,7 +100,7 @@ Controls slider orientation. When both are horizontal, the panel width becomes 3
 
 | Type | Default | Description |
 | --- | --- | --- |
-| `boolean` | `false` | Position the panel relative to the box automatically. Requires `ewColorPickerBox !== false`. |
+| `boolean` | `false` | Position the panel relative to the box automatically. Requires the Box plugin with `hasBox: true`. |
 
 ### panelPlacement
 
@@ -174,7 +174,6 @@ new ewColorPicker({
 | --- | --- | --- |
 | `ewColorPickerPanel` | `boolean \| object` | `false` disables the panel; object merges panel options |
 | `ewColorPickerColorMode` | `boolean \| object` | `false` disables mode switching |
-| `ewColorPickerBox` | `boolean \| object` | `false` disables the box (also affects auto positioning) |
 
 ## Box extras
 
