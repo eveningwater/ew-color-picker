@@ -1,6 +1,6 @@
 # @ew-color-picker/button
 
-EW Color Picker 的按钮插件，提供清空和确定按钮功能。
+ew-color-picker 的按钮插件，提供清空和确定按钮功能。
 
 ## 功能特性
 

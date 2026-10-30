@@ -1,6 +1,6 @@
 # @ew-color-picker/style
 
-EW Color Picker 的样式包，提供完整的CSS样式。
+ew-color-picker 的样式包，提供完整的CSS样式。
 
 ## 功能特性
 

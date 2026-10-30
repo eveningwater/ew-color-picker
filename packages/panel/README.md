@@ -1,6 +1,6 @@
 # @ew-color-picker/panel
 
-EW Color Picker 的颜色面板插件，提供颜色选择面板和滑块功能。
+ew-color-picker 的颜色面板插件，提供颜色选择面板和滑块功能。
 
 ## 功能特性
 

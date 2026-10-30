@@ -1,6 +1,6 @@
 # @ew-color-picker/ew-color-picker
 
-EW Color Picker 聚合包：注册全部内置插件并导出核心，开箱即用。
+ew-color-picker 聚合包：注册全部内置插件并导出核心，开箱即用。
 
 ## 安装
 

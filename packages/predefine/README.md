@@ -1,6 +1,6 @@
 # @ew-color-picker/predefine
 
-EW Color Picker 的预定义颜色插件，提供预定义颜色快速选择功能。
+ew-color-picker 的预定义颜色插件，提供预定义颜色快速选择功能。
 
 ## 功能特性
 
