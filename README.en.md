@@ -1,4 +1,4 @@
-# EW Color Picker
+# ew-color-picker
 
 **[中文](./README.md) | English**
 
