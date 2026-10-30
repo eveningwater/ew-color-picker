@@ -21,7 +21,7 @@ Event-driven, plugin-based color picker with Hex / RGB / HSL support, alpha chan
 - [核心概念](https://eveningwater.github.io/ew-color-picker/guide/concepts): 理解实例级事件总线、挂载点、插件执行顺序、单一改色入口与实例隔离。
 - [框架集成](https://eveningwater.github.io/ew-color-picker/guide/framework-integration): 在 React、Vue 3、Angular 与 Solid 中集成 ew-color-picker 的最小封装写法、生命周期清理与受控同步。
 - [快速开始](https://eveningwater.github.io/ew-color-picker/guide/getting-started): 几分钟内创建第一个 ew-color-picker 实例：容器、配置、事件、方法与销毁。
-- [项目介绍](https://eveningwater.github.io/ew-color-picker/guide/): ew-color-picker 是事件驱动、插件化的颜色选择器。了解核心职责、13 个包的划分与数据流。
+- [项目介绍](https://eveningwater.github.io/ew-color-picker/guide/): ew-color-picker 是事件驱动、插件化的颜色选择器。了解核心职责、14 个包的划分与数据流。
 - [安装](https://eveningwater.github.io/ew-color-picker/guide/installation): 通过 pnpm/npm/yarn、UMD 脚本或按需子包安装 ew-color-picker，开发环境需要 Node 20.10+。
 - [编写自定义插件](https://eveningwater.github.io/ew-color-picker/guide/plugin-dev): 按 pluginName、applyOrder、构造函数、挂载点与事件的约定编写可注册、可销毁的自定义插件。
 - [插件化架构](https://eveningwater.github.io/ew-color-picker/)
@@ -50,7 +50,7 @@ Event-driven, plugin-based color picker with Hex / RGB / HSL support, alpha chan
 - [Core Concepts](https://eveningwater.github.io/ew-color-picker/en/guide/concepts): Understand the instance-level event bus, mount points, plugin apply order, single color entry and instance isolation.
 - [Framework Integration](https://eveningwater.github.io/ew-color-picker/en/guide/framework-integration): Minimal integration patterns for ew-color-picker in React, Vue 3, Angular and Solid, including lifecycle cleanup and controlled-value sync.
 - [Quick Start](https://eveningwater.github.io/ew-color-picker/en/guide/getting-started): Create your first ew-color-picker instance in minutes: container, options, events, methods and cleanup.
-- [Introduction](https://eveningwater.github.io/ew-color-picker/en/guide/): ew-color-picker is an event-driven, plugin-based color picker. Learn what the core does and how the 13 packages fit together.
+- [Introduction](https://eveningwater.github.io/ew-color-picker/en/guide/): ew-color-picker is an event-driven, plugin-based color picker. Learn what the core does and how the 14 packages fit together.
 - [Installation](https://eveningwater.github.io/ew-color-picker/en/guide/installation): Install ew-color-picker via npm, pnpm, yarn, UMD script, or per-package imports. Requires Node 20.10+ for development.
 - [Writing a Plugin](https://eveningwater.github.io/ew-color-picker/en/guide/plugin-dev): Build a custom ew-color-picker plugin with pluginName, applyOrder, constructor, mount points, events and TypeScript type augmentation.
 - [Plugin Architecture](https://eveningwater.github.io/ew-color-picker/en/)
