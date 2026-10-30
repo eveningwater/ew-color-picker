@@ -1127,7 +1127,7 @@ new ewColorPicker({
 ## 完整示例
 
 ```ts
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 
@@ -1386,7 +1386,7 @@ Source: https://eveningwater.github.io/ew-color-picker/examples/
 
 ```html
 <div id="app"></div>
-<script src="@ew-color-picker/ewColorPicker/dist/index.min.js"></script>
+<script src="@ew-color-picker/ew-color-picker/dist/index.min.js"></script>
 <script>
   const picker = new ewColorPicker({ el: '#app', defaultColor: '#3b82f6' })
   picker.on('change', (color) => console.log(color))
@@ -1745,7 +1745,7 @@ EW Color Picker 只依赖原生 DOM 与事件，没有任何框架运行时依�
 5. **SSR 场景延迟挂载**：只在浏览器端的生命周期里创建实例（`useEffect` / `onMounted` / `ngAfterViewInit` / `onMount`），避免服务端渲染时访问 DOM。
 
 ```ts
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 ```
@@ -1754,7 +1754,7 @@ import '@ew-color-picker/style/dist/input-number.css'
 
 ```tsx
 import { useEffect, useRef } from 'react'
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 
@@ -1796,7 +1796,7 @@ React 19 的 StrictMode 会执行两次挂载，上面的 `return () => picker.d
 ```vue
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 
@@ -1851,7 +1851,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core'
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 
 @Component({
   selector: 'ew-color-field',
@@ -1889,7 +1889,7 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
 
 ```tsx
 import { onCleanup, onMount } from 'solid-js'
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 
@@ -1941,7 +1941,7 @@ Source: https://eveningwater.github.io/ew-color-picker/guide/getting-started
 ## 2. 初始化
 
 ```ts
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 
@@ -2117,14 +2117,14 @@ Source: https://eveningwater.github.io/ew-color-picker/guide/installation
 
 ## 方式一：聚合包（推荐）
 
-聚合包 `@ew-color-picker/ewColorPicker` 已注册全部内置插件，安装后即可获得完整功能。
+聚合包 `@ew-color-picker/ew-color-picker` 已注册全部内置插件，安装后即可获得完整功能。
 
 ```bash
-pnpm add @ew-color-picker/ewColorPicker @ew-color-picker/style
+pnpm add @ew-color-picker/ew-color-picker @ew-color-picker/style
 # 或
-npm install @ew-color-picker/ewColorPicker @ew-color-picker/style
+npm install @ew-color-picker/ew-color-picker @ew-color-picker/style
 # 或
-yarn add @ew-color-picker/ewColorPicker @ew-color-picker/style
+yarn add @ew-color-picker/ew-color-picker @ew-color-picker/style
 ```
 
 引入样式：
@@ -2143,7 +2143,7 @@ npm install ew-color-picker
 ```
 
 ::: tip 关于包名
-`ew-color-picker` 是 v2 提供的兼容入口包，只做转发，内部依赖 `@ew-color-picker/ewColorPicker` 与 `@ew-color-picker/style`。适合从 v1 升级，或希望安装命令更简短的用户。
+`ew-color-picker` 是 v2 提供的兼容入口包，只做转发，内部依赖 `@ew-color-picker/ew-color-picker` 与 `@ew-color-picker/style`。适合从 v1 升级，或希望安装命令更简短的用户。
 :::
 
 ## 从 v1 升级到 v2
@@ -2151,7 +2151,7 @@ npm install ew-color-picker
 v2 是破坏性重构，v1 与 v2 的 API 不能混用：
 
 - **架构**：v1 是配置式单包；v2 拆分为 13 个包，界面全部由插件组装，可通过 `Core.use(Plugin)` 自由组合与替换
-- **包名**：`ew-color-picker` 仍是入口，但内部指向 `@ew-color-picker/ewColorPicker`
+- **包名**：`ew-color-picker` 仍是入口，但内部指向 `@ew-color-picker/ew-color-picker`
 - **样式**：需要显式引入 `index.css` 与 `input-number.css` 两个文件
 - **配置与事件**：插件相关配置项（如 `hasAlpha`、`hasBox`）与 v1 有差异，请按本站在线演示重新接入
 
@@ -2178,7 +2178,7 @@ pnpm add @ew-color-picker/box @ew-color-picker/panel
 | `@ew-color-picker/input-number` | 数字输入框组件 |
 | `@ew-color-picker/button` | 清空 / 确定按钮 |
 | `@ew-color-picker/predefine` | 预定义色板 |
-| `@ew-color-picker/colorMode` | 颜色模式切换 |
+| `@ew-color-picker/color-mode` | 颜色模式切换 |
 
 手动注册插件：
 
@@ -2204,7 +2204,7 @@ new ewColorPicker({ el: '#picker' })
 <link rel="stylesheet" href="node_modules/@ew-color-picker/style/dist/index.css" />
 <link rel="stylesheet" href="node_modules/@ew-color-picker/style/dist/input-number.css" />
 
-<script src="node_modules/@ew-color-picker/ewColorPicker/dist/index.min.js"></script>
+<script src="node_modules/@ew-color-picker/ew-color-picker/dist/index.min.js"></script>
 <script>
   new ewColorPicker({ el: '#picker' })
 </script>
@@ -2405,7 +2405,7 @@ Source: https://eveningwater.github.io/ew-color-picker/
 <div id="picker"></div>
 
 <script type="module">
-  import ewColorPicker from '@ew-color-picker/ewColorPicker'
+  import ewColorPicker from '@ew-color-picker/ew-color-picker'
 
   const picker = new ewColorPicker({
     el: '#picker',
@@ -2687,7 +2687,7 @@ picker.on('change', (color) => console.log('颜色：', color))
   </head>
   <body>
     <div id="app"></div>
-    <script src="/node_modules/@ew-color-picker/ewColorPicker/dist/index.min.js"></script>
+    <script src="/node_modules/@ew-color-picker/ew-color-picker/dist/index.min.js"></script>
     <script>
       const picker = new ewColorPicker({
         el: '#app',
@@ -3026,7 +3026,7 @@ import Panel from '@ew-color-picker/panel'
 ewColorPicker.use(Box).use(Panel)
 ```
 
-如果使用聚合包 `@ew-color-picker/ewColorPicker`，Console 已经注册，无法通过 options 关闭。
+如果使用聚合包 `@ew-color-picker/ew-color-picker`，Console 已经注册，无法通过 options 关闭。
 
 ## 输出内容
 
@@ -3191,7 +3191,7 @@ new ewColorPicker({ el: '#app' })
 
 ## 内置插件一览
 
-聚合包 `@ew-color-picker/ewColorPicker` 的注册顺序如下（顺序决定默认的 DOM 排布）：
+聚合包 `@ew-color-picker/ew-color-picker` 的注册顺序如下（顺序决定默认的 DOM 排布）：
 
 | # | 插件 | `pluginName` | 包 | 职责 |
 | --- | --- | --- | --- | --- |
@@ -3696,7 +3696,7 @@ picker.on('change', (color) => console.log(color))
 ## 完整示例
 
 ```ts
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 
@@ -4792,7 +4792,7 @@ Twelve minimal recipes. Runnable HTML files live in the repository's `examples/`
 
 ```html
 <div id="app"></div>
-<script src="@ew-color-picker/ewColorPicker/dist/index.min.js"></script>
+<script src="@ew-color-picker/ew-color-picker/dist/index.min.js"></script>
 <script>
   const picker = new ewColorPicker({ el: '#app', defaultColor: '#3b82f6' })
   picker.on('change', (color) => console.log(color))
@@ -5147,7 +5147,7 @@ Below are minimal, copy-paste wrappers for four frameworks. No official framewor
 5. **SSR safety**: create the instance only in browser-side lifecycle hooks (`useEffect` / `onMounted` / `ngAfterViewInit` / `onMount`).
 
 ```ts
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 ```
@@ -5156,7 +5156,7 @@ import '@ew-color-picker/style/dist/input-number.css'
 
 ```tsx
 import { useEffect, useRef } from 'react'
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 
@@ -5198,7 +5198,7 @@ React 19 StrictMode mounts effects twice; the `return () => picker.destroy()` cl
 ```vue
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 
@@ -5253,7 +5253,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core'
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 
 @Component({
   selector: 'ew-color-field',
@@ -5291,7 +5291,7 @@ Use it with two-way binding:
 
 ```tsx
 import { onCleanup, onMount } from 'solid-js'
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 
@@ -5339,7 +5339,7 @@ Source: https://eveningwater.github.io/ew-color-picker/en/guide/getting-started
 ```
 
 ```ts
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 ```
@@ -5464,7 +5464,7 @@ Core (@ew-color-picker/core)
 | `@ew-color-picker/core` | Color state, event bus, mount points, plugin registry |
 | `@ew-color-picker/utils` | DOM/color/animation helpers, `EventEmitter`, `Console` plugin |
 | `@ew-color-picker/style` | CSS (`index.css` + `input-number.css`) |
-| `@ew-color-picker/ewColorPicker` | All-in-one bundle: registers all plugins and re-exports the core |
+| `@ew-color-picker/ew-color-picker` | All-in-one bundle: registers all plugins and re-exports the core |
 | `@ew-color-picker/box` | Trigger swatch that opens/closes the panel |
 | `@ew-color-picker/panel` | Saturation/value 2D panel |
 | `@ew-color-picker/hue` | Hue slider (0–360°) |
@@ -5527,11 +5527,11 @@ Source: https://eveningwater.github.io/ew-color-picker/en/guide/installation
 ## All-in-one bundle
 
 ```bash
-pnpm add @ew-color-picker/ewColorPicker @ew-color-picker/style
+pnpm add @ew-color-picker/ew-color-picker @ew-color-picker/style
 ```
 
 ```ts
-import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 
@@ -5549,7 +5549,7 @@ npm install ew-color-picker
 ```
 
 ::: tip About the package name
-`ew-color-picker` is a thin compatibility entry for v2. It only forwards to `@ew-color-picker/ewColorPicker` and `@ew-color-picker/style`; it contains no implementation code.
+`ew-color-picker` is a thin compatibility entry for v2. It only forwards to `@ew-color-picker/ew-color-picker` and `@ew-color-picker/style`; it contains no implementation code.
 :::
 
 ## Upgrading from v1
@@ -5557,7 +5557,7 @@ npm install ew-color-picker
 v2 is a breaking rewrite; v1 and v2 APIs cannot be mixed:
 
 - **Architecture**: v1 was a single configurable package; v2 splits into 13 packages where every UI part is a plugin, composable via `Core.use(Plugin)`
-- **Package name**: `ew-color-picker` remains the entry, but now points to `@ew-color-picker/ewColorPicker`
+- **Package name**: `ew-color-picker` remains the entry, but now points to `@ew-color-picker/ew-color-picker`
 - **Styles**: both `index.css` and `input-number.css` must be imported explicitly
 - **Options and events**: plugin options such as `hasAlpha` and `hasBox` differ from v1; re-integrate against the live demo on this site
 
@@ -5596,7 +5596,7 @@ new ewColorPicker({ el: '#app' })
 
 <div id="app"></div>
 
-<script src="https://unpkg.com/@ew-color-picker/ewColorPicker/dist/index.min.js"></script>
+<script src="https://unpkg.com/@ew-color-picker/ew-color-picker/dist/index.min.js"></script>
 <script>
   const picker = new ewColorPicker({ el: '#app', defaultColor: '#3b82f6' })
 </script>
@@ -5798,7 +5798,7 @@ Source: https://eveningwater.github.io/ew-color-picker/en/
 <div id="picker"></div>
 
 <script type="module">
-  import ewColorPicker from '@ew-color-picker/ewColorPicker'
+  import ewColorPicker from '@ew-color-picker/ew-color-picker'
 
   const picker = new ewColorPicker({
     el: '#picker',
@@ -6365,7 +6365,7 @@ new ewColorPicker({ el: '#app' })
 
 ## Built-in plugins
 
-Registration order in `@ew-color-picker/ewColorPicker`:
+Registration order in `@ew-color-picker/ew-color-picker`:
 
 | # | Plugin | `pluginName` | Package | Role |
 | --- | --- | --- | --- | --- |
