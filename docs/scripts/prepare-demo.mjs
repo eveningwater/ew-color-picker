@@ -11,7 +11,7 @@ const assetsDir = resolve(docsDir, 'public/assets')
 
 const assets = [
   {
-    from: resolve(repoDir, 'packages/ew-color-picker/dist/index.js'),
+    from: resolve(repoDir, 'packages/ew-color-picker/dist/index.min.js'),
     to: resolve(assetsDir, 'ew-color-picker.js'),
   },
   {
