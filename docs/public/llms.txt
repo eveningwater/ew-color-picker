@@ -17,6 +17,7 @@ Event-driven, plugin-based color picker with Hex / RGB / HSL support, alpha chan
 - [样式与类名](https://eveningwater.github.io/ew-color-picker/api/styles): 样式入口、CSS 变量、全部类名分组与主题定制方式。
 - [在线演示](https://eveningwater.github.io/ew-color-picker/examples/demo): 在浏览器中直接体验 EW Color Picker：取色、开合面板、查看实时事件日志。
 - [示例集](https://eveningwater.github.io/ew-color-picker/examples/): EW Color Picker 的 12 个典型用法：基础、布局、预设色、按钮、事件、定位、动画、禁用、模式、API、数字输入、多实例。
+- [竞品对比与产品定位](https://eveningwater.github.io/ew-color-picker/guide/comparison): 对比 Pickr、iro.js、Coloris、react-colorful、react-color 等成熟颜色选择器，说明 EW Color Picker 的差异、优势、局限与适用场景。
 - [核心概念](https://eveningwater.github.io/ew-color-picker/guide/concepts): 理解实例级事件总线、挂载点、插件执行顺序、单一改色入口与实例隔离。
 - [快速开始](https://eveningwater.github.io/ew-color-picker/guide/getting-started): 几分钟内创建第一个 EW Color Picker 实例：容器、配置、事件、方法与销毁。
 - [项目介绍](https://eveningwater.github.io/ew-color-picker/guide/): EW Color Picker 是事件驱动、插件化的颜色选择器。了解核心职责、13 个包的划分与数据流。
@@ -44,6 +45,7 @@ Event-driven, plugin-based color picker with Hex / RGB / HSL support, alpha chan
 - [Styles & Classes](https://eveningwater.github.io/ew-color-picker/en/api/styles): Stylesheet entries, CSS variables, class name groups and theming tips for EW Color Picker.
 - [Live Demo](https://eveningwater.github.io/ew-color-picker/en/examples/demo): Try EW Color Picker in the browser: pick colors, toggle the panel and watch the realtime event log.
 - [Examples](https://eveningwater.github.io/ew-color-picker/en/examples/): Twelve typical EW Color Picker scenarios: basic, layout, presets, buttons, events, placement, animation, disabled, modes, API, numeric inputs, multiple instances.
+- [Comparison & Positioning](https://eveningwater.github.io/ew-color-picker/en/guide/comparison): How EW Color Picker compares with Pickr, iro.js, Coloris, react-colorful and react-color, and where it fits.
 - [Core Concepts](https://eveningwater.github.io/ew-color-picker/en/guide/concepts): Understand the instance-level event bus, mount points, plugin apply order, single color entry and instance isolation.
 - [Quick Start](https://eveningwater.github.io/ew-color-picker/en/guide/getting-started): Create your first EW Color Picker instance in minutes: container, options, events, methods and cleanup.
 - [Introduction](https://eveningwater.github.io/ew-color-picker/en/guide/): EW Color Picker is an event-driven, plugin-based color picker. Learn what the core does and how the 13 packages fit together.

@@ -32,6 +32,7 @@ const zhSidebar = {
       text: '开始',
       items: [
         { text: '项目介绍', link: '/guide/' },
+        { text: '竞品对比与定位', link: '/guide/comparison' },
         { text: '安装', link: '/guide/installation' },
         { text: '快速开始', link: '/guide/getting-started' },
         { text: '核心概念', link: '/guide/concepts' },
@@ -86,6 +87,7 @@ const enSidebar = {
       text: 'Getting Started',
       items: [
         { text: 'Introduction', link: '/en/guide/' },
+        { text: 'Comparison & Positioning', link: '/en/guide/comparison' },
         { text: 'Installation', link: '/en/guide/installation' },
         { text: 'Quick Start', link: '/en/guide/getting-started' },
         { text: 'Core Concepts', link: '/en/guide/concepts' },
