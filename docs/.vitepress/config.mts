@@ -13,6 +13,7 @@ const zhNav = [
   { text: 'API', link: '/api/options', activeMatch: '/api/' },
   { text: '插件', link: '/plugins/', activeMatch: '/plugins/' },
   { text: '示例', link: '/examples/', activeMatch: '/examples/' },
+  { text: '框架集成', link: '/guide/framework-integration', activeMatch: '/guide/framework-integration' },
   { text: '在线演示', link: '/examples/demo', activeMatch: '/examples/demo' },
   { text: '其他项目', link: 'https://www.eveningwater.com', target: '_blank', rel: 'noopener' },
 ]
@@ -22,6 +23,7 @@ const enNav = [
   { text: 'API', link: '/en/api/options', activeMatch: '/en/api/' },
   { text: 'Plugins', link: '/en/plugins/', activeMatch: '/en/plugins/' },
   { text: 'Examples', link: '/en/examples/', activeMatch: '/en/examples/' },
+  { text: 'Frameworks', link: '/en/guide/framework-integration', activeMatch: '/en/guide/framework-integration' },
   { text: 'Live Demo', link: '/en/examples/demo', activeMatch: '/en/examples/demo' },
   { text: 'More Projects', link: 'https://www.eveningwater.com', target: '_blank', rel: 'noopener' },
 ]
