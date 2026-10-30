@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../packages/style/dist/index.css">
+    <link rel="stylesheet" href="../packages/style/dist/input-number.css">
+</head>
+
+<body>
+    <div id="picker"></div>
+    <script type="module">
+        import ewColorPicker from '../packages/ew-color-picker/src/index.ts';
+        new ewColorPicker({
+            el: '#picker',
+            predefineColor: ['#111827', '#f9fafb'],
+            changeColor(color) {
+                console.log('选择预定义颜色：', color)
+            },
+        })
+    </script>
+</body>
+
+</html>

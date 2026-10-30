@@ -56,7 +56,6 @@ new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
 | 配置项 | 类型 | 说明 |
 | --- | --- | --- |
 | `ewColorPickerPanel` | `boolean` | `false` 等价 `hasPanel: false` |
-| `ewColorPickerPredefine` | `false \| { predefineColor?, changeColor? }` | 预定义色板配置 |
 | `ewColorPickerColorMode` | `false \| { defaultMode?, changeMode?, showColorMode? }` | 颜色模式配置 |
 | `ewColorPickerBox` | `{ onClick?, onMouseEnter?, onMouseLeave?, disabled?, readonly?, className?, style? }` | 颜色盒配置 |
 
@@ -138,12 +137,15 @@ new ewColorPicker({ el: '#picker', size: { width: 56, height: 40 } })
 - **类型**：`(string | { color: string; disabled?: boolean })[]`
 - **默认值**：`[]`
 
-预定义色板数据。字符串数组会自动归一化；对象形式可以单独禁用某个色块（禁用后置灰且不可点击）。
+预定义色板数据。字符串数组会自动归一化；对象形式可以单独禁用某个色块（禁用后置灰且不可点击）。点击任意色块后会调用顶层的 `changeColor` 回调。
 
 ```ts
 new ewColorPicker({
   el: '#picker',
   predefineColor: ['#6366f1', '#8b5cf6', { color: '#ef4444', disabled: true }],
+  changeColor(color) {
+    console.log('选择预定义颜色：', color)
+  },
 })
 ```
 
@@ -330,24 +332,6 @@ new ewColorPicker({
 - **类型**：`boolean`
 
 `false` 时不渲染颜色面板，等价于 `hasPanel: false`。
-
-## ewColorPickerPredefine
-
-- **类型**：`false | { predefineColor?: (string | { color, disabled? })[]; changeColor?: (color: string) => void }`
-
-预定义色板的嵌套配置。传对象时会与顶层配置合并；`false` 时不渲染色板。
-
-```ts
-new ewColorPicker({
-  el: '#picker',
-  ewColorPickerPredefine: {
-    predefineColor: ['#111827', '#f9fafb'],
-    changeColor(color) {
-      console.log('选择预定义颜色：', color)
-    },
-  },
-})
-```
 
 ## ewColorPickerColorMode
 
