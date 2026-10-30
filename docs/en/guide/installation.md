@@ -45,7 +45,7 @@ npm install ew-color-picker
 
 v2 is a breaking rewrite; v1 and v2 APIs cannot be mixed:
 
-- **Architecture**: v1 was a single configurable package; v2 splits into 13 packages where every UI part is a plugin, composable via `Core.use(Plugin)`
+- **Architecture**: v1 was a single configurable package; v2 splits into 13 packages plus a compat entry where every UI part is a plugin, composable via `Core.use(Plugin)`
 - **Package name**: `ew-color-picker` remains the entry, but now points to `@ew-color-picker/ew-color-picker`
 - **Styles**: both `index.css` and `input-number.css` must be imported explicitly
 - **Options and events**: plugin options such as `hasAlpha` and `hasBox` differ from v1; re-integrate against the live demo on this site

@@ -1,6 +1,6 @@
 ---
 title: 项目介绍
-description: ew-color-picker 是事件驱动、插件化的颜色选择器。了解核心职责、13 个包的划分与数据流。
+description: ew-color-picker 是事件驱动、插件化的颜色选择器。了解核心职责、14 个包的划分与数据流。
 ---
 
 # 项目介绍
@@ -30,6 +30,7 @@ ew-color-picker 是一个基于 **事件驱动 + 插件系统** 的颜色选择�
 | `@ew-color-picker/utils` | DOM / 颜色 / 动画 / 事件 / 图标等基础工具 |
 | `@ew-color-picker/style` | 全部样式（`index.css`、`input-number.css` 等） |
 | `@ew-color-picker/ew-color-picker` | 聚合包，注册全部内置插件，开箱即用 |
+| `ew-color-picker` | 兼容 v1 的无 scope 入口，转发聚合包与样式 |
 | `@ew-color-picker/box` | 触发面板的颜色盒 |
 | `@ew-color-picker/panel` | 饱和度/明度面板（核心必需插件） |
 | `@ew-color-picker/hue` | 色相滑块 |

@@ -20,7 +20,7 @@ ew-color-picker 不是一套「成品皮肤」，而是一个 **可组装的颜�
 
 | 方案 | 形态 | 框架约束 | 扩展方式 | 体积（unpacked） | 最近发布 |
 | --- | --- | --- | --- | --- | --- |
-| **ew-color-picker** | 13 个 npm 包，插件化 | 无（原生 DOM） | 插件注册 / 自写插件 | 聚合包 543.8 KB，核心包 `core.min` 11 KB（gzip 3 KB） | 2026-10 |
+| **ew-color-picker** | 聚合包 + 13 个插件包（含兼容入口 `ew-color-picker`） | 无（原生 DOM） | 插件注册 / 自写插件 | 聚合包 84.6 KB + 样式 36.1 KB（合计 120.7 KB），`core.min` 11.9 KB（gzip 3.9 KB） | 2026-10 |
 | [Pickr](https://github.com/Simonwep/pickr) | 单包，UMD/ESM | 无 | 主题（classic/monolith/nano）+ 选项 | 280.3 KB | 2026-09 |
 | [iro.js](https://github.com/jaames/iro.js) | 单包 | 无 | 选项 + 组件组合 | 231.4 KB | 2021-07 |
 | [Coloris](https://github.com/melloware/coloris) | 单包 + 一份 CSS | 无 | CSS 变量主题 + 选项 | 152.2 KB | 2026-10 |
@@ -31,7 +31,7 @@ ew-color-picker 不是一套「成品皮肤」，而是一个 **可组装的颜�
 | 原生 `input[type=color]` | 浏览器内置 | 无 | 无（样式不可控） | 0 | 随浏览器 |
 | Spectrum | jQuery 插件 | jQuery | 选项 | 1804.2 KB | 2020-05 |
 
-需要强调的一点：体量数字不能直接等价为运行时开销。ew-color-picker 的聚合包体积主要来自三份产物（UMD、UMD.min、ESM）和 `.d.ts` 声明，实际引入的最小运行时是 `index.min.js` **79 KB（gzip 18 KB）**，按需只用核心时是 **11 KB（gzip 3 KB）**。
+需要强调的一点：体量数字不能直接等价为运行时开销。ew-color-picker 的聚合包包含 UMD.min 与 ESM 两份产物和 `.d.ts` 声明，实际引入的最小运行时是 `index.min.js` **81.8 KB（gzip 19.4 KB）**，按需只用核心时是 **11.9 KB（gzip 3.9 KB）**；加上两套样式（gzip 约 3.7 KB）即为完整开箱体积，npm 压缩包总计约 29 KB。
 
 ## ew-color-picker 的优势
 
@@ -57,7 +57,7 @@ ewColorPicker.use(Panel).use(Hue)
 
 ### 4. 开箱即用的完整能力
 
-聚合包默认就带 Hex / RGB / HSL 模式切换、透明度调节、预定义色板、清空/确定按钮与输入校验，不需要像 `react-colorful` 那样自己拼输入框和按钮。
+聚合包（或兼容入口 `ew-color-picker`）默认就带 Hex / RGB / HSL 模式切换、透明度调节、预定义色板、清空/确定按钮与输入校验，不需要像 `react-colorful` 那样自己拼输入框和按钮。
 
 ### 5. 全量 TypeScript 类型
 
@@ -70,10 +70,10 @@ ewColorPicker.use(Panel).use(Hue)
 ## 需要正视的局限
 
 - **生态与社区规模小**：下载量、第三方教程、Issue 沉淀都无法与 Pickr、react-color 相比，遇到冷门问题更多要靠读源码。
-- **没有官方框架封装**：React / Vue 用户需要自己写一层薄封装（或等社区提供）。
+- **不提供官方框架绑定包**：React / Vue / Angular / Solid 的接入方式见[框架集成](./framework-integration)，受控组件与 SSR 场景按示例自行封装（约 20 行）。
 - **不支持渐变、多色选择与图片取色**：这类需求目前要选 iro.js 或专门的渐变选择器。
-- **包数量多**：首次接入需要理解「核心 + 插件」的心智模型，比单包方案多一步。
-- **包的绝对体积不占优**：聚合包 543.8 KB（含声明与三份产物）超过 Pickr、Coloris 的整包体积；优势在于可以按需裁剪到很小。
+- **只有需要定制时才要理解插件模型**：默认装聚合入口或 `npm i ew-color-picker` 即可开箱使用；只有在替换局部 UI、组合自有插件时，才需要理解「核心 + 插件」的结构。
+- **想进一步减小体积需按需装子包**：聚合包 84.6 KB、样式 36.1 KB，已与 Coloris 同量级；若只用单个部件，按需安装插件包可以裁到核心 11.9 KB。
 
 ## 选型建议
 
@@ -85,7 +85,7 @@ ewColorPicker.use(Panel).use(Hue)
 | Vue 项目需要现成组件集 | vue-color 或 @uiw/react-color |
 | 需要渐变、色彩空间转换、游戏/可视化场景 | iro.js |
 | 中后台 / 低代码 / 组件库，需要和设计体系深度融合、替换局部 UI、多实例隔离 | **ew-color-picker** |
-| 需要把选色能力嵌进自己的插件体系或运行时 | **ew-color-picker**（核心 11 KB，可只保留核心 + 自写插件） |
+| 需要把选色能力嵌进自己的插件体系或运行时 | **ew-color-picker**（核心 11.9 KB，可只保留核心 + 自写插件） |
 
 ## 相关链接
 
