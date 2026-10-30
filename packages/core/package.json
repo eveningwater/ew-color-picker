@@ -33,7 +33,7 @@
     "directory": "packages/core"
   },
   "dependencies": {
-    "@ew-color-picker/utils": "workspace:*"
+    "@ew-color-picker/utils": "workspace:^2.0.0"
   },
   "devDependencies": {
     "rollup": "^3.29.5",
