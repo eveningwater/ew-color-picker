@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>11. 数字输入框</title>
+    <link rel="stylesheet" href="../packages/style/dist/index.css">
+    <link rel="stylesheet" href="../packages/style/dist/input-number.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f5; }
+        .demo { max-width: 800px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; }
+        .item { margin-bottom: 24px; padding: 15px; border: 1px solid #e8e8e8; border-radius: 6px; }
+        .title { font-weight: 600; margin-bottom: 10px; }
+        .result { margin-top: 10px; padding: 8px; background: #f8f9fa; border-radius: 4px; font-family: monospace; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <div class="demo">
+        <h2>11. 数字输入框 InputNumber</h2>
+        <p style="color:#666;font-size:13px;">颜色选择器在 RGB/HSL 模式下使用数字输入框，以下为独立组件选项演示。</p>
+        <div class="item">
+            <div class="title">1. 基础用法 + min/max（0 ~ 255）</div>
+            <div id="input1"></div>
+            <div class="result" id="result1">值: 128</div>
+        </div>
+        <div class="item">
+            <div class="title">2. step: 5 + precision: 1（步进 5，保留 1 位小数）</div>
+            <div id="input2"></div>
+            <div class="result" id="result2">值: 50.0</div>
+        </div>
+        <div class="item">
+            <div class="title">3. disabled: true</div>
+            <div id="input3"></div>
+        </div>
+        <div class="item">
+            <div class="title">4. size: small</div>
+            <div id="input4"></div>
+        </div>
+    </div>
+    <script type="module">
+        import { InputNumber } from '../packages/input-number/src/index.ts';
+
+        const mount = (id, options) => {
+            const instance = new InputNumber(options);
+            document.getElementById(id).appendChild(instance.getElement());
+            return instance;
+        };
+
+        mount('input1', {
+            value: 128, min: 0, max: 255,
+            onChange: v => document.getElementById('result1').textContent = '值: ' + v
+        });
+        mount('input2', {
+            value: 50, step: 5, precision: 1, min: 0, max: 100,
+            onChange: v => document.getElementById('result2').textContent = '值: ' + v
+        });
+        mount('input3', { value: 66, disabled: true });
+        mount('input4', { value: 99, size: 'small', min: 0, max: 255 });
+    </script>
+</body>
+</html>

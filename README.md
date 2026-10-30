@@ -1,167 +1,228 @@
+# EW Color Picker
 
-[English](./README.md) | [简体中文](./README-zh_CN.md)
+**中文 | [English](./README.en.md)**
 
-# ew-color-picker
+事件驱动 + 插件化的现代颜色选择器。核心只维护颜色状态与事件，界面全部由插件组装，可按需组合、替换与扩展。
 
-[![NPM version](https://img.shields.io/npm/v/ew-color-picker.svg?color=red)](https://www.npmjs.com/package/ew-color-picker)
-![npm](https://img.shields.io/npm/dw/ew-color-picker)
-![npm](https://img.shields.io/npm/dt/ew-color-picker)
-[![GitHub stars](https://img.shields.io/github/stars/eveningwater/ew-color-picker.svg?color=#42b983)](https://github.com/eveningwater/ew-color-picker/stargazers)
-[![GitHub stars](https://img.shields.io/github/forks/eveningwater/ew-color-picker.svg)](https://github.com/eveningwater/ew-color-picker/network/members)
+- 官网文档：https://eveningwater.github.io/ew-color-picker/
+- 在线演示：https://eveningwater.github.io/ew-color-picker/examples/demo
+- 其他项目：https://www.eveningwater.com
+- AI 文档索引：[llms.txt](https://eveningwater.github.io/ew-color-picker/llms.txt) · [llms-full.txt](https://eveningwater.github.io/ew-color-picker/llms-full.txt)
 
-A colorPicker plugin packaged based on native js.
+## 特性
 
-## Installation and use
+- **插件架构**：Box、Panel、Hue、Alpha、Input、InputNumber、Button、Predefine、ColorMode 全部是独立插件
+- **事件驱动**：`change` / `sure` / `clear` / `toggle` / `mode-change` / `options-update` / `destroy`
+- **多颜色模式**：Hex、RGB、HSL 输入切换，支持透明度
+- **完整类型**：全部包使用 TypeScript 编写并输出声明文件
+- **多实例隔离**：每个实例拥有独立事件总线、DOM 与插件实例
+- **按需加载**：13 个独立包，可只引入所需插件
 
-### Installation
+## 包结构
+
+| 包 | 职责 |
+| --- | --- |
+| `@ew-color-picker/core` | 颜色状态、事件总线、挂载点、插件注册 |
+| `@ew-color-picker/utils` | DOM / 颜色 / 动画工具、`EventEmitter`、`Console` 插件 |
+| `@ew-color-picker/style` | 样式产物（`index.css` + `input-number.css`） |
+| `@ew-color-picker/ewColorPicker` | 聚合包：注册全部插件并导出核心 |
+| `@ew-color-picker/box` | 触发器色块 |
+| `@ew-color-picker/panel` | 饱和度 / 明度面板 |
+| `@ew-color-picker/hue` | 色相滑块 |
+| `@ew-color-picker/alpha` | 透明度滑块 |
+| `@ew-color-picker/input` | 文本颜色输入框 |
+| `@ew-color-picker/input-number` | 数字输入组件与插件 |
+| `@ew-color-picker/button` | 清空 / 确定按钮 |
+| `@ew-color-picker/predefine` | 预定义颜色 |
+| `@ew-color-picker/color-mode` | Hex / RGB / HSL 模式切换 |
+
+## 安装
+
+```bash
+pnpm add @ew-color-picker/ewColorPicker @ew-color-picker/style
 ```
-  npm install ew-color-picker --save-dev // or yarn add ew-color-picker
 
+```ts
+import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import '@ew-color-picker/style/dist/index.css'
+import '@ew-color-picker/style/dist/input-number.css'
+
+const picker = new ewColorPicker({
+  el: '#colorPicker',
+  defaultColor: '#6366f1',
+})
+
+picker.on('change', (color) => console.log('颜色改变：', color))
 ```
-### import
 
-```js
-  <script src="./dist/ew-color-picker.min.js"></script>
+> 两个样式文件都需要引入：`index.css` 负责选择器，`input-number.css` 负责 RGB/HSL 数字输入框。
 
+### 按需引入
+
+```ts
+import ewColorPicker from '@ew-color-picker/core'
+import Box from '@ew-color-picker/box'
+import Panel from '@ew-color-picker/panel'
+import Hue from '@ew-color-picker/hue'
+import Input from '@ew-color-picker/input'
+import Button from '@ew-color-picker/button'
+
+ewColorPicker.use(Box).use(Panel).use(Hue).use(Input).use(Button)
+
+new ewColorPicker({ el: '#colorPicker' })
 ```
 
-A colorPicker as follows:
+### UMD
 
-```js
-   //default configuration
-   var color = new ewColorPicker('.demo');
-   // or var color = new ewColorPicker(document.getElementByClassName('demo'));
-   //click the sure button
-   color.config.sure = function(color){
-       //return color value
-   }
-   //click the cancel button
-   color.config.clear = function(defaultColor){
-     //return default color value
-   }
-  //  when the color changed
-  color.config.changeColor = function(color){
-     //return the changed color
+```html
+<link rel="stylesheet" href="https://unpkg.com/@ew-color-picker/style/dist/index.css" />
+<link rel="stylesheet" href="https://unpkg.com/@ew-color-picker/style/dist/input-number.css" />
+
+<div id="colorPicker"></div>
+<script src="https://unpkg.com/@ew-color-picker/ewColorPicker/dist/index.js"></script>
+<script>
+  new ewColorPicker({ el: '#colorPicker', defaultColor: '#ff0000' })
+</script>
+```
+
+## 使用示例
+
+```ts
+const picker = new ewColorPicker({
+  el: '#colorPicker',
+  defaultColor: 'rgba(99, 102, 241, 0.8)',
+  size: 'large',
+  hueDirection: 'horizontal',
+  alphaDirection: 'horizontal',
+  predefineColor: ['#ef4444', '#22c55e', '#3b82f6', { color: '#0f172a', disabled: true }],
+  clearText: '重置',
+  sureText: '应用',
+  autoPanelPosition: true,
+  panelPlacement: 'bottom-start',
+  togglePickerAnimation: 'height',
+  pickerAnimationTime: 250,
+  changeColor: (color) => console.log('回调：', color),
+})
+
+picker.on('sure', (color, instance) => console.log('确定：', color, instance.getColor()))
+picker.on('clear', () => console.log('已清空'))
+picker.on('mode-change', (mode) => console.log('模式：', mode))
+```
+
+## 配置项
+
+| 选项 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `el` | `string \| HTMLElement` | `document.body` | 挂载容器，提供后自动挂载 |
+| `disabled` | `boolean` | `false` | 禁用全部交互 |
+| `defaultColor` | `string` | `''` | 初始颜色，也是清空后的还原色 |
+| `size` | `string \| number \| object` | `'normal'` | 色块尺寸：`mini`/`small`/`normal`/`medium`/`large`、数字、`{ width, height }` |
+| `predefineColor` | `(string \| { color, disabled? })[]` | `[]` | 预定义颜色，为空则不渲染 |
+| `isClickOutside` | `boolean` | `true` | 点击外部关闭面板 |
+| `hueDirection` | `'vertical' \| 'horizontal'` | `'vertical'` | 色相滑块方向 |
+| `alphaDirection` | `'vertical' \| 'horizontal'` | `'vertical'` | 透明度滑块方向 |
+| `autoPanelPosition` | `boolean` | `false` | 面板自动定位（需 Box） |
+| `panelPlacement` | `string` | `'bottom'` | 12 个方位值，见文档 |
+| `clearText` / `sureText` | `string` | `'清空'` / `'确定'` | 按钮文案 |
+| `togglePickerAnimation` | `string` | `'default'` | `default` / `height` / `opacity` |
+| `pickerAnimationTime` | `number` | `200` | 动画时长（≤10000ms） |
+| `hasBox` / `hasPanel` / `hasInput` | `boolean` | `true` | 控制对应插件 |
+| `hasClear` / `hasSure` | `boolean` | `true` | 控制按钮 |
+| `hue` / `alpha` | `boolean` | `true` | 控制滑块 |
+| `showButton` / `showColorMode` / `showInputNumber` | `boolean` | `true` | 控制底部区域 |
+| `defaultMode` | `'hex' \| 'rgb' \| 'hsl'` | 有 Alpha 时 `rgb`，否则 `hex` | 初始模式 |
+| `readonly` | `boolean` | `false` | 只读：阻止点击色块 |
+| `className` / `style` | `string \| object` | `''` | 色块额外类名 / 内联样式 |
+| `changeColor` | `(color) => void` | - | 颜色改变回调 |
+| `sure` | `(color, picker) => void` | - | 确定回调 |
+| `clear` | `(picker) => void` | - | 清空回调 |
+| `togglePicker` | `(isOpen) => void` | - | 面板开合回调 |
+
+完整说明见[配置项文档](https://eveningwater.github.io/ew-color-picker/api/options)。
+
+## 实例方法
+
+| 方法 | 说明 |
+| --- | --- |
+| `setColor(color)` | 唯一推荐的改色入口，触发 `change` |
+| `getColor()` | 获取当前颜色 |
+| `getHsvaColor()` / `setHsvaColor(hsva)` | 读写 HSVA（后者不触发事件） |
+| `showPanel()` / `hidePanel()` | 开合面板 |
+| `openPicker()` / `closePicker()` | 上面两个的别名 |
+| `getOptions()` / `updateOptions(options)` | 读写配置，后者触发 `options-update` |
+| `mount(el?)` / `getContainer()` / `getMountPoint(name)` | 挂载与容器访问 |
+| `on` / `once` / `off` / `trigger` / `emit` | 事件 API |
+| `destroy()` / `getDestroyedStatus()` | 销毁与状态查询 |
+
+完整签名见[实例方法文档](https://eveningwater.github.io/ew-color-picker/api/methods)。
+
+## 事件
+
+| 事件 | 参数 | 说明 |
+| --- | --- | --- |
+| `change` | `(color)` | 颜色改变 |
+| `toggle` | `(isOpen)` | 面板开合 |
+| `sure` | `(color, picker)` | 点击确定 |
+| `clear` | `()` | 点击清空 |
+| `options-update` | `(options)` | 配置更新 |
+| `mode-change` | `(mode)` | `hex` / `rgb` / `hsl` |
+| `destroy` | `()` | 实例销毁 |
+
+监听函数返回 `true` 可中断后续监听。
+
+## 自定义插件
+
+```ts
+import ewColorPicker from '@ew-color-picker/core'
+import { ApplyOrder } from '@ew-color-picker/utils'
+
+export default class CustomPlugin {
+  static pluginName = 'CustomPlugin'
+  static applyOrder = ApplyOrder.Post
+
+  constructor(public ewColorPicker: ewColorPicker) {
+    // 渲染到挂载点并订阅事件
   }
-     //Custom configuration
-   var color = new ewColorPicker({
-      el:'.demo2',//the dom element
-      alpha:true,//open the alpha
-      hue:false,//open the hue
-      size:{
-          width:100,
-          height:50
-      },//the colorPicker type，contained four value such as normal,medium,small,mini or an object that you defined by yourself,the min value is 25px
-      predefineColor:['#223456','rgba(122,35,77,.5)'],//predefine color is an array
-      disabled:false,//disabled all event
-      defaultColor:'#eeff22',//the default color
-      pickerAnimation:'opacity',//or 'height',`default`，the animation of open the colorPicker,the default value is `default`
-      pickerAnimationTime:300,//Animation execution time，200 is default,the max time is 10000
-      sure:function(color){
-          console.log(color);
-      },//the handler of sure
-      clear:function(){
-          console.log(this)
-      },//the handler of clear
-      togglePicker:(el,flag,context) => {
-        console.log('current root element',el);
-        console.log('current color picker',context);
-        if(flag){
-            console.log("opened");
-        }else{
-            console.log("closed");
-        }
-      },//Click the box event callback, you need to pay attention to the event trigger must be set `hasBox` to true 
-      isLog:false, //Whether to turn on printing information, the default is true if the value is not specified
-      changeColor:(color) => {
-        console.log('the color value changed:',color);
-      },
-      hasBox:true //The default is true, or false, indicating whether to display the box
-      isClickOutside:true, //The default is true, or false,Indicates whether it is allowed to click outside the colorPicker area to close the colorPicker
-      hasClear:true,//Whether to show the clear button，the default is true
-      hasSure:true, //Whether to show the sure button，the default is true,it is not recommended to set to false
-      hasInput:true, //Whether to show the sure input,the default is true,it is not recommended to set to false
-      boxDisabled:true,//The default is false,set it to true and set haxBox to true，then click on the box not to open the color picker
-      openChangeColorMode:true,//Whether to turn on the color switching mode, note that you must set alpha and hue to true to turn on this mode
-      hueDirection:"horizontal",//Or `vertical`, the default is a vertical layout display, indicating whether the hue color scale column is displayed in a horizontal or vertical layout
-      alphaDirection:"horizontal",//Or vertical, the default is a vertical layout display, indicating whether the transparency column is displayed in a horizontal or vertical layout
-      lang:"zh",//Or `en`, means whether to enable Chinese mode or English mode
-      clearText:"clear",//The clear button text, if you want to customize the value, you need to set `userDefineText` to true
-      sureText:"sure",//The sure button text, if you want to customize the value, you need to set `userDefineText` to true
-      userDefineText:false,//The default is false, after setting it to true, the switch of the `lang` attribute will be invalid
-  })
-  //If you don’t like the way to instantiate to create a color picker, you can also use the `createColorPicker` method
-  ewColorPicker.createColorPicker(config);//the param is the configuration
-  //You can get the default configuration object by `getDefaultConfig` method
-  ewColorPicker.getDefaultConfig();
-  //For the instantiated color picker class, we also provide 3 APIs, as follows:
-  color.openPicker(pickerAnimation,time);//Open the color picker manually, the parameter is the animation type, namely `height` or `opacity`
-  color.closePicker(pickerAnimation,time);//Manually close the color picker, the parameters are the same as the manual open method
-  color.updateColor(color);//Manually update the color value, the parameter is the color value, the unqualified color value will give an error prompt, and the color picker panel must be open
+
+  destroy() {
+    // 释放 DOM 与事件
+  }
+}
 ```
 
-## import from cdn
-
-```js
-//import the css
-CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.css
-CDN:https://www.unpkg.com/ew-color-picker/dist/ew-color-picker.min.js
+```ts
+ewColorPicker.use(CustomPlugin)
 ```
 
-## use in component
+详见[插件开发指南](https://eveningwater.github.io/ew-color-picker/guide/plugin-dev)。
 
+## 本地开发
 
-```js
-   import ewColorPicker from 'ewColorPicker';
-  //  import the style
-   import "ew-color-picker/dist/ew-color-picker.min.css"
-  //or  import "ew-color-picker/src/style/ew-color-picker.css"
-   const colorPicker = new ewColorPicker(option);//option is the configuration object, see above for details
-
-```
-> tips: It should be noted that starting from version 1.6.4, if there are multiple dom elements passed in, only the first dom element will be rendered as a colorPicker. If multiple colorPickers need to be rendered, an array can be used for instance. E.g:
-```js
-   const els = document.querySelectorAll('.demo');
-   els.forEach(item => {
-     new ewColorPicker(item);
-     //or new ewColorPicker({
-    //  el:item,
-    //  }) //and the configuration
-   })
+```bash
+pnpm install         # 安装依赖
+pnpm run build:all   # 构建全部包与样式
+pnpm run dev:preview # 示例热更新服务
+pnpm run test:run    # 全量测试
+pnpm run docs:dev    # 启动文档站点
+pnpm run docs:build  # 构建文档
 ```
 
-For more details, please refer to the official website of the document [ewColorPicker](https://eveningwater.github.io/ew-color-picker/);
+## 文档
 
-> Domestic access is slow and accessible [ewColorPicker](https://eveningwater.gitee.io/ew-color-picker/)
+- 中文：https://eveningwater.github.io/ew-color-picker/
+- English：https://eveningwater.github.io/ew-color-picker/en/
+- 示例：https://eveningwater.github.io/ew-color-picker/examples/
+- 演示：https://eveningwater.github.io/ew-color-picker/examples/demo
 
-# About the source code
+## 贡献
 
-the lesson of source code about ew-color-picker can see [here](https://ke.segmentfault.com/course/1650000040761646)。
+欢迎提交 Issue 与 Pull Request。
 
-# the update logs
+## 许可证
 
-* 1.9.9 Fixed the horizontal layout positioning problem of the alpha bar, adjusted the `$` tool method, and added the `$$` tool method.
-* 1.9.8 fixes some problems,add the animation type,now contains "height","opacity","default".
-* 1.9.7 fixes some problems
-* 1.9.6 Fixed some problems of the color picker, and added the method `destroy` to destroy the color picker instance globally.
-* 1.9.5 Fixed the problem of multiple color selector configuration objects, and added the method `destroy` to destroy the color selector instance.
-* 1.9.4 Fixed the problem of responsive update.
-* 1.9.0 ~ 1.9.3 fixed some problems, and modified the introduction and configuration of dependent packages.
-* 1.8.9 Added the `lang` language configuration attribute, added the `clearText` and `sureText` attributes, used to customize the text of the clear button and the OK button, and added the `userDefineText` attribute, used to open the user Customize the text of the clear button and the OK button. If this attribute is not enabled, then the manual setting of the `clearText` and `sureText` attribute values ​​is invalid. If the value is enabled, the language mode is invalid.
-* 1.8.8 Changed el configuration properties and isLog properties into non-responsive properties, modified the type definition, modified the minimum width and height limits of size, modified the maximum limit of animation execution time, and changed the `openAndClosePicker` configuration object property method The name is changed to `togglePicker`, and the return parameter of togglePicker is modified.
-* 1.8.7 Fixed the problem of clicking on predefined color elements
-* 1.8.6 The color picker configuration object has added a responsive function. Whether it is adding, deleting or changing the properties of the color picker, it will trigger the update of the color picker. At the same time, the `pickerAnimationTime` property has been added to indicate the time to execute the animation. The time is set too long and some codes are optimized.
-* 1.8.5 Cancel the verification of the el attribute and not passing the dom element. If no parameters are passed, the color selector will be added to the body by default (but a container element will be generated to contain it).
-* 1.8.3 ~ 1.8.4 fixed some problems and optimized some codes
-* 1.8.2 Fixed the issue of transparency change in the horizontal direction, adjusted the layout and optimized some codes.
-* 1.8.1 Fixed some problems and added `hueDirection` and `alphaDirection` attributes.
-* 1.8.0 Fixed the problem of adding to the body, and modified the problem of setting disabled to true.
-* 1.7.9 Fixed the problem of hiding color blocks.
-* 1.7.8 Fixed the problem of hiding the input, optimized the code, and changed the `openPickerAni` configuration property name to `pickerAnimation`.
-* 1.7.7 Fixed some problems with predefined colors and optimized some codes.
-* 1.7.6 Fixed some problems, opened the internal tool methods, can access all tool methods through `ewColorPicker.util`, and modified the verification of the color value to support the input of English color words, such as setting predefined colors and The default color.
-* 1.7.5 Fixed the problem of default assignment of transparency, renamed the callback of the original `openPicker` to open or close the color block by clicking on it, and renamed it to `openOrClosePicker`, and optimized the code.
-* 1.7.4: Fixed the problem that the transparency of color mode switching does not change, and added the `boxBgColor` configuration property, which indicates whether the background color of the color block changes when the color panel is opened and the color value is triggered. If you do not click OK Button, the color panel will be restored to the default color after closing the color panel. The predefined color array `predefineColor` has added an array item that can be passed as an object or a string. The object is defined as `{ color:"#123",disabled:true }(color Is a qualified color value, disabled is true or false, indicating whether to disable the predefined click to change color)`.
-* 1.7.3: Optimized the color value algorithm, and added the `boxDisabled` and `openChangeColorMode` configuration properties.
-* 1.7.2: Added the ability to add a color selector to the `body`, but a container element will be generated to contain it, and the `disabled` configuration attribute is changed to prohibit all clicks.
-* 1.3.3 ~ 1.7.1: The basic function of the color picker has been added.
+MIT License
+
+---
+
+**作者**：eveningwater  
+**仓库**：https://github.com/eveningwater/ew-color-picker

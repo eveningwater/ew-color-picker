@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>07. 动画</title>
+    <link rel="stylesheet" href="../packages/style/dist/index.css">
+    <link rel="stylesheet" href="../packages/style/dist/input-number.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f5; }
+        .demo { max-width: 800px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; }
+        .item { margin-bottom: 24px; padding: 15px; border: 1px solid #e8e8e8; border-radius: 6px; }
+        .title { font-weight: 600; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="demo">
+        <h2>07. 动画</h2>
+        <div class="item">
+            <div class="title">1. togglePickerAnimation: "default"（默认）</div>
+            <div id="picker1"></div>
+        </div>
+        <div class="item">
+            <div class="title">2. togglePickerAnimation: "height"（高度展开）</div>
+            <div id="picker2"></div>
+        </div>
+        <div class="item">
+            <div class="title">3. pickerAnimationTime: 600（慢速 600ms）</div>
+            <div id="picker3"></div>
+        </div>
+        <div class="item">
+            <div class="title">4. pickerAnimationTime: 0（无动画）</div>
+            <div id="picker4"></div>
+        </div>
+    </div>
+    <script type="module">
+        import ewColorPicker from '../packages/ew-color-picker/src/index.ts';
+
+        new ewColorPicker({ el: '#picker1', togglePickerAnimation: 'default', defaultColor: '#1890ff' });
+        new ewColorPicker({ el: '#picker2', togglePickerAnimation: 'height', defaultColor: '#52c41a' });
+        new ewColorPicker({ el: '#picker3', pickerAnimationTime: 600, defaultColor: '#faad14' });
+        new ewColorPicker({ el: '#picker4', pickerAnimationTime: 0, defaultColor: '#f5222d' });
+    </script>
+</body>
+</html>

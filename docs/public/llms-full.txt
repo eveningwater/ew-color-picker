@@ -1,0 +1,6193 @@
+# EW Color Picker 完整文档 / Full Documentation
+
+> 事件驱动 + 插件化的现代颜色选择器。Event-driven, plugin-based color picker.
+
+> 站点 / Site: https://eveningwater.github.io/ew-color-picker/
+
+
+---
+
+# 中文文档
+
+
+## 回调
+
+Source: https://eveningwater.github.io/ew-color-picker/api/callbacks
+
+# 回调
+
+回调是配置对象中的函数字段，与[事件](./events)不同：**回调一个事件类型只能配置一个**，而事件可以注册多个监听器。回调由具体插件在合适的时机直接调用。
+
+## 核心回调
+
+### changeColor
+
+颜色变化时调用，由 `setColor()` 直接调用。
+
+```ts
+new ewColorPicker({
+  el: '#picker',
+  changeColor(color: string) {
+    console.log(color)
+  },
+})
+```
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `color` | `string` | 最新颜色字符串 |
+
+执行顺序：`trigger('change', color)` → `options.changeColor(color)`。
+
+### sure
+
+点击“确定”时调用，由 Button 插件在触发 `sure` 事件之前调用。
+
+```ts
+new ewColorPicker({
+  el: '#picker',
+  sure(color: string, picker: ewColorPicker) {
+    console.log('确定：', color)
+  },
+})
+```
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `color` | `string` | 当前颜色 |
+| `picker` | `ewColorPicker` | 实例 |
+
+### clear
+
+点击“清空”时调用，由 Button 插件在触发 `clear` 事件之前调用。
+
+```ts
+new ewColorPicker({
+  el: '#picker',
+  clear(picker: ewColorPicker) {
+    console.log('清空')
+  },
+})
+```
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `picker` | `ewColorPicker` | 实例 |
+
+### togglePicker
+
+面板开合时调用，分别在 `showPanel()` / `hidePanel()` 动画完成后执行。
+
+```ts
+new ewColorPicker({
+  el: '#picker',
+  togglePicker(isOpen: boolean) {
+    console.log(isOpen ? '打开' : '关闭')
+  },
+})
+```
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `isOpen` | `boolean` | `true` 展开，`false` 收起 |
+
+## 插件级回调
+
+### Box
+
+通过 `ewColorPickerBox` 配置。
+
+```ts
+new ewColorPicker({
+  el: '#picker',
+  ewColorPickerBox: {
+    onClick(plugin) {},      // 点击颜色盒
+    onMouseEnter(plugin) {}, // 鼠标移入
+    onMouseLeave(plugin) {}, // 鼠标移出
+  },
+})
+```
+
+| 回调 | 参数 | 说明 |
+| --- | --- | --- |
+| `onClick` | `ewColorPickerBoxPlugin` | 点击颜色盒（默认开合行为不受影响） |
+| `onMouseEnter` | `ewColorPickerBoxPlugin` | 鼠标移入 |
+| `onMouseLeave` | `ewColorPickerBoxPlugin` | 鼠标移出 |
+
+### Input
+
+通过 `changeColor` 配置（与核心 `changeColor` 同名，Input 插件会在用户输入合法颜色后调用）。
+
+```ts
+new ewColorPicker({
+  el: '#picker',
+  changeColor(color) {
+    console.log('输入框提交：', color) // rgba 字符串
+  },
+})
+```
+
+### InputNumber
+
+```ts
+import { InputNumber } from '@ew-color-picker/input-number'
+
+const input = new InputNumber({
+  value: 128,
+  min: 0,
+  max: 255,
+  step: 1,
+  onChange(value) {
+    console.log('数值变化：', value)
+  },
+  onBlur(value) {
+    console.log('失焦：', value)
+  },
+  onFocus(event) {
+    console.log('聚焦：', event)
+  },
+})
+```
+
+| 回调 | 参数 | 说明 |
+| --- | --- | --- |
+| `onChange` | `value: number` | 数值变化（含输入与步进） |
+| `onBlur` | `value: number` | 失焦 |
+| `onFocus` | `FocusEvent` | 聚焦 |
+
+### ColorMode
+
+```ts
+new ewColorPicker({
+  el: '#picker',
+  changeMode(mode, picker) {
+    console.log('模式：', mode) // 'hex' | 'rgb' | 'hsl'
+  },
+})
+```
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `mode` | `ColorMode` | 当前模式 |
+| `picker` | `ewColorPicker` | 实例 |
+
+## 回调 vs 事件
+
+| 维度 | 回调 | 事件 |
+| --- | --- | --- |
+| 数量 | 每种一个 | 可注册多个 |
+| 注册方式 | 构造配置 | `on` / `once` |
+| 解绑 | 需 `updateOptions` 覆盖 | `off` |
+| 调用者 | 具体插件直接调用 | 插件 / 核心 `trigger` |
+| 适用场景 | 单一业务处理 | 多监听、组件通信、插件同步 |
+
+推荐：插件与核心内部同步使用事件；业务侧单一入口使用回调即可。
+
+## 相关链接
+
+- [事件](./events)
+- [配置项](./options)
+
+## 事件
+
+Source: https://eveningwater.github.io/ew-color-picker/api/events
+
+# 事件
+
+实例基于 `EventEmitter` 提供事件订阅能力。所有事件都是**实例级**的，不会跨实例传播。
+
+## 事件总览
+
+| 事件 | 参数 | 触发时机 |
+| --- | --- | --- |
+| `change` | `(color: string)` | `setColor()` 执行后（每次颜色变化） |
+| `toggle` | `(isOpen: boolean)` | 面板展开 / 收起完成后 |
+| `sure` | `(color: string, picker: ewColorPicker)` | 点击“确定”按钮 |
+| `clear` | `()` | 点击“清空”按钮 |
+| `options-update` | `(options)` | `updateOptions()` 执行后 |
+| `mode-change` | `(mode: 'hex' \| 'rgb' \| 'hsl')` | 颜色模式切换后（ColorMode 插件派发） |
+| `destroy` | `()` | 实例销毁时 |
+
+> 事件名必须在上述白名单内。`on()` / `once()` / `off()` 对未知事件会输出警告，便于发现拼写错误。
+
+## change
+
+颜色变化事件，是最重要的事件。
+
+```ts
+picker.on('change', (color: string) => {
+  console.log('当前颜色：', color)
+})
+```
+
+- 由 `setColor()` 触发；
+- 回调参数为写入的原始颜色字符串（可能与当前输入模式不同，例如 `rgba(...)`）；
+- 与配置项 `changeColor` 同时存在：先触发事件，再调用回调。
+
+```ts
+const picker = new ewColorPicker({
+  el: '#picker',
+  changeColor(color) {
+    document.body.style.background = color
+  },
+})
+
+picker.on('change', (color) => {
+  document.querySelector('#value')!.textContent = color
+})
+```
+
+## toggle
+
+面板开合事件。
+
+```ts
+picker.on('toggle', (isOpen: boolean) => {
+  console.log(isOpen ? '面板已打开' : '面板已关闭')
+})
+```
+
+- `showPanel()` 动画完成后触发 `toggle(true)`；
+- `hidePanel()` 动画完成后触发 `toggle(false)`；
+- 配置项 `togglePicker(isOpen)` 会在事件之后被调用。
+
+## sure
+
+确定按钮事件。
+
+```ts
+picker.on('sure', (color, instance) => {
+  console.log('确认颜色：', color)
+})
+```
+
+- 由 Button 插件在点击“确定”后触发；
+- 回调参数：当前颜色、实例本身；
+- Button 插件会**先**调用配置项 `sure(color, picker)`，**再**触发该事件，最后收起面板。
+
+## clear
+
+清空按钮事件。
+
+```ts
+picker.on('clear', () => {
+  console.log('已清空')
+})
+```
+
+- Button 插件先执行 `options.clear(picker)`，再触发 `clear` 事件；
+- 点击清空后面板自动收起。
+
+## options-update
+
+配置更新事件。
+
+```ts
+picker.on('options-update', (options) => {
+  console.log('配置已更新', options)
+})
+```
+
+- 在 `updateOptions()` 完成配置合并、颜色同步与插件重新渲染后触发；
+- 参数为更新后的完整配置对象。
+
+## mode-change
+
+颜色模式切换事件，由 ColorMode 插件派发。
+
+```ts
+picker.on('mode-change', (mode) => {
+  console.log('切换到：', mode) // 'hex' | 'rgb' | 'hsl'
+})
+```
+
+- 可通过 `picker.plugins.ewColorPickerColorMode.setMode(mode)` 主动切换；
+- 配置项 `changeMode(mode, picker)` 与该事件都会在切换后执行。
+
+## destroy
+
+销毁事件。
+
+```ts
+picker.on('destroy', () => {
+  console.log('实例已销毁')
+})
+```
+
+- 在 `destroy()` 的末尾触发，此时 DOM 已被移除、插件引用已清空。
+
+## 订阅技巧
+
+### 只监听一次
+
+```ts
+picker.once('sure', (color) => {
+  console.log('只会执行一次：', color)
+})
+```
+
+### 解绑指定监听
+
+```ts
+const handler = (color: string) => console.log(color)
+picker.on('change', handler)
+picker.off('change', handler)
+```
+
+### 解绑全部监听
+
+```ts
+picker.off('change') // 清空 change 事件的所有监听
+picker.off()         // 清空所有事件监听
+```
+
+### 中断后续监听
+
+监听函数返回 `true` 时，`trigger` 会停止执行后续监听器：
+
+```ts
+picker.on('change', (color) => {
+  if (someCondition) return true
+})
+```
+
+## trigger 与 emit
+
+```ts
+picker.trigger('change', '#ff0000') // 只通知监听器
+picker.emit('sure', '#ff0000', picker) // 通知监听器 + 调用 options.sure()
+```
+
+日常开发中无需手动派发，插件会在合适的时机自行触发。
+
+## 相关链接
+
+- [回调](./callbacks)
+- [实例方法](./methods)
+
+## 实例方法
+
+Source: https://eveningwater.github.io/ew-color-picker/api/methods
+
+# 实例方法
+
+所有方法都通过 `new ewColorPicker(...)` 返回的实例调用。实例销毁后，大部分方法会安全地直接返回，不会抛错。
+
+```ts
+const picker = new ewColorPicker({ el: '#picker' })
+```
+
+## 构造函数
+
+```ts
+new ewColorPicker('#picker')
+new ewColorPicker(domElement)
+new ewColorPicker({ el: '#picker', ...options })
+```
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `options` | `string \| HTMLElement \| ewColorPickerOptions` | 容器或完整配置对象 |
+| `pluginOptions` | `Record<string, any>`（可选） | 内部使用的插件配置合并参数 |
+
+构造函数会依次完成：合并默认配置 → 解析容器 → 创建 `root` / `panelContainer` → 按 `applyOrder` 实例化已注册插件 → 绑定外部点击（`isClickOutside`）。
+
+---
+
+## static use
+
+注册插件构造函数。**必须在实例化之前调用**。
+
+```ts
+ewColorPicker.use(PluginCtor)
+```
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `plugin` | `ewColorPickerPluginCtor` | 带 `static pluginName` 的插件类 |
+| 返回 | `typeof ewColorPicker` | 支持链式调用 |
+
+```ts
+import BoxPlugin from '@ew-color-picker/box'
+import PanelPlugin from '@ew-color-picker/panel'
+
+ewColorPicker.use(BoxPlugin).use(PanelPlugin)
+```
+
+---
+
+## mount
+
+将实例重新挂载到指定容器。
+
+```ts
+picker.mount(el?: string | HTMLElement): ewColorPicker
+```
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `el` | `string \| HTMLElement`（可选） | 新容器；省略时使用 `options.el`，再回退到 `document.body` |
+
+- 会更新 `options.el`，重新创建挂载点并重新执行全部已注册插件的 `run()`；
+- 已销毁的实例会直接返回自身；
+- 通常无需手动调用，构造时已自动完成挂载。
+
+---
+
+## getMountPoint
+
+获取插件渲染所用的挂载点。
+
+```ts
+picker.getMountPoint(name: 'root' | 'panelContainer'): HTMLElement | undefined
+```
+
+| 挂载点 | 说明 |
+| --- | --- |
+| `root` | `.ew-color-picker` 外层容器 |
+| `panelContainer` | `.ew-color-picker-panel-container` 面板容器 |
+
+实例销毁后返回 `undefined`。
+
+---
+
+## getContainer
+
+获取当前挂载容器（即 `options.el`）。
+
+```ts
+picker.getContainer(): HTMLElement
+```
+
+---
+
+## showPanel / hidePanel
+
+展开或收起面板。
+
+```ts
+picker.showPanel(animationType?: string, duration?: number): void
+picker.hidePanel(animationType?: string, duration?: number): void
+```
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `animationType` | `'default' \| 'height' \| 'opacity'`（可选） | 覆盖配置中的 `togglePickerAnimation` |
+| `duration` | `number`（可选） | 覆盖 `pickerAnimationTime`，单位毫秒 |
+
+行为说明：
+
+- 面板打开且 `currentColor` 为空时，会用 `defaultColor`（未配置则 `#ff0000`）初始化颜色，但不会写入输入框；
+- 打开后触发 `toggle(true)` 与 `togglePicker(true)` 回调，并调用 `syncAllPlugins()`；
+- 关闭后触发 `toggle(false)` 与 `togglePicker(false)`。
+
+```ts
+picker.showPanel('height', 240)
+picker.hidePanel()
+```
+
+---
+
+## openPicker / closePicker
+
+`showPanel()` / `hidePanel()` 的语义化别名，无参数。
+
+```ts
+picker.openPicker()
+picker.closePicker()
+```
+
+---
+
+## setColor
+
+修改颜色的**唯一入口**。
+
+```ts
+picker.setColor(color: string): void
+```
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `color` | `string` | 任意合法 CSS 颜色（Hex / RGB / RGBA / HSL / HSLA / 关键字） |
+
+执行流程：
+
+1. 写入 `currentColor`；
+2. 将颜色转换为 RGBA 再转换为 HSVA，写入 `hsvaColor`（转换失败时使用 `{ h: 0, s: 100, v: 100, a: 1 }`）；
+3. `trigger('change', color)`；
+4. 调用 `options.changeColor(color)`。
+
+```ts
+picker.setColor('#ff0000')
+picker.setColor('rgba(0, 0, 0, 0.5)')
+```
+
+::: tip
+插件内部修改颜色也必须调用该方法，不要直接改写 DOM，否则其他插件不会同步。
+:::
+
+---
+
+## getColor
+
+获取当前颜色字符串。
+
+```ts
+picker.getColor(): string
+```
+
+未设置颜色时返回 `''`。
+
+---
+
+## getHsvaColor / setHsvaColor
+
+读取或写入 HSVA 状态。
+
+```ts
+picker.getHsvaColor(): HsvaColor
+picker.setHsvaColor(hsva: HsvaColor): void
+```
+
+```ts
+interface HsvaColor {
+  h: number // 0 ~ 360
+  s: number // 0 ~ 100
+  v: number // 0 ~ 100
+  a: number // 0 ~ 1
+}
+```
+
+`getHsvaColor` 返回浅拷贝，修改返回值不会影响实例。`setHsvaColor` 只更新内部状态，**不会触发 `change` 事件**；如需同步 UI 请改用 `setColor()`。
+
+---
+
+## getOptions
+
+获取当前完整配置（包括合并后的默认值）。
+
+```ts
+picker.getOptions(): ewColorPickerMergeOptionsData
+```
+
+返回的是实例内部配置对象的引用，不建议直接修改，请使用 `updateOptions()`。
+
+---
+
+## updateOptions
+
+运行时更新配置。
+
+```ts
+picker.updateOptions(newOptions: Record<string, any>): void
+```
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `newOptions` | `Record<string, any>` | 需要覆盖的配置片段 |
+
+行为说明：
+
+- 与现有配置浅合并；
+- 若包含 `defaultColor`，会校验颜色：合法则立即 `setColor`，非法则保持当前颜色并输出警告；
+- 依次调用全部插件的 `run()` 重新渲染；
+- 触发 `options-update` 事件。
+
+```ts
+picker.updateOptions({
+  disabled: true,
+  defaultColor: '#22c55e',
+  size: 'small',
+})
+```
+
+---
+
+## syncAllPlugins
+
+手动同步所有插件到指定颜色。内部只会调用实现了 `syncColor` 方法的插件。
+
+```ts
+picker.syncAllPlugins(color: string): void
+```
+
+`setColor` 已通过 `change` 事件驱动同步；该方法主要用于插件内部在特殊场景下强制刷新（如 ColorMode 更新输入框后）。
+
+---
+
+## destroy
+
+销毁实例。
+
+```ts
+picker.destroy(): void
+```
+
+执行内容：
+
+1. 标记 `isDestroyed = true`；
+2. 解绑 `document` 上的外部点击监听；
+3. 依次调用每个插件的 `destroy()`；
+4. 移除全部挂载点与包装容器；
+5. 清空 `plugins` 引用；
+6. 触发 `destroy` 事件。
+
+重复调用无副作用。
+
+---
+
+## getDestroyedStatus
+
+判断实例是否已销毁。
+
+```ts
+picker.getDestroyedStatus(): boolean
+```
+
+---
+
+## on / once / off
+
+事件订阅与解绑，基于实例级 `EventEmitter`。
+
+```ts
+picker.on(type: string, fn: Function, context?: object): ewColorPicker
+picker.once(type: string, fn: Function, context?: object): ewColorPicker
+picker.off(type?: string, fn?: Function): ewColorPicker | undefined
+```
+
+| 参数 | 说明 |
+| --- | --- |
+| `type` | 事件名，必须是白名单事件 |
+| `fn` | 回调函数 |
+| `context` | 回调执行上下文，默认实例本身 |
+
+- `on` / `once` 会校验事件名，未知事件会输出警告；
+- `once` 回调执行后自动解绑；
+- `off(type)` 清空该事件全部监听；`off(type, fn)` 只移除指定函数；`off()` 清空全部监听；
+- 回调返回 `true` 会中断后续监听器的执行（`trigger` 的内部行为）。
+
+```ts
+const handler = (color: string) => console.log(color)
+picker.on('change', handler)
+picker.off('change', handler)
+```
+
+详见 [事件](./events)。
+
+---
+
+## trigger / emit
+
+手动派发事件。
+
+```ts
+picker.trigger(type: string, ...args: any[]): void
+picker.emit(type: string, ...args: any[]): void
+```
+
+- `trigger` 仅通知监听器；
+- `emit` 在通知监听器之后，还会按事件类型调用对应配置回调：`clear → options.clear()`、`sure → options.sure()`、`toggle → options.togglePicker(...args)`。
+
+日常使用中，插件会自行触发对应事件；仅在自定义插件或测试中才需要手动调用。
+
+---
+
+## 实例 use
+
+在运行期安装一个**插件实例**（区别于静态 `use`）。
+
+```ts
+picker.use(plugin: ewColorPickerPlugin): ewColorPicker
+```
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `plugin` | `{ install(core): void }` | 实现 `install` 方法的插件对象 |
+
+```ts
+const badge = {
+  install(core: ewColorPicker) {
+    console.log('installed on', core)
+  },
+}
+picker.use(badge)
+```
+
+---
+
+## 实例属性
+
+| 属性 | 类型 | 说明 |
+| --- | --- | --- |
+| `options` | `ewColorPickerMergeOptionsData` | 合并后的完整配置 |
+| `plugins` | `Record<string, plugin>` | 已实例化的插件，按 `pluginName` 索引 |
+| `wrapper` | `HTMLElement & { isEwColorPickerContainer?: boolean }` | `.ew-color-picker` 包装容器 |
+| `currentColor` | `string` | 当前颜色字符串 |
+| `hsvaColor` | `HsvaColor` | 当前 HSVA 状态 |
+
+```ts
+picker.plugins.ewColorPickerButton.enableClear(false)
+console.log(picker.wrapper)
+```
+
+## 相关链接
+
+- [配置项](./options)
+- [事件](./events)
+- [回调](./callbacks)
+
+## 配置项
+
+Source: https://eveningwater.github.io/ew-color-picker/api/options
+
+# 配置项
+
+`new ewColorPicker(options)` 接受一个配置对象；也可以直接传入选择器字符串或 DOM 元素作为 `el`。
+
+```ts
+new ewColorPicker('#picker')
+new ewColorPicker(document.querySelector('#picker')!)
+new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
+```
+
+所有配置都可以在实例化后通过 [`updateOptions()`](./methods#updateoptions) 动态更新。
+
+## 总览
+
+### 核心配置
+
+| 配置项 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `el` | `string \| HTMLElement` | `document.body` | 挂载容器 |
+| `disabled` | `boolean` | `false` | 禁用全部交互 |
+| `defaultColor` | `string` | `''` | 初始颜色 |
+| `size` | `string \| number \| { width, height }` | `'normal'` | 颜色盒尺寸 |
+| `predefineColor` | `(string \| { color, disabled? })[]` | `[]` | 预定义颜色 |
+| `isClickOutside` | `boolean` | `true` | 点击容器外部时收起面板 |
+| `hueDirection` | `'vertical' \| 'horizontal'` | `'vertical'` | 色相滑块方向 |
+| `alphaDirection` | `'vertical' \| 'horizontal'` | `'vertical'` | 透明度滑块方向 |
+| `clearText` | `string` | `'清空'` | 清空按钮文本 |
+| `sureText` | `string` | `'确定'` | 确定按钮文本 |
+| `togglePickerAnimation` | `'default' \| 'height' \| 'opacity'` | `'default'` | 面板开合动画 |
+| `pickerAnimationTime` | `number` | `200` | 动画时长（毫秒，上限 10000） |
+| `autoPanelPosition` | `boolean` | `false` | 面板自动定位（需配置 `ewColorPickerBox`） |
+| `panelPlacement` | 见下文 | `'bottom'` | 面板相对盒子的位置 |
+
+### 显示开关
+
+| 配置项 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `hasBox` | `boolean` | `true` | 是否显示颜色盒 |
+| `hasPanel` | `boolean` | `true` | 是否显示颜色面板 |
+| `hasInput` | `boolean` | `true` | 是否显示文本输入框 |
+| `hasClear` | `boolean` | `true` | 是否显示清空按钮 |
+| `hasSure` | `boolean` | `true` | 是否显示确定按钮 |
+| `hue` | `boolean` | `true` | 是否显示色相滑块 |
+| `alpha` | `boolean` | `true` | 是否显示透明度滑块（注册 Alpha 插件后） |
+| `showButton` | `boolean` | `true` | 是否渲染按钮组 |
+| `showColorMode` | `boolean` | `true` | 是否显示颜色模式切换器 |
+| `showInputNumber` | `boolean` | `true` | 是否渲染数字输入框 |
+
+### 插件配置对象
+
+| 配置项 | 类型 | 说明 |
+| --- | --- | --- |
+| `ewColorPickerPanel` | `boolean` | `false` 等价 `hasPanel: false` |
+| `ewColorPickerPredefine` | `false \| { predefineColor?, changeColor? }` | 预定义色板配置 |
+| `ewColorPickerColorMode` | `false \| { defaultMode?, changeMode?, showColorMode? }` | 颜色模式配置 |
+| `ewColorPickerBox` | `{ onClick?, onMouseEnter?, onMouseLeave?, disabled?, readonly?, className?, style? }` | 颜色盒配置 |
+
+### 回调
+
+| 配置项 | 签名 | 说明 |
+| --- | --- | --- |
+| `changeColor` | `(color: string) => void` | 颜色变化时调用 |
+| `sure` | `(color: string, picker: ewColorPicker) => void` | 点击确定时调用 |
+| `clear` | `(picker: ewColorPicker) => void` | 点击清空时调用 |
+| `togglePicker` | `(isOpen: boolean) => void` | 面板开合时调用 |
+
+## el
+
+- **类型**：`string | HTMLElement`
+- **默认值**：`document.body`
+
+挂载容器。字符串会通过 `querySelector` 解析；解析失败或未传入时回退到 `document.body`。容器会获得 `isEwColorPickerContainer` 标记属性，内部会创建 `.ew-color-picker` 包装层。
+
+```ts
+const el = document.querySelector('#picker')!
+new ewColorPicker({ el })
+```
+
+## disabled
+
+- **类型**：`boolean`
+- **默认值**：`false`
+
+禁用全部交互：颜色盒不可点击、面板不可拖动、按钮禁用、输入框禁用。`disabled` 为 `true` 时颜色盒仍保留当前背景色，用于展示。
+
+```ts
+new ewColorPicker({ el: '#picker', disabled: true })
+```
+
+运行时切换：
+
+```ts
+picker.updateOptions({ disabled: true })
+```
+
+## defaultColor
+
+- **类型**：`string`
+- **默认值**：`''`
+
+初始颜色，支持 Hex、RGB(A)、HSL(A) 与颜色关键字。为空时颜色盒展示为“无颜色”状态，打开面板时会回退到 `#ff0000` 用于面板定位，但不会写入输入框。
+
+当颜色非法时：
+
+- 初始化阶段保留空颜色状态；
+- `updateOptions({ defaultColor })` 阶段保持当前颜色并输出警告：`Invalid defaultColor '...', keep current color unchanged.`
+
+```ts
+new ewColorPicker({ el: '#picker', defaultColor: 'rgba(99, 102, 241, 0.65)' })
+```
+
+## size
+
+- **类型**：`string | number | { width?: string | number; height?: string | number }`
+- **默认值**：`'normal'`
+
+颜色盒尺寸。支持四种写法：
+
+| 写法 | 示例 | 结果 |
+| --- | --- | --- |
+| 预设名 | `'mini'` / `'small'` / `'normal'` / `'medium'` / `'large'` | 20 / 24 / 32 / 36 / 40 px |
+| CSS 长度 | `'48px'`、`'3rem'` | 直接使用 |
+| 数字 | `48` | `48px` |
+| 对象 | `{ width: 48, height: 32 }` | 分别设置宽高，图标取较小边的 50% |
+
+```ts
+new ewColorPicker({ el: '#picker', size: 'large' })
+new ewColorPicker({ el: '#picker', size: { width: 56, height: 40 } })
+```
+
+## predefineColor
+
+- **类型**：`(string | { color: string; disabled?: boolean })[]`
+- **默认值**：`[]`
+
+预定义色板数据。字符串数组会自动归一化；对象形式可以单独禁用某个色块（禁用后置灰且不可点击）。
+
+```ts
+new ewColorPicker({
+  el: '#picker',
+  predefineColor: ['#6366f1', '#8b5cf6', { color: '#ef4444', disabled: true }],
+})
+```
+
+运行时更新：
+
+```ts
+picker.plugins.ewColorPickerPredefine.updatePredefineColors(['#000000', '#ffffff'])
+```
+
+## isClickOutside
+
+- **类型**：`boolean`
+- **默认值**：`true`
+
+是否在点击容器外部时自动收起面板。内部监听 `document` 的 `mousedown`（捕获阶段），并判断事件目标是否位于当前实例容器内，因此多实例互不影响。
+
+## hueDirection / alphaDirection
+
+- **类型**：`'vertical' | 'horizontal'`
+- **默认值**：`'vertical'`
+
+色相滑块与透明度滑块的方向。水平滑块会插入到面板下方，垂直滑块会插入到面板右侧，面板宽度会自动调整。
+
+```ts
+new ewColorPicker({
+  el: '#picker',
+  hueDirection: 'horizontal',
+  alphaDirection: 'horizontal',
+})
+```
+
+## clearText / sureText
+
+- **类型**：`string`
+- **默认值**：`'清空'` / `'确定'`
+
+底部按钮文案。运行时可通过插件方法修改：
+
+```ts
+picker.plugins.ewColorPickerButton.setClearText('重置')
+picker.plugins.ewColorPickerButton.setSureText('应用')
+```
+
+## togglePickerAnimation
+
+- **类型**：`'default' | 'height' | 'opacity'`
+- **默认值**：`'default'`
+
+面板开合动画。仅以下两个值会产生实际动画：
+
+| 值 | 效果 |
+| --- | --- |
+| `'height'` | 高度展开 / 收起的滑动动画 |
+| `'opacity'` | 淡入淡出 |
+| 其他（含 `'default'`） | 直接显示 / 隐藏 |
+
+## pickerAnimationTime
+
+- **类型**：`number`
+- **默认值**：`200`
+- **单位**：毫秒
+
+动画时长，内部会限制在 `0 ~ 10000` 之间。未传或为 0 时使用默认值。
+
+## autoPanelPosition
+
+- **类型**：`boolean`
+- **默认值**：`false`
+
+是否启用面板自动定位。启用后根据盒子在视口中的位置自动调整面板方向，并在空间不足时翻转。
+
+> **注意**：该能力依赖颜色盒插件。只有同时配置了 `ewColorPickerBox`（任意对象，例如 `{}`）时才会生效。
+
+```ts
+new ewColorPicker({
+  el: '#picker',
+  autoPanelPosition: true,
+  ewColorPickerBox: {},
+})
+```
+
+## panelPlacement
+
+- **类型**：面板方位字符串
+- **默认值**：`'bottom'`
+
+可选值共 12 个：
+
+| 方向 | 取值 |
+| --- | --- |
+| 上 | `top-start`、`top`、`top-end` |
+| 下 | `bottom-start`、`bottom`、`bottom-end` |
+| 左 | `left-start`、`left`、`left-end` |
+| 右 | `right-start`、`right`、`right-end` |
+
+`start` / `end` 表示沿主轴的对齐方式；未启用 `autoPanelPosition` 时按配置固定定位。
+
+```ts
+new ewColorPicker({ el: '#picker', panelPlacement: 'right-start' })
+```
+
+## hasBox / hasPanel / hasInput / hasClear / hasSure / hue / alpha
+
+- **类型**：`boolean`
+- **默认值**：均为 `true`
+
+构造期控制各功能区域是否渲染。实现上分别在 Box、Panel、Input、Button、Hue、Alpha 插件构造时读取，因此只能在实例化时生效。
+
+```ts
+new ewColorPicker({
+  el: '#picker',
+  hasBox: false,
+  hasPanel: false,
+  hasInput: false,
+  hasClear: false,
+  hasSure: false,
+  hue: false,
+  alpha: false,
+})
+```
+
+运行时切换请使用插件方法：
+
+```ts
+picker.plugins.ewColorPickerBox.enableBox(false)
+picker.plugins.ewColorPickerInput.enableInput(false)
+picker.plugins.ewColorPickerButton.enableClear(false)
+picker.plugins.ewColorPickerButton.enableSure(false)
+picker.plugins.ewColorPickerHue.enableHue(false)
+picker.plugins.ewColorPickerAlpha.enableAlpha(false)
+```
+
+## showButton
+
+- **类型**：`boolean`
+- **默认值**：`true`
+
+为 `false` 时整个按钮组（清空 + 确定）不渲染，等价于同时隐藏两个按钮。
+
+## showColorMode
+
+- **类型**：`boolean`
+- **默认值**：`true`
+
+为 `false` 时不渲染颜色模式切换器（`hex / rgb / hsl` 切换按钮及对应输入结构）。
+
+## showInputNumber
+
+- **类型**：`boolean`
+- **默认值**：`true`
+
+为 `false` 时不创建数字输入框组件（RGB / HSL 模式下的分量输入框仍由 ColorMode 插件渲染，但其数字步进控件会被跳过）。
+
+## 颜色模式相关
+
+### defaultMode
+
+- **类型**：`'hex' | 'rgb' | 'hsl'`
+- **默认值**：注册了 Alpha 插件时为 `'rgb'`，否则为 `'hex'`
+
+初始输入模式。
+
+```ts
+new ewColorPicker({ el: '#picker', defaultMode: 'hsl' })
+```
+
+### changeMode
+
+- **类型**：`(mode: 'hex' | 'rgb' | 'hsl', picker: ewColorPicker) => void`
+
+模式切换时的回调（由 ColorMode 插件调用）。
+
+```ts
+new ewColorPicker({
+  el: '#picker',
+  changeMode(mode) {
+    console.log('当前模式：', mode)
+  },
+})
+```
+
+## ewColorPickerPanel
+
+- **类型**：`boolean`
+
+`false` 时不渲染颜色面板，等价于 `hasPanel: false`。
+
+## ewColorPickerPredefine
+
+- **类型**：`false | { predefineColor?: (string | { color, disabled? })[]; changeColor?: (color: string) => void }`
+
+预定义色板的嵌套配置。传对象时会与顶层配置合并；`false` 时不渲染色板。
+
+```ts
+new ewColorPicker({
+  el: '#picker',
+  ewColorPickerPredefine: {
+    predefineColor: ['#111827', '#f9fafb'],
+    changeColor(color) {
+      console.log('选择预定义颜色：', color)
+    },
+  },
+})
+```
+
+## ewColorPickerColorMode
+
+- **类型**：`false | { defaultMode?, changeMode?, showColorMode? }`
+
+颜色模式插件的嵌套配置。`false` 时关闭模式切换；传对象时会覆盖对应字段。
+
+## ewColorPickerBox
+
+- **类型**：对象
+
+颜色盒的扩展配置，同时也是 `autoPanelPosition` 生效的前提。
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `onClick` | `(plugin) => void` | 点击颜色盒时调用（在默认开合行为之外） |
+| `onMouseEnter` | `(plugin) => void` | 鼠标移入 |
+| `onMouseLeave` | `(plugin) => void` | 鼠标移出 |
+| `disabled` | `boolean` | 盒子禁用 |
+| `readonly` | `boolean` | 只读（保留样式，不响应点击） |
+| `className` | `string` | 追加到盒子上的类名 |
+| `style` | `Partial<CSSStyleDeclaration>` | 追加内联样式 |
+| `boxNoColorIcon` | `string` | 无颜色时的自定义图标（HTML 字符串） |
+| `boxHasColorIcon` | `string` | 有颜色时的自定义图标（HTML 字符串） |
+
+```ts
+new ewColorPicker({
+  el: '#picker',
+  ewColorPickerBox: {
+    onClick(plugin) {
+      console.log('盒子被点击', plugin)
+    },
+    className: 'my-box',
+  },
+})
+```
+
+## 完整示例
+
+```ts
+import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import '@ew-color-picker/style/dist/index.css'
+import '@ew-color-picker/style/dist/input-number.css'
+
+const picker = new ewColorPicker({
+  el: '#picker',
+  defaultColor: '#6366f1',
+  size: 'large',
+  predefineColor: ['#6366f1', '#8b5cf6', '#06b6d4', '#22c55e'],
+  hueDirection: 'horizontal',
+  alphaDirection: 'horizontal',
+  panelPlacement: 'bottom-end',
+  togglePickerAnimation: 'height',
+  pickerAnimationTime: 240,
+  clearText: '重置',
+  sureText: '应用',
+  changeColor(color) {
+    console.log('change:', color)
+  },
+  sure(color) {
+    console.log('sure:', color)
+  },
+})
+```
+
+## 相关链接
+
+- [实例方法](./methods)
+- [事件](./events)
+- [回调](./callbacks)
+- [插件总览](../plugins/)
+
+## 样式与类名
+
+Source: https://eveningwater.github.io/ew-color-picker/api/styles
+
+# 样式与类名
+
+## 样式入口
+
+样式包 `@ew-color-picker/style` 提供两个独立入口：
+
+```ts
+import '@ew-color-picker/style/dist/index.css'
+import '@ew-color-picker/style/dist/input-number.css'
+```
+
+| 文件 | 内容 |
+| --- | --- |
+| `index.css` | 颜色盒、面板、滑块、输入框、按钮、色板、模式切换器 |
+| `input-number.css` | 数字输入框组件 `.ew-input-number` 系列样式 |
+
+::: warning
+两个文件都需要引入。只引入 `index.css` 时，RGB / HSL 模式下的数字输入框会丢失样式。
+:::
+
+其它可用产物：`index.min.css`、`color.css`、`extend.css`、`variable.css`（以及对应 `.min.css`）。
+
+## CSS 变量
+
+| 变量 | 默认值 | 说明 |
+| --- | --- | --- |
+| `--panel-width` | `285px` | 面板宽度（插件会根据滑块方向动态写入） |
+| `--panel-height` | `180px` | 面板高度 |
+
+```css
+:root {
+  --panel-width: 300px;
+  --panel-height: 200px;
+}
+```
+
+## 类名一览
+
+### 容器
+
+| 类名 | 说明 |
+| --- | --- |
+| `.ew-color-picker` | 实例最外层包装容器（`root` 挂载点） |
+| `.ew-color-picker-panel-container` | 面板容器（`panelContainer` 挂载点） |
+| `.ew-color-picker-box` | 颜色盒 |
+| `.ew-color-picker-box-arrow-icon` | 有颜色时的默认箭头图标 |
+| `.ew-color-picker-box-close-icon` | 无颜色时的默认关闭图标 |
+
+### 面板
+
+| 类名 | 说明 |
+| --- | --- |
+| `.ew-color-picker-panel` | 颜色面板 |
+| `.ew-color-picker-panel-dynamic-size` | 动态尺寸面板 |
+| `.ew-color-picker-white-panel` | 白色渐变层 |
+| `.ew-color-picker-black-panel` | 黑色渐变层 |
+| `.ew-color-picker-panel-cursor` | 面板取色光标 |
+| `.ew-color-picker-bottom-row` | 面板底部行容器 |
+
+### 滑块
+
+| 类名 | 说明 |
+| --- | --- |
+| `.ew-color-picker-slider` | 滑块容器 |
+| `.ew-color-picker-slider-bar` | 滑块轨道 |
+| `.ew-color-picker-slider-thumb` | 滑块手柄 |
+| `.ew-color-picker-is-horizontal` | 水平方向 |
+| `.ew-color-picker-is-vertical` | 垂直方向 |
+| `.ew-color-picker-alpha-slider-bg` | 透明度棋盘背景 |
+| `.ew-color-picker-alpha-slider-wrapper` | 透明度滑块包装 |
+| `.ew-color-picker-alpha-slider-thumb` | 透明度手柄 |
+
+### 输入与按钮
+
+| 类名 | 说明 |
+| --- | --- |
+| `.ew-color-picker-input-container` | 输入区容器 |
+| `.ew-color-picker-input` | 文本输入框 |
+| `.ew-color-picker-input-label` | 输入框前缀标签 |
+| `.ew-color-picker-rgb-r-input` / `-g-input` / `-b-input` / `-a-input` | RGB 分量输入 |
+| `.ew-color-picker-hsl-h-input` / `-s-input` / `-l-input` / `-a-input` | HSL 分量输入 |
+| `.ew-color-picker-drop-btn` | 通用下拉按钮 |
+| `.ew-color-picker-clear-btn` | 清空按钮 |
+| `.ew-color-picker-sure-btn` | 确定按钮 |
+| `.ew-color-picker-mode-up-btn` / `-mode-down-btn` | 模式切换上下按钮 |
+
+### 预定义色板
+
+| 类名 | 说明 |
+| --- | --- |
+| `.ew-color-picker-predefine` | 色板容器 |
+| `.ew-color-picker-predefine-item` | 单个色块 |
+| `.ew-color-picker-predefine-item-disabled` | 禁用色块 |
+| `.ew-color-picker-predefine-item-active` | 当前选中色块 |
+
+### 数字输入框
+
+| 类名 | 说明 |
+| --- | --- |
+| `.ew-input-number` | 数字输入框根节点 |
+| `.ew-input-number--default` / `--small` / `--large` | 尺寸修饰 |
+| `.ew-input-number__decrease` / `__increase` | 减少 / 增加按钮 |
+| `.ew-input-number__input` | 内部 input |
+
+### 状态类
+
+| 类名 | 说明 |
+| --- | --- |
+| `.is-readonly` | 颜色盒只读 |
+| `.is-disabled` | 禁用态（按钮、输入框等） |
+
+## 自定义主题示例
+
+```css
+/* 修改面板尺寸 */
+#picker {
+  --panel-width: 300px;
+  --panel-height: 200px;
+}
+
+/* 自定义颜色盒圆角与边框 */
+#picker .ew-color-picker-box {
+  border-radius: 10px;
+  border: 1px solid rgba(99, 102, 241, 0.45);
+}
+
+/* 自定义按钮 */
+#picker .ew-color-picker-sure-btn {
+  background: #6366f1;
+  color: #fff;
+  border-radius: 8px;
+}
+
+/* 自定义选中色块描边 */
+#picker .ew-color-picker-predefine-item-active {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+```
+
+## 多实例隔离
+
+所有类名都是全局的，但插件内部会通过挂载点限定查询范围。为不同实例追加自定义作用域是最稳妥的方式：
+
+```ts
+new ewColorPicker({ el: '#picker-a' })
+new ewColorPicker({ el: '#picker-b' })
+```
+
+```css
+#picker-a .ew-color-picker-box { border-radius: 6px; }
+#picker-b .ew-color-picker-box { border-radius: 50%; }
+```
+
+::: tip
+请勿通过 `document.querySelector('.ew-color-picker-box')` 操作实例 DOM，多实例下会命中第一个实例。请使用 `picker.wrapper` 或 `getMountPoint()` 限定范围。
+:::
+
+## 相关链接
+
+- [配置项](./options)
+- [插件总览](../plugins/)
+
+## 在线演示
+
+Source: https://eveningwater.github.io/ew-color-picker/examples/demo
+
+# 在线演示
+
+下面的演示页面加载了真实的构建产物，包含一个完整的颜色选择器、当前颜色预览和事件日志。
+
+<iframe
+  class="demo-frame"
+  src="../demo.html"
+  title="EW Color Picker 在线演示"
+  loading="lazy"
+></iframe>
+
+::: tip 演示资源从哪来？
+`docs/scripts/prepare-demo.mjs` 会在 `dev` / `build` 前把以下产物复制到 `docs/public/assets/`：
+
+- `packages/ew-color-picker/dist/index.js`
+- `packages/style/dist/index.css`
+- `packages/style/dist/input-number.css`
+
+如果演示页空白，先执行根目录的 `pnpm run build:all`。
+:::
+
+## 演示页做了什么
+
+| 区域 | 说明 |
+| --- | --- |
+| 左侧选择器 | `defaultColor: '#6366f1'`，开启预设色与模式切换 |
+| 当前颜色卡片 | 监听 `change` 实时更新色值与色块 |
+| 事件日志 | 监听 `change` / `toggle` / `sure` / `clear` / `mode-change` / `destroy` |
+
+## 本地运行
+
+```bash
+# 1. 构建所有包与样式
+pnpm run build:all
+
+# 2. 启动文档站点
+pnpm run docs:dev
+```
+
+## 相关
+
+- [示例集](./index.md)
+- [快速开始](../guide/getting-started.md)
+
+## 示例集
+
+Source: https://eveningwater.github.io/ew-color-picker/examples/
+
+# 示例集
+
+下面是 12 个覆盖主要场景的最小示例。仓库 `examples/` 目录下有对应的完整 HTML 文件，可直接用浏览器打开。
+
+## 1. 基础用法
+
+```html
+<div id="app"></div>
+<script src="@ew-color-picker/ewColorPicker/dist/index.js"></script>
+<script>
+  const picker = new ewColorPicker({ el: '#app', defaultColor: '#3b82f6' })
+  picker.on('change', (color) => console.log(color))
+</script>
+```
+
+## 2. 布局与方向
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  hueDirection: 'horizontal',
+  alphaDirection: 'horizontal',
+  size: 'large',
+})
+```
+
+## 3. 预定义颜色
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  predefineColor: ['#ef4444', '#22c55e', '#3b82f6', { color: '#0f172a', disabled: true }],
+})
+```
+
+## 4. 按钮控制
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  hasClear: false,
+  sureText: '应用颜色',
+  sure: (color) => console.log('应用：', color),
+})
+```
+
+## 5. 事件与回调
+
+```ts
+const picker = new ewColorPicker({
+  el: '#app',
+  changeColor: (color) => console.log('回调：', color),
+})
+
+picker.once('change', (color) => console.log('只监听一次：', color))
+picker.on('sure', (color) => console.log('确定：', color))
+picker.on('clear', () => console.log('清空'))
+picker.on('toggle', (open) => console.log('面板：', open ? '展开' : '收起'))
+```
+
+## 6. 面板自动定位
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  autoPanelPosition: true,
+  panelPlacement: 'top-end',
+})
+```
+
+## 7. 开合动画
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  togglePickerAnimation: 'height',
+  pickerAnimationTime: 300,
+})
+```
+
+可用动画：`default`、`height`、`opacity`。`pickerAnimationTime` 上限 10000ms。
+
+## 8. 禁用与只读
+
+```ts
+// 完全禁用
+new ewColorPicker({ el: '#app', disabled: true })
+
+// 只读：阻止点击，仅展示
+new ewColorPicker({ el: '#app', readonly: true, defaultColor: '#84cc16' })
+```
+
+## 9. 颜色模式
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  defaultMode: 'rgb',
+  showColorMode: true,
+  changeMode: (mode) => console.log('模式：', mode),
+})
+```
+
+## 10. 实例 API
+
+```ts
+const picker = new ewColorPicker({ el: '#app', defaultColor: '#f43f5e' })
+
+console.log(picker.getColor())        // 当前颜色
+console.log(picker.getHsvaColor())    // { h, s, v, a }
+picker.setColor('#22c55e')
+picker.updateOptions({ size: 'large' })
+picker.showPanel()
+picker.hidePanel()
+picker.destroy()
+```
+
+## 11. 数字输入框
+
+```ts
+import { InputNumber } from '@ew-color-picker/input-number'
+import '@ew-color-picker/style/dist/input-number.css'
+
+const num = new InputNumber({
+  value: 50,
+  min: 0,
+  max: 100,
+  onChange: (v) => console.log(v),
+})
+document.body.appendChild(num.getElement())
+```
+
+## 12. 多实例
+
+```ts
+[...document.querySelectorAll('.picker')].forEach((el) => {
+  new ewColorPicker({ el, defaultColor: '#a855f7' })
+})
+```
+
+::: warning 不要直接传 NodeList
+构造函数不接受 `NodeList` / 数组，必须逐个实例化。每个实例的事件、挂载点、输入框都是隔离的。
+:::
+
+## 相关
+
+- [在线演示](./demo.md)
+- [配置项](../api/options.md)
+- [实例方法](../api/methods.md)
+- [事件](../api/events.md)
+
+## 核心概念
+
+Source: https://eveningwater.github.io/ew-color-picker/guide/concepts
+
+# 核心概念
+
+## 实例级事件总线
+
+每个 `ewColorPicker` 实例都拥有一套独立的 `EventEmitter`，事件不会在实例之间共享。核心把事件分为两类：
+
+| 类别 | 事件 | 说明 |
+| --- | --- | --- |
+| 生命周期 | `destroy` | 实例销毁时触发 |
+| 交互 | `change`、`toggle`、`sure`、`clear` | 颜色变化、面板开合、确定、清空 |
+| 配置 | `options-update` | `updateOptions()` 执行后触发 |
+| 插件 | `mode-change` | 颜色模式切换（由 ColorMode 插件派发） |
+
+`on()` / `once()` / `off()` 会校验事件名是否在白名单内，未知事件会打印警告而不是静默吞掉，便于排查拼写错误。
+
+## 插件注册与执行顺序
+
+插件是一个**类**，必须提供静态属性：
+
+```ts
+class MyPlugin {
+  static pluginName = 'myPlugin'        // 唯一名称，用于 plugins.myPlugin 访问
+  static applyOrder = ApplyOrder.Post   // 'pre' | 'post'
+  constructor(core) { /* 渲染与订阅 */ }
+}
+```
+
+注册方式：
+
+```ts
+ewColorPicker.use(MyPlugin)   // 静态注册，必须在实例化之前
+```
+
+- `ApplyOrder.Pre` 的插件先执行，`Post` 后执行；同组内按注册顺序执行。
+- 注册发生在**类级别**，`new ewColorPicker()` 时按排序结果依次实例化。
+- 实例化完成后可通过 `picker.plugins.myPlugin` 访问插件实例。
+
+> 插件只能在实例化前注册。运行期新增插件请使用 `picker.use(pluginInstance)`（见 [实例方法](../api/methods#use)）。
+
+## 挂载点
+
+核心只创建两个挂载点：
+
+| 挂载点 | 元素 | 用途 |
+| --- | --- | --- |
+| `root` | `.ew-color-picker` 外层容器 | 放置颜色盒、预定义色板等 |
+| `panelContainer` | `.ew-color-picker-panel-container` 面板容器 | 放置面板、滑块、底部输入区、按钮 |
+
+```ts
+const root = picker.getMountPoint('root')
+const panel = picker.getMountPoint('panelContainer')
+```
+
+插件渲染时**必须**从挂载点取容器，禁止直接查询 `document`，否则多实例会互相污染。
+
+## 单一改色入口
+
+```ts
+picker.setColor(color)
+```
+
+内部流程：
+
+1. 校验并归一化颜色；
+2. 同步 `currentColor` 与 `hsvaColor`；
+3. `trigger('change', color)` —— 所有 UI 插件据此刷新；
+4. 调用 `options.changeColor(color)` 回调。
+
+插件内部修改颜色（例如色相滑块拖动、色板点击）也必须走 `core.setColor()`，不要直接改写 DOM。
+
+## 作用域隔离
+
+多实例场景下，插件内部所有 DOM 查询都应限定在当前实例的挂载点内：
+
+```ts
+const panelContainer = this.ewColorPicker.getMountPoint('panelContainer')
+const input = $('.ew-color-picker-input', panelContainer)
+```
+
+`@ew-color-picker/utils` 的 `$(selector, context)` 支持传入上下文，正是为此设计。
+
+## 生命周期
+
+```text
+new ewColorPicker(options)
+  ├─ 合并默认配置
+  ├─ 渲染包装容器，创建 root / panelContainer
+  ├─ 按 applyOrder 实例化插件
+  └─ 绑定外部点击（isClickOutside）
+
+picker.destroy()
+  ├─ 解绑全局事件
+  ├─ 依次调用插件的 destroy()
+  ├─ 移除挂载点与容器
+  └─ 清空 plugins 引用，isDestroyed = true
+```
+
+销毁后再调用任何方法都会安全返回（`getMountPoint` 返回 `undefined`，`mount` / `showPanel` 等直接返回实例）。
+
+## 快速开始
+
+Source: https://eveningwater.github.io/ew-color-picker/guide/getting-started
+
+# 快速开始
+
+## 1. 准备容器
+
+颜色选择器会挂载到指定容器中。容器宽度由内容自适应，建议给容器留出足够空间。
+
+```html
+<div id="picker"></div>
+```
+
+## 2. 初始化
+
+```ts
+import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import '@ew-color-picker/style/dist/index.css'
+import '@ew-color-picker/style/dist/input-number.css'
+
+const picker = new ewColorPicker({
+  el: '#picker',
+  defaultColor: '#6366f1',
+})
+
+console.log(picker.getColor()) // '#6366f1'
+```
+
+`el` 支持三种写法：
+
+```ts
+new ewColorPicker('#picker')            // 选择器
+new ewColorPicker(document.querySelector('#picker')!) // 元素
+new ewColorPicker({ el: '#picker' })    // 配置对象
+```
+
+## 3. 监听颜色变化
+
+```ts
+const picker = new ewColorPicker({
+  el: '#picker',
+  changeColor(color) {
+    console.log('实时颜色：', color)
+  },
+  sure(color, instance) {
+    console.log('点击确定：', color, instance)
+  },
+  clear(instance) {
+    console.log('点击清空')
+  },
+})
+```
+
+也可以使用事件订阅：
+
+```ts
+picker.on('change', (color) => {
+  document.body.style.background = color
+})
+```
+
+## 4. 常用的完整配置
+
+```ts
+const picker = new ewColorPicker({
+  el: '#picker',
+  defaultColor: 'rgba(99, 102, 241, 0.8)',
+  predefineColor: [
+    '#6366f1',
+    '#8b5cf6',
+    '#06b6d4',
+    '#22c55e',
+    { color: '#ef4444', disabled: true },
+  ],
+  size: 'large',
+  hueDirection: 'horizontal',
+  alphaDirection: 'horizontal',
+  panelPlacement: 'bottom-end',
+  autoPanelPosition: true,
+  togglePickerAnimation: 'height',
+  pickerAnimationTime: 240,
+  clearText: '重置',
+  sureText: '应用',
+  changeColor(color) {
+    console.log(color)
+  },
+})
+```
+
+## 5. 实例方法
+
+```ts
+picker.setColor('#ff0000')  // 修改颜色（唯一入口）
+picker.getColor()           // 获取当前颜色字符串
+picker.openPicker()         // 展开面板
+picker.closePicker()        // 收起面板
+picker.updateOptions({ disabled: true }) // 运行时更新配置
+picker.destroy()            // 销毁实例，解绑事件
+```
+
+## 6. 销毁
+
+页面卸载或组件卸载时务必调用 `destroy()`，它会移除 DOM、解绑全局事件并清空插件。
+
+```ts
+picker.destroy()
+console.log(picker.getDestroyedStatus()) // true
+```
+
+## 下一步
+
+- [核心概念](./concepts) — 理解插件挂载点与事件流
+- [配置项](../api/options) — 查看全部可选参数
+- [插件](../plugins/) — 按需组合界面
+
+## 项目介绍
+
+Source: https://eveningwater.github.io/ew-color-picker/guide/
+
+# 项目介绍
+
+EW Color Picker 是一个基于 **事件驱动 + 插件系统** 的颜色选择器。核心包只做三件事：
+
+1. 维护当前颜色（`currentColor`）与 HSVA 状态（`hsvaColor`）；
+2. 通过实例级 `EventEmitter` 派发事件；
+3. 为插件提供 `root` 与 `panelContainer` 两个挂载点。
+
+其余所有界面元素（颜色盒、面板、色相/透明度滑块、输入框、按钮、预定义色板、颜色模式切换器）都以插件形式注册，因此可以按需组合、自由扩展。
+
+## 设计理念
+
+| 原则 | 说明 |
+| --- | --- |
+| 单一数据源 | 任何插件修改颜色都只调用 `core.setColor()`，再由 `change` 事件驱动其他插件同步，不存在多份颜色状态。 |
+| 插件自治 | 插件自己负责渲染、事件绑定与销毁，核心不感知具体 UI。 |
+| 可裁剪 | 不需要按钮就不注册 Button 插件；不需要透明度就不注册 Alpha 插件。 |
+| 类型完备 | 每个包都输出 `.d.ts`，插件通过 `declare module` 扩展配置类型。 |
+
+## 包结构
+
+| 包 | 职责 |
+| --- | --- |
+| `@ew-color-picker/core` | 颜色状态、事件总线、插件注册与挂载点 |
+| `@ew-color-picker/utils` | DOM / 颜色 / 动画 / 事件 / 图标等基础工具 |
+| `@ew-color-picker/style` | 全部样式（`index.css`、`input-number.css` 等） |
+| `@ew-color-picker/ew-color-picker` | 聚合包，注册全部内置插件，开箱即用 |
+| `@ew-color-picker/box` | 触发面板的颜色盒 |
+| `@ew-color-picker/panel` | 饱和度/明度面板（核心必需插件） |
+| `@ew-color-picker/hue` | 色相滑块 |
+| `@ew-color-picker/alpha` | 透明度滑块 |
+| `@ew-color-picker/input` | 文本输入框 |
+| `@ew-color-picker/input-number` | 数字输入框组件 |
+| `@ew-color-picker/button` | 清空 / 确定按钮 |
+| `@ew-color-picker/predefine` | 预定义颜色色板 |
+| `@ew-color-picker/color-mode` | Hex / RGB / HSL 模式切换 |
+| `@ew-color-picker/console` | 控制台版本横幅（已并入 utils） |
+
+## 数据流
+
+```text
+用户操作（面板拖动 / 输入框 / 色板 / 滑块）
+        │
+        ▼
+   core.setColor(color)
+        │  trigger('change', color)
+        ▼
+ ┌───────────────┬───────────────┬───────────────┐
+ │ Box 更新背景   │ Panel 更新光标 │ Input 更新值   │  …其他插件
+ └───────────────┴───────────────┴───────────────┘
+```
+
+`setColor` 同时会更新 `hsvaColor` 并调用 `options.changeColor` 回调。插件**不应该**直接修改其他插件的 DOM，而是订阅 `change` 事件自行同步。
+
+## 下一步
+
+- [安装](./installation) — 选择聚合包或按需安装子包
+- [快速开始](./getting-started) — 完成第一个可交互示例
+- [核心概念](./concepts) — 理解挂载点、插件顺序与事件
+
+## 安装
+
+Source: https://eveningwater.github.io/ew-color-picker/guide/installation
+
+# 安装
+
+## 环境要求
+
+- Node.js ≥ 20.10（`dev:preview` 与文档站依赖该版本）
+- 任意支持 ES Module 的构建工具（Vite / Webpack / Rspack / Rollup）
+
+## 方式一：聚合包（推荐）
+
+聚合包 `@ew-color-picker/ewColorPicker` 已注册全部内置插件，安装后即可获得完整功能。
+
+```bash
+pnpm add @ew-color-picker/ewColorPicker @ew-color-picker/style
+# 或
+npm install @ew-color-picker/ewColorPicker @ew-color-picker/style
+# 或
+yarn add @ew-color-picker/ewColorPicker @ew-color-picker/style
+```
+
+引入样式：
+
+```ts
+import '@ew-color-picker/style/dist/index.css'
+import '@ew-color-picker/style/dist/input-number.css'
+```
+
+> `index.css` 是核心样式，`input-number.css` 是数字输入框组件的独立样式入口，**两者都需要引入**，否则 RGB / HSL 模式下的数字框会失去样式。
+
+## 方式二：按需安装子包
+
+仅需要部分功能时，可以只安装对应子包。Core 与 Utils 是所有插件的基础依赖，必须显式安装。
+
+```bash
+pnpm add @ew-color-picker/core @ew-color-picker/utils @ew-color-picker/style
+pnpm add @ew-color-picker/box @ew-color-picker/panel
+```
+
+| 子包 | 说明 |
+| --- | --- |
+| `@ew-color-picker/core` | 核心（必需） |
+| `@ew-color-picker/utils` | 工具（必需） |
+| `@ew-color-picker/box` | 颜色盒触发器 |
+| `@ew-color-picker/panel` | 颜色面板（取色必需） |
+| `@ew-color-picker/hue` | 色相滑块 |
+| `@ew-color-picker/alpha` | 透明度滑块 |
+| `@ew-color-picker/input` | 文本输入框 |
+| `@ew-color-picker/input-number` | 数字输入框组件 |
+| `@ew-color-picker/button` | 清空 / 确定按钮 |
+| `@ew-color-picker/predefine` | 预定义色板 |
+| `@ew-color-picker/colorMode` | 颜色模式切换 |
+
+手动注册插件：
+
+```ts
+import ewColorPicker from '@ew-color-picker/core'
+import ewColorPickerBoxPlugin from '@ew-color-picker/box'
+import ewColorPickerPanelPlugin from '@ew-color-picker/panel'
+import ewColorPickerHuePlugin from '@ew-color-picker/hue'
+
+// 注册顺序不影响渲染结果，实际执行顺序由 applyOrder 决定
+ewColorPicker.use(ewColorPickerBoxPlugin)
+ewColorPicker.use(ewColorPickerPanelPlugin)
+ewColorPicker.use(ewColorPickerHuePlugin)
+
+new ewColorPicker({ el: '#picker' })
+```
+
+## 方式三：UMD / 浏览器直连
+
+适合无构建工具的传统页面。构建产物位于各包的 `dist` 目录：
+
+```html
+<link rel="stylesheet" href="node_modules/@ew-color-picker/style/dist/index.css" />
+<link rel="stylesheet" href="node_modules/@ew-color-picker/style/dist/input-number.css" />
+
+<script src="node_modules/@ew-color-picker/ewColorPicker/dist/index.js"></script>
+<script>
+  new ewColorPicker({ el: '#picker' })
+</script>
+```
+
+## TypeScript
+
+所有子包均输出声明文件，无需额外安装 `@types/*`。插件会通过 `declare module '@ew-color-picker/core'` 扩展 `ewColorPickerOptions`，因此插件配置项在实例化时就能获得补全。
+
+## 开发仓库自身
+
+```bash
+pnpm install          # 安装依赖
+pnpm run build:all    # 构建全部 13 个包
+pnpm run test         # 运行测试
+pnpm run dev:preview  # 启动 examples 预览（Vite）
+```
+
+文档站单独位于 `docs/`，构建前需要先生成包产物（在线演示会复用 UMD 产物）：
+
+```bash
+pnpm run build:docs   # 构建包 + 构建文档站到 gh-pages/
+cd docs && npm run dev # 本地开发文档（需先 build:all）
+```
+
+## 编写自定义插件
+
+Source: https://eveningwater.github.io/ew-color-picker/guide/plugin-dev
+
+# 编写自定义插件
+
+插件是普通的类，核心只要求两个静态属性与一个构造函数。
+
+## 最小模板
+
+```ts
+import type ewColorPicker from '@ew-color-picker/core'
+import { ApplyOrder, create, addClass, insertNode, isFunction } from '@ew-color-picker/utils'
+
+export default class MyBadgePlugin {
+  static pluginName = 'myBadge'
+  static applyOrder = ApplyOrder.Post
+
+  el: HTMLElement | null = null
+
+  constructor(public ewColorPicker: ewColorPicker) {
+    this.run()
+
+    // 订阅颜色变化，保持 UI 与核心同步
+    if (isFunction(this.ewColorPicker.on)) {
+      this.ewColorPicker.on('change', this.handleChange)
+    }
+  }
+
+  run() {
+    const panelContainer = this.ewColorPicker.getMountPoint('panelContainer')
+    if (!panelContainer) return
+
+    this.el = create('span')
+    addClass(this.el, 'my-badge')
+    insertNode(panelContainer, this.el)
+    this.renderColor(this.ewColorPicker.getColor())
+  }
+
+  handleChange = (color: string) => {
+    this.renderColor(color)
+  }
+
+  renderColor(color?: string) {
+    if (this.el) this.el.textContent = color || '未选择'
+  }
+
+  destroy() {
+    if (isFunction(this.ewColorPicker.off)) {
+      this.ewColorPicker.off('change', this.handleChange)
+    }
+    this.el?.parentNode?.removeChild(this.el)
+    this.el = null
+  }
+}
+```
+
+注册：
+
+```ts
+import ewColorPicker from '@ew-color-picker/core'
+import MyBadgePlugin from './my-badge'
+
+ewColorPicker.use(MyBadgePlugin)
+new ewColorPicker({ el: '#picker' })
+```
+
+## 约定与注意事项
+
+| 约定 | 说明 |
+| --- | --- |
+| `static pluginName` | 必填，作为 `picker.plugins[pluginName]` 的键，需全局唯一 |
+| `static applyOrder` | `ApplyOrder.Pre`（先渲染）/ `ApplyOrder.Post`（后渲染），默认按注册顺序 |
+| 构造函数 | 接收 core 实例；此时挂载点已创建，可以直接渲染 |
+| `destroy()` | 必须解绑事件、移除 DOM，避免内存泄漏 |
+| 挂载点 | 优先使用 `getMountPoint('root' \| 'panelContainer')`，禁止 `document.querySelector` |
+| 改色 | 只调用 `this.ewColorPicker.setColor(color)`，不要直写其他插件 DOM |
+| 延迟渲染 | 依赖真实尺寸的计算可放在 `setTimeout(..., 0)` 中执行 |
+
+## 类型扩展
+
+如果插件有自己的配置项，通过模块扩充让构造函数获得提示：
+
+```ts
+declare module '@ew-color-picker/core' {
+  interface CustomOptions {
+    myBadge?: {
+      text?: string
+    }
+  }
+}
+```
+
+之后可以这样使用：
+
+```ts
+new ewColorPicker({
+  el: '#picker',
+  myBadge: { text: '当前颜色' },
+})
+```
+
+## 兼容 `install(core)` 写法
+
+部分插件还实现了 `install(core)` 方法，用于测试或手动安装场景：
+
+```ts
+install(core: ewColorPicker) {
+  this.ewColorPicker = core
+  this.run?.()
+}
+```
+
+若同时支持 `install` 与构造函数，注意不要在两条路径上重复绑定事件。
+
+## 生命周期小结
+
+```text
+new Plugin(core)
+  ├─ 读取 core.options
+  ├─ 从挂载点渲染 DOM
+  ├─ 绑定 DOM 事件
+  └─ 订阅 change / toggle / …
+        │
+core.destroy()
+  └─ 调用 plugin.destroy()
+       ├─ off(...)
+       ├─ 移除 DOM
+       └─ 置空引用
+```
+
+## 插件化架构
+
+Source: https://eveningwater.github.io/ew-color-picker/
+
+<div class="doc-section">
+  <h2>立即体验</h2>
+  <p class="subtitle">下面是一个真实运行的颜色选择器，由本站直接加载构建产物渲染。</p>
+  <iframe class="demo-frame" src="./demo.html" title="EW Color Picker 在线演示" loading="lazy"></iframe>
+</div>
+
+<div class="doc-section">
+  <h2>从这里开始</h2>
+  <div class="doc-cards">
+    <a class="doc-card" href="./guide/getting-started">
+      <h3>5 分钟上手</h3>
+      <p>安装、引入样式、初始化实例，三步渲染出第一个颜色选择器。</p>
+    </a>
+    <a class="doc-card" href="./api/options">
+      <h3>配置项速查</h3>
+      <p>所有构造参数、插件开关、回调函数与默认值的完整说明。</p>
+    </a>
+    <a class="doc-card" href="./plugins/">
+      <h3>插件体系</h3>
+      <p>了解 10 个内置插件各自的职责、配置与方法，以及如何组合使用。</p>
+    </a>
+    <a class="doc-card" href="./guide/plugin-dev">
+      <h3>自定义插件</h3>
+      <p>按照 pluginName / applyOrder 约定，编写可注册、可销毁的插件。</p>
+    </a>
+  </div>
+</div>
+
+<div class="doc-section">
+  <h2>最小示例</h2>
+  <p class="subtitle">一个容器、一份样式、一行初始化，即可获得完整的取色体验。</p>
+</div>
+
+```html
+<link rel="stylesheet" href="@ew-color-picker/style/dist/index.css" />
+<link rel="stylesheet" href="@ew-color-picker/style/dist/input-number.css" />
+
+<div id="picker"></div>
+
+<script type="module">
+  import ewColorPicker from '@ew-color-picker/ewColorPicker'
+
+  const picker = new ewColorPicker({
+    el: '#picker',
+    defaultColor: '#6366f1',
+    predefineColor: ['#6366f1', '#8b5cf6', '#06b6d4', '#22c55e'],
+    changeColor(color) {
+      console.log('当前颜色：', color)
+    }
+  })
+</script>
+```
+
+## Alpha 透明度滑块插件
+
+Source: https://eveningwater.github.io/ew-color-picker/plugins/alpha
+
+# Alpha 透明度滑块
+
+`ewColorPickerAlpha` 增加一条透明度（Alpha）滑块，取值范围 `0`–`1`，输出 `rgba()` 颜色。是否注册该插件会直接影响核心的默认颜色格式：
+
+- **注册了 Alpha**：`defaultColor` 是 hex 时会被转成 `rgba()`，取色结果带透明度
+- **未注册 Alpha**：`defaultColor` 是 `rgba()` 时会被转成 hex，取色结果不带透明度
+
+| 项 | 值 |
+| --- | --- |
+| 包 | `@ew-color-picker/alpha` |
+| `pluginName` | `ewColorPickerAlpha` |
+| `applyOrder` | `Post` |
+| 挂载点 | `panelContainer` |
+| 访问实例 | `core.plugins.ewColorPickerAlpha` |
+
+## 配置项
+
+| 配置 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `alpha` | `boolean` | `true` | `false` 时不渲染透明度滑块（构造期生效） |
+| `alphaDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | 滑块方向 |
+| `disabled` | `boolean` | `false` | 禁用后点击/拖拽不生效 |
+
+## 实例方法
+
+```ts
+const alpha = picker.plugins.ewColorPickerAlpha
+```
+
+| 方法 / 属性 | 签名 | 说明 |
+| --- | --- | --- |
+| `enableAlpha` | `(enable = true) => void` | 运行时显示/隐藏滑块 |
+| `updateAlpha` | `(alpha: number) => void` | 设置透明度（0–1），内部调用 `core.setColor()` |
+| `updateAlphaThumbPosition` | `(alpha: number) => void` | 只移动手柄，不改颜色 |
+| `hasAlpha` | `boolean`（getter/setter） | setter 会立即渲染或移除 DOM |
+| `alphaBar` | `HTMLElement \| null` | 滑块根节点 |
+| `alphaThumb` | `HTMLElement \| null` | 手柄 |
+| `isHorizontal` | `boolean` | 是否水平方向 |
+
+### 联动 ColorMode
+
+`updateAlpha` 执行后会检查 ColorMode 插件：若当前不在 `hex` 模式，会调用 `colorMode.updateInputValues(newColor)` 同步 RGB/HSL 输入框，无需自己处理。
+
+## 交互行为
+
+| 操作 | 行为 |
+| --- | --- |
+| 点击滑块 | 按位置换算 alpha（水平方向从右往左递增） |
+| 按住拖拽 | 节流 16ms 连续改色 |
+| 外部颜色变化 | 监听 `change`，用新颜色的 `a` 同步手柄位置 |
+
+`updateAlpha` 只改透明度，保持当前 `h`/`s`/`v` 不变；若当前颜色为空则直接返回，不会凭空生成颜色。
+
+## 事件
+
+改色经由 `core.setColor()`，因此监听 `change` 即可：
+
+```ts
+picker.on('change', (color) => console.log(color)) // rgba(...)
+```
+
+## DOM 结构
+
+```html
+<div class="ew-color-picker-slider ew-alpha ew-color-picker-is-vertical">
+  <div class="ew-color-picker-alpha-slider-wrapper">
+    <div class="ew-color-picker-alpha-slider-bg"></div>
+    <div class="ew-color-picker-alpha-slider-bar"></div>
+  </div>
+  <div class="ew-color-picker-alpha-slider-thumb"></div>
+</div>
+```
+
+| 类名 | 说明 |
+| --- | --- |
+| `.ew-color-picker-slider.ew-alpha` | 滑块根节点 |
+| `.ew-color-picker-alpha-slider-wrapper` | 棋盘 + 渐变容器 |
+| `.ew-color-picker-alpha-slider-bg` | 透明棋盘底 |
+| `.ew-color-picker-alpha-slider-bar` | 颜色渐变条 |
+| `.ew-color-picker-alpha-slider-thumb` | 手柄 |
+
+## 完整示例
+
+```ts
+const picker = new ewColorPicker({
+  el: '#app',
+  defaultColor: 'rgba(99, 102, 241, 0.6)',
+  alphaDirection: 'horizontal',
+})
+
+picker.on('change', (color) => {
+  console.log('含透明度：', color)
+  console.log('alpha =', picker.hsvaColor.a)
+})
+
+// 50% 透明
+picker.plugins.ewColorPickerAlpha.updateAlpha(0.5)
+```
+
+## 相关
+
+- [Hue 色相滑块](./hue.md)
+- [ColorMode 颜色模式](./color-mode.md)
+- [配置项 · alphaDirection](../api/options.md#alphadirection)
+
+## Box 颜色盒插件
+
+Source: https://eveningwater.github.io/ew-color-picker/plugins/box
+
+# Box 颜色盒
+
+`ewColorPickerBox` 是用户第一眼看到的控件：一个显示当前颜色的方形触发器。点击它开合颜色面板。
+
+| 项 | 值 |
+| --- | --- |
+| 包 | `@ew-color-picker/box` |
+| `pluginName` | `ewColorPickerBox` |
+| `applyOrder` | 未显式声明（按注册顺序执行，聚合包中排第 2） |
+| 挂载点 | `root`（`.ew-color-picker`） |
+| 访问实例 | `core.plugins.ewColorPickerBox` |
+
+## 配置项
+
+Box 读取以下 options：
+
+| 配置 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `defaultColor` | `string` | `''` | 初始颜色，同时作为「清空」后的还原色 |
+| `size` | `string \| number \| { width, height }` | `'normal'` | 色块尺寸，详见下文 |
+| `disabled` | `boolean` | `false` | 禁用后不可点击，面板也不会展开 |
+| `readonly` | `boolean` | `false` | 只读：阻止点击（与 `disabled` 同样不响应），仅保留视觉样式 |
+| `hasBox` | `boolean` | `true` | 设为 `false` 时不渲染色块 |
+| `boxNoColorIcon` | `string` | `''` | 无颜色时自定义图标（HTML 字符串） |
+| `boxHasColorIcon` | `string` | `''` | 有颜色时自定义图标（HTML 字符串） |
+| `className` | `string` | `''` | 追加到 `.ew-color-picker-box` 上的额外类名 |
+| `style` | `string \| Record<string,string>` | `''` | 直接内联到色块的样式 |
+| `onClick` | `(plugin) => void` | — | 点击色块时的回调，参数为 Box 插件实例 |
+| `onMouseEnter` | `(plugin) => void` | — | 鼠标移入回调 |
+| `onMouseLeave` | `(plugin) => void` | — | 鼠标移出回调 |
+
+### size 的三种写法
+
+| 写法 | 示例 | 结果 |
+| --- | --- | --- |
+| 预设关键字 | `size: 'mini'` | `mini=20px`、`small=24px`、`normal=32px`、`medium=36px`、`large=40px` |
+| 数字 | `size: 48` | 宽高均为 `48px` |
+| 对象 | `size: { width: '60px', height: '36px' }` | 自定义宽高（数字会自动补 `px`） |
+| CSS 字符串 | `size: '5rem'` | 原样使用 |
+
+图标尺寸会跟随色块尺寸自动缩放：
+
+| size | 图标尺寸 |
+| --- | --- |
+| `mini` | 12px |
+| `small` | 14px |
+| `normal` | 16px |
+| `medium` | 18px |
+| `large` | 20px |
+| 数字 / 对象 | 取较短边的 50% |
+
+### 图标颜色自适应
+
+默认图标颜色不是写死的，而是按背景色**相对亮度**计算：
+
+- 亮度 > 0.5（浅色背景）→ `#333333`
+- 否则 → `#ffffff`
+- 半透明颜色按「叠加在白色底上」的实际呈现色计算
+
+因此 `#fff` 上会显示深色箭头，`#000` 上会显示白色箭头，无需手动配置。
+
+### 自定义图标
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  boxNoColorIcon: '<svg viewBox="0 0 24 24">…</svg>',
+  boxHasColorIcon: '<svg viewBox="0 0 24 24">…</svg>',
+})
+```
+
+传入字符串会直接作为 `innerHTML`，请确保内容可信。
+
+## 实例方法
+
+```ts
+const box = picker.plugins.ewColorPickerBox
+```
+
+| 方法 | 签名 | 说明 |
+| --- | --- | --- |
+| `enableBox` | `(enable = true) => void` | 显示/隐藏色块，等价于 `hasBox = enable` |
+| `update` | `(keys?: string[]) => void` | 按需刷新。默认刷新 `defaultColor / size / disabled / readonly / className / style` |
+| `updateChildren` | `() => void` | 只重新计算图标（内容与颜色） |
+| `setBoxSize` | `() => void` | 重新应用尺寸样式 |
+| `setBoxBgColor` | `(color?: string) => void` | 设置色块背景色，`undefined` 视为空 |
+| `clearBoxBgColor` | `() => void` | 清空背景色并回到「无颜色」图标 |
+| `setBoxState` | `() => void` | 同步 `is-disabled` / `is-readonly` 状态类 |
+| `setDisabled` | `(disabled: boolean) => void` | 切换禁用态 |
+| `bindMouseEvents` | `(onEnter?, onLeave?) => void` | 手动绑定鼠标事件 |
+| `unbindHandler` | `() => void` | 解绑所有 DOM 事件 |
+| `destroy` | `() => void` | 移除色块并解绑事件 |
+
+### 属性
+
+| 属性 | 类型 | 说明 |
+| --- | --- | --- |
+| `hasBox` | `boolean`（getter/setter） | 读写显示状态，setter 会自动渲染/移除 |
+| `box` | `HTMLElement \| null` | 色块 DOM |
+
+## 事件与回调
+
+Box 自身不触发事件，点击时按当前状态直接调用：
+
+```ts
+if (picker.pickerFlag) {
+  picker.hidePanel(togglePickerAnimation, pickerAnimationTime)
+} else {
+  picker.showPanel(togglePickerAnimation, pickerAnimationTime)
+}
+onClick?.(boxPlugin)
+```
+
+`disabled` 或 `readonly` 为 `true` 时，点击会被 `preventDefault` + `stopPropagation` 拦截，不会展开面板，也不会执行 `onClick`。
+
+监听颜色或开合状态请使用核心事件：
+
+```ts
+picker.on('toggle', (isOpen) => console.log('面板开合：', isOpen))
+picker.on('change', (color) => console.log('颜色：', color))
+```
+
+## DOM 结构
+
+```html
+<div class="ew-color-picker" data-uid="…">
+  <!-- Box -->
+  <div class="ew-color-picker-box" style="width:32px;height:32px">
+    <span class="ew-color-picker-box-arrow-icon">…</span>
+    <!-- 或 <span class="ew-color-picker-box-close-icon">…</span> -->
+  </div>
+  <!-- 面板容器 -->
+  <div class="ew-color-picker-panel-container ew-color-picker-panel-container-hidden">…</div>
+</div>
+```
+
+| 类名 | 说明 |
+| --- | --- |
+| `.ew-color-picker-box` | 触发器根节点 |
+| `.ew-color-picker-box-arrow-icon` | 有颜色时的默认图标 |
+| `.ew-color-picker-box-close-icon` | 无颜色时的默认图标 |
+| `.is-disabled` | 禁用态 |
+| `.is-readonly` | 只读态 |
+
+## 完整示例
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/node_modules/@ew-color-picker/style/dist/index.css" />
+    <link rel="stylesheet" href="/node_modules/@ew-color-picker/style/dist/input-number.css" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="/node_modules/@ew-color-picker/ewColorPicker/dist/index.js"></script>
+    <script>
+      const picker = new ewColorPicker({
+        el: '#app',
+        defaultColor: '#6366f1',
+        size: 'large',
+        onMouseEnter: () => console.log('鼠标移入色块'),
+        onMouseLeave: () => console.log('鼠标移出色块'),
+        onClick: (box) => {
+          console.log('点击了色块', box.hasBox)
+        },
+      })
+    </script>
+  </body>
+</html>
+```
+
+## 相关
+
+- [Panel 颜色面板](./panel.md) — 色块展开后的主体
+- [配置项 · size](../api/options.md#size)
+- [样式与类名](../api/styles.md)
+
+## Button 按钮插件
+
+Source: https://eveningwater.github.io/ew-color-picker/plugins/button
+
+# Button 按钮
+
+`ewColorPickerButton` 渲染「清空」与「确定」两个按钮。清空会还原默认色并关闭面板，确定会提交当前色并关闭面板。
+
+| 项 | 值 |
+| --- | --- |
+| 包 | `@ew-color-picker/button` |
+| `pluginName` | `ewColorPickerButton` |
+| `applyOrder` | `Post` |
+| 挂载点 | `panelContainer` → `.ew-color-picker-bottom-row` |
+| 访问实例 | `core.plugins.ewColorPickerButton` |
+
+## 配置项
+
+| 配置 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `showButton` | `boolean` | `true` | `false` 时不渲染任何按钮 |
+| `hasClear` | `boolean` | `true` | `false` 时隐藏清空按钮 |
+| `hasSure` | `boolean` | `true` | `false` 时隐藏确定按钮 |
+| `clearText` | `string` | `'清空'` | 清空按钮文案 |
+| `sureText` | `string` | `'确定'` | 确定按钮文案 |
+| `disabled` | `boolean` | `false` | 禁用两个按钮 |
+
+> `hasClear` / `hasSure` 在构造期生效；运行时切换请用 `enableClear` / `enableSure` / `enableButtons`。
+
+## 实例方法
+
+```ts
+const button = picker.plugins.ewColorPickerButton
+```
+
+| 方法 / 属性 | 签名 | 说明 |
+| --- | --- | --- |
+| `enableClear` | `(enable = true) => void` | 显示/隐藏清空按钮 |
+| `enableSure` | `(enable = true) => void` | 显示/隐藏确定按钮 |
+| `enableButtons` | `(enable = true) => void` | 同时控制两个按钮 |
+| `hasClear` / `hasSure` | `boolean`（getter/setter） | setter 会重新渲染 |
+| `setClearText` | `(text: string) => void` | 修改清空文案 |
+| `setSureText` | `(text: string) => void` | 修改确定文案 |
+| `setDisabled` | `(disabled: boolean) => void` | 设置按钮 `disabled` 属性 |
+| `updateOptions` | `() => void` | 重新读取配置并重绘（延后一帧以避开 ColorMode） |
+| `onClearColor` | `() => void` | 执行清空逻辑（防抖 100ms） |
+| `onSureColor` | `() => void` | 执行确定逻辑（防抖 100ms） |
+| `clearButton` / `sureButton` | `HTMLButtonElement \| null` | 按钮 DOM |
+
+## 点击行为
+
+### 清空（onClearColor）
+
+1. 读取 `defaultColor`：有值则还原为该颜色，否则置空；
+2. 同步 `hsvaColor`（无默认色时重置为 `{h:0,s:100,v:100,a:1}`）；
+3. `core.setColor(resetColor)`；
+4. `core.syncAllPlugins(resetColor)` 同步全部插件 UI；
+5. `core.hidePanel()` 关闭面板；
+6. 调用 `options.clear?.(picker)`；
+7. `core.trigger('clear')`。
+
+### 确定（onSureColor）
+
+1. 调用 `options.sure?.(color, picker)`；
+2. `core.trigger('sure', color, picker)`；
+3. `core.hidePanel()` 关闭面板。
+
+## 事件与回调
+
+| 来源 | 签名 | 触发时机 |
+| --- | --- | --- |
+| `options.clear` | `(picker) => void` | 点击清空按钮 |
+| `options.sure` | `(color, picker) => void` | 点击确定按钮 |
+| 事件 `clear` | `()` | 点击清空按钮 |
+| 事件 `sure` | `(color, picker)` | 点击确定按钮 |
+
+```ts
+picker.on('sure', (color, instance) => console.log('确定：', color))
+picker.on('clear', () => console.log('已清空'))
+```
+
+## DOM 结构
+
+```html
+<div class="ew-color-picker-bottom-row">
+  <div class="ew-color-picker-drop-btn-group">
+    <button class="ew-color-picker-clear-btn ew-color-picker-drop-btn">清空</button>
+    <button class="ew-color-picker-sure-btn ew-color-picker-drop-btn">确定</button>
+  </div>
+</div>
+```
+
+| 类名 | 说明 |
+| --- | --- |
+| `.ew-color-picker-drop-btn-group` | 按钮组 |
+| `.ew-color-picker-drop-btn-group-multi` / `-single` | 与 ColorMode 输入组并排时的布局调整 |
+| `.ew-color-picker-clear-btn` | 清空按钮 |
+| `.ew-color-picker-sure-btn` | 确定按钮 |
+| `.ew-color-picker-drop-btn` | 通用按钮样式 |
+
+## 完整示例
+
+```ts
+const picker = new ewColorPicker({
+  el: '#app',
+  defaultColor: '#8b5cf6',
+  clearText: '重置',
+  sureText: '用这个颜色',
+  clear: (instance) => {
+    console.log('清空后颜色：', instance.getColor())
+  },
+  sure: (color, instance) => {
+    console.log('确定颜色：', color)
+    instance.destroy()
+  },
+})
+```
+
+## 相关
+
+- [事件 · clear / sure](../api/events.md)
+- [配置项 · clearText / sureText](../api/options.md#cleartext)
+
+## ColorMode 颜色模式插件
+
+Source: https://eveningwater.github.io/ew-color-picker/plugins/color-mode
+
+# ColorMode 颜色模式
+
+`ewColorPickerColorMode` 提供 **Hex / RGB / HSL** 三种输入模式。切换后底部输入区会重建为对应的分通道输入组。
+
+| 项 | 值 |
+| --- | --- |
+| 包 | `@ew-color-picker/color-mode` |
+| `pluginName` | `ewColorPickerColorMode` |
+| `applyOrder` | `Post` |
+| 挂载点 | `panelContainer` |
+| 访问实例 | `core.plugins.ewColorPickerColorMode` |
+
+## 配置项
+
+| 配置 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `defaultMode` | `'hex' \| 'rgb' \| 'hsl'` | 有 Alpha 时 `'rgb'`，否则 `'hex'` | 初始模式 |
+| `showColorMode` | `boolean` | `true` | `false` 时不渲染模式切换器 |
+| `ewColorPickerColorMode` | `boolean \| object` | `true` | `false` 等价于关闭；对象会合并进插件配置 |
+| `changeMode` | `(mode, picker) => void` | — | 模式切换回调 |
+
+::: tip 默认模式为什么是 RGB？
+当 Alpha 插件存在时，颜色天然是 `rgba()`，因此默认进入 `rgb` 模式更符合直觉；没有 Alpha 时默认 `hex`。
+:::
+
+## 实例方法
+
+```ts
+const colorMode = picker.plugins.ewColorPickerColorMode
+```
+
+| 方法 / 属性 | 签名 | 说明 |
+| --- | --- | --- |
+| `getCurrentMode` | `() => 'hex' \| 'rgb' \| 'hsl'` | 读取当前模式 |
+| `setMode` | `(mode) => void` | 切换模式（内部防抖 100ms） |
+| `switchToNextMode` | `() => void` | 循环到下一个模式：hex → rgb → hsl → hex |
+| `switchToPreviousMode` | `() => void` | 循环到上一个模式 |
+| `onModeChange` | `(mode) => void` | 模式变更主逻辑：更新显示、重建输入、执行回调、触发事件 |
+| `updateOptions` | `() => void` | 重新读取配置并重绘 |
+| `updateInputStructure` | `() => void` | 按当前模式重建输入区 |
+| `updateInputValues` | `(color: string) => void` | 把颜色同步到当前模式的输入框 |
+| `updateColorFromRgbInputs` | `() => void` | 从 RGB 输入框合成颜色并改色（防抖） |
+| `updateColorFromHslInputs` | `() => void` | 从 HSL 输入框合成颜色并改色（防抖） |
+| `restoreDefaultInput` | `() => void` | 恢复 Input 插件的默认输入框 |
+| `currentMode` | `'hex' \| 'rgb' \| 'hsl'` | 当前模式 |
+| `modeContainer` | `HTMLElement \| null` | 模式切换器根节点 |
+
+### 切换模式
+
+```ts
+picker.plugins.ewColorPickerColorMode.setMode('rgb')
+picker.plugins.ewColorPickerColorMode.switchToNextMode()
+```
+
+## 模式切换行为
+
+```text
+点击上/下箭头
+   → debounce(100ms) onModeChange(mode)
+   → 更新模式文本（HEX / RGB / HSL）
+   → updateInputStructure() 重建输入区
+   → 非 hex 模式：updateInputValues(当前颜色)
+   → options.changeMode?.(mode, picker)
+   → trigger('mode-change', mode)
+```
+
+**Hex 模式下不会再次调用 `setColor`**，避免把输入框里的 `#xxxxxx` 覆盖成 `rgba()/hsla()` 字符串。
+
+### 禁用状态
+
+上/下箭头点击时会检查 `options.disabled`，禁用状态下不响应。
+
+## 事件与回调
+
+| 来源 | 签名 | 说明 |
+| --- | --- | --- |
+| `options.changeMode` | `(mode, picker) => void` | 模式切换后 |
+| 事件 `mode-change` | `(mode)` | 模式切换后 |
+
+```ts
+picker.on('mode-change', (mode) => {
+  console.log('当前模式：', mode) // 'hex' | 'rgb' | 'hsl'
+})
+```
+
+## DOM 结构
+
+```html
+<!-- 模式切换器 -->
+<div class="ew-color-picker-mode-container">
+  <button class="ew-color-picker-mode-up-btn" type="button" title="上一个模式"></button>
+  <div class="ew-color-picker-mode-text">HEX</div>
+  <button class="ew-color-picker-mode-down-btn" type="button" title="下一个模式"></button>
+</div>
+
+<!-- RGB/HSL 模式下的输入组 -->
+<div class="ew-color-picker-inputs-group">
+  <div class="ew-color-picker-inputs-col">
+    <label class="ew-color-picker-input-label">R</label>
+    <div class="ew-input-number">…</div>
+  </div>
+  <!-- G / B / A 或 H / S / L / A -->
+</div>
+```
+
+| 类名 | 说明 |
+| --- | --- |
+| `.ew-color-picker-mode-container` | 模式切换器 |
+| `.ew-color-picker-mode-up-btn` / `-down-btn` | 上/下切换按钮 |
+| `.ew-color-picker-mode-text` | 模式文本 |
+| `.ew-color-picker-inputs-group` | 分通道输入组 |
+| `.ew-color-picker-inputs-col` | 单个通道列 |
+| `.ew-color-picker-input-label` | 通道标签 |
+| `.ew-color-picker-input-container-flex` | Hex 模式的输入容器 |
+| `.ew-color-picker-input` / `.ew-color-picker-input-default` | 默认输入框 |
+
+## 完整示例
+
+```ts
+const picker = new ewColorPicker({
+  el: '#app',
+  defaultColor: '#ec4899',
+  defaultMode: 'hex',
+  showColorMode: true,
+  changeMode: (mode, instance) => {
+    console.log(`切换到 ${mode}，当前色 ${instance.getColor()}`)
+  },
+})
+
+picker.on('mode-change', (mode) => {
+  if (mode === 'hsl') {
+    // HSL 模式下可以读取 hsvaColor 做进一步处理
+    console.log(picker.hsvaColor)
+  }
+})
+```
+
+## 相关
+
+- [Input 输入框](./input.md)
+- [InputNumber 数字输入框](./input-number.md)
+- [事件 · mode-change](../api/events.md#mode-change)
+
+## Console 控制台插件
+
+Source: https://eveningwater.github.io/ew-color-picker/plugins/console
+
+# Console 控制台
+
+`ewColorPickerConsole` 会在控制台打印一条带样式的版本横幅（版本号、QQ、微信、GitHub）。它不影响任何 UI。
+
+| 项 | 值 |
+| --- | --- |
+| 包 | `@ew-color-picker/utils`（从 utils 导出 `Console`） |
+| `pluginName` | `ewColorPickerConsole` |
+| `applyOrder` | 未显式声明（聚合包中最先注册） |
+| 挂载点 | 无（只输出日志） |
+| 访问实例 | `core.plugins.ewColorPickerConsole` |
+
+## 全页仅一次
+
+插件内部用一个模块级布尔标记：
+
+```ts
+let hasPrintedTips = false
+
+run() {
+  if (hasPrintedTips) return
+  hasPrintedTips = true
+  log(...tips)
+}
+```
+
+因此无论页面上创建多少个选择器实例，横幅都只出现一次。
+
+## 关闭方式
+
+Console 没有独立配置项（类型为 `{}`）。最简单的做法是**单独按需注册插件时不要注册它**：
+
+```ts
+import ewColorPicker from '@ew-color-picker/core'
+import Box from '@ew-color-picker/box'
+import Panel from '@ew-color-picker/panel'
+// …
+
+// 不引入 Console，就不会打印横幅
+ewColorPicker.use(Box).use(Panel)
+```
+
+如果使用聚合包 `@ew-color-picker/ewColorPicker`，Console 已经注册，无法通过 options 关闭。
+
+## 输出内容
+
+```text
+ ew-color-picker@2.0.0  联系QQ：854806732  联系微信：eveningwater  github:https://github.com/eveningwater/ew-color-picker
+```
+
+样式通过 `%c` 注入，不影响页面。
+
+## 实例方法
+
+| 方法 | 说明 |
+| --- | --- |
+| `handleOptions` | 合并核心配置（当前无实际用途） |
+| `run` | 输出横幅（受一次性标记保护） |
+| `install` | 兼容手动 `install(core)` 调用 |
+
+## 相关
+
+- [插件总览](./index.md)
+- [编写自定义插件](../guide/plugin-dev.md)
+
+## Hue 色相滑块插件
+
+Source: https://eveningwater.github.io/ew-color-picker/plugins/hue
+
+# Hue 色相滑块
+
+`ewColorPickerHue` 渲染一条 0–360° 的色相条。改变色相时保持当前饱和度、明度与透明度不变。
+
+| 项 | 值 |
+| --- | --- |
+| 包 | `@ew-color-picker/hue` |
+| `pluginName` | `ewColorPickerHue` |
+| `applyOrder` | `Post` |
+| 挂载点 | `panelContainer` |
+| 访问实例 | `core.plugins.ewColorPickerHue` |
+
+## 配置项
+
+| 配置 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `hue` | `boolean` | `true` | `false` 时不渲染色相条（构造期生效） |
+| `hueDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | 滑块方向 |
+| `disabled` | `boolean` | `false` | 禁用后点击/拖拽不生效 |
+
+::: tip hue 与 ewColorPickerPanel
+`hue` 只控制色相条本身，不影响二维面板。想要「极简取色」，通常同时关闭 `hasPanel`。
+:::
+
+## 实例方法
+
+```ts
+const hue = picker.plugins.ewColorPickerHue
+```
+
+| 方法 / 属性 | 签名 | 说明 |
+| --- | --- | --- |
+| `enableHue` | `(enable = true) => void` | 运行时显示/隐藏色相条，等价于 `hasHue = enable` |
+| `updateHue` | `(hue: number) => void` | 设置色相（0–360），内部经 `core.setColor()` 改色 |
+| `updateHueThumbPosition` | `(hue: number) => void` | 只移动滑块，不改颜色 |
+| `hasHue` | `boolean`（getter/setter） | setter 会立即渲染或移除 DOM |
+| `hueBar` | `HTMLElement \| null` | 色相条根节点 |
+| `hueThumb` | `HTMLElement \| null` | 滑块手柄 |
+| `isHorizontal` | `boolean` | 当前是否水平方向 |
+
+### 示例：运行时隐藏
+
+```ts
+picker.plugins.ewColorPickerHue.enableHue(false)
+picker.plugins.ewColorPickerHue.enableHue(true)
+```
+
+## 交互行为
+
+| 操作 | 行为 |
+| --- | --- |
+| 点击色相条 | 按点击位置换算色相并立即改色 |
+| 按住拖拽 | 节流 16ms 连续改色 |
+| 外部颜色变化 | 监听 `change`，用新颜色的 `h` 同步手柄位置 |
+
+色相条背景始终是完整的 360° 光谱，不受当前颜色影响。
+
+## 事件
+
+改色通过 `core.setColor()`，因此：
+
+```ts
+picker.on('change', (color) => console.log(color))
+```
+
+会收到色相拖动产生的颜色。Hue 自身不 `trigger` 额外事件。
+
+## DOM 结构
+
+```html
+<div class="ew-color-picker-slider ew-color-picker-is-vertical">
+  <div class="ew-color-picker-slider-bar"></div>
+  <div class="ew-color-picker-slider-thumb"></div>
+</div>
+```
+
+| 类名 | 说明 |
+| --- | --- |
+| `.ew-color-picker-slider` | 滑块根节点 |
+| `.ew-color-picker-is-vertical` / `.ew-color-picker-is-horizontal` | 方向 |
+| `.ew-color-picker-slider-bar` | 色相渐变条 |
+| `.ew-color-picker-slider-thumb` | 手柄 |
+
+## 完整示例
+
+```ts
+const picker = new ewColorPicker({
+  el: '#app',
+  defaultColor: '#ef4444',
+  hueDirection: 'horizontal',
+})
+
+// 监听色相变化
+picker.on('change', (color) => {
+  const h = picker.hsvaColor.h
+  console.log(`色相 ${h.toFixed(0)}°，颜色 ${color}`)
+})
+
+// 设置为 200°（青蓝）
+picker.plugins.ewColorPickerHue.updateHue(200)
+```
+
+## 相关
+
+- [Alpha 透明度滑块](./alpha.md)
+- [配置项 · hueDirection](../api/options.md#huedirection)
+
+## 插件总览
+
+Source: https://eveningwater.github.io/ew-color-picker/plugins/
+
+# 插件总览
+
+EW Color Picker 的核心（`@ew-color-picker/core`）只负责三件事：维护颜色状态、派发事件、管理挂载点。**所有可见的 UI 都由插件渲染**，因此你可以按需组合出完全不同的选择器形态。
+
+## 插件是怎么工作的
+
+每个插件都是一个普通类，核心只要求：
+
+| 成员 | 类型 | 说明 |
+| --- | --- | --- |
+| `static pluginName` | `string` | 唯一名称，也是核心 `plugins` 对象的键 |
+| `static applyOrder` | `ApplyOrder` | 执行顺序，`Pre = -1` 先于核心默认逻辑，`Post = 1` 后于核心默认逻辑 |
+| `constructor(core)` | — | 接收核心实例，自行渲染到挂载点并订阅事件 |
+| `destroy()` | 可选 | 卸载时释放 DOM 与事件 |
+
+```ts
+import ewColorPicker from '@ew-color-picker/core'
+import MyPlugin from './my-plugin'
+
+ewColorPicker.use(MyPlugin)
+new ewColorPicker({ el: '#app' })
+```
+
+`use()` 是幂等的：同一个构造函数重复注册不会产生第二个实例。插件实例可以通过 `core.plugins[pluginName]` 访问。
+
+## 内置插件一览
+
+聚合包 `@ew-color-picker/ewColorPicker` 的注册顺序如下（顺序决定默认的 DOM 排布）：
+
+| # | 插件 | `pluginName` | 包 | 职责 |
+| --- | --- | --- | --- | --- |
+| 1 | Console | `ewColorPickerConsole` | `@ew-color-picker/utils` | 控制台输出版本信息，全页仅一次 |
+| 2 | Box | `ewColorPickerBox` | `@ew-color-picker/box` | 触发器色块：显示当前色、打开/关闭面板 |
+| 3 | Panel | `ewColorPickerPanel` | `@ew-color-picker/panel` | 饱和度/明度选择面板 |
+| 4 | Hue | `ewColorPickerHue` | `@ew-color-picker/hue` | 色相滑块 |
+| 5 | Alpha | `ewColorPickerAlpha` | `@ew-color-picker/alpha` | 透明度滑块 |
+| 6 | Input | `ewColorPickerInput` | `@ew-color-picker/input` | 文本颜色输入框 |
+| 7 | InputNumber | `ewColorPickerInputNumber` | `@ew-color-picker/input-number` | RGB/HSL 数值输入组（底层组件） |
+| 8 | Button | `ewColorPickerButton` | `@ew-color-picker/button` | 清空 / 确定按钮 |
+| 9 | Predefine | `ewColorPickerPredefine` | `@ew-color-picker/predefine` | 预定义颜色色块 |
+| 10 | ColorMode | `ewColorPickerColorMode` | `@ew-color-picker/color-mode` | Hex / RGB / HSL 模式切换 |
+| 11 | — | — | `@ew-color-picker/style` | 样式产物（CSS，不是插件） |
+
+## 挂载点
+
+核心在挂载时创建两个容器，插件只能往这两个节点里渲染：
+
+| 挂载点 | 获取方式 | 说明 |
+| --- | --- | --- |
+| `root` | `core.getMountPoint('root')` | 外层容器 `.ew-color-picker`，触发器（Box）放这里 |
+| `panelContainer` | `core.getMountPoint('panelContainer')` | 面板容器 `.ew-color-picker-panel-container`，默认带 `-hidden` 类 |
+
+面板收起时给 `panelContainer` 加 `ew-color-picker-panel-container-hidden`，展开时移除，配合 `togglePickerAnimation` 产生动画。
+
+## 插件之间如何协作
+
+```text
+用户操作 (Box / Panel / Hue / Alpha / Input / Predefine / Button)
+        │
+        ▼
+   core.setColor(color)  ← 唯一的改色入口
+        │
+        ├─► emit('change', color)
+        │        ├─ Panel   同步背景色与光标
+        │        ├─ Hue     同步滑块位置
+        │        ├─ Alpha   同步滑块位置
+        │        ├─ Input   同步输入框文本
+        │        ├─ ColorMode 同步 RGB/HSL 输入框
+        │        └─ Box     同步色块背景与图标颜色
+        │
+        └─► 调用 options.changeColor(color)
+```
+
+几条硬约束：
+
+- **只有 `core.setColor()` 能改色**，插件之间不直接互调。
+- 插件通过 `core.on('change')` 监听颜色变化，不要轮询 `core.currentColor`。
+- 插件之间通过 `core.plugins.xxx` 读取状态，例如 ColorMode 会判断 `core.plugins.ewColorPickerAlpha` 是否存在来决定默认模式。
+- 需要刷新配置时调用 `core.updateOptions(options)`，核心会广播 `options-update`。
+
+## 按需组合
+
+只要引用了聚合包，11 个插件就都已注册。你可以用配置项裁剪 UI，而不必卸载插件：
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  hasPanel: false,     // 不要饱和度面板
+  hue: false,          // 不要色相滑块
+  alpha: false,        // 不要透明度滑块
+  hasInput: false,     // 不要输入框
+  hasClear: false,     // 不要清空按钮
+  hasSure: false,      // 不要确定按钮
+  showColorMode: false,// 不要模式切换
+  size: 'large',
+})
+```
+
+::: tip 想要更小的体积？
+按需手动注册插件即可，见[安装](../guide/installation.md#按需引入子包)。
+:::
+
+## 下一步
+
+- [Box 颜色盒](./box.md)
+- [Panel 颜色面板](./panel.md)
+- [Hue 色相滑块](./hue.md)
+- [Alpha 透明度滑块](./alpha.md)
+- [Input 输入框](./input.md)
+- [InputNumber 数字输入框](./input-number.md)
+- [Button 按钮](./button.md)
+- [Predefine 预定义颜色](./predefine.md)
+- [ColorMode 颜色模式](./color-mode.md)
+- [Console 控制台](./console.md)
+- [编写自定义插件](../guide/plugin-dev.md)
+
+## InputNumber 数字输入框插件
+
+Source: https://eveningwater.github.io/ew-color-picker/plugins/input-number
+
+# InputNumber 数字输入框
+
+`@ew-color-picker/input-number` 包含两部分：
+
+1. **插件** `ewColorPickerInputNumber`：随聚合包自动注册，把一个数字输入框挂到面板底部行；
+2. **组件** `InputNumber`：可独立使用的受控数字输入组件，ColorMode 插件在 RGB/HSL 模式下用它构建分通道输入组。
+
+| 项 | 值 |
+| --- | --- |
+| 包 | `@ew-color-picker/input-number` |
+| `pluginName` | `ewColorPickerInputNumber` |
+| `applyOrder` | `Post` |
+| 挂载点 | `panelContainer` → `.ew-color-picker-bottom-row` |
+| 访问实例 | `core.plugins.ewColorPickerInputNumber` |
+
+::: warning 必须引入额外样式
+数字输入框的样式在独立文件中：
+
+```ts
+import '@ew-color-picker/style/dist/input-number.css'
+```
+
+只引入 `index.css` 会导致输入框无样式。
+:::
+
+## 插件配置
+
+| 配置 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `disabled` | `boolean` | `false` | 禁用所有由该插件管理的数字输入框 |
+
+插件读取核心的 `disabled` 并同步给已创建的输入框。
+
+## 插件方法
+
+```ts
+const inputNumberPlugin = picker.plugins.ewColorPickerInputNumber
+```
+
+| 方法 | 签名 | 说明 |
+| --- | --- | --- |
+| `createInputNumber` | `(options: InputNumberOptions) => InputNumber` | 创建一个数字输入组件实例 |
+| `updateOptions` | `() => void` | 重新读取核心配置并把 `disabled` 应用到所有实例 |
+| `run` | `() => void` | 创建默认实例并挂到底部行 |
+| `destroy` | `() => void` | 销毁全部实例并清空引用 |
+
+## InputNumber 组件
+
+```ts
+import { InputNumber } from '@ew-color-picker/input-number'
+```
+
+### 构造配置
+
+| 配置 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `value` | `number` | `0` | 初始值 |
+| `min` | `number` | `-Infinity` | 最小值 |
+| `max` | `number` | `Infinity` | 最大值 |
+| `step` | `number` | `1` | 步进值 |
+| `precision` | `number` | `0` | 小数位数 |
+| `disabled` | `boolean` | `false` | 禁用 |
+| `placeholder` | `string` | `''` | 占位符 |
+| `size` | `'small' \| 'default' \| 'large'` | `'default'` | 尺寸 |
+| `onChange` | `(value: number) => void` | — | 值变化回调（防抖 300ms） |
+| `onBlur` | `(value: number) => void` | — | 失焦回调 |
+| `onFocus` | `(event: FocusEvent) => void` | — | 聚焦回调 |
+
+### 组件方法
+
+| 方法 | 签名 | 说明 |
+| --- | --- | --- |
+| `getValue` | `() => number` | 读取当前值 |
+| `setValue` | `(value: number) => void` | 设置值（会按 `min`/`max`/`precision` 规整） |
+| `setDisabled` | `(disabled: boolean) => void` | 切换禁用态 |
+| `getElement` | `() => HTMLElement` | 获取根 DOM，便于自行挂载 |
+| `destroy` | `() => void` | 解绑事件并移除 DOM |
+
+### 独立使用示例
+
+```ts
+import { InputNumber } from '@ew-color-picker/input-number'
+import '@ew-color-picker/style/dist/input-number.css'
+
+const num = new InputNumber({
+  value: 50,
+  min: 0,
+  max: 100,
+  step: 1,
+  precision: 0,
+  placeholder: '饱和度',
+  onChange: (v) => console.log('新值', v),
+})
+
+document.body.appendChild(num.getElement())
+```
+
+::: tip 初始化不触发 onChange
+构造时会直接同步显示值，但**不会**调用 `onChange`，避免实例创建阶段误改颜色。只有用户交互才会触发。
+:::
+
+## DOM 结构
+
+```html
+<div class="ew-input-number ew-input-number--default">
+  <input class="ew-input-number__input" type="text" inputmode="decimal" />
+  <div class="ew-input-number__buttons">
+    <button class="ew-input-number__button ew-input-number__button--up"></button>
+    <button class="ew-input-number__button ew-input-number__button--down"></button>
+  </div>
+</div>
+```
+
+| 类名 | 说明 |
+| --- | --- |
+| `.ew-input-number` | 根节点 |
+| `.ew-input-number--small` / `--default` / `--large` | 尺寸 |
+| `.ew-input-number--focused` | 聚焦态 |
+| `.ew-input-number--disabled` | 禁用态 |
+| `.ew-input-number__input` | 输入框 |
+| `.ew-input-number__buttons` | 上下步进按钮容器 |
+| `.ew-input-number__button--up` / `--down` | 步进按钮 |
+
+## 与 ColorMode 的关系
+
+ColorMode 在 RGB/HSL 模式下会：
+
+1. 调用 `createInputNumber` 创建 R/G/B/A 或 H/S/L/A 输入组；
+2. 把多个 `InputNumber` 放进 `.ew-color-picker-inputs-group`；
+3. 任一输入变化后合成颜色并调用 `core.setColor()`。
+
+因此调色时不需要手动拼装这四个输入框。
+
+## 完整示例
+
+```ts
+const picker = new ewColorPicker({
+  el: '#app',
+  defaultColor: '#f59e0b',
+  defaultMode: 'rgb',
+})
+
+picker.on('change', (color) => {
+  console.log('RGB 输入组改色：', color)
+  // r/g/b 实时值
+  console.log(picker.hsvaColor)
+})
+```
+
+## 相关
+
+- [ColorMode 颜色模式](./color-mode.md)
+- [Input 颜色输入框](./input.md)
+- [样式与类名](../api/styles.md)
+
+## Input 颜色输入框插件
+
+Source: https://eveningwater.github.io/ew-color-picker/plugins/input
+
+# Input 颜色输入框
+
+`ewColorPickerInput` 渲染一个文本输入框，允许用户直接键入颜色值。输入合法颜色后回车或失焦即改色；非法输入不会污染当前颜色。
+
+| 项 | 值 |
+| --- | --- |
+| 包 | `@ew-color-picker/input` |
+| `pluginName` | `ewColorPickerInput` |
+| `applyOrder` | `Post` |
+| 挂载点 | `panelContainer` |
+| 访问实例 | `core.plugins.ewColorPickerInput` |
+
+## 配置项
+
+| 配置 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `hasInput` | `boolean` | `true` | `false` 时不渲染输入框 |
+| `disabled` | `boolean` | `false` | 禁用输入框 |
+| `changeColor` | `(rgba: string) => void` | — | 输入合法颜色并改色后的回调，参数为 `rgba()` 字符串 |
+
+> 输入框的显示内容由当前模式决定：Hex 模式显示 hex，RGB 模式显示 `rgb()/rgba()`，HSL 模式显示 `hsl()/hsla()`。模式切换由 [ColorMode](./color-mode.md) 管理。
+
+## 实例方法
+
+```ts
+const input = picker.plugins.ewColorPickerInput
+```
+
+| 方法 / 属性 | 签名 | 说明 |
+| --- | --- | --- |
+| `enableInput` | `(enable = true) => void` | 显示/隐藏输入框 |
+| `hasInput` | `boolean`（getter/setter） | setter 会立即渲染或移除 DOM |
+| `setValue` | `(value: string) => void` | 直接设置输入框文本（不改颜色） |
+| `getValue` | `() => string` | 读取输入框当前文本 |
+| `setDisabled` | `(disabled: boolean) => void` | 切换禁用态，会同步 `ew-input-disabled` 类 |
+| `update` | `(color: string) => void` | 按当前模式格式化并写入输入框 |
+| `onInputColor` | `(value: string) => void` | 处理输入值；内部防抖 300ms |
+| `input` | `HTMLInputElement \| null` | 输入框 DOM |
+
+### 典型用法
+
+```ts
+// 让输入框显示当前颜色（内部已自动处理，一般无需手动调用）
+picker.plugins.ewColorPickerInput.update(picker.getColor())
+
+// 直接读取用户输入
+console.log(picker.plugins.ewColorPickerInput.getValue())
+
+// 禁用
+picker.plugins.ewColorPickerInput.setDisabled(true)
+```
+
+## 输入校验
+
+| 输入 | 结果 |
+| --- | --- |
+| `#f00`、`#ff0000`、`#ff000080` | 合法，按当前插件组合转换为 rgba 或 hex |
+| `rgb(255,0,0)`、`rgba(255,0,0,0.5)` | 合法 |
+| `hsl(0,100%,50%)`、`hsla(...)` | 合法 |
+| 空字符串 | 合法（表示清空颜色） |
+| 其它 | 非法，不触发改色；部分场景会 `warn` |
+
+输入事件防抖 300ms，避免每个按键都触发整棵插件树的同步。
+
+## 事件与回调
+
+改色成功后：
+
+```ts
+core.setColor(rgbaColor)
+core.trigger('change', rgbaColor)
+options.changeColor?.(rgbaColor)
+```
+
+监听 `change`：
+
+```ts
+picker.on('change', (color) => console.log('输入框改色：', color))
+```
+
+## DOM 结构
+
+```html
+<div class="ew-color-picker-input-container ew-color-picker-input-container-flex">
+  <input class="ew-color-picker-input" type="text" />
+</div>
+```
+
+禁用时输入框会追加 `ew-input-disabled`。
+
+## 完整示例
+
+```ts
+const picker = new ewColorPicker({
+  el: '#app',
+  defaultColor: '#0ea5e9',
+  hasInput: true,
+  changeColor: (rgba) => console.log('用户输入了：', rgba),
+})
+
+picker.on('change', (color) => {
+  console.log('当前颜色', color)
+})
+```
+
+## 相关
+
+- [ColorMode 颜色模式](./color-mode.md) — 决定输入框显示格式
+- [InputNumber 数字输入框](./input-number.md) — RGB/HSL 分通道输入
+
+## Panel 颜色面板插件
+
+Source: https://eveningwater.github.io/ew-color-picker/plugins/panel
+
+# Panel 颜色面板
+
+`ewColorPickerPanel` 负责最核心的取色区域：一张二维渐变面板，横轴是饱和度（S），纵轴是明度（V），拖动光标即可改色。
+
+| 项 | 值 |
+| --- | --- |
+| 包 | `@ew-color-picker/panel` |
+| `pluginName` | `ewColorPickerPanel` |
+| `applyOrder` | `Post` |
+| 挂载点 | `panelContainer` |
+| 访问实例 | `core.plugins.ewColorPickerPanel` |
+
+## 配置项
+
+| 配置 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `hasPanel` | `boolean` | `true` | `false` 时不渲染二维面板 |
+| `ewColorPickerPanel` | `boolean \| object` | `true` | 兼容写法：`false` 等价于关闭面板；对象形式可合并面板配置 |
+| `hueDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | 影响面板计算宽度（水平布局更宽） |
+| `alphaDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | 同上，两者都水平时面板宽 320px |
+| `autoPanelPosition` | `boolean` | `false` | 是否根据触发器位置自动定位面板 |
+| `panelPlacement` | `string` | `'bottom'` | 自动定位时的方向，见下表 |
+| `ewColorPickerBox` | `boolean` | `true` | 自动定位必须是 `true`（需要读取 Box 尺寸） |
+| `alpha` | `boolean` | 由插件是否存在决定 | 有无透明度插件会影响默认颜色格式 |
+| `disabled` | `boolean` | `false` | 禁用后拖拽不生效 |
+
+### panelPlacement 取值
+
+| 方向 | 对齐 |
+| --- | --- |
+| `top-start` / `top` / `top-end` | 面板在上方 |
+| `bottom-start` / `bottom` / `bottom-end` | 面板在下方 |
+| `left-start` / `left` / `left-end` | 面板在左侧 |
+| `right-start` / `right` / `right-end` | 面板在右侧 |
+
+带 `-start` / `-end` 时按触发器边缘对齐，不带后缀时居中对齐。面板与触发器间距固定 5px，超出视口会自动翻转/内收。
+
+### 面板宽度规则
+
+| hue 方向 | alpha 方向 | 面板宽度 |
+| --- | --- | --- |
+| 垂直 | 垂直 | 285px |
+| 水平 | 垂直（或反之） | 约 302px |
+| 水平 | 水平 | 320px |
+
+高度固定 180px，通过 CSS 变量 `--panel-width` / `--panel-height` 注入。
+
+## 实例方法
+
+```ts
+const panel = picker.plugins.ewColorPickerPanel
+```
+
+| 方法 | 签名 | 说明 |
+| --- | --- | --- |
+| `render` | `() => void` | 重建面板 DOM（会移除旧面板） |
+| `updateCursorPosition` | `(saturation: number, value: number) => void` | 把光标移动到 S/V 对应位置（0–100） |
+| `updateColor` | `(saturation: number, value: number) => void` | 按 S/V 计算新颜色并调用 `core.setColor()`，随后 `trigger('change')` |
+| `updateHueBg` | `(hue?: number) => void` | 更新面板纯色底；不传则取当前颜色色相 |
+| `calculateContainerSize` | `() => void` | 计算容器尺寸（隐藏状态下会临时离屏测量） |
+| `handleAutoPosition` | `() => void` | 按 `panelPlacement` 计算并应用面板位置 |
+| `calculatePosition` | `(position, align, boxWidth, boxHeight) => { left, top }` | 纯计算，不写 DOM |
+| `adjustForViewport` | `(root, left, top) => { left, top }` | 视口边界修正 |
+| `destroy` | `() => void` | 移除面板与事件 |
+
+### 属性
+
+| 属性 | 类型 | 说明 |
+| --- | --- | --- |
+| `panel` | `HTMLElement \| null` | 面板根节点 |
+| `cursor` | `HTMLElement \| null` | 光标节点 |
+| `whitePanel` / `blackPanel` | `HTMLElement \| null` | 白/黑渐变层 |
+| `panelWidth` / `panelHeight` | `number` | 当前面板尺寸 |
+| `isHueHorizontal` / `isAlphaHorizontal` | `boolean` | 方向标记 |
+| `isDragging` | `boolean` | 是否正在拖拽 |
+
+### 手动改色
+
+```ts
+// 饱和度 50%，明度 80%
+picker.plugins.ewColorPickerPanel.updateColor(50, 80)
+```
+
+注意 `updateColor` 内部已经调用了 `core.setColor()` 并触发 `change`，不需要再调用一次。
+
+## 交互行为
+
+| 操作 | 行为 |
+| --- | --- |
+| 点击面板 | 光标跳到点击位置并立即改色 |
+| 按住拖拽 | 节流 16ms（约 60fps）连续改色 |
+| 触摸滑动 | 与鼠标拖拽一致 |
+| 颜色被其他插件修改 | 监听 `change` 自动同步光标与底色 |
+
+`updateColor` 会先取当前颜色；若为空或包含 `NaN`，会回退到红色（`alpha` 开启时为 `rgba(255,0,0,1)`）并先 `setColor`，保证面板始终有可计算的颜色。
+
+## 事件
+
+Panel 不定义自己的事件类型，改色时：
+
+```ts
+core.setColor(newColor)
+core.trigger('change', newColor)
+```
+
+因此监听 `change` 即可拿到面板拖动产生的颜色：
+
+```ts
+picker.on('change', (color) => console.log(color))
+```
+
+## DOM 结构
+
+```html
+<div class="ew-color-picker-panel-container">
+  <div class="ew-color-picker-panel ew-color-picker-panel-dynamic-size"
+       style="--panel-width:285px;--panel-height:180px;background:rgba(255,0,0,1)">
+    <div class="ew-color-picker-white-panel"></div>
+    <div class="ew-color-picker-black-panel"></div>
+    <div class="ew-color-picker-panel-cursor"></div>
+  </div>
+  <div class="ew-color-picker-bottom-row">
+    <!-- Hue / Alpha / InputNumber / Button / ColorMode 等 -->
+  </div>
+</div>
+```
+
+| 类名 | 说明 |
+| --- | --- |
+| `.ew-color-picker-panel` | 面板根节点 |
+| `.ew-color-picker-panel-dynamic-size` | 动态尺寸标记 |
+| `.ew-color-picker-white-panel` | 白色渐变层（饱和度） |
+| `.ew-color-picker-black-panel` | 黑色渐变层（明度） |
+| `.ew-color-picker-panel-cursor` | 拖拽光标 |
+| `.ew-color-picker-bottom-row` | 底部行容器，其它插件往这里插入 |
+
+## 完整示例
+
+```ts
+import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import '@ew-color-picker/style/dist/index.css'
+import '@ew-color-picker/style/dist/input-number.css'
+
+const picker = new ewColorPicker({
+  el: '#app',
+  defaultColor: '#22c55e',
+  hueDirection: 'horizontal',
+  alphaDirection: 'horizontal',
+  autoPanelPosition: true,
+  panelPlacement: 'bottom-start',
+})
+
+// 3 秒后把光标拖到「低饱和、低明度」
+setTimeout(() => {
+  picker.plugins.ewColorPickerPanel.updateColor(20, 30)
+}, 3000)
+```
+
+## 相关
+
+- [Hue 色相滑块](./hue.md)
+- [Alpha 透明度滑块](./alpha.md)
+- [配置项 · panelPlacement](../api/options.md#panelplacement)
+- [方法 · showPanel / hidePanel](../api/methods.md#showpanel)
+
+## Predefine 预定义颜色插件
+
+Source: https://eveningwater.github.io/ew-color-picker/plugins/predefine
+
+# Predefine 预定义颜色
+
+`ewColorPickerPredefine` 在面板内渲染一排预设色块，点击即可快速切换到常用颜色。
+
+| 项 | 值 |
+| --- | --- |
+| 包 | `@ew-color-picker/predefine` |
+| `pluginName` | `ewColorPickerPredefine` |
+| `applyOrder` | 未显式声明（按注册顺序） |
+| 挂载点 | `panelContainer` |
+| 访问实例 | `core.plugins.ewColorPickerPredefine` |
+
+## 配置项
+
+| 配置 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `predefineColor` | `(string \| { color: string; disabled?: boolean })[]` | `[]` | 预定义颜色列表；**为空时不渲染** |
+| `changeColor` | `(rgba: string) => void` | — | 点击色块后的回调，参数为 `rgba()` 字符串 |
+| `disabled` | `boolean` | `false` | 全局禁用后点击无效 |
+| `ewColorPickerPredefine` | `object` | — | 嵌套配置写法，会合并进插件配置 |
+
+### 两种数组写法
+
+```ts
+// 纯字符串
+predefineColor: ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#a855f7']
+
+// 带禁用项
+predefineColor: [
+  { color: '#ef4444' },
+  { color: '#22c55e', disabled: true },
+  { color: '#3b82f6' },
+]
+```
+
+### 校验规则
+
+- 使用**严格颜色格式**校验，只保留合法的 `hex` / `rgb` / `hsl` / 具名色等；
+- 非法颜色会在渲染前被过滤掉；
+- 点击时仍会再次校验，非法值会 `warn` 且不改色。
+
+## 实例方法
+
+```ts
+const predefine = picker.plugins.ewColorPickerPredefine
+```
+
+| 方法 / 属性 | 签名 | 说明 |
+| --- | --- | --- |
+| `updatePredefineColors` | `(colors: string[] \| PredefineColor[]) => void` | 替换颜色列表并重新渲染、重新绑定事件 |
+| `setDisabled` | `(index: number, disabled: boolean) => void` | 按索引启用/禁用单个色块 |
+| `onPredefineColorClick` | `(event: Event, color: string) => void` | 点击处理逻辑（防抖 100ms） |
+| `predefineItems` | `HTMLElement[]` | 色块 DOM 列表 |
+| `container` | `HTMLElement \| null` | 色块容器 |
+
+### 运行时更新
+
+```ts
+picker.plugins.ewColorPickerPredefine.updatePredefineColors([
+  '#000000', '#ffffff', '#64748b',
+])
+
+picker.plugins.ewColorPickerPredefine.setDisabled(0, true)
+```
+
+## 点击行为
+
+1. 命中色块并检查是否带 `-disabled` 类；
+2. 若全局 `disabled` 为 `true`，直接阻止事件；
+3. 给当前色块加 `ew-color-picker-predefine-color-active`，移除其它色块的高亮；
+4. 校验颜色 → 转换为 `rgba` → 同步 `core.hsvaColor` → `core.setColor(rgba)`；
+5. 调用 `options.changeColor?.(rgba)`。
+
+## 事件
+
+改色经由 `core.setColor()`，并会正常触发 `change`：
+
+```ts
+picker.on('change', (color) => console.log('预定义色块：', color))
+```
+
+## DOM 结构
+
+```html
+<div class="ew-color-picker-predefine-container">
+  <div class="ew-color-picker-predefine-color">
+    <div class="ew-color-picker-predefine-color-item" style="background:#ef4444"></div>
+  </div>
+  <div class="ew-color-picker-predefine-color ew-color-picker-predefine-color-disabled">…</div>
+  <div class="ew-color-picker-predefine-color ew-color-picker-predefine-color-active">…</div>
+</div>
+```
+
+| 类名 | 说明 |
+| --- | --- |
+| `.ew-color-picker-predefine-container` | 色块容器 |
+| `.ew-color-picker-predefine-color` | 单个色块外层 |
+| `.ew-color-picker-predefine-color-item` | 颜色填充层 |
+| `.ew-color-picker-predefine-color-disabled` | 禁用态 |
+| `.ew-color-picker-predefine-color-active` | 当前选中态 |
+
+## 完整示例
+
+```ts
+const picker = new ewColorPicker({
+  el: '#app',
+  defaultColor: '#3b82f6',
+  predefineColor: [
+    '#ef4444',
+    '#f97316',
+    '#eab308',
+    '#22c55e',
+    '#3b82f6',
+    '#a855f7',
+    { color: '#0f172a', disabled: true },
+  ],
+  changeColor: (rgba) => console.log('选中预设色：', rgba),
+})
+```
+
+## 相关
+
+- [配置项 · predefineColor](../api/options.md#predefinecolor)
+- [样式与类名](../api/styles.md)
+
+---
+
+# English Docs
+
+
+## Callbacks
+
+Source: https://eveningwater.github.io/ew-color-picker/en/api/callbacks
+
+# Callbacks
+
+Callbacks are functions passed through options. Unlike events, they are bound to a specific plugin or the core.
+
+## Core callbacks
+
+| Callback | Signature | Triggered by |
+| --- | --- | --- |
+| `changeColor` | `(color: string) => void` | `core.setColor()` |
+| `sure` | `(color: string, picker) => void` | Sure button |
+| `clear` | `(picker) => void` | Clear button |
+| `togglePicker` | `(isOpen: boolean) => void` | `showPanel()` / `hidePanel()` |
+
+```ts
+const picker = new ewColorPicker({
+  el: '#app',
+  changeColor: (color) => console.log(color),
+  sure: (color, instance) => console.log(color, instance.getColor()),
+  clear: (instance) => console.log('cleared', instance.getColor()),
+  togglePicker: (open) => console.log(open ? 'open' : 'closed'),
+})
+```
+
+::: tip Callback vs event
+`changeColor` runs **inside** `setColor()` in addition to the `change` event. `sure` / `clear` are invoked by the Button plugin with arguments, while `core.emit('sure')` invokes them without arguments.
+:::
+
+## Plugin-level callbacks
+
+### Box
+
+| Callback | Signature | Notes |
+| --- | --- | --- |
+| `onClick` | `(boxPlugin) => void` | After the panel toggle; blocked when `disabled` / `readonly` |
+| `onMouseEnter` | `(boxPlugin) => void` | Mouse enter |
+| `onMouseLeave` | `(boxPlugin) => void` | Mouse leave |
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  onClick: (box) => console.log('box clicked', box.hasBox),
+})
+```
+
+### Input
+
+| Callback | Signature | Notes |
+| --- | --- | --- |
+| `changeColor` | `(rgba: string) => void` | Valid input parsed and applied |
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  hasInput: true,
+  changeColor: (rgba) => console.log('input applied', rgba),
+})
+```
+
+### InputNumber
+
+| Callback | Signature | Notes |
+| --- | --- | --- |
+| `onChange` | `(value: number) => void` | Debounced 300ms; not called on construction |
+| `onBlur` | `(value: number) => void` | Input blurred |
+| `onFocus` | `(event: FocusEvent) => void` | Input focused |
+
+```ts
+import { InputNumber } from '@ew-color-picker/input-number'
+
+new InputNumber({
+  value: 50,
+  min: 0,
+  max: 100,
+  onChange: (v) => console.log(v),
+  onBlur: (v) => console.log('blur', v),
+  onFocus: (e) => console.log('focus', e),
+})
+```
+
+### Predefine
+
+| Callback | Signature | Notes |
+| --- | --- | --- |
+| `changeColor` | `(rgba: string) => void` | Swatch clicked and applied |
+
+### ColorMode
+
+| Callback | Signature | Notes |
+| --- | --- | --- |
+| `changeMode` | `(mode, picker) => void` | After switching to `'hex' \| 'rgb' \| 'hsl'` |
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  changeMode: (mode, instance) => console.log(mode, instance.getColor()),
+})
+```
+
+### Button
+
+| Callback | Signature | Notes |
+| --- | --- | --- |
+| `clear` | `(picker) => void` | Clear clicked |
+| `sure` | `(color, picker) => void` | Sure clicked |
+
+## Callback vs event
+
+| Aspect | Callback | Event |
+| --- | --- | --- |
+| Registration | Options object | `on()` / `once()` |
+| Multiple handlers | One per option | Many |
+| Removal | `updateOptions({ changeColor: noop })` | `off()` |
+| Return value effect | Ignored | `true` stops propagation |
+| Access to plugin instance | Usually provided | Only via payload |
+
+Prefer events for analytics or multiple consumers; prefer callbacks for a single owner of the behavior.
+
+## Next steps
+
+- [Events](./events.md)
+- [Options](./options.md)
+- [Plugin overview](../plugins/index.md)
+
+## Events
+
+Source: https://eveningwater.github.io/ew-color-picker/en/api/events
+
+# Events
+
+Every instance has its own event bus. The following types are registered:
+
+```ts
+['destroy', 'change', 'sure', 'clear', 'toggle', 'options-update', 'mode-change']
+```
+
+Using an unknown type logs a warning; it does not throw.
+
+## Summary
+
+| Event | Payload | Emitted when |
+| --- | --- | --- |
+| `change` | `(color: string)` | `setColor()` is called |
+| `toggle` | `(isOpen: boolean)` | Panel opened/closed |
+| `sure` | `(color: string, picker)` | Sure button clicked |
+| `clear` | `()` | Clear button clicked |
+| `options-update` | `(options)` | `updateOptions()` finished |
+| `mode-change` | `(mode: 'hex' \| 'rgb' \| 'hsl')` | Color mode switched |
+| `destroy` | `()` | `destroy()` finished |
+
+## change
+
+```ts
+picker.on('change', (color) => console.log(color))
+```
+
+Emitted synchronously by `setColor()`, after `currentColor` and `hsvaColor` are updated. Every UI plugin listens to this event to stay in sync.
+
+Calling `setColor('')` also emits `change('')` (used when clearing).
+
+## toggle
+
+```ts
+picker.on('toggle', (isOpen) => console.log(isOpen))
+```
+
+Emitted after the open/close animation promise resolves. `pickerFlag` is already updated when listeners run.
+
+## sure
+
+```ts
+picker.on('sure', (color, picker) => console.log(color))
+```
+
+Emitted by the Button plugin after `options.sure(color, picker)`. The panel closes afterwards.
+
+## clear
+
+```ts
+picker.on('clear', () => console.log('cleared'))
+```
+
+Emitted by the Button plugin after `options.clear(picker)`. The panel closes afterwards.
+
+## options-update
+
+```ts
+picker.on('options-update', (options) => console.log(options))
+```
+
+Emitted at the end of `updateOptions()`, after plugins have re-rendered.
+
+## mode-change
+
+```ts
+picker.on('mode-change', (mode) => console.log(mode))
+```
+
+Emitted by the ColorMode plugin. `mode` is `'hex'`, `'rgb'` or `'hsl'`.
+
+## destroy
+
+```ts
+picker.on('destroy', () => console.log('destroyed'))
+```
+
+Emitted at the very end of `destroy()`, after plugin cleanup and DOM removal.
+
+## Listener rules
+
+### once
+
+```ts
+picker.once('change', (color) => console.log('first change only', color))
+```
+
+### off
+
+```ts
+const handler = (color: string) => console.log(color)
+picker.on('change', handler)
+picker.off('change', handler)
+
+picker.off('change') // remove all change listeners
+picker.off()         // remove everything
+```
+
+### Stopping propagation
+
+Return `true` from a listener to stop the remaining listeners of the same event:
+
+```ts
+picker.on('change', (color) => {
+  if (color === '#000000') return true // stop here
+})
+```
+
+### trigger vs emit
+
+| Method | Calls listeners | Calls option callbacks |
+| --- | --- | --- |
+| `trigger(type, ...args)` | Yes | No |
+| `emit(type, ...args)` | Yes | Yes, for `clear` / `sure` / `toggle` |
+
+`emit('clear')` invokes `options.clear()` with no arguments; `emit('sure')` invokes `options.sure()` with no arguments; `emit('toggle', isOpen)` forwards `isOpen` to `options.togglePicker`.
+
+## Next steps
+
+- [Callbacks](./callbacks.md)
+- [Methods](./methods.md)
+
+## Methods
+
+Source: https://eveningwater.github.io/ew-color-picker/en/api/methods
+
+# Methods
+
+## Constructor
+
+```ts
+new ewColorPicker(options)
+new ewColorPicker(el)
+new ewColorPicker(el, options)
+```
+
+| Form | Example |
+| --- | --- |
+| Options object | `new ewColorPicker({ el: '#app', defaultColor: '#f00' })` |
+| Selector + options | `new ewColorPicker('#app', { size: 'large' })` |
+| Element + options | `new ewColorPicker(document.querySelector('#app')!, { size: 'large' })` |
+
+If `el` (or the first argument) is provided, `mount()` is called automatically.
+
+## Static methods
+
+### use
+
+```ts
+static use(ctor: ewColorPickerPluginCtor): typeof ewColorPicker
+```
+
+Registers a plugin class. Requires `static pluginName`. Idempotent and chainable.
+
+```ts
+ewColorPicker.use(MyPlugin).use(AnotherPlugin)
+```
+
+## Mounting
+
+### mount
+
+```ts
+mount(el?: string | HTMLElement): ewColorPicker
+```
+
+Creates `root` and `panelContainer`, then applies plugins. If `el` is omitted, uses `options.el` or `document.body`. Returns `this`.
+
+### getMountPoint
+
+```ts
+getMountPoint(name: 'root' | 'panelContainer'): HTMLElement | undefined
+```
+
+Returns `undefined` after destruction.
+
+### getContainer
+
+```ts
+getContainer(): HTMLElement
+```
+
+Returns the current mount container.
+
+## Panel control
+
+### showPanel
+
+```ts
+showPanel(animationType?: string, duration?: number): void
+```
+
+- If there is no current color, uses `defaultColor` or falls back to red and syncs plugins.
+- Resolves animation, then sets `pickerFlag = true`, emits `toggle(true)`, calls `options.togglePicker(true)`, calls `syncAllPlugins`, then auto-positions the panel and binds the outside-click handler.
+
+### hidePanel
+
+```ts
+hidePanel(animationType?: string, duration?: number): void
+```
+
+Resolves animation, resets auto-placement styles, sets `pickerFlag = false`, emits `toggle(false)`, calls `options.togglePicker(false)`, and unbinds the outside-click handler.
+
+### openPicker / closePicker
+
+```ts
+openPicker(): void   // alias of showPanel()
+closePicker(): void  // alias of hidePanel()
+```
+
+## Color
+
+### setColor
+
+```ts
+setColor(color: string): void
+```
+
+The only supported way to change color:
+
+1. Stores `currentColor`;
+2. Converts to rgba → hsva and updates `hsvaColor` (invalid color falls back to `{h:0,s:100,v:100,a:1}`);
+3. Emits `change(color)`;
+4. Calls `options.changeColor(color)`.
+
+Does nothing special for empty strings: `setColor('')` clears `currentColor` and emits `change('')`.
+
+### getColor
+
+```ts
+getColor(): string
+```
+
+Returns `currentColor` (may be `''` when no color is selected).
+
+### getHsvaColor / setHsvaColor
+
+```ts
+getHsvaColor(): HsvaColor           // copy
+setHsvaColor(hsva: HsvaColor): void // does NOT emit change
+```
+
+`setHsvaColor` only mutates internal state; call `setColor()` afterwards if the UI must update.
+
+## Options
+
+### getOptions
+
+```ts
+getOptions(): ewColorPickerMergeOptionsData
+```
+
+Returns the live options object.
+
+### updateOptions
+
+```ts
+updateOptions(newOptions: Record<string, any>): void
+```
+
+1. Merges new options;
+2. If `defaultColor` is present and valid, calls `setColor(defaultColor)`; invalid values warn and keep the current color;
+3. Re-applies plugins so plugin `updateOptions()` can refresh;
+4. Emits `options-update(options)`.
+
+```ts
+picker.updateOptions({ size: 'small', disabled: true })
+```
+
+### syncAllPlugins
+
+```ts
+syncAllPlugins(color: string): void
+```
+
+Calls each plugin's `syncColor(color)` when it exists. Useful after external state changes.
+
+## Events
+
+```ts
+on(type, fn, context?): this
+once(type, fn, context?): this
+off(type?, fn?): this | undefined
+trigger(type, ...args): void
+emit(type, ...args): void
+```
+
+| Method | Notes |
+| --- | --- |
+| `on` | Add listener |
+| `once` | One-shot listener |
+| `off` | Remove a specific listener, all of a type, or all |
+| `trigger` | Runs listeners only; returning `true` from one stops the rest |
+| `emit` | Runs listeners **and** invokes `options.clear` / `options.sure` / `options.togglePicker` |
+
+## Instance plugin use
+
+```ts
+use(plugin: ewColorPickerPlugin): ewColorPicker
+```
+
+Calls `plugin.install(this)` if present and returns `this`.
+
+## Lifecycle
+
+### destroy
+
+```ts
+destroy(): void
+```
+
+1. Marks the instance destroyed;
+2. Unbinds the document `mousedown` listener;
+3. Calls `destroy()` on every plugin instance;
+4. Removes all mount points and the wrapper;
+5. Clears plugin references;
+6. Emits `destroy`.
+
+Subsequent calls are no-ops.
+
+### getDestroyedStatus
+
+```ts
+getDestroyedStatus(): boolean
+```
+
+## Instance properties
+
+| Property | Type | Description |
+| --- | --- | --- |
+| `options` | `ewColorPickerMergeOptionsData` | Merged options |
+| `wrapper` | `HTMLElement` | Root `.ew-color-picker` element |
+| `plugins` | `Record<string, plugin>` | Plugin instances |
+| `currentColor` | `string` | Current color |
+| `hsvaColor` | `HsvaColor` | Current HSVA |
+| `currentMode` | `'Hex' \| 'RGB' \| 'HSV'` | Core mode field |
+| `pickerFlag` | `boolean` | Panel open state |
+| `panelWidth` / `panelHeight` | `number` | Panel size |
+| `panelLeft` / `panelTop` | `number` | Panel position |
+
+## Next steps
+
+- [Events](./events.md)
+- [Callbacks](./callbacks.md)
+- [Options](./options.md)
+
+## Options
+
+Source: https://eveningwater.github.io/ew-color-picker/en/api/options
+
+# Options
+
+Every option below can be passed to the constructor. Defaults come from `defaultConfig` in the core.
+
+## Overview
+
+| Group | Options |
+| --- | --- |
+| Core | `el`, `disabled`, `defaultColor`, `size`, `predefineColor`, `isClickOutside` |
+| Layout | `hueDirection`, `alphaDirection`, `autoPanelPosition`, `panelPlacement` |
+| Labels | `clearText`, `sureText` |
+| Animation | `togglePickerAnimation`, `pickerAnimationTime` |
+| Plugin switches | `hasBox`, `hasPanel`, `hasInput`, `hasClear`, `hasSure`, `hue`, `alpha`, `showButton`, `showColorMode`, `showInputNumber` |
+| Plugin config objects | `ewColorPickerPanel`, `ewColorPickerPredefine`, `ewColorPickerColorMode`, `ewColorPickerBox` |
+| Box extras | `boxNoColorIcon`, `boxHasColorIcon`, `readonly`, `className`, `style` |
+| Callbacks | `changeColor`, `sure`, `clear`, `togglePicker` |
+| Color mode | `defaultMode`, `changeMode` |
+
+## Core options
+
+### el
+
+| Type | Default | Description |
+| --- | --- | --- |
+| `string \| HTMLElement` | `document.body` | Mount container. A selector or element. Providing it auto-mounts. |
+
+```ts
+new ewColorPicker({ el: '#app' })
+new ewColorPicker(document.getElementById('app')!)
+```
+
+### disabled
+
+| Type | Default | Description |
+| --- | --- | --- |
+| `boolean` | `false` | Disables the box, panel drag, hue/alpha sliders, inputs and buttons. |
+
+```ts
+new ewColorPicker({ el: '#app', disabled: true })
+```
+
+### defaultColor
+
+| Type | Default | Description |
+| --- | --- | --- |
+| `string` | `''` | Initial color; also the color restored by the Clear button. |
+
+- With the Alpha plugin registered, a hex value is converted to `rgba()`.
+- Without Alpha, a `rgba()` value is converted to hex.
+- Invalid values produce a warning and keep the current color when passed to `updateOptions`.
+
+### size
+
+| Type | Default | Description |
+| --- | --- | --- |
+| `'mini' \| 'small' \| 'normal' \| 'medium' \| 'large' \| number \| { width, height } \| string` | `'normal'` | Box size |
+
+| Preset | Size | Icon |
+| --- | --- | --- |
+| `mini` | 20px | 12px |
+| `small` | 24px | 14px |
+| `normal` | 32px | 16px |
+| `medium` | 36px | 18px |
+| `large` | 40px | 20px |
+
+Numbers are treated as pixels; objects accept `width`/`height`; CSS strings are used verbatim.
+
+### predefineColor
+
+| Type | Default | Description |
+| --- | --- | --- |
+| `(string \| { color: string; disabled?: boolean })[]` | `[]` | Predefined swatches. Empty array renders nothing. |
+
+```ts
+predefineColor: ['#ef4444', '#22c55e', { color: '#0f172a', disabled: true }]
+```
+
+### isClickOutside
+
+| Type | Default | Description |
+| --- | --- | --- |
+| `boolean` | `true` | Clicking outside the picker closes the panel. |
+
+## Layout options
+
+### hueDirection / alphaDirection
+
+| Type | Default |
+| --- | --- |
+| `'horizontal' \| 'vertical'` | `'vertical'` |
+
+Controls slider orientation. When both are horizontal, the panel width becomes 320px.
+
+### autoPanelPosition
+
+| Type | Default | Description |
+| --- | --- | --- |
+| `boolean` | `false` | Position the panel relative to the box automatically. Requires `ewColorPickerBox !== false`. |
+
+### panelPlacement
+
+| Type | Default | Values |
+| --- | --- | --- |
+| `string` | `'bottom'` | `top-start` `top` `top-end` `left-start` `left` `left-end` `right-start` `right` `right-end` `bottom-start` `bottom` `bottom-end` |
+
+Gap is 5px; out-of-viewport positions are adjusted automatically.
+
+## Labels
+
+| Option | Type | Default |
+| --- | --- | --- |
+| `clearText` | `string` | `'清空'` |
+| `sureText` | `string` | `'确定'` |
+
+Change them for i18n:
+
+```ts
+new ewColorPicker({ clearText: 'Reset', sureText: 'Apply' })
+```
+
+## Animation
+
+### togglePickerAnimation
+
+| Type | Default | Values |
+| --- | --- | --- |
+| `string` | `'default'` | `'default'`, `'height'`, `'opacity'` |
+
+Only `height` and `opacity` are animated; `default` toggles instantly.
+
+### pickerAnimationTime
+
+| Type | Default | Range |
+| --- | --- | --- |
+| `number` | `200` | 0–10000 (ms) |
+
+Values above 10000 are clamped.
+
+## Plugin switches
+
+| Option | Type | Default | Effect |
+| --- | --- | --- | --- |
+| `hasBox` | `boolean` | `true` | Hide the trigger swatch |
+| `hasPanel` | `boolean` | `true` | Hide the 2D panel |
+| `hasInput` | `boolean` | `true` | Hide the text input |
+| `hasClear` | `boolean` | `true` | Hide the Clear button |
+| `hasSure` | `boolean` | `true` | Hide the Sure button |
+| `hue` | `boolean` | `true` | Hide the hue slider |
+| `alpha` | `boolean` | `true` | Hide the alpha slider |
+| `showButton` | `boolean` | `true` | Hide clear + sure buttons at once |
+| `showColorMode` | `boolean` | `true` | Hide the Hex/RGB/HSL switcher |
+| `showInputNumber` | `boolean` | `true` | Hide numeric inputs |
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  hasPanel: false,
+  hue: false,
+  alpha: false,
+  hasInput: false,
+  hasClear: false,
+  hasSure: false,
+})
+```
+
+## Plugin config objects
+
+| Option | Type | Notes |
+| --- | --- | --- |
+| `ewColorPickerPanel` | `boolean \| object` | `false` disables the panel; object merges panel options |
+| `ewColorPickerPredefine` | `object` | Merged into predefine plugin options |
+| `ewColorPickerColorMode` | `boolean \| object` | `false` disables mode switching |
+| `ewColorPickerBox` | `boolean \| object` | `false` disables the box (also affects auto positioning) |
+
+## Box extras
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `boxNoColorIcon` | `string` | `''` | Custom HTML for the "no color" icon |
+| `boxHasColorIcon` | `string` | `''` | Custom HTML for the "has color" icon |
+| `readonly` | `boolean` | `false` | Prevents clicking the box |
+| `className` | `string` | `''` | Extra class on `.ew-color-picker-box` |
+| `style` | `string \| Record<string,string>` | `''` | Inline styles for the box |
+
+## Color mode
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `defaultMode` | `'hex' \| 'rgb' \| 'hsl'` | `'rgb'` with Alpha, otherwise `'hex'` | Initial mode |
+| `changeMode` | `(mode, picker) => void` | — | Mode change callback |
+
+## Callbacks
+
+| Callback | Signature | When |
+| --- | --- | --- |
+| `changeColor` | `(color: string) => void` | Color changed |
+| `sure` | `(color: string, picker) => void` | Sure button clicked |
+| `clear` | `(picker) => void` | Clear button clicked |
+| `togglePicker` | `(isOpen: boolean) => void` | Panel toggled |
+
+## Complete example
+
+```ts
+const picker = new ewColorPicker({
+  el: '#app',
+  defaultColor: 'rgba(99, 102, 241, 0.8)',
+  size: 'large',
+  predefineColor: ['#ef4444', '#22c55e', '#3b82f6', { color: '#0f172a', disabled: true }],
+  hueDirection: 'horizontal',
+  alphaDirection: 'horizontal',
+  clearText: 'Reset',
+  sureText: 'Apply',
+  togglePickerAnimation: 'height',
+  pickerAnimationTime: 250,
+  autoPanelPosition: true,
+  panelPlacement: 'bottom-start',
+  defaultMode: 'rgb',
+  changeColor: (color) => console.log(color),
+  sure: (color) => console.log('sure', color),
+})
+```
+
+## Next steps
+
+- [Methods](../api/methods.md)
+- [Events](../api/events.md)
+- [Callbacks](../api/callbacks.md)
+
+## Styles & Classes
+
+Source: https://eveningwater.github.io/ew-color-picker/en/api/styles
+
+# Styles & Classes
+
+## Stylesheet entries
+
+| File | Required | Contents |
+| --- | --- | --- |
+| `@ew-color-picker/style/dist/index.css` | Yes | Picker, box, panel, sliders, buttons, mode switcher, predefine |
+| `@ew-color-picker/style/dist/input-number.css` | Yes for numeric inputs | InputNumber component |
+
+```ts
+import '@ew-color-picker/style/dist/index.css'
+import '@ew-color-picker/style/dist/input-number.css'
+```
+
+::: warning
+Importing only `index.css` leaves RGB/HSL numeric inputs unstyled.
+:::
+
+## CSS variables
+
+| Variable | Set on | Default | Description |
+| --- | --- | --- | --- |
+| `--panel-width` | `.ew-color-picker-panel` | computed (285/302/320px) | Panel width |
+| `--panel-height` | `.ew-color-picker-panel` | `180px` | Panel height |
+
+Override them after importing the styles:
+
+```css
+.ew-color-picker .ew-color-picker-panel {
+  --panel-width: 320px;
+  --panel-height: 200px;
+}
+```
+
+## Class reference
+
+### Container
+
+| Class | Description |
+| --- | --- |
+| `.ew-color-picker` | Root container |
+| `.ew-color-picker-panel-container` | Panel container (absolute) |
+| `.ew-color-picker-panel-container-hidden` | Hidden state |
+| `.ew-color-picker-bottom-row` | Bottom row that hosts inputs and buttons |
+
+### Box
+
+| Class | Description |
+| --- | --- |
+| `.ew-color-picker-box` | Trigger swatch |
+| `.ew-color-picker-box-arrow-icon` | Default "has color" icon |
+| `.ew-color-picker-box-close-icon` | Default "no color" icon |
+| `.is-disabled` / `.is-readonly` | States |
+
+### Panel
+
+| Class | Description |
+| --- | --- |
+| `.ew-color-picker-panel` | 2D panel |
+| `.ew-color-picker-panel-dynamic-size` | Dynamic size marker |
+| `.ew-color-picker-white-panel` / `.ew-color-picker-black-panel` | Gradient layers |
+| `.ew-color-picker-panel-cursor` | Drag cursor |
+
+### Sliders
+
+| Class | Description |
+| --- | --- |
+| `.ew-color-picker-slider` | Hue slider root |
+| `.ew-color-picker-is-horizontal` / `.ew-color-picker-is-vertical` | Orientation |
+| `.ew-color-picker-slider-bar` | Hue gradient bar |
+| `.ew-color-picker-slider-thumb` | Hue thumb |
+| `.ew-color-picker-slider.ew-alpha` | Alpha slider root |
+| `.ew-color-picker-alpha-slider-wrapper` | Checkerboard + gradient wrapper |
+| `.ew-color-picker-alpha-slider-bg` / `.ew-color-picker-alpha-slider-bar` | Layers |
+| `.ew-color-picker-alpha-slider-thumb` | Alpha thumb |
+
+### Input & buttons
+
+| Class | Description |
+| --- | --- |
+| `.ew-color-picker-input-container` / `-flex` | Text input container |
+| `.ew-color-picker-input` | Text input |
+| `.ew-color-picker-input-default` | Default (hex) input |
+| `.ew-input-disabled` | Disabled text input |
+| `.ew-color-picker-drop-btn-group` / `-multi` / `-single` | Button group |
+| `.ew-color-picker-clear-btn` | Clear button |
+| `.ew-color-picker-sure-btn` | Sure button |
+| `.ew-color-picker-drop-btn` | Shared button style |
+
+### Color mode
+
+| Class | Description |
+| --- | --- |
+| `.ew-color-picker-mode-container` | Mode switcher |
+| `.ew-color-picker-mode-up-btn` / `-down-btn` | Arrows |
+| `.ew-color-picker-mode-text` | Current mode label |
+| `.ew-color-picker-inputs-group` | Channel group |
+| `.ew-color-picker-inputs-col` | One channel column |
+| `.ew-color-picker-input-label` | Channel label |
+
+### Predefine
+
+| Class | Description |
+| --- | --- |
+| `.ew-color-picker-predefine-container` | Swatch container |
+| `.ew-color-picker-predefine-color` | Swatch wrapper |
+| `.ew-color-picker-predefine-color-item` | Color fill |
+| `.ew-color-picker-predefine-color-disabled` | Disabled swatch |
+| `.ew-color-picker-predefine-color-active` | Selected swatch |
+
+### InputNumber
+
+| Class | Description |
+| --- | --- |
+| `.ew-input-number` | Root |
+| `.ew-input-number--small` / `--default` / `--large` | Sizes |
+| `.ew-input-number--focused` / `--disabled` | States |
+| `.ew-input-number__input` | Input |
+| `.ew-input-number__buttons` | Stepper container |
+| `.ew-input-number__button--up` / `--down` | Steppers |
+
+## Theming example
+
+```css
+/* Brand buttons */
+.ew-color-picker-sure-btn {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border: none;
+  color: #fff;
+}
+
+/* Rounded trigger */
+.ew-color-picker-box {
+  border-radius: 12px;
+}
+
+/* Bigger panel */
+.ew-color-picker-panel {
+  --panel-width: 340px;
+  --panel-height: 200px;
+}
+```
+
+## Multi-instance isolation
+
+Class names are global. If you need per-instance styling, pass a `className` (Box) or scope styles to a wrapper:
+
+```html
+<div class="theme-dark">
+  <div id="picker"></div>
+</div>
+```
+
+```css
+.theme-dark .ew-color-picker-panel {
+  background: #111827;
+}
+```
+
+## Next steps
+
+- [Options](./options.md)
+- [Box plugin](../plugins/box.md)
+- [InputNumber plugin](../plugins/input-number.md)
+
+## Live Demo
+
+Source: https://eveningwater.github.io/ew-color-picker/en/examples/demo
+
+# Live Demo
+
+The page below loads real build artifacts: a full picker, a current-color preview, and an event log.
+
+<iframe
+  class="demo-frame"
+  src="../../demo.html"
+  title="EW Color Picker live demo"
+  loading="lazy"
+></iframe>
+
+::: tip Where do the assets come from?
+`docs/scripts/prepare-demo.mjs` copies these before `dev` / `build`:
+
+- `packages/ew-color-picker/dist/index.js`
+- `packages/style/dist/index.css`
+- `packages/style/dist/input-number.css`
+
+If the iframe is blank, run `pnpm run build:all` in the repository root first.
+:::
+
+## What the demo shows
+
+| Area | Description |
+| --- | --- |
+| Picker | `defaultColor: '#6366f1'`, presets and mode switching enabled |
+| Color card | Updates live from `change` |
+| Event log | Listens to `change` / `toggle` / `sure` / `clear` / `mode-change` / `destroy` |
+
+## Run locally
+
+```bash
+pnpm run build:all
+pnpm run docs:dev
+```
+
+## Related
+
+- [Examples](./index.md)
+- [Quick start](../guide/getting-started.md)
+
+## Examples
+
+Source: https://eveningwater.github.io/ew-color-picker/en/examples/
+
+# Examples
+
+Twelve minimal recipes. Runnable HTML files live in the repository's `examples/` directory.
+
+## 1. Basic
+
+```html
+<div id="app"></div>
+<script src="@ew-color-picker/ewColorPicker/dist/index.js"></script>
+<script>
+  const picker = new ewColorPicker({ el: '#app', defaultColor: '#3b82f6' })
+  picker.on('change', (color) => console.log(color))
+</script>
+```
+
+## 2. Layout & orientation
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  hueDirection: 'horizontal',
+  alphaDirection: 'horizontal',
+  size: 'large',
+})
+```
+
+## 3. Predefined colors
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  predefineColor: ['#ef4444', '#22c55e', '#3b82f6', { color: '#0f172a', disabled: true }],
+})
+```
+
+## 4. Buttons
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  hasClear: false,
+  sureText: 'Apply color',
+  sure: (color) => console.log(color),
+})
+```
+
+## 5. Events & callbacks
+
+```ts
+const picker = new ewColorPicker({
+  el: '#app',
+  changeColor: (color) => console.log('callback', color),
+})
+
+picker.once('change', (color) => console.log('once', color))
+picker.on('sure', (color) => console.log('sure', color))
+picker.on('clear', () => console.log('clear'))
+picker.on('toggle', (open) => console.log(open))
+```
+
+## 6. Auto panel placement
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  autoPanelPosition: true,
+  panelPlacement: 'top-end',
+})
+```
+
+## 7. Toggle animation
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  togglePickerAnimation: 'height',
+  pickerAnimationTime: 300,
+})
+```
+
+Available: `default`, `height`, `opacity`. Maximum duration is 10000ms.
+
+## 8. Disabled & readonly
+
+```ts
+new ewColorPicker({ el: '#app', disabled: true })
+new ewColorPicker({ el: '#app', readonly: true, defaultColor: '#84cc16' })
+```
+
+## 9. Color modes
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  defaultMode: 'rgb',
+  showColorMode: true,
+  changeMode: (mode) => console.log(mode),
+})
+```
+
+## 10. Instance API
+
+```ts
+const picker = new ewColorPicker({ el: '#app', defaultColor: '#f43f5e' })
+
+console.log(picker.getColor())
+console.log(picker.getHsvaColor())
+picker.setColor('#22c55e')
+picker.updateOptions({ size: 'large' })
+picker.showPanel()
+picker.hidePanel()
+picker.destroy()
+```
+
+## 11. Numeric input
+
+```ts
+import { InputNumber } from '@ew-color-picker/input-number'
+import '@ew-color-picker/style/dist/input-number.css'
+
+const num = new InputNumber({ value: 50, min: 0, max: 100, onChange: console.log })
+document.body.appendChild(num.getElement())
+```
+
+## 12. Multiple instances
+
+```ts
+[...document.querySelectorAll('.picker')].forEach((el) => {
+  new ewColorPicker({ el, defaultColor: '#a855f7' })
+})
+```
+
+::: warning No NodeList
+The constructor does not accept a NodeList or array. Instantiate one by one. Events, mount points and inputs are isolated per instance.
+:::
+
+## Related
+
+- [Live demo](./demo.md)
+- [Options](../api/options.md) · [Methods](../api/methods.md) · [Events](../api/events.md)
+
+## Core Concepts
+
+Source: https://eveningwater.github.io/ew-color-picker/en/guide/concepts
+
+# Core Concepts
+
+## Instance-level event bus
+
+Every instance extends `EventEmitter` and registers exactly these event types:
+
+```ts
+['destroy', 'change', 'sure', 'clear', 'toggle', 'options-update', 'mode-change']
+```
+
+`on` / `once` / `off` / `trigger` / `emit` are available on the instance. Unknown event names log a warning instead of throwing.
+
+| Method | Behaviour |
+| --- | --- |
+| `on(type, fn)` | Add a listener |
+| `once(type, fn)` | Add a one-shot listener |
+| `off(type?, fn?)` | Remove one listener, all listeners of a type, or everything |
+| `trigger(type, ...args)` | Run listeners directly; `return true` from a listener stops the rest |
+| `emit(type, ...args)` | Like `trigger`, but also invokes the matching `options` callback (`clear`, `sure`, `togglePicker`) |
+
+## Mount points
+
+When mounting, the core creates:
+
+```html
+<div class="ew-color-picker" data-uid="…">
+  <div class="ew-color-picker-panel-container ew-color-picker-panel-container-hidden">
+    …
+  </div>
+</div>
+```
+
+| Mount point | Access | Used by |
+| --- | --- | --- |
+| `root` | `core.getMountPoint('root')` | Box |
+| `panelContainer` | `core.getMountPoint('panelContainer')` | Panel, Hue, Alpha, Input, InputNumber, Button, Predefine, ColorMode |
+
+The panel container is hidden with the `-hidden` class and revealed when the panel opens.
+
+## Plugin apply order
+
+| Value | Meaning |
+| --- | --- |
+| `ApplyOrder.Pre` (`-1`) | Runs before the core's default logic |
+| `ApplyOrder.Post` (`1`) | Runs after the core's default logic |
+| not set | Runs in registration order |
+
+All built-in UI plugins use `Post`.
+
+## Single color entry
+
+`core.setColor(color)` is the only supported way to change color. It:
+
+1. Normalises the color (hex ↔ rgba depending on the Alpha plugin);
+2. Updates `currentColor` and `hsvaColor`;
+3. Emits `change`;
+4. Calls `options.changeColor(color)`.
+
+Plugins must subscribe to `change` instead of polling `currentColor`.
+
+## Plugin registry
+
+```ts
+ewColorPicker.plugins        // array of registered { name, applyOrder, ctor }
+ewColorPicker.pluginsMap     // { [pluginName]: true }
+core.plugins                 // instance map: { [pluginName]: instance }
+```
+
+`core.plugins.ewColorPickerPanel`, `core.plugins.ewColorPickerAlpha`, etc. expose each plugin instance.
+
+## Instance isolation
+
+Each instance gets:
+
+- its own event bus,
+- its own `data-uid`,
+- its own DOM subtree,
+- its own plugin instances.
+
+That is why multiple instances never share colors. Always scope DOM queries to the current wrapper.
+
+## Lifecycle
+
+```text
+new ewColorPicker(options)
+  → normalize options
+  → init state (currentColor, hsvaColor, mode)
+  → mount(el) if el provided
+      → create root + panelContainer
+      → apply plugins (Pre → default → Post)
+      → sync hue/alpha
+
+picker.destroy()
+  → emit destroy
+  → plugin.destroy()
+  → remove DOM and listeners
+  → mark instance as destroyed
+```
+
+## Next steps
+
+- [Write a plugin](./plugin-dev.md)
+- [Events](../api/events.md)
+- [Methods](../api/methods.md)
+
+## Quick Start
+
+Source: https://eveningwater.github.io/ew-color-picker/en/guide/getting-started
+
+# Quick Start
+
+## 1. Prepare a container
+
+```html
+<div id="picker"></div>
+```
+
+```ts
+import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import '@ew-color-picker/style/dist/index.css'
+import '@ew-color-picker/style/dist/input-number.css'
+```
+
+## 2. Create an instance
+
+There are three equivalent ways to pass the container:
+
+```ts
+// Selector
+new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
+
+// DOM element
+const el = document.getElementById('picker')!
+new ewColorPicker(el, { defaultColor: '#6366f1' })
+
+// Element in options object (same as the first form)
+new ewColorPicker({ el, defaultColor: '#6366f1' })
+```
+
+If `el` is provided, the picker **mounts automatically**. Without `el`, call `mount()` yourself later.
+
+## 3. Listen for changes
+
+```ts
+const picker = new ewColorPicker({
+  el: '#picker',
+  defaultColor: '#6366f1',
+})
+
+picker.on('change', (color) => {
+  console.log('Current color:', color)
+})
+
+picker.on('sure', (color) => {
+  console.log('Confirmed:', color)
+})
+```
+
+## 4. A fuller example
+
+```ts
+const picker = new ewColorPicker({
+  el: '#picker',
+  defaultColor: '#6366f1',
+  size: 'large',
+  hueDirection: 'horizontal',
+  alphaDirection: 'horizontal',
+  predefineColor: ['#ef4444', '#22c55e', '#3b82f6', '#a855f7'],
+  clearText: 'Reset',
+  sureText: 'Apply',
+  autoPanelPosition: true,
+  panelPlacement: 'bottom-start',
+  togglePickerAnimation: 'height',
+  pickerAnimationTime: 250,
+})
+
+picker.on('change', (color) => console.log('change', color))
+picker.on('toggle', (open) => console.log('panel', open ? 'open' : 'closed'))
+picker.on('mode-change', (mode) => console.log('mode', mode))
+```
+
+## 5. Methods
+
+```ts
+picker.getColor()          // current color string
+picker.getHsvaColor()      // { h, s, v, a }
+picker.setColor('#22c55e') // programmatic change (emits change)
+picker.showPanel()
+picker.hidePanel()
+picker.updateOptions({ size: 'small' })
+```
+
+Full reference: [Methods](../api/methods.md).
+
+## 6. Cleanup
+
+```ts
+picker.destroy()
+```
+
+`destroy()` removes DOM, unbinds DOM events, clears listeners, and emits `destroy`. After destruction, most methods become no-ops; check `picker.getDestroyedStatus()`.
+
+## Next steps
+
+- [Core concepts](./concepts.md)
+- [Options](../api/options.md)
+- [Plugin overview](../plugins/index.md)
+
+## Introduction
+
+Source: https://eveningwater.github.io/ew-color-picker/en/guide/
+
+# Introduction
+
+EW Color Picker is a modern color picker built around two ideas:
+
+1. **Event-driven** — every action becomes an event (`change`, `sure`, `clear`, `toggle`, `mode-change`, `options-update`, `destroy`).
+2. **Plugin-based** — the core owns color state and mount points; every piece of UI is a plugin.
+
+```text
+Core (@ew-color-picker/core)
+├─ color state: currentColor + hsvaColor
+├─ event bus: on / once / off / trigger / emit
+├─ mount points: root + panelContainer
+└─ plugins: can be registered, replaced, or extended
+```
+
+## Why a plugin architecture?
+
+| Benefit | What it means |
+| --- | --- |
+| Small bundles | Install only the plugins you use |
+| Replaceable UI | Swap the panel, input, or buttons for your own implementation |
+| Testable | Each plugin can be tested in isolation |
+| Extensible | Add features without touching the core |
+
+## The 13 packages
+
+| Package | Responsibility |
+| --- | --- |
+| `@ew-color-picker/core` | Color state, event bus, mount points, plugin registry |
+| `@ew-color-picker/utils` | DOM/color/animation helpers, `EventEmitter`, `Console` plugin |
+| `@ew-color-picker/style` | CSS (`index.css` + `input-number.css`) |
+| `@ew-color-picker/ewColorPicker` | All-in-one bundle: registers all plugins and re-exports the core |
+| `@ew-color-picker/box` | Trigger swatch that opens/closes the panel |
+| `@ew-color-picker/panel` | Saturation/value 2D panel |
+| `@ew-color-picker/hue` | Hue slider (0–360°) |
+| `@ew-color-picker/alpha` | Alpha slider (0–1) |
+| `@ew-color-picker/input` | Text color input with validation |
+| `@ew-color-picker/input-number` | Numeric input component + plugin |
+| `@ew-color-picker/button` | Clear / Sure buttons |
+| `@ew-color-picker/predefine` | Predefined color swatches |
+| `@ew-color-picker/color-mode` | Hex / RGB / HSL mode switching |
+
+## Data flow
+
+```text
+User interaction (Box / Panel / Hue / Alpha / Input / Predefine / Button)
+        │
+        ▼
+   core.setColor(color)        ← the only way to change color
+        │
+        ├─► emit('change', color)
+        │     ├─ Panel   sync background + cursor
+        │     ├─ Hue     sync thumb
+        │     ├─ Alpha   sync thumb
+        │     ├─ Input   sync text
+        │     ├─ ColorMode sync R/G/B or H/S/L inputs
+        │     └─ Box     sync background + icon color
+        │
+        └─► options.changeColor(color)
+```
+
+## Design principles
+
+| Principle | Detail |
+| --- | --- |
+| Single source of truth | Only `core.setColor()` changes color; plugins never call each other directly |
+| Instance isolation | Each instance has its own event bus, DOM and plugin instances |
+| No global pollution | CSS is scoped by class names; the only global is the UMD `window.ewColorPicker` |
+| Progressive disclosure | Defaults work out of the box; every plugin exposes options and methods when you need them |
+
+## Next steps
+
+- [Installation](./installation.md)
+- [Quick start](./getting-started.md)
+- [Core concepts](./concepts.md)
+- [Write a plugin](./plugin-dev.md)
+
+## Installation
+
+Source: https://eveningwater.github.io/ew-color-picker/en/guide/installation
+
+# Installation
+
+## Requirements
+
+| Item | Requirement |
+| --- | --- |
+| Node.js | 20.10+ (for building and running the docs) |
+| Package manager | pnpm (workspace) / npm / yarn |
+| Browser | Any modern browser (ES2019+) |
+
+## All-in-one bundle
+
+```bash
+pnpm add @ew-color-picker/ewColorPicker @ew-color-picker/style
+```
+
+```ts
+import ewColorPicker from '@ew-color-picker/ewColorPicker'
+import '@ew-color-picker/style/dist/index.css'
+import '@ew-color-picker/style/dist/input-number.css'
+
+const picker = new ewColorPicker({ el: '#app' })
+```
+
+::: warning Two stylesheets
+`index.css` covers the picker. `input-number.css` is required for the numeric inputs used by RGB/HSL modes. Import both.
+:::
+
+## Per-package imports
+
+The core has no UI. Register only what you need:
+
+```bash
+pnpm add @ew-color-picker/core @ew-color-picker/style \
+  @ew-color-picker/box @ew-color-picker/panel @ew-color-picker/hue \
+  @ew-color-picker/input @ew-color-picker/button
+```
+
+```ts
+import ewColorPicker from '@ew-color-picker/core'
+import Box from '@ew-color-picker/box'
+import Panel from '@ew-color-picker/panel'
+import Hue from '@ew-color-picker/hue'
+import Input from '@ew-color-picker/input'
+import Button from '@ew-color-picker/button'
+
+ewColorPicker.use(Box).use(Panel).use(Hue).use(Input).use(Button)
+
+new ewColorPicker({ el: '#app' })
+```
+
+`use()` returns the class itself, so calls can be chained. It is idempotent — registering the same constructor twice does nothing.
+
+## UMD via `<script>`
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/@ew-color-picker/style/dist/index.css" />
+<link rel="stylesheet" href="https://unpkg.com/@ew-color-picker/style/dist/input-number.css" />
+
+<div id="app"></div>
+
+<script src="https://unpkg.com/@ew-color-picker/ewColorPicker/dist/index.js"></script>
+<script>
+  const picker = new ewColorPicker({ el: '#app', defaultColor: '#3b82f6' })
+</script>
+```
+
+The UMD build exposes `window.ewColorPicker`.
+
+## TypeScript
+
+All packages ship declaration files. Types are exported from the core and from each plugin package:
+
+```ts
+import type { ewColorPickerOptions, ewColorPickerConstructorOptions } from '@ew-color-picker/core'
+import type { InputNumberOptions } from '@ew-color-picker/input-number'
+
+const options: ewColorPickerConstructorOptions = {
+  el: '#app',
+  defaultColor: '#6366f1',
+}
+```
+
+## Repository development
+
+```bash
+pnpm install        # install workspace dependencies
+pnpm run build:all  # build every package + styles
+pnpm run dev:preview# live-reload example server
+pnpm run test:run   # run the full vitest suite
+pnpm run docs:dev   # start the documentation site
+```
+
+## Next steps
+
+- [Quick start](./getting-started.md)
+- [Core concepts](./concepts.md)
+- [Options reference](../api/options.md)
+
+## Writing a Plugin
+
+Source: https://eveningwater.github.io/ew-color-picker/en/guide/plugin-dev
+
+# Writing a Plugin
+
+A plugin is a plain class. The core only requires two static properties and a constructor.
+
+## Minimal template
+
+```ts
+import type ewColorPicker from '@ew-color-picker/core'
+import { ApplyOrder, create, addClass, insertNode, isFunction } from '@ew-color-picker/utils'
+
+export default class MyBadgePlugin {
+  static pluginName = 'myBadge'
+  static applyOrder = ApplyOrder.Post
+
+  el: HTMLElement | null = null
+
+  constructor(public ewColorPicker: ewColorPicker) {
+    this.run()
+
+    if (isFunction(this.ewColorPicker.on)) {
+      this.ewColorPicker.on('change', this.handleChange)
+    }
+  }
+
+  run() {
+    const panelContainer = this.ewColorPicker.getMountPoint('panelContainer')
+    if (!panelContainer) return
+
+    this.el = create('span')
+    addClass(this.el, 'my-badge')
+    insertNode(panelContainer, this.el)
+    this.renderColor(this.ewColorPicker.getColor())
+  }
+
+  handleChange = (color: string) => {
+    this.renderColor(color)
+  }
+
+  renderColor(color?: string) {
+    if (this.el) this.el.textContent = color || 'no color'
+  }
+
+  destroy() {
+    if (isFunction(this.ewColorPicker.off)) {
+      this.ewColorPicker.off('change', this.handleChange)
+    }
+    this.el?.parentNode?.removeChild(this.el)
+    this.el = null
+  }
+}
+```
+
+## Register it
+
+```ts
+import ewColorPicker from '@ew-color-picker/core'
+import MyBadgePlugin from './my-badge'
+
+ewColorPicker.use(MyBadgePlugin)
+
+new ewColorPicker({ el: '#app' })
+```
+
+`use()` is chainable and idempotent.
+
+## Contract
+
+| Member | Required | Notes |
+| --- | --- | --- |
+| `static pluginName` | Yes | Unique key in `core.plugins`; missing name logs a warning |
+| `static applyOrder` | No | `ApplyOrder.Pre` / `Post` / `undefined` |
+| `constructor(core)` | Yes | Receives the instance; render + subscribe here |
+| `destroy()` | No | Unbind DOM events and listeners |
+| `install(core)` | No | Support manual `plugin.install(core)` usage |
+| `updateOptions()` | No | Called when `core.updateOptions()` broadcasts `options-update` |
+
+## Rules
+
+1. Change colors only via `core.setColor()`.
+2. Subscribe to `change` rather than reading state in loops.
+3. Render only into `root` or `panelContainer`.
+4. Scope DOM queries to your own wrapper.
+5. Clean up everything in `destroy()`.
+
+## Type augmentation
+
+Declare your options on the core's `CustomOptions` interface:
+
+```ts
+declare module '@ew-color-picker/core' {
+  interface CustomOptions {
+    myBadge?: {
+      label?: string
+    }
+  }
+}
+```
+
+Now `new ewColorPicker({ myBadge: { label: 'Hi' } })` type-checks.
+
+## Lifecycle summary
+
+```text
+Core.use(Plugin)  → registered statically
+new ewColorPicker → creates instance, calls constructor
+mount(el)         → mount points exist, plugins render
+updateOptions()   → updateOptions() + options-update event
+destroy()         → destroy() called, DOM removed
+```
+
+## Next steps
+
+- [Plugin overview](../plugins/index.md)
+- [Core concepts](./concepts.md)
+- [Events](../api/events.md)
+
+## Plugin Architecture
+
+Source: https://eveningwater.github.io/ew-color-picker/en/
+
+<div class="doc-section">
+  <h2>Try it now</h2>
+  <p class="subtitle">A real, running color picker rendered directly from the built artifacts.</p>
+  <iframe class="demo-frame" src="../demo.html" title="EW Color Picker live demo" loading="lazy"></iframe>
+</div>
+
+<div class="doc-section">
+  <h2>Start here</h2>
+  <div class="doc-cards">
+    <a class="doc-card" href="./guide/getting-started">
+      <h3>5-minute setup</h3>
+      <p>Install, import the styles, create an instance — three steps to your first picker.</p>
+    </a>
+    <a class="doc-card" href="./api/options">
+      <h3>Options reference</h3>
+      <p>Every constructor option, plugin switch, callback and default value.</p>
+    </a>
+    <a class="doc-card" href="./plugins/">
+      <h3>Plugin system</h3>
+      <p>What each of the 10 built-in plugins does, how to configure them, and how to compose them.</p>
+    </a>
+    <a class="doc-card" href="./guide/plugin-dev">
+      <h3>Write a plugin</h3>
+      <p>Follow the pluginName / applyOrder contract to build a registrable, destroyable plugin.</p>
+    </a>
+  </div>
+</div>
+
+<div class="doc-section">
+  <h2>Minimal example</h2>
+  <p class="subtitle">One container, one stylesheet, one constructor call.</p>
+</div>
+
+```html
+<link rel="stylesheet" href="@ew-color-picker/style/dist/index.css" />
+<link rel="stylesheet" href="@ew-color-picker/style/dist/input-number.css" />
+
+<div id="picker"></div>
+
+<script type="module">
+  import ewColorPicker from '@ew-color-picker/ewColorPicker'
+
+  const picker = new ewColorPicker({
+    el: '#picker',
+    defaultColor: '#6366f1',
+    predefineColor: ['#6366f1', '#8b5cf6', '#06b6d4', '#22c55e'],
+    changeColor(color) {
+      console.log('Current color:', color)
+    }
+  })
+</script>
+```
+
+## Alpha Plugin
+
+Source: https://eveningwater.github.io/ew-color-picker/en/plugins/alpha
+
+# Alpha
+
+`ewColorPickerAlpha` adds an alpha slider (0–1). Registering it changes how the core normalizes colors:
+
+- **Registered**: hex `defaultColor` becomes `rgba()`
+- **Not registered**: `rgba()` `defaultColor` becomes hex
+
+| Item | Value |
+| --- | --- |
+| Package | `@ew-color-picker/alpha` |
+| `pluginName` | `ewColorPickerAlpha` |
+| `applyOrder` | `Post` |
+| Mount point | `panelContainer` |
+| Instance | `core.plugins.ewColorPickerAlpha` |
+
+## Options
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `alpha` | `boolean` | `true` | `false` hides the slider |
+| `alphaDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | Orientation |
+| `disabled` | `boolean` | `false` | Blocks interaction |
+
+## Methods
+
+| Method / property | Signature | Description |
+| --- | --- | --- |
+| `enableAlpha` | `(enable = true) => void` | Show/hide |
+| `updateAlpha` | `(alpha: number) => void` | Apply alpha (0–1) via `setColor()` |
+| `updateAlphaThumbPosition` | `(alpha: number) => void` | Move thumb only |
+| `hasAlpha` | `boolean` getter/setter | Re-renders on change |
+| `alphaBar` / `alphaThumb` | `HTMLElement \| null` | DOM |
+| `isHorizontal` | `boolean` | Orientation flag |
+
+`updateAlpha` also syncs ColorMode inputs when the current mode is not `hex`.
+
+## Behaviour
+
+| Action | Result |
+| --- | --- |
+| Click | Alpha computed from position (horizontal: right → left increases) |
+| Drag | Throttled 16ms |
+| External change | Thumb syncs |
+
+Return early when no current color exists.
+
+## Events
+
+```ts
+picker.on('change', (color) => console.log(color)) // rgba(...)
+```
+
+## DOM
+
+```html
+<div class="ew-color-picker-slider ew-alpha ew-color-picker-is-vertical">
+  <div class="ew-color-picker-alpha-slider-wrapper">
+    <div class="ew-color-picker-alpha-slider-bg"></div>
+    <div class="ew-color-picker-alpha-slider-bar"></div>
+  </div>
+  <div class="ew-color-picker-alpha-slider-thumb"></div>
+</div>
+```
+
+## Example
+
+```ts
+const picker = new ewColorPicker({
+  el: '#app',
+  defaultColor: 'rgba(99, 102, 241, 0.6)',
+  alphaDirection: 'horizontal',
+})
+
+picker.plugins.ewColorPickerAlpha.updateAlpha(0.5)
+```
+
+## Related
+
+- [Hue](./hue.md) · [ColorMode](./color-mode.md)
+
+## Box Plugin
+
+Source: https://eveningwater.github.io/ew-color-picker/en/plugins/box
+
+# Box
+
+`ewColorPickerBox` is the square trigger showing the current color.
+
+| Item | Value |
+| --- | --- |
+| Package | `@ew-color-picker/box` |
+| `pluginName` | `ewColorPickerBox` |
+| `applyOrder` | not declared |
+| Mount point | `root` |
+| Instance | `core.plugins.ewColorPickerBox` |
+
+## Options
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `defaultColor` | `string` | `''` | Initial color / clear target |
+| `size` | string, number, object | `'normal'` | Swatch size |
+| `disabled` | `boolean` | `false` | Blocks clicks |
+| `readonly` | `boolean` | `false` | Blocks clicks, keeps styles |
+| `hasBox` | `boolean` | `true` | Hide the swatch |
+| `boxNoColorIcon` | `string` | `''` | Custom "no color" icon HTML |
+| `boxHasColorIcon` | `string` | `''` | Custom "has color" icon HTML |
+| `className` | `string` | `''` | Extra class |
+| `style` | `string \| object` | `''` | Inline styles |
+| `onClick` | `(box) => void` | — | Click callback |
+| `onMouseEnter` / `onMouseLeave` | `(box) => void` | — | Hover callbacks |
+
+### size
+
+| Form | Result |
+| --- | --- |
+| `mini` / `small` / `normal` / `medium` / `large` | 20 / 24 / 32 / 36 / 40px |
+| `48` | 48px |
+| `{ width: '60px', height: '36px' }` | custom |
+| `'5rem'` | verbatim |
+
+Icon sizes: `mini` 12px, `small` 14px, `normal` 16px, `medium` 18px, `large` 20px; numbers/objects use 50% of the shorter side.
+
+### Icon contrast
+
+- Luminance > 0.5 → `#333333`
+- otherwise → `#ffffff`
+- translucent colors are blended over white first
+
+## Methods
+
+| Method | Signature | Description |
+| --- | --- | --- |
+| `enableBox` | `(enable = true) => void` | Show/hide |
+| `update` | `(keys?: string[]) => void` | Refresh selected keys |
+| `updateChildren` | `() => void` | Recompute icon |
+| `setBoxSize` | `() => void` | Reapply size |
+| `setBoxBgColor` | `(color?: string) => void` | Set background |
+| `clearBoxBgColor` | `() => void` | Reset background |
+| `setBoxState` | `() => void` | Sync state classes |
+| `setDisabled` | `(disabled: boolean) => void` | Toggle disabled |
+| `bindMouseEvents` | `(onEnter?, onLeave?) => void` | Bind hover |
+| `unbindHandler` | `() => void` | Unbind DOM events |
+| `destroy` | `() => void` | Remove |
+
+Properties: `hasBox` (getter/setter), `box` (`HTMLElement | null`).
+
+## Behaviour
+
+Clicking calls `showPanel()` or `hidePanel()` with `togglePickerAnimation` / `pickerAnimationTime`, then `onClick(boxPlugin)`. With `disabled` or `readonly`, the click is prevented.
+
+```ts
+picker.on('toggle', (open) => console.log(open))
+picker.on('change', (color) => console.log(color))
+```
+
+## DOM
+
+```html
+<div class="ew-color-picker-box">
+  <span class="ew-color-picker-box-arrow-icon"></span>
+</div>
+```
+
+| Class | Meaning |
+| --- | --- |
+| `.ew-color-picker-box` | Root |
+| `.ew-color-picker-box-arrow-icon` | Has-color icon |
+| `.ew-color-picker-box-close-icon` | No-color icon |
+| `.is-disabled` / `.is-readonly` | States |
+
+## Example
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  defaultColor: '#6366f1',
+  size: 'large',
+  onClick: (box) => console.log('clicked', box.hasBox),
+})
+```
+
+## Related
+
+- [Panel](./panel.md) · [Options · size](../api/options.md#size)
+
+## Button Plugin
+
+Source: https://eveningwater.github.io/ew-color-picker/en/plugins/button
+
+# Button
+
+`ewColorPickerButton` renders the Clear and Sure buttons. Clear restores the default color and closes the panel; Sure submits the current color and closes the panel.
+
+| Item | Value |
+| --- | --- |
+| Package | `@ew-color-picker/button` |
+| `pluginName` | `ewColorPickerButton` |
+| `applyOrder` | `Post` |
+| Mount point | `panelContainer` → `.ew-color-picker-bottom-row` |
+| Instance | `core.plugins.ewColorPickerButton` |
+
+## Options
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `showButton` | `boolean` | `true` | Hide both buttons |
+| `hasClear` | `boolean` | `true` | Hide Clear |
+| `hasSure` | `boolean` | `true` | Hide Sure |
+| `clearText` | `string` | `'清空'` | Clear label |
+| `sureText` | `string` | `'确定'` | Sure label |
+| `disabled` | `boolean` | `false` | Disable both |
+
+`hasClear` / `hasSure` apply at construction; use `enableClear` / `enableSure` / `enableButtons` at runtime.
+
+## Methods
+
+| Method / property | Signature | Description |
+| --- | --- | --- |
+| `enableClear` | `(enable = true) => void` | Show/hide Clear |
+| `enableSure` | `(enable = true) => void` | Show/hide Sure |
+| `enableButtons` | `(enable = true) => void` | Both |
+| `hasClear` / `hasSure` | `boolean` getter/setter | Re-render |
+| `setClearText` | `(text: string) => void` | Change label |
+| `setSureText` | `(text: string) => void` | Change label |
+| `setDisabled` | `(disabled: boolean) => void` | Toggle `disabled` |
+| `updateOptions` | `() => void` | Re-read and redraw (deferred one frame) |
+| `onClearColor` | `() => void` | Clear logic (100ms debounce) |
+| `onSureColor` | `() => void` | Sure logic (100ms debounce) |
+| `clearButton` / `sureButton` | `HTMLButtonElement \| null` | DOM |
+
+## Click behaviour
+
+### Clear
+
+1. Restore `defaultColor`, or clear if absent;
+2. Sync `hsvaColor` (reset to `{h:0,s:100,v:100,a:1}` when empty);
+3. `core.setColor(resetColor)`;
+4. `core.syncAllPlugins(resetColor)`;
+5. `core.hidePanel()`;
+6. `options.clear?.(picker)`;
+7. `core.trigger('clear')`.
+
+### Sure
+
+1. `options.sure?.(color, picker)`;
+2. `core.trigger('sure', color, picker)`;
+3. `core.hidePanel()`.
+
+## Events & callbacks
+
+| Source | Signature |
+| --- | --- |
+| `options.clear` | `(picker) => void` |
+| `options.sure` | `(color, picker) => void` |
+| event `clear` | `()` |
+| event `sure` | `(color, picker)` |
+
+## DOM
+
+```html
+<div class="ew-color-picker-drop-btn-group">
+  <button class="ew-color-picker-clear-btn ew-color-picker-drop-btn">Clear</button>
+  <button class="ew-color-picker-sure-btn ew-color-picker-drop-btn">Sure</button>
+</div>
+```
+
+## Example
+
+```ts
+const picker = new ewColorPicker({
+  el: '#app',
+  defaultColor: '#8b5cf6',
+  clearText: 'Reset',
+  sureText: 'Use this color',
+  clear: (instance) => console.log('after clear', instance.getColor()),
+  sure: (color) => console.log('confirmed', color),
+})
+```
+
+## Related
+
+- [Events · clear / sure](../api/events.md) · [Options · clearText](../api/options.md#labels)
+
+## ColorMode Plugin
+
+Source: https://eveningwater.github.io/ew-color-picker/en/plugins/color-mode
+
+# ColorMode
+
+`ewColorPickerColorMode` provides **Hex / RGB / HSL** input modes. Switching rebuilds the channel input group.
+
+| Item | Value |
+| --- | --- |
+| Package | `@ew-color-picker/color-mode` |
+| `pluginName` | `ewColorPickerColorMode` |
+| `applyOrder` | `Post` |
+| Mount point | `panelContainer` |
+| Instance | `core.plugins.ewColorPickerColorMode` |
+
+## Options
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `defaultMode` | `'hex' \| 'rgb' \| 'hsl'` | `'rgb'` with Alpha, else `'hex'` | Initial mode |
+| `showColorMode` | `boolean` | `true` | Hide the switcher |
+| `ewColorPickerColorMode` | `boolean \| object` | `true` | `false` disables; object merges |
+| `changeMode` | `(mode, picker) => void` | — | Mode change callback |
+
+## Methods
+
+| Method / property | Signature | Description |
+| --- | --- | --- |
+| `getCurrentMode` | `() => 'hex' \| 'rgb' \| 'hsl'` | Read mode |
+| `setMode` | `(mode) => void` | Switch (100ms debounce) |
+| `switchToNextMode` | `() => void` | hex → rgb → hsl → hex |
+| `switchToPreviousMode` | `() => void` | Reverse |
+| `onModeChange` | `(mode) => void` | Main handler |
+| `updateOptions` | `() => void` | Re-read config and redraw |
+| `updateInputStructure` | `() => void` | Rebuild inputs |
+| `updateInputValues` | `(color: string) => void` | Sync inputs |
+| `updateColorFromRgbInputs` / `updateColorFromHslInputs` | `() => void` | Compose color (debounced) |
+| `restoreDefaultInput` | `() => void` | Restore Input plugin field |
+| `currentMode` | `'hex' \| 'rgb' \| 'hsl'` | Current mode |
+
+## Switch flow
+
+```text
+Arrow click
+  → debounce(100ms) onModeChange(mode)
+  → update label (HEX / RGB / HSL)
+  → updateInputStructure()
+  → non-hex: updateInputValues(current color)
+  → options.changeMode?.(mode, picker)
+  → trigger('mode-change', mode)
+```
+
+Hex mode never calls `setColor` again, preventing hex text from being overwritten by `rgba()`.
+
+Arrows respect `options.disabled`.
+
+## Events & callbacks
+
+```ts
+picker.on('mode-change', (mode) => console.log(mode))
+```
+
+## DOM
+
+```html
+<div class="ew-color-picker-mode-container">
+  <button class="ew-color-picker-mode-up-btn" type="button"></button>
+  <div class="ew-color-picker-mode-text">HEX</div>
+  <button class="ew-color-picker-mode-down-btn" type="button"></button>
+</div>
+
+<div class="ew-color-picker-inputs-group">
+  <div class="ew-color-picker-inputs-col">
+    <label class="ew-color-picker-input-label">R</label>
+    <div class="ew-input-number">…</div>
+  </div>
+</div>
+```
+
+## Example
+
+```ts
+const picker = new ewColorPicker({
+  el: '#app',
+  defaultColor: '#ec4899',
+  defaultMode: 'hex',
+  changeMode: (mode, instance) => console.log(mode, instance.getColor()),
+})
+
+picker.plugins.ewColorPickerColorMode.setMode('hsl')
+```
+
+## Related
+
+- [Input](./input.md) · [InputNumber](./input-number.md) · [Events](/en/api/events#mode-change)
+
+## Console Plugin
+
+Source: https://eveningwater.github.io/ew-color-picker/en/plugins/console
+
+# Console
+
+`ewColorPickerConsole` prints a styled banner (version, QQ, WeChat, GitHub) in the browser console. It has no UI.
+
+| Item | Value |
+| --- | --- |
+| Package | `@ew-color-picker/utils` (exports `Console`) |
+| `pluginName` | `ewColorPickerConsole` |
+| `applyOrder` | not declared (registered first in the bundle) |
+| Mount point | none |
+| Instance | `core.plugins.ewColorPickerConsole` |
+
+## Printed once
+
+A module-level flag ensures only the first instance prints:
+
+```ts
+let hasPrintedTips = false
+
+run() {
+  if (hasPrintedTips) return
+  hasPrintedTips = true
+  log(...tips)
+}
+```
+
+## Disabling
+
+Console has no options object (`{}`). To skip it, register plugins manually:
+
+```ts
+import ewColorPicker from '@ew-color-picker/core'
+import Box from '@ew-color-picker/box'
+
+ewColorPicker.use(Box) // Console not imported → no banner
+```
+
+With the all-in-one bundle it is always registered.
+
+## Output
+
+```text
+ ew-color-picker@2.0.0   QQ: 854806732  WeChat: eveningwater  github:https://github.com/eveningwater/ew-color-picker
+```
+
+## Methods
+
+| Method | Description |
+| --- | --- |
+| `handleOptions` | Merge core options (no-op today) |
+| `run` | Print banner (guarded) |
+| `install` | Compatibility for manual `install(core)` |
+
+## Related
+
+- [Plugin overview](./index.md) · [Writing a plugin](../guide/plugin-dev.md)
+
+## Hue Plugin
+
+Source: https://eveningwater.github.io/ew-color-picker/en/plugins/hue
+
+# Hue
+
+`ewColorPickerHue` renders the 0–360° hue slider while keeping saturation, value and alpha unchanged.
+
+| Item | Value |
+| --- | --- |
+| Package | `@ew-color-picker/hue` |
+| `pluginName` | `ewColorPickerHue` |
+| `applyOrder` | `Post` |
+| Mount point | `panelContainer` |
+| Instance | `core.plugins.ewColorPickerHue` |
+
+## Options
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `hue` | `boolean` | `true` | `false` hides the slider at construction |
+| `hueDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | Orientation |
+| `disabled` | `boolean` | `false` | Blocks interaction |
+
+## Methods
+
+| Method / property | Signature | Description |
+| --- | --- | --- |
+| `enableHue` | `(enable = true) => void` | Show/hide |
+| `updateHue` | `(hue: number) => void` | Apply hue (0–360) via `setColor()` |
+| `updateHueThumbPosition` | `(hue: number) => void` | Move thumb only |
+| `hasHue` | `boolean` getter/setter | Re-renders on change |
+| `hueBar` / `hueThumb` | `HTMLElement \| null` | DOM |
+| `isHorizontal` | `boolean` | Orientation flag |
+
+## Behaviour
+
+| Action | Result |
+| --- | --- |
+| Click | Hue computed from position, color applies |
+| Drag | Throttled 16ms |
+| External change | Thumb syncs to the new hue |
+
+The gradient always shows the full spectrum.
+
+## Events
+
+Changes go through `core.setColor()`, so:
+
+```ts
+picker.on('change', (color) => console.log(color))
+```
+
+## DOM
+
+```html
+<div class="ew-color-picker-slider ew-color-picker-is-vertical">
+  <div class="ew-color-picker-slider-bar"></div>
+  <div class="ew-color-picker-slider-thumb"></div>
+</div>
+```
+
+## Example
+
+```ts
+const picker = new ewColorPicker({
+  el: '#app',
+  defaultColor: '#ef4444',
+  hueDirection: 'horizontal',
+})
+
+picker.on('change', () => console.log(picker.hsvaColor.h))
+picker.plugins.ewColorPickerHue.updateHue(200)
+```
+
+## Related
+
+- [Alpha](./alpha.md) · [Options · hueDirection](../api/options.md#huedirection--alphadirection)
+
+## Plugin Overview
+
+Source: https://eveningwater.github.io/ew-color-picker/en/plugins/
+
+# Plugin Overview
+
+The core (`@ew-color-picker/core`) only does three things: keep color state, dispatch events, and manage mount points. **All visible UI is rendered by plugins**, so you can compose very different pickers.
+
+## How a plugin works
+
+| Member | Type | Required |
+| --- | --- | --- |
+| `static pluginName` | `string` | Yes |
+| `static applyOrder` | `ApplyOrder` | No (`Pre = -1`, `Post = 1`) |
+| `constructor(core)` | — | Yes |
+| `destroy()` | `() => void` | No |
+
+```ts
+import ewColorPicker from '@ew-color-picker/core'
+import MyPlugin from './my-plugin'
+
+ewColorPicker.use(MyPlugin)
+new ewColorPicker({ el: '#app' })
+```
+
+`use()` is idempotent. Plugin instances live at `core.plugins[pluginName]`.
+
+## Built-in plugins
+
+Registration order in `@ew-color-picker/ewColorPicker`:
+
+| # | Plugin | `pluginName` | Package | Role |
+| --- | --- | --- | --- | --- |
+| 1 | Console | `ewColorPickerConsole` | utils | Prints the version banner once |
+| 2 | Box | `ewColorPickerBox` | box | Trigger swatch |
+| 3 | Panel | `ewColorPickerPanel` | panel | Saturation/value panel |
+| 4 | Hue | `ewColorPickerHue` | hue | Hue slider |
+| 5 | Alpha | `ewColorPickerAlpha` | alpha | Alpha slider |
+| 6 | Input | `ewColorPickerInput` | input | Text color input |
+| 7 | InputNumber | `ewColorPickerInputNumber` | input-number | Numeric inputs |
+| 8 | Button | `ewColorPickerButton` | button | Clear / Sure |
+| 9 | Predefine | `ewColorPickerPredefine` | predefine | Swatches |
+| 10 | ColorMode | `ewColorPickerColorMode` | color-mode | Hex / RGB / HSL |
+| 11 | — | — | style | CSS artifacts (not a plugin) |
+
+## Mount points
+
+| Mount point | Access | Contents |
+| --- | --- | --- |
+| `root` | `core.getMountPoint('root')` | `.ew-color-picker`, hosts Box |
+| `panelContainer` | `core.getMountPoint('panelContainer')` | `.ew-color-picker-panel-container`, hosts everything else |
+
+The panel container carries `ew-color-picker-panel-container-hidden` while closed.
+
+## Collaboration
+
+```text
+User action (Box / Panel / Hue / Alpha / Input / Predefine / Button)
+        │
+        ▼
+   core.setColor(color)   ← the only color entry
+        │
+        ├─► emit('change', color)
+        │     ├─ Panel / Hue / Alpha / Input / ColorMode / Box sync
+        │
+        └─► options.changeColor(color)
+```
+
+Rules:
+
+- Only `core.setColor()` changes color.
+- Subscribe to `change`; don't poll `currentColor`.
+- Read other plugin state via `core.plugins.xxx`.
+- Use `core.updateOptions()` to refresh configuration.
+
+## Trimming the UI
+
+All plugins are registered by the bundle; disable via options instead of unregistering:
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  hasPanel: false,
+  hue: false,
+  alpha: false,
+  hasInput: false,
+  hasClear: false,
+  hasSure: false,
+  showColorMode: false,
+  size: 'large',
+})
+```
+
+::: tip Smaller bundle
+Register plugins manually — see [Installation](../guide/installation.md#per-package-imports).
+:::
+
+## Next steps
+
+- [Box](./box.md) · [Panel](./panel.md) · [Hue](./hue.md) · [Alpha](./alpha.md)
+- [Input](./input.md) · [InputNumber](./input-number.md) · [Button](./button.md)
+- [Predefine](./predefine.md) · [ColorMode](./color-mode.md) · [Console](./console.md)
+- [Writing a plugin](../guide/plugin-dev.md)
+
+## InputNumber Plugin
+
+Source: https://eveningwater.github.io/ew-color-picker/en/plugins/input-number
+
+# InputNumber
+
+`@ew-color-picker/input-number` ships two pieces:
+
+1. **Plugin** `ewColorPickerInputNumber` — creates a numeric input in the bottom row;
+2. **Component** `InputNumber` — a standalone controlled number input used by ColorMode for RGB/HSL channels.
+
+| Item | Value |
+| --- | --- |
+| Package | `@ew-color-picker/input-number` |
+| `pluginName` | `ewColorPickerInputNumber` |
+| `applyOrder` | `Post` |
+| Mount point | `panelContainer` → `.ew-color-picker-bottom-row` |
+| Instance | `core.plugins.ewColorPickerInputNumber` |
+
+::: warning Extra stylesheet required
+```ts
+import '@ew-color-picker/style/dist/input-number.css'
+```
+Without it numeric inputs are unstyled.
+:::
+
+## Plugin options
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `disabled` | `boolean` | `false` | Disable all managed inputs |
+
+## Plugin methods
+
+| Method | Signature | Description |
+| --- | --- | --- |
+| `createInputNumber` | `(options) => InputNumber` | Create a component |
+| `updateOptions` | `() => void` | Reapply `disabled` |
+| `run` | `() => void` | Create the default instance |
+| `destroy` | `() => void` | Destroy all instances |
+
+## InputNumber component
+
+```ts
+import { InputNumber } from '@ew-color-picker/input-number'
+```
+
+### Options
+
+| Option | Type | Default |
+| --- | --- | --- |
+| `value` | `number` | `0` |
+| `min` | `number` | `-Infinity` |
+| `max` | `number` | `Infinity` |
+| `step` | `number` | `1` |
+| `precision` | `number` | `0` |
+| `disabled` | `boolean` | `false` |
+| `placeholder` | `string` | `''` |
+| `size` | `'small' \| 'default' \| 'large'` | `'default'` |
+| `onChange` | `(value) => void` | — |
+| `onBlur` | `(value) => void` | — |
+| `onFocus` | `(event) => void` | — |
+
+`onChange` is debounced 300ms and is **not** called during construction.
+
+### Methods
+
+| Method | Signature | Description |
+| --- | --- | --- |
+| `getValue` | `() => number` | Read value |
+| `setValue` | `(value: number) => void` | Set clamped value |
+| `setDisabled` | `(disabled: boolean) => void` | Toggle disabled |
+| `getElement` | `() => HTMLElement` | Root element |
+| `destroy` | `() => void` | Cleanup |
+
+### Standalone example
+
+```ts
+import { InputNumber } from '@ew-color-picker/input-number'
+import '@ew-color-picker/style/dist/input-number.css'
+
+const num = new InputNumber({
+  value: 50,
+  min: 0,
+  max: 100,
+  placeholder: 'Saturation',
+  onChange: (v) => console.log(v),
+})
+
+document.body.appendChild(num.getElement())
+```
+
+## DOM
+
+```html
+<div class="ew-input-number ew-input-number--default">
+  <input class="ew-input-number__input" type="text" inputmode="decimal" />
+  <div class="ew-input-number__buttons">
+    <button class="ew-input-number__button ew-input-number__button--up"></button>
+    <button class="ew-input-number__button ew-input-number__button--down"></button>
+  </div>
+</div>
+```
+
+## Related
+
+- [ColorMode](./color-mode.md) · [Input](./input.md)
+
+## Input Plugin
+
+Source: https://eveningwater.github.io/ew-color-picker/en/plugins/input
+
+# Input
+
+`ewColorPickerInput` renders a text field accepting hex / rgb(a) / hsl(a). Valid input applies immediately; invalid input never pollutes the current color.
+
+| Item | Value |
+| --- | --- |
+| Package | `@ew-color-picker/input` |
+| `pluginName` | `ewColorPickerInput` |
+| `applyOrder` | `Post` |
+| Mount point | `panelContainer` |
+| Instance | `core.plugins.ewColorPickerInput` |
+
+## Options
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `hasInput` | `boolean` | `true` | Hide the field |
+| `disabled` | `boolean` | `false` | Disable it |
+| `changeColor` | `(rgba: string) => void` | — | Applied color callback |
+
+Display format follows the current mode: hex in Hex mode, `rgb()/rgba()` in RGB, `hsl()/hsla()` in HSL.
+
+## Methods
+
+| Method / property | Signature | Description |
+| --- | --- | --- |
+| `enableInput` | `(enable = true) => void` | Show/hide |
+| `hasInput` | `boolean` getter/setter | Re-renders on change |
+| `setValue` | `(value: string) => void` | Set text only |
+| `getValue` | `() => string` | Read text |
+| `setDisabled` | `(disabled: boolean) => void` | Toggle disabled state |
+| `update` | `(color: string) => void` | Format and write current color |
+| `onInputColor` | `(value: string) => void` | Input handler (300ms debounce) |
+| `input` | `HTMLInputElement \| null` | DOM |
+
+## Validation
+
+| Input | Result |
+| --- | --- |
+| `#f00`, `#ff0000`, `#ff000080` | Valid |
+| `rgb(255,0,0)`, `rgba(255,0,0,0.5)` | Valid |
+| `hsl(0,100%,50%)`, `hsla(...)` | Valid |
+| `''` | Valid (clears color) |
+| other | Invalid, ignored (may warn) |
+
+Input is debounced by 300ms.
+
+## Events
+
+```ts
+core.setColor(rgbaColor)
+core.trigger('change', rgbaColor)
+options.changeColor?.(rgbaColor)
+```
+
+## DOM
+
+```html
+<div class="ew-color-picker-input-container ew-color-picker-input-container-flex">
+  <input class="ew-color-picker-input" type="text" />
+</div>
+```
+
+Disabled adds `ew-input-disabled`.
+
+## Example
+
+```ts
+const picker = new ewColorPicker({
+  el: '#app',
+  defaultColor: '#0ea5e9',
+  hasInput: true,
+  changeColor: (rgba) => console.log(rgba),
+})
+```
+
+## Related
+
+- [ColorMode](./color-mode.md) · [InputNumber](./input-number.md)
+
+## Panel Plugin
+
+Source: https://eveningwater.github.io/ew-color-picker/en/plugins/panel
+
+# Panel
+
+`ewColorPickerPanel` renders the 2D picking area. The horizontal axis is saturation, the vertical axis is value.
+
+| Item | Value |
+| --- | --- |
+| Package | `@ew-color-picker/panel` |
+| `pluginName` | `ewColorPickerPanel` |
+| `applyOrder` | `Post` |
+| Mount point | `panelContainer` |
+| Instance | `core.plugins.ewColorPickerPanel` |
+
+## Options
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `hasPanel` | `boolean` | `true` | Hide the 2D panel |
+| `ewColorPickerPanel` | `boolean \| object` | `true` | `false` disables; object merges |
+| `hueDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | Affects width |
+| `alphaDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | Affects width |
+| `autoPanelPosition` | `boolean` | `false` | Auto placement |
+| `panelPlacement` | `string` | `'bottom'` | See below |
+| `ewColorPickerBox` | `boolean` | `true` | Required for auto placement |
+| `alpha` | `boolean` | derived | Affects default color format |
+| `disabled` | `boolean` | `false` | Blocks dragging |
+
+### panelPlacement
+
+`top-start` `top` `top-end` `left-start` `left` `left-end` `right-start` `right` `right-end` `bottom-start` `bottom` `bottom-end`
+
+Gap 5px; positions are adjusted to stay inside the viewport.
+
+### Width rules
+
+| Hue | Alpha | Width |
+| --- | --- | --- |
+| vertical | vertical | 285px |
+| horizontal | vertical (or vice versa) | ~302px |
+| horizontal | horizontal | 320px |
+
+Height is 180px, injected as `--panel-width` / `--panel-height`.
+
+## Methods
+
+| Method | Signature | Description |
+| --- | --- | --- |
+| `render` | `() => void` | Rebuild DOM |
+| `updateCursorPosition` | `(s, v) => void` | Move cursor (0–100) |
+| `updateColor` | `(s, v) => void` | Apply color via `setColor()` |
+| `updateHueBg` | `(hue?) => void` | Update base hue |
+| `calculateContainerSize` | `() => void` | Measure container |
+| `handleAutoPosition` | `() => void` | Apply placement |
+| `calculatePosition` | `(position, align, boxW, boxH) => { left, top }` | Pure calculation |
+| `adjustForViewport` | `(root, left, top) => { left, top }` | Viewport correction |
+| `destroy` | `() => void` | Remove |
+
+Properties: `panel`, `cursor`, `whitePanel`, `blackPanel`, `panelWidth`, `panelHeight`, `isHueHorizontal`, `isAlphaHorizontal`, `isDragging`.
+
+## Behaviour
+
+| Action | Result |
+| --- | --- |
+| Click | Cursor jumps, color applies |
+| Drag | Throttled to ~60fps |
+| Touch | Same as drag |
+| External change | Cursor and base hue sync |
+
+`updateColor` falls back to red when the current color is empty or contains `NaN`.
+
+Emits `change` via `core.setColor()`.
+
+## DOM
+
+```html
+<div class="ew-color-picker-panel ew-color-picker-panel-dynamic-size"
+     style="--panel-width:285px;--panel-height:180px">
+  <div class="ew-color-picker-white-panel"></div>
+  <div class="ew-color-picker-black-panel"></div>
+  <div class="ew-color-picker-panel-cursor"></div>
+</div>
+```
+
+## Example
+
+```ts
+const picker = new ewColorPicker({
+  el: '#app',
+  hueDirection: 'horizontal',
+  alphaDirection: 'horizontal',
+  autoPanelPosition: true,
+  panelPlacement: 'bottom-start',
+})
+
+picker.plugins.ewColorPickerPanel.updateColor(20, 30)
+```
+
+## Related
+
+- [Hue](./hue.md) · [Alpha](./alpha.md) · [Options · panelPlacement](../api/options.md#panelplacement)
+
+## Predefine Plugin
+
+Source: https://eveningwater.github.io/ew-color-picker/en/plugins/predefine
+
+# Predefine
+
+`ewColorPickerPredefine` renders a row of quick color swatches inside the panel.
+
+| Item | Value |
+| --- | --- |
+| Package | `@ew-color-picker/predefine` |
+| `pluginName` | `ewColorPickerPredefine` |
+| `applyOrder` | not declared |
+| Mount point | `panelContainer` |
+| Instance | `core.plugins.ewColorPickerPredefine` |
+
+## Options
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `predefineColor` | `(string \| { color: string; disabled?: boolean })[]` | `[]` | Swatches; empty renders nothing |
+| `changeColor` | `(rgba: string) => void` | — | Swatch applied |
+| `disabled` | `boolean` | `false` | Block all clicks |
+| `ewColorPickerPredefine` | `object` | — | Nested config merged in |
+
+```ts
+predefineColor: [
+  '#ef4444',
+  { color: '#22c55e', disabled: true },
+  '#3b82f6',
+]
+```
+
+Strict color validation: invalid entries are filtered out before rendering and re-checked on click.
+
+## Methods
+
+| Method / property | Signature | Description |
+| --- | --- | --- |
+| `updatePredefineColors` | `(colors) => void` | Replace and re-render |
+| `setDisabled` | `(index: number, disabled: boolean) => void` | Toggle one swatch |
+| `onPredefineColorClick` | `(event, color) => void` | Click handler (100ms debounce) |
+| `predefineItems` | `HTMLElement[]` | Swatch DOM |
+| `container` | `HTMLElement \| null` | Container |
+
+## Click behaviour
+
+Checks the disabled class and global `disabled`, highlights the active swatch, validates and converts the color, syncs `core.hsvaColor`, calls `core.setColor(rgba)`, then `options.changeColor?.(rgba)`.
+
+## Events
+
+```ts
+picker.on('change', (color) => console.log(color))
+```
+
+## DOM
+
+```html
+<div class="ew-color-picker-predefine-container">
+  <div class="ew-color-picker-predefine-color">
+    <div class="ew-color-picker-predefine-color-item" style="background:#ef4444"></div>
+  </div>
+  <div class="ew-color-picker-predefine-color ew-color-picker-predefine-color-disabled">…</div>
+  <div class="ew-color-picker-predefine-color ew-color-picker-predefine-color-active">…</div>
+</div>
+```
+
+## Example
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  defaultColor: '#3b82f6',
+  predefineColor: ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#a855f7'],
+  changeColor: (rgba) => console.log(rgba),
+})
+```
+
+## Related
+
+- [Options · predefineColor](../api/options.md#predefinecolor) · [Styles](../api/styles.md)

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>02. 布局（size、方向）</title>
+    <link rel="stylesheet" href="../packages/style/dist/index.css">
+    <link rel="stylesheet" href="../packages/style/dist/input-number.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f5; }
+        .demo { max-width: 900px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; }
+        .item { margin-bottom: 24px; padding: 15px; border: 1px solid #e8e8e8; border-radius: 6px; }
+        .title { font-weight: 600; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="demo">
+        <h2>02. 布局</h2>
+        <div class="item">
+            <div class="title">size: small</div>
+            <div id="sizeSmall"></div>
+        </div>
+        <div class="item">
+            <div class="title">size: normal（默认）</div>
+            <div id="sizeNormal"></div>
+        </div>
+        <div class="item">
+            <div class="title">size: large</div>
+            <div id="sizeLarge"></div>
+        </div>
+        <div class="item">
+            <div class="title">hueDirection: horizontal（色相横向）</div>
+            <div id="hueH"></div>
+        </div>
+        <div class="item">
+            <div class="title">alphaDirection: horizontal（透明度横向）</div>
+            <div id="alphaH"></div>
+        </div>
+        <div class="item">
+            <div class="title">hue + alpha 均横向</div>
+            <div id="bothH"></div>
+        </div>
+    </div>
+    <script type="module">
+        import ewColorPicker from '../packages/ew-color-picker/src/index.ts';
+
+        new ewColorPicker({ el: '#sizeSmall', size: 'small', defaultColor: '#0ca6dc' });
+        new ewColorPicker({ el: '#sizeNormal', size: 'normal', defaultColor: '#0ca6dc' });
+        new ewColorPicker({ el: '#sizeLarge', size: 'large', defaultColor: '#0ca6dc' });
+        new ewColorPicker({ el: '#hueH', hueDirection: 'horizontal', defaultColor: '#722ed1' });
+        new ewColorPicker({ el: '#alphaH', alphaDirection: 'horizontal', defaultColor: 'rgba(245,34,45,0.5)' });
+        new ewColorPicker({ el: '#bothH', hueDirection: 'horizontal', alphaDirection: 'horizontal', defaultColor: 'rgba(82,196,26,0.6)' });
+    </script>
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>EW Color Picker · 在线演示</title>
+    <link rel="stylesheet" href="./assets/index.css" />
+    <link rel="stylesheet" href="./assets/input-number.css" />
+    <style>
+      :root {
+        --demo-bg: #0b1020;
+        --demo-panel: rgba(255, 255, 255, 0.06);
+        --demo-border: rgba(255, 255, 255, 0.12);
+        --demo-text: #e2e8f0;
+        --demo-muted: #94a3b8;
+        --demo-accent: #6366f1;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+          "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        color: var(--demo-text);
+        background:
+          radial-gradient(1200px 600px at 10% -10%, rgba(99, 102, 241, 0.25), transparent 60%),
+          radial-gradient(900px 500px at 100% 0%, rgba(236, 72, 153, 0.18), transparent 55%),
+          var(--demo-bg);
+      }
+      .demo {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 56px 24px 72px;
+      }
+      .demo__header { text-align: center; margin-bottom: 40px; }
+      .demo__badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border: 1px solid var(--demo-border);
+        border-radius: 999px;
+        background: var(--demo-panel);
+        color: var(--demo-muted);
+        font-size: 13px;
+      }
+      .demo__badge span {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--demo-accent);
+        box-shadow: 0 0 12px var(--demo-accent);
+      }
+      .demo__header h1 {
+        margin: 18px 0 10px;
+        font-size: clamp(28px, 4vw, 44px);
+        letter-spacing: -0.02em;
+      }
+      .demo__header p { margin: 0; color: var(--demo-muted); font-size: 15px; }
+      .demo__grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+        gap: 24px;
+        align-items: start;
+      }
+      @media (max-width: 860px) { .demo__grid { grid-template-columns: 1fr; } }
+      .card {
+        border: 1px solid var(--demo-border);
+        border-radius: 18px;
+        background: var(--demo-panel);
+        backdrop-filter: blur(14px);
+        padding: 24px;
+      }
+      .card__title {
+        margin: 0 0 16px;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--demo-muted);
+      }
+      .picker-stage { display: flex; flex-direction: column; gap: 18px; align-items: flex-start; }
+      .swatch-row { display: flex; align-items: center; gap: 16px; }
+      .swatch {
+        width: 72px;
+        height: 72px;
+        border-radius: 16px;
+        border: 1px solid var(--demo-border);
+        background: #6366f1;
+        transition: background-color 0.25s ease;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+      }
+      .swatch-meta { display: flex; flex-direction: column; gap: 4px; }
+      .swatch-meta__label { color: var(--demo-muted); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+      .swatch-meta__value { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 18px; }
+      .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+      .btn {
+        appearance: none;
+        border: 1px solid var(--demo-border);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--demo-text);
+        padding: 9px 16px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+      }
+      .btn:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.24); }
+      .btn:active { transform: translateY(1px); }
+      .btn--primary { background: var(--demo-accent); border-color: var(--demo-accent); }
+      .btn--primary:hover { background: #4f46e5; border-color: #4f46e5; }
+      .log {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 360px;
+        overflow: auto;
+      }
+      .log__item {
+        display: grid;
+        grid-template-columns: 64px 1fr;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.04);
+        font-size: 13px;
+        animation: fade-in 0.25s ease;
+      }
+      .log__time { color: var(--demo-muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+      .log__event { color: #a5b4fc; font-weight: 600; }
+      .log__payload { color: var(--demo-text); word-break: break-all; }
+      .log__empty { color: var(--demo-muted); font-size: 13px; }
+      @keyframes fade-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+      .demo__footer {
+        margin-top: 32px;
+        text-align: center;
+        color: var(--demo-muted);
+        font-size: 13px;
+      }
+      .demo__footer a { color: #a5b4fc; text-decoration: none; }
+      .demo__footer a:hover { text-decoration: underline; }
+    </style>
+  </head>
+  <body>
+    <main class="demo">
+      <header class="demo__header">
+        <div class="demo__badge"><span></span> EW Color Picker · Live Demo</div>
+        <h1>事件驱动 + 插件化的颜色选择器</h1>
+        <p>点击色块展开面板，拖动面板 / 滑块 / 输入框，右侧会实时记录全部事件。</p>
+      </header>
+
+      <div class="demo__grid">
+        <section class="card">
+          <h2 class="card__title">Picker</h2>
+          <div class="picker-stage">
+            <div id="picker"></div>
+            <div class="swatch-row">
+              <div class="swatch" id="swatch"></div>
+              <div class="swatch-meta">
+                <span class="swatch-meta__label">Current color</span>
+                <span class="swatch-meta__value" id="color-value">#6366f1</span>
+              </div>
+            </div>
+            <div class="actions">
+              <button class="btn btn--primary" id="copy" type="button">复制色值</button>
+              <button class="btn" id="open" type="button">打开面板</button>
+              <button class="btn" id="close" type="button">关闭面板</button>
+              <button class="btn" id="reset" type="button">恢复默认</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2 class="card__title">Event Log</h2>
+          <ul class="log" id="log"></ul>
+          <p class="log__empty" id="log-empty">等待交互…</p>
+        </section>
+      </div>
+
+      <footer class="demo__footer">
+        <a href="https://github.com/eveningwater/ew-color-picker" target="_blank" rel="noopener">GitHub</a>
+        ·
+        <a href="./">返回文档</a>
+      </footer>
+    </main>
+
+    <script src="./assets/ew-color-picker.js"></script>
+    <script>
+      ;(function () {
+        var DEFAULT_COLOR = '#6366f1'
+        var logEl = document.getElementById('log')
+        var logEmpty = document.getElementById('log-empty')
+        var swatch = document.getElementById('swatch')
+        var valueEl = document.getElementById('color-value')
+        var count = 0
+
+        function formatTime() {
+          var d = new Date()
+          return [d.getHours(), d.getMinutes(), d.getSeconds()]
+            .map(function (n) { return String(n).padStart(2, '0') })
+            .join(':')
+        }
+
+        function log(event, payload) {
+          if (count === 0) logEmpty.style.display = 'none'
+          count += 1
+
+          var li = document.createElement('li')
+          li.className = 'log__item'
+
+          var time = document.createElement('span')
+          time.className = 'log__time'
+          time.textContent = formatTime()
+
+          var body = document.createElement('span')
+          var ev = document.createElement('span')
+          ev.className = 'log__event'
+          ev.textContent = event
+          body.appendChild(ev)
+
+          var payloadEl = document.createElement('span')
+          payloadEl.className = 'log__payload'
+          payloadEl.textContent = payload === undefined ? '' : '  ' + String(payload)
+          body.appendChild(payloadEl)
+
+          li.appendChild(time)
+          li.appendChild(body)
+          logEl.insertBefore(li, logEl.firstChild)
+
+          while (logEl.children.length > 30) logEl.removeChild(logEl.lastChild)
+        }
+
+        if (!window.ewColorPicker) {
+          log('error', '未找到 ew-color-picker.js，请先执行 pnpm run build:all')
+          return
+        }
+
+        var picker = new window.ewColorPicker({
+          el: '#picker',
+          defaultColor: DEFAULT_COLOR,
+          size: 'large',
+          predefineColor: ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#a855f7'],
+          sureText: '应用',
+          togglePickerAnimation: 'height',
+          pickerAnimationTime: 220,
+          changeColor: function (color) { renderColor(color) },
+          sure: function (color) { log('sure', color) },
+          clear: function () { log('clear') },
+        })
+
+        function renderColor(color) {
+          if (!color) {
+            swatch.style.background = 'transparent'
+            valueEl.textContent = '未选择'
+            return
+          }
+          swatch.style.background = color
+          valueEl.textContent = color
+        }
+
+        picker.on('change', function (color) {
+          renderColor(color)
+          log('change', color)
+        })
+        picker.on('toggle', function (open) { log('toggle', open ? 'open' : 'close') })
+        picker.on('clear', function () { log('clear', '') })
+        picker.on('sure', function (color) { log('sure', color) })
+        picker.on('mode-change', function (mode) { log('mode-change', mode) })
+        picker.on('options-update', function (options) { log('options-update', JSON.stringify(options)) })
+
+        document.getElementById('open').addEventListener('click', function () {
+          picker.showPanel()
+        })
+        document.getElementById('close').addEventListener('click', function () {
+          picker.hidePanel()
+        })
+        document.getElementById('reset').addEventListener('click', function () {
+          picker.setColor(DEFAULT_COLOR)
+          renderColor(DEFAULT_COLOR)
+          log('reset', DEFAULT_COLOR)
+        })
+        document.getElementById('copy').addEventListener('click', function () {
+          var color = picker.getColor() || DEFAULT_COLOR
+          var text = color
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function () {
+              log('copy', text)
+            })
+          } else {
+            var ta = document.createElement('textarea')
+            ta.value = text
+            document.body.appendChild(ta)
+            ta.select()
+            try { document.execCommand('copy') } catch (e) {}
+            document.body.removeChild(ta)
+            log('copy', text)
+          }
+        })
+
+        renderColor(picker.getColor() || DEFAULT_COLOR)
+      })()
+    </script>
+  </body>
+</html>

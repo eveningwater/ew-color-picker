@@ -1,7 +1,4 @@
-node_modules
+node_modules/*
 npm-debug.log
-docs
-example
-introduce
-rollup.config.js
-.babelrc
+docs/*
+example/*

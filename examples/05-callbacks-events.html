@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>05. 回调与事件</title>
+    <link rel="stylesheet" href="../packages/style/dist/index.css">
+    <link rel="stylesheet" href="../packages/style/dist/input-number.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f5; }
+        .demo { max-width: 800px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; }
+        .item { margin-bottom: 24px; padding: 15px; border: 1px solid #e8e8e8; border-radius: 6px; }
+        .title { font-weight: 600; margin-bottom: 10px; }
+        .log { margin-top: 10px; padding: 8px; background: #f8f9fa; border-radius: 4px; font-family: monospace; font-size: 12px; max-height: 150px; overflow-y: auto; white-space: pre-line; }
+    </style>
+</head>
+<body>
+    <div class="demo">
+        <h2>05. 回调与事件</h2>
+        <div class="item">
+            <div class="title">1. 构造回调：changeColor / togglePicker / clear / sure</div>
+            <div id="picker1"></div>
+            <div class="log" id="log1">等待触发...</div>
+        </div>
+        <div class="item">
+            <div class="title">2. 事件监听：change / toggle / clear / sure / mode-change</div>
+            <div id="picker2"></div>
+            <div class="log" id="log2">等待触发...</div>
+        </div>
+    </div>
+    <script type="module">
+        import ewColorPicker from '../packages/ew-color-picker/src/index.ts';
+
+        const append = (id, msg) => {
+            const el = document.getElementById(id);
+            const time = new Date().toLocaleTimeString();
+            el.textContent = `[${time}] ${msg}\n` + (el.textContent === '等待触发...' ? '' : el.textContent);
+        };
+
+        // 1. 构造回调
+        new ewColorPicker({
+            el: '#picker1',
+            defaultColor: '#1890ff',
+            changeColor(c) { append('log1', 'changeColor: ' + c); },
+            togglePicker(isShow) { append('log1', 'togglePicker: ' + (isShow ? '打开' : '关闭')); },
+            clear() { append('log1', 'clear 回调'); },
+            sure(c) { append('log1', 'sure 回调: ' + c); }
+        });
+
+        // 2. 事件监听
+        const p2 = new ewColorPicker({ el: '#picker2', defaultColor: '#52c41a' });
+        p2.on('change', c => append('log2', 'change: ' + c));
+        p2.on('toggle', isShow => append('log2', 'toggle: ' + (isShow ? '打开' : '关闭')));
+        p2.on('clear', () => append('log2', 'clear 事件'));
+        p2.on('sure', c => append('log2', 'sure 事件: ' + c));
+        p2.on('mode-change', mode => append('log2', 'mode-change: ' + mode));
+    </script>
+</body>
+</html>
