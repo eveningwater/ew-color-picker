@@ -2136,6 +2136,27 @@ import '@ew-color-picker/style/dist/input-number.css'
 
 > `index.css` 是核心样式，`input-number.css` 是数字输入框组件的独立样式入口，**两者都需要引入**，否则 RGB / HSL 模式下的数字框会失去样式。
 
+如果希望沿用 v1 的包名，也可以直接安装无 scope 的聚合入口包，二者等价：
+
+```bash
+npm install ew-color-picker
+```
+
+::: tip 关于包名
+`ew-color-picker` 是 v2 提供的兼容入口包，只做转发，内部依赖 `@ew-color-picker/ewColorPicker` 与 `@ew-color-picker/style`。适合从 v1 升级，或希望安装命令更简短的用户。
+:::
+
+## 从 v1 升级到 v2
+
+v2 是破坏性重构，v1 与 v2 的 API 不能混用：
+
+- **架构**：v1 是配置式单包；v2 拆分为 13 个包，界面全部由插件组装，可通过 `Core.use(Plugin)` 自由组合与替换
+- **包名**：`ew-color-picker` 仍是入口，但内部指向 `@ew-color-picker/ewColorPicker`
+- **样式**：需要显式引入 `index.css` 与 `input-number.css` 两个文件
+- **配置与事件**：插件相关配置项（如 `hasAlpha`、`hasBox`）与 v1 有差异，请按本站在线演示重新接入
+
+需要继续使用旧版可以锁定 `ew-color-picker@1`；v1 源码保留在仓库的 `v1` 分支。
+
 ## 方式二：按需安装子包
 
 仅需要部分功能时，可以只安装对应子包。Core 与 Utils 是所有插件的基础依赖，必须显式安装。
@@ -5520,6 +5541,27 @@ const picker = new ewColorPicker({ el: '#app' })
 ::: warning Two stylesheets
 `index.css` covers the picker. `input-number.css` is required for the numeric inputs used by RGB/HSL modes. Import both.
 :::
+
+To keep the v1 package name, install the unscoped entry package instead — it is equivalent:
+
+```bash
+npm install ew-color-picker
+```
+
+::: tip About the package name
+`ew-color-picker` is a thin compatibility entry for v2. It only forwards to `@ew-color-picker/ewColorPicker` and `@ew-color-picker/style`; it contains no implementation code.
+:::
+
+## Upgrading from v1
+
+v2 is a breaking rewrite; v1 and v2 APIs cannot be mixed:
+
+- **Architecture**: v1 was a single configurable package; v2 splits into 13 packages where every UI part is a plugin, composable via `Core.use(Plugin)`
+- **Package name**: `ew-color-picker` remains the entry, but now points to `@ew-color-picker/ewColorPicker`
+- **Styles**: both `index.css` and `input-number.css` must be imported explicitly
+- **Options and events**: plugin options such as `hasAlpha` and `hasBox` differ from v1; re-integrate against the live demo on this site
+
+To stay on the old version, pin `ew-color-picker@1`; the v1 source is preserved on the `v1` branch.
 
 ## Per-package imports
 

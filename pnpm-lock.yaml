@@ -230,6 +230,15 @@ importers:
         specifier: ^4.9.0
         version: 4.9.5
 
+  packages/ew-color-picker-compat:
+    dependencies:
+      '@ew-color-picker/ewColorPicker':
+        specifier: workspace:^2.0.0
+        version: link:../ew-color-picker
+      '@ew-color-picker/style':
+        specifier: workspace:^2.0.0
+        version: link:../style
+
   packages/hue:
     dependencies:
       '@ew-color-picker/core':

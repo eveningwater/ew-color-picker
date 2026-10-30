@@ -31,6 +31,27 @@ const picker = new ewColorPicker({ el: '#app' })
 `index.css` covers the picker. `input-number.css` is required for the numeric inputs used by RGB/HSL modes. Import both.
 :::
 
+To keep the v1 package name, install the unscoped entry package instead — it is equivalent:
+
+```bash
+npm install ew-color-picker
+```
+
+::: tip About the package name
+`ew-color-picker` is a thin compatibility entry for v2. It only forwards to `@ew-color-picker/ewColorPicker` and `@ew-color-picker/style`; it contains no implementation code.
+:::
+
+## Upgrading from v1
+
+v2 is a breaking rewrite; v1 and v2 APIs cannot be mixed:
+
+- **Architecture**: v1 was a single configurable package; v2 splits into 13 packages where every UI part is a plugin, composable via `Core.use(Plugin)`
+- **Package name**: `ew-color-picker` remains the entry, but now points to `@ew-color-picker/ewColorPicker`
+- **Styles**: both `index.css` and `input-number.css` must be imported explicitly
+- **Options and events**: plugin options such as `hasAlpha` and `hasBox` differ from v1; re-integrate against the live demo on this site
+
+To stay on the old version, pin `ew-color-picker@1`; the v1 source is preserved on the `v1` branch.
+
 ## Per-package imports
 
 The core has no UI. Register only what you need:
