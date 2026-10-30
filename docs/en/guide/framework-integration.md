@@ -1,11 +1,11 @@
 ---
 title: Framework Integration
-description: 'Minimal integration patterns for EW Color Picker in React, Vue 3, Angular and Solid, including lifecycle cleanup and controlled-value sync.'
+description: 'Minimal integration patterns for ew-color-picker in React, Vue 3, Angular and Solid, including lifecycle cleanup and controlled-value sync.'
 ---
 
 # Framework Integration
 
-EW Color Picker depends only on plain DOM and events — no framework runtime — so the same approach works everywhere: **create the instance on mount, call `destroy()` on unmount, and sync controlled values through `setColor()`**.
+ew-color-picker depends only on plain DOM and events — no framework runtime — so the same approach works everywhere: **create the instance on mount, call `destroy()` on unmount, and sync controlled values through `setColor()`**.
 
 Below are minimal, copy-paste wrappers for four frameworks. No official framework packages are published; the reasoning is covered in [Comparison & Positioning](./comparison).
 

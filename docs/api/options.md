@@ -1,6 +1,6 @@
 ---
 title: 配置项
-description: EW Color Picker 全部构造配置项的完整参考：类型、默认值与行为说明。
+description: ew-color-picker 全部构造配置项的完整参考：类型、默认值与行为说明。
 ---
 
 # 配置项

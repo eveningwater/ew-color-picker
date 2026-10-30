@@ -1,11 +1,11 @@
 ---
 title: 项目介绍
-description: EW Color Picker 是事件驱动、插件化的颜色选择器。了解核心职责、13 个包的划分与数据流。
+description: ew-color-picker 是事件驱动、插件化的颜色选择器。了解核心职责、13 个包的划分与数据流。
 ---
 
 # 项目介绍
 
-EW Color Picker 是一个基于 **事件驱动 + 插件系统** 的颜色选择器。核心包只做三件事：
+ew-color-picker 是一个基于 **事件驱动 + 插件系统** 的颜色选择器。核心包只做三件事：
 
 1. 维护当前颜色（`currentColor`）与 HSVA 状态（`hsvaColor`）；
 2. 通过实例级 `EventEmitter` 派发事件；

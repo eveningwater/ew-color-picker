@@ -1,6 +1,6 @@
 ---
 title: 快速开始
-description: 几分钟内创建第一个 EW Color Picker 实例：容器、配置、事件、方法与销毁。
+description: 几分钟内创建第一个 ew-color-picker 实例：容器、配置、事件、方法与销毁。
 ---
 
 # 快速开始

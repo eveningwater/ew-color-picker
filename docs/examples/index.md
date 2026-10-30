@@ -1,6 +1,6 @@
 ---
 title: 示例集
-description: EW Color Picker 的 12 个典型用法：基础、布局、预设色、按钮、事件、定位、动画、禁用、模式、API、数字输入、多实例。
+description: ew-color-picker 的 12 个典型用法：基础、布局、预设色、按钮、事件、定位、动画、禁用、模式、API、数字输入、多实例。
 ---
 
 # 示例集

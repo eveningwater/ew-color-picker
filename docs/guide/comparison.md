@@ -1,6 +1,6 @@
 ---
 title: 竞品对比与产品定位
-description: 对比 Pickr、iro.js、Coloris、react-colorful、react-color 等成熟颜色选择器，说明 EW Color Picker 的差异、优势、局限与适用场景。
+description: 对比 Pickr、iro.js、Coloris、react-colorful、react-color 等成熟颜色选择器，说明 ew-color-picker 的差异、优势、局限与适用场景。
 ---
 
 # 竞品对比与产品定位
@@ -9,7 +9,7 @@ description: 对比 Pickr、iro.js、Coloris、react-colorful、react-color 等�
 
 ## 一句话定位
 
-EW Color Picker 不是一套「成品皮肤」，而是一个 **可组装的颜色选择器底座**：核心只维护颜色与事件，所有界面部件都是独立插件，团队可以保留需要的部分、替换不需要的部分，或者基于同一套插件协议写自己的 UI。
+ew-color-picker 不是一套「成品皮肤」，而是一个 **可组装的颜色选择器底座**：核心只维护颜色与事件，所有界面部件都是独立插件，团队可以保留需要的部分、替换不需要的部分，或者基于同一套插件协议写自己的 UI。
 
 适合：中后台系统、低代码平台、组件库、需要和现有设计体系深度融合的产品。
 不适合：只想要一个开箱即用、无需定制的单点选色场景（这类需求用原生 `input[type=color]` 或 Coloris 更省事）。
@@ -20,7 +20,7 @@ EW Color Picker 不是一套「成品皮肤」，而是一个 **可组装的颜�
 
 | 方案 | 形态 | 框架约束 | 扩展方式 | 体积（unpacked） | 最近发布 |
 | --- | --- | --- | --- | --- | --- |
-| **EW Color Picker** | 13 个 npm 包，插件化 | 无（原生 DOM） | 插件注册 / 自写插件 | 聚合包 543.8 KB，核心包 `core.min` 11 KB（gzip 3 KB） | 2026-10 |
+| **ew-color-picker** | 13 个 npm 包，插件化 | 无（原生 DOM） | 插件注册 / 自写插件 | 聚合包 543.8 KB，核心包 `core.min` 11 KB（gzip 3 KB） | 2026-10 |
 | [Pickr](https://github.com/Simonwep/pickr) | 单包，UMD/ESM | 无 | 主题（classic/monolith/nano）+ 选项 | 280.3 KB | 2026-09 |
 | [iro.js](https://github.com/jaames/iro.js) | 单包 | 无 | 选项 + 组件组合 | 231.4 KB | 2021-07 |
 | [Coloris](https://github.com/melloware/coloris) | 单包 + 一份 CSS | 无 | CSS 变量主题 + 选项 | 152.2 KB | 2026-10 |
@@ -31,13 +31,13 @@ EW Color Picker 不是一套「成品皮肤」，而是一个 **可组装的颜�
 | 原生 `input[type=color]` | 浏览器内置 | 无 | 无（样式不可控） | 0 | 随浏览器 |
 | Spectrum | jQuery 插件 | jQuery | 选项 | 1804.2 KB | 2020-05 |
 
-需要强调的一点：体量数字不能直接等价为运行时开销。EW Color Picker 的聚合包体积主要来自三份产物（UMD、UMD.min、ESM）和 `.d.ts` 声明，实际引入的最小运行时是 `index.min.js` **79 KB（gzip 18 KB）**，按需只用核心时是 **11 KB（gzip 3 KB）**。
+需要强调的一点：体量数字不能直接等价为运行时开销。ew-color-picker 的聚合包体积主要来自三份产物（UMD、UMD.min、ESM）和 `.d.ts` 声明，实际引入的最小运行时是 `index.min.js` **79 KB（gzip 18 KB）**，按需只用核心时是 **11 KB（gzip 3 KB）**。
 
-## EW Color Picker 的优势
+## ew-color-picker 的优势
 
 ### 1. 插件是「结构可替换」，不只是「主题可换」
 
-多数同类库的定制方式是换主题、改 CSS 变量或改配置项，UI 的组成结构固定。EW Color Picker 把颜色盒、面板、色相滑块、透明度滑块、输入框、数字输入框、按钮、预定义色板、模式切换器都拆成独立插件，注册哪些、顺序如何、要不要自己的插件，都由使用者决定。
+多数同类库的定制方式是换主题、改 CSS 变量或改配置项，UI 的组成结构固定。ew-color-picker 把颜色盒、面板、色相滑块、透明度滑块、输入框、数字输入框、按钮、预定义色板、模式切换器都拆成独立插件，注册哪些、顺序如何、要不要自己的插件，都由使用者决定。
 
 ```ts
 import ewColorPicker from '@ew-color-picker/core'
@@ -84,8 +84,8 @@ ewColorPicker.use(Panel).use(Hue)
 | React 项目只要一个面板/滑块 | react-colorful |
 | Vue 项目需要现成组件集 | vue-color 或 @uiw/react-color |
 | 需要渐变、色彩空间转换、游戏/可视化场景 | iro.js |
-| 中后台 / 低代码 / 组件库，需要和设计体系深度融合、替换局部 UI、多实例隔离 | **EW Color Picker** |
-| 需要把选色能力嵌进自己的插件体系或运行时 | **EW Color Picker**（核心 11 KB，可只保留核心 + 自写插件） |
+| 中后台 / 低代码 / 组件库，需要和设计体系深度融合、替换局部 UI、多实例隔离 | **ew-color-picker** |
+| 需要把选色能力嵌进自己的插件体系或运行时 | **ew-color-picker**（核心 11 KB，可只保留核心 + 自写插件） |
 
 ## 相关链接
 

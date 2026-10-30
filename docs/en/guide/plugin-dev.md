@@ -1,6 +1,6 @@
 ---
 title: Writing a Plugin
-description: Build a custom EW Color Picker plugin with pluginName, applyOrder, constructor, mount points, events and TypeScript type augmentation.
+description: Build a custom ew-color-picker plugin with pluginName, applyOrder, constructor, mount points, events and TypeScript type augmentation.
 ---
 
 # Writing a Plugin

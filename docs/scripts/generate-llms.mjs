@@ -57,11 +57,11 @@ const SECTIONS = [
 
 const files = (await collect(DOCS_DIR)).sort()
 
-let full = '# EW Color Picker 完整文档 / Full Documentation\n\n'
+let full = '# ew-color-picker 完整文档 / Full Documentation\n\n'
 full += `> 事件驱动 + 插件化的现代颜色选择器。Event-driven, plugin-based color picker.\n\n`
 full += `> 站点 / Site: ${SITE}\n\n`
 
-let index = `# EW Color Picker\n\n`
+let index = `# ew-color-picker\n\n`
 index += `> 事件驱动 + 插件化的现代颜色选择器，支持 Hex / RGB / HSL、透明度、中英文文档。\n\n`
 index += `Event-driven, plugin-based color picker with Hex / RGB / HSL support, alpha channel, and full plugin architecture.\n\n`
 index += `- 官网 / Website: ${SITE}\n`

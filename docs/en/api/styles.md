@@ -1,6 +1,6 @@
 ---
 title: Styles & Classes
-description: Stylesheet entries, CSS variables, class name groups and theming tips for EW Color Picker.
+description: Stylesheet entries, CSS variables, class name groups and theming tips for ew-color-picker.
 ---
 
 # Styles & Classes

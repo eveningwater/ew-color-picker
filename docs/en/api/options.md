@@ -1,6 +1,6 @@
 ---
 title: Options
-description: Complete reference for every EW Color Picker constructor option, default value, type and behaviour.
+description: Complete reference for every ew-color-picker constructor option, default value, type and behaviour.
 ---
 
 # Options

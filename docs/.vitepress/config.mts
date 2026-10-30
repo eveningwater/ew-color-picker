@@ -195,8 +195,8 @@ function transformHead({ pageData }: any) {
   const enUrl = joinUrl(enPath)
 
   const title = pageData.frontmatter?.title
-    ? `${pageData.frontmatter.title} | EW Color Picker`
-    : pageData.title || 'EW Color Picker'
+    ? `${pageData.frontmatter.title} | ew-color-picker`
+    : pageData.title || 'ew-color-picker'
   const description =
     pageData.frontmatter?.description ||
     pageData.description ||
@@ -222,7 +222,7 @@ function transformHead({ pageData }: any) {
       JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'SoftwareApplication',
-        name: 'EW Color Picker',
+        name: 'ew-color-picker',
         applicationCategory: 'DeveloperApplication',
         operatingSystem: 'Any',
         description:
@@ -240,8 +240,8 @@ function transformHead({ pageData }: any) {
 
 export default defineConfig({
   lang: 'zh-CN',
-  title: 'EW Color Picker',
-  titleTemplate: ':title | EW Color Picker',
+  title: 'ew-color-picker',
+  titleTemplate: ':title | ew-color-picker',
   description: '事件驱动 + 插件化的现代颜色选择器，支持 Hex / RGB / HSL 与透明度调节',
   base: BASE,
   cleanUrls: true,
@@ -265,11 +265,11 @@ export default defineConfig({
     root: {
       label: '简体中文',
       lang: 'zh-CN',
-      title: 'EW Color Picker',
+      title: 'ew-color-picker',
       description: '事件驱动 + 插件化的现代颜色选择器，支持 Hex / RGB / HSL 与透明度调节',
       themeConfig: {
         logo: '/logo.svg',
-        siteTitle: 'EW Color Picker',
+        siteTitle: 'ew-color-picker',
         nav: zhNav,
         sidebar: zhSidebar,
         outline: { level: [2, 3], label: '本页目录' },
@@ -287,12 +287,12 @@ export default defineConfig({
       label: 'English',
       lang: 'en-US',
       link: '/en/',
-      title: 'EW Color Picker',
+      title: 'ew-color-picker',
       description:
         'Event-driven, plugin-based modern color picker with Hex / RGB / HSL support and alpha adjustment.',
       themeConfig: {
         logo: '/logo.svg',
-        siteTitle: 'EW Color Picker',
+        siteTitle: 'ew-color-picker',
         nav: enNav,
         sidebar: enSidebar,
         outline: { level: [2, 3], label: 'On this page' },

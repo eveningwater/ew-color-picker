@@ -1,6 +1,6 @@
 ---
 title: Installation
-description: Install EW Color Picker via npm, pnpm, yarn, UMD script, or per-package imports. Requires Node 20.10+ for development.
+description: Install ew-color-picker via npm, pnpm, yarn, UMD script, or per-package imports. Requires Node 20.10+ for development.
 ---
 
 # Installation

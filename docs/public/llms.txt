@@ -1,4 +1,4 @@
-# EW Color Picker
+# ew-color-picker
 
 > 事件驱动 + 插件化的现代颜色选择器，支持 Hex / RGB / HSL、透明度、中英文文档。
 
@@ -13,25 +13,25 @@ Event-driven, plugin-based color picker with Hex / RGB / HSL support, alpha chan
 - [回调](https://eveningwater.github.io/ew-color-picker/api/callbacks): 核心回调与各插件回调的签名、触发时机，以及回调与事件的差异对比。
 - [事件](https://eveningwater.github.io/ew-color-picker/api/events): change、toggle、sure、clear、options-update、mode-change、destroy 七个事件的触发时机、参数与监听规则。
 - [实例方法](https://eveningwater.github.io/ew-color-picker/api/methods): ewColorPicker 实例方法完整参考：挂载、改色、开合面板、更新配置、事件与销毁。
-- [配置项](https://eveningwater.github.io/ew-color-picker/api/options): EW Color Picker 全部构造配置项的完整参考：类型、默认值与行为说明。
+- [配置项](https://eveningwater.github.io/ew-color-picker/api/options): ew-color-picker 全部构造配置项的完整参考：类型、默认值与行为说明。
 - [样式与类名](https://eveningwater.github.io/ew-color-picker/api/styles): 样式入口、CSS 变量、全部类名分组与主题定制方式。
-- [在线演示](https://eveningwater.github.io/ew-color-picker/examples/demo): 在浏览器中直接体验 EW Color Picker：取色、开合面板、查看实时事件日志。
-- [示例集](https://eveningwater.github.io/ew-color-picker/examples/): EW Color Picker 的 12 个典型用法：基础、布局、预设色、按钮、事件、定位、动画、禁用、模式、API、数字输入、多实例。
-- [竞品对比与产品定位](https://eveningwater.github.io/ew-color-picker/guide/comparison): 对比 Pickr、iro.js、Coloris、react-colorful、react-color 等成熟颜色选择器，说明 EW Color Picker 的差异、优势、局限与适用场景。
+- [在线演示](https://eveningwater.github.io/ew-color-picker/examples/demo): 在浏览器中直接体验 ew-color-picker：取色、开合面板、查看实时事件日志。
+- [示例集](https://eveningwater.github.io/ew-color-picker/examples/): ew-color-picker 的 12 个典型用法：基础、布局、预设色、按钮、事件、定位、动画、禁用、模式、API、数字输入、多实例。
+- [竞品对比与产品定位](https://eveningwater.github.io/ew-color-picker/guide/comparison): 对比 Pickr、iro.js、Coloris、react-colorful、react-color 等成熟颜色选择器，说明 ew-color-picker 的差异、优势、局限与适用场景。
 - [核心概念](https://eveningwater.github.io/ew-color-picker/guide/concepts): 理解实例级事件总线、挂载点、插件执行顺序、单一改色入口与实例隔离。
-- [框架集成](https://eveningwater.github.io/ew-color-picker/guide/framework-integration): 在 React、Vue 3、Angular 与 Solid 中集成 EW Color Picker 的最小封装写法、生命周期清理与受控同步。
-- [快速开始](https://eveningwater.github.io/ew-color-picker/guide/getting-started): 几分钟内创建第一个 EW Color Picker 实例：容器、配置、事件、方法与销毁。
-- [项目介绍](https://eveningwater.github.io/ew-color-picker/guide/): EW Color Picker 是事件驱动、插件化的颜色选择器。了解核心职责、13 个包的划分与数据流。
-- [安装](https://eveningwater.github.io/ew-color-picker/guide/installation): 通过 pnpm/npm/yarn、UMD 脚本或按需子包安装 EW Color Picker，开发环境需要 Node 20.10+。
+- [框架集成](https://eveningwater.github.io/ew-color-picker/guide/framework-integration): 在 React、Vue 3、Angular 与 Solid 中集成 ew-color-picker 的最小封装写法、生命周期清理与受控同步。
+- [快速开始](https://eveningwater.github.io/ew-color-picker/guide/getting-started): 几分钟内创建第一个 ew-color-picker 实例：容器、配置、事件、方法与销毁。
+- [项目介绍](https://eveningwater.github.io/ew-color-picker/guide/): ew-color-picker 是事件驱动、插件化的颜色选择器。了解核心职责、13 个包的划分与数据流。
+- [安装](https://eveningwater.github.io/ew-color-picker/guide/installation): 通过 pnpm/npm/yarn、UMD 脚本或按需子包安装 ew-color-picker，开发环境需要 Node 20.10+。
 - [编写自定义插件](https://eveningwater.github.io/ew-color-picker/guide/plugin-dev): 按 pluginName、applyOrder、构造函数、挂载点与事件的约定编写可注册、可销毁的自定义插件。
 - [插件化架构](https://eveningwater.github.io/ew-color-picker/)
-- [Alpha 透明度滑块插件](https://eveningwater.github.io/ew-color-picker/plugins/alpha): Alpha 插件为 EW Color Picker 增加 0–1 透明度滑块，输出 rgba 颜色，支持水平/垂直方向与运行时开关。
-- [Box 颜色盒插件](https://eveningwater.github.io/ew-color-picker/plugins/box): Box 插件是 EW Color Picker 的触发器：渲染当前颜色色块，点击打开或关闭面板，并负责图标颜色随背景自适应。
+- [Alpha 透明度滑块插件](https://eveningwater.github.io/ew-color-picker/plugins/alpha): Alpha 插件为 ew-color-picker 增加 0–1 透明度滑块，输出 rgba 颜色，支持水平/垂直方向与运行时开关。
+- [Box 颜色盒插件](https://eveningwater.github.io/ew-color-picker/plugins/box): Box 插件是 ew-color-picker 的触发器：渲染当前颜色色块，点击打开或关闭面板，并负责图标颜色随背景自适应。
 - [Button 按钮插件](https://eveningwater.github.io/ew-color-picker/plugins/button): Button 插件渲染清空与确定按钮，支持自定义文案、禁用、动态显隐，并触发 clear / sure 事件。
 - [ColorMode 颜色模式插件](https://eveningwater.github.io/ew-color-picker/plugins/color-mode): 在 Hex / RGB / HSL 三种颜色模式之间切换，并驱动分通道输入组，触发 mode-change 事件。
 - [Console 控制台插件](https://eveningwater.github.io/ew-color-picker/plugins/console): Console 插件在浏览器控制台输出版本与作者信息，全页面仅打印一次，可关闭。
 - [Hue 色相滑块插件](https://eveningwater.github.io/ew-color-picker/plugins/hue): Hue 插件渲染 0–360 度色相滑块，支持水平/垂直方向、点击跳转、拖拽与运行时开关。
-- [插件总览](https://eveningwater.github.io/ew-color-picker/plugins/): EW Color Picker 的插件体系：11 个内置插件的职责、注册顺序与包名，以及插件之间如何协作完成颜色选择。
+- [插件总览](https://eveningwater.github.io/ew-color-picker/plugins/): ew-color-picker 的插件体系：11 个内置插件的职责、注册顺序与包名，以及插件之间如何协作完成颜色选择。
 - [InputNumber 数字输入框插件](https://eveningwater.github.io/ew-color-picker/plugins/input-number): InputNumber 插件与底层 InputNumber 组件的配置、方法、尺寸与事件，用于 RGB/HSL 分通道数值输入。
 - [Input 颜色输入框插件](https://eveningwater.github.io/ew-color-picker/plugins/input): Input 插件提供可直接输入 hex/rgb/rgba/hsl/hsla 的文本框，带校验、防抖与禁用态。
 - [Panel 颜色面板插件](https://eveningwater.github.io/ew-color-picker/plugins/panel): Panel 插件渲染饱和度/明度二维选择面板，支持拖拽与触摸、自动定位、面板尺寸自适应。
@@ -42,17 +42,17 @@ Event-driven, plugin-based color picker with Hex / RGB / HSL support, alpha chan
 - [Callbacks](https://eveningwater.github.io/ew-color-picker/en/api/callbacks): Core and plugin-level callbacks: changeColor, sure, clear, togglePicker, onClick, onChange, changeMode and their signatures.
 - [Events](https://eveningwater.github.io/ew-color-picker/en/api/events): Change, toggle, sure, clear, options-update, mode-change and destroy events: payloads, timing and listener rules.
 - [Methods](https://eveningwater.github.io/ew-color-picker/en/api/methods): Full reference for ewColorPicker instance methods: mount, setColor, getColor, updateOptions, showPanel, events and destroy.
-- [Options](https://eveningwater.github.io/ew-color-picker/en/api/options): Complete reference for every EW Color Picker constructor option, default value, type and behaviour.
-- [Styles & Classes](https://eveningwater.github.io/ew-color-picker/en/api/styles): Stylesheet entries, CSS variables, class name groups and theming tips for EW Color Picker.
-- [Live Demo](https://eveningwater.github.io/ew-color-picker/en/examples/demo): Try EW Color Picker in the browser: pick colors, toggle the panel and watch the realtime event log.
-- [Examples](https://eveningwater.github.io/ew-color-picker/en/examples/): Twelve typical EW Color Picker scenarios: basic, layout, presets, buttons, events, placement, animation, disabled, modes, API, numeric inputs, multiple instances.
-- [Comparison & Positioning](https://eveningwater.github.io/ew-color-picker/en/guide/comparison): How EW Color Picker compares with Pickr, iro.js, Coloris, react-colorful and react-color, and where it fits.
+- [Options](https://eveningwater.github.io/ew-color-picker/en/api/options): Complete reference for every ew-color-picker constructor option, default value, type and behaviour.
+- [Styles & Classes](https://eveningwater.github.io/ew-color-picker/en/api/styles): Stylesheet entries, CSS variables, class name groups and theming tips for ew-color-picker.
+- [Live Demo](https://eveningwater.github.io/ew-color-picker/en/examples/demo): Try ew-color-picker in the browser: pick colors, toggle the panel and watch the realtime event log.
+- [Examples](https://eveningwater.github.io/ew-color-picker/en/examples/): Twelve typical ew-color-picker scenarios: basic, layout, presets, buttons, events, placement, animation, disabled, modes, API, numeric inputs, multiple instances.
+- [Comparison & Positioning](https://eveningwater.github.io/ew-color-picker/en/guide/comparison): How ew-color-picker compares with Pickr, iro.js, Coloris, react-colorful and react-color, and where it fits.
 - [Core Concepts](https://eveningwater.github.io/ew-color-picker/en/guide/concepts): Understand the instance-level event bus, mount points, plugin apply order, single color entry and instance isolation.
-- [Framework Integration](https://eveningwater.github.io/ew-color-picker/en/guide/framework-integration): Minimal integration patterns for EW Color Picker in React, Vue 3, Angular and Solid, including lifecycle cleanup and controlled-value sync.
-- [Quick Start](https://eveningwater.github.io/ew-color-picker/en/guide/getting-started): Create your first EW Color Picker instance in minutes: container, options, events, methods and cleanup.
-- [Introduction](https://eveningwater.github.io/ew-color-picker/en/guide/): EW Color Picker is an event-driven, plugin-based color picker. Learn what the core does and how the 13 packages fit together.
-- [Installation](https://eveningwater.github.io/ew-color-picker/en/guide/installation): Install EW Color Picker via npm, pnpm, yarn, UMD script, or per-package imports. Requires Node 20.10+ for development.
-- [Writing a Plugin](https://eveningwater.github.io/ew-color-picker/en/guide/plugin-dev): Build a custom EW Color Picker plugin with pluginName, applyOrder, constructor, mount points, events and TypeScript type augmentation.
+- [Framework Integration](https://eveningwater.github.io/ew-color-picker/en/guide/framework-integration): Minimal integration patterns for ew-color-picker in React, Vue 3, Angular and Solid, including lifecycle cleanup and controlled-value sync.
+- [Quick Start](https://eveningwater.github.io/ew-color-picker/en/guide/getting-started): Create your first ew-color-picker instance in minutes: container, options, events, methods and cleanup.
+- [Introduction](https://eveningwater.github.io/ew-color-picker/en/guide/): ew-color-picker is an event-driven, plugin-based color picker. Learn what the core does and how the 13 packages fit together.
+- [Installation](https://eveningwater.github.io/ew-color-picker/en/guide/installation): Install ew-color-picker via npm, pnpm, yarn, UMD script, or per-package imports. Requires Node 20.10+ for development.
+- [Writing a Plugin](https://eveningwater.github.io/ew-color-picker/en/guide/plugin-dev): Build a custom ew-color-picker plugin with pluginName, applyOrder, constructor, mount points, events and TypeScript type augmentation.
 - [Plugin Architecture](https://eveningwater.github.io/ew-color-picker/en/)
 - [Alpha Plugin](https://eveningwater.github.io/ew-color-picker/en/plugins/alpha): The Alpha plugin adds a 0–1 opacity slider, outputs rgba colors, and supports horizontal/vertical orientation.
 - [Box Plugin](https://eveningwater.github.io/ew-color-picker/en/plugins/box): The Box plugin renders the trigger swatch, toggles the panel, and adapts icon color to background luminance.
@@ -60,7 +60,7 @@ Event-driven, plugin-based color picker with Hex / RGB / HSL support, alpha chan
 - [ColorMode Plugin](https://eveningwater.github.io/ew-color-picker/en/plugins/color-mode): Switch between Hex / RGB / HSL, rebuild channel inputs, and listen to the mode-change event.
 - [Console Plugin](https://eveningwater.github.io/ew-color-picker/en/plugins/console): The Console plugin prints a styled version banner once per page and can be omitted by registering plugins manually.
 - [Hue Plugin](https://eveningwater.github.io/ew-color-picker/en/plugins/hue): The Hue plugin renders a 0–360° slider with horizontal/vertical orientation, click, drag and runtime toggle.
-- [Plugin Overview](https://eveningwater.github.io/ew-color-picker/en/plugins/): The EW Color Picker plugin system: 11 built-in plugins, registration order, mount points and collaboration.
+- [Plugin Overview](https://eveningwater.github.io/ew-color-picker/en/plugins/): The ew-color-picker plugin system: 11 built-in plugins, registration order, mount points and collaboration.
 - [InputNumber Plugin](https://eveningwater.github.io/ew-color-picker/en/plugins/input-number): The InputNumber plugin and standalone component: options, methods, sizes and events for numeric color inputs.
 - [Input Plugin](https://eveningwater.github.io/ew-color-picker/en/plugins/input): The Input plugin provides a validated hex/rgb/hsl text field with debounce and disabled state.
 - [Panel Plugin](https://eveningwater.github.io/ew-color-picker/en/plugins/panel): The Panel plugin renders the saturation/value area with drag, touch support, auto placement and dynamic sizing.
