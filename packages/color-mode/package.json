@@ -25,6 +25,18 @@
     "color-mode",
     "plugin"
   ],
-  "author": "ew-color-picker",
-  "license": "MIT"
-} 
+  "author": "eveningwater(854806732@qq.com)",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eveningwater/ew-color-picker.git",
+    "directory": "packages/color-mode"
+  },
+  "homepage": "https://eveningwater.github.io/ew-color-picker/",
+  "bugs": {
+    "url": "https://github.com/eveningwater/ew-color-picker/issues"
+  }
+}
