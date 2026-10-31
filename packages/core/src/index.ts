@@ -156,16 +156,20 @@ export default class ewColorPicker extends EventEmitter {
   static use(ctor: ewColorPickerPluginCtor): typeof ewColorPicker {
     const { pluginName } = ctor;
 
-    // 检查插件是否已安装
-    if (ewColorPicker.plugins.some((plugin) => ctor === plugin.ctor)) {
-      return ewColorPicker;
-    }
-
     // 验证插件名称
     if (isUndefined(pluginName) || isNull(pluginName)) {
       warn(
         "[ewColorPicker warning]: Plugin Class must specify plugin's name in static property by 'pluginName' field."
       );
+      return ewColorPicker;
+    }
+
+    // 按 pluginName 去重，避免 HMR 或多入口重复注册同一个插件
+    if (
+      ewColorPicker.plugins.some(
+        (plugin) => plugin.name === pluginName || ctor === plugin.ctor
+      )
+    ) {
       return ewColorPicker;
     }
 
@@ -530,11 +534,18 @@ export default class ewColorPicker extends EventEmitter {
 
     // 实例化插件 - 自动启用所有已注册的插件
     sortedPlugins.forEach(({ ctor, name }) => {
-      tryErrorHandler(() => {
-        if (isFunction(ctor)) {
-          this.plugins[name] = new ctor(this);
+      tryErrorHandler(
+        () => {
+          if (isFunction(ctor)) {
+            this.plugins[name] = new ctor(this);
+          }
+        },
+        (error) => {
+          warn(
+            `[ewColorPicker warning]: Failed to apply plugin '${name}': ${error}`
+          );
         }
-      });
+      );
     });
   }
 
