@@ -1,5 +1,7 @@
 @import './variable.scss';
-.ew-input-number {
+// 类名前缀，可通过 @use ... with ($prefix: "my-") 自定义，需与 JS 侧 prefix 选项保持一致
+$prefix: "ew-" !default;
+.#{$prefix}input-number {
   display: flex;
   align-items: stretch;
   border: 1.5px solid #d9d9d9;
@@ -14,10 +16,10 @@
   transition: border-color 0.2s;
   height: 32px; /* 统一高度 */
 }
-.ew-input-number:focus-within {
+.#{$prefix}input-number:focus-within {
   border-color: #4096ef;
 }
-.ew-input-number__input {
+.#{$prefix}input-number__input {
   flex: 1;
   border: none;
   outline: none;
@@ -30,7 +32,7 @@
   color: #222;
   font-family: inherit;
 }
-.ew-input-number__buttons {
+.#{$prefix}input-number__buttons {
   width: 32px;
   min-width: 24px;
   display: flex;
@@ -41,7 +43,7 @@
   margin: 0;
   border-left: 1px solid #e5e6eb;
 }
-.ew-input-number__button {
+.#{$prefix}input-number__button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -56,13 +58,13 @@
   transition: background 0.2s;
   color: #666;
 }
-.ew-input-number__button--up {
+.#{$prefix}input-number__button--up {
   border-bottom: 1px solid #e5e6eb;
 }
-.ew-input-number__button:active {
+.#{$prefix}input-number__button:active {
   background: #f0f8ff;
 }
-.ew-input-number__icon {
+.#{$prefix}input-number__icon {
   width: 14px;
   height: 14px;
   display: block;

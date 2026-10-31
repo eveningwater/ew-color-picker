@@ -21,6 +21,17 @@ import '@ew-color-picker/style/dist/input-number.css'
 Importing only `index.css` leaves RGB/HSL numeric inputs unstyled.
 :::
 
+## Class prefix
+
+All class names start with `ew-` by default (e.g. `.ew-color-picker-box`, `.ew-input-number`). Change the JS-side prefix with the [`prefix`](./options#prefix) constructor option and mirror it in the stylesheet through the SCSS `$prefix` variable:
+
+```scss
+@use "@ew-color-picker/style/src/index.scss" with ($prefix: "my-");
+@use "@ew-color-picker/style/src/input-number.scss" with ($prefix: "my-");
+```
+
+The prebuilt `dist/*.css` files always use the `ew-` prefix; keep the default `prefix` option when using them.
+
 ## CSS variables
 
 | Variable | Set on | Default | Description |

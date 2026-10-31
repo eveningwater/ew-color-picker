@@ -1,4 +1,4 @@
-import { ApplyOrder, isUndefined } from "@ew-color-picker/utils";
+import { ApplyOrder, isUndefined, getPrefix } from "@ew-color-picker/utils";
 import InputNumber from "./input-number";
 import type { InputNumberOptions } from "./input-number";
 import ewColorPicker from "@ew-color-picker/core";
@@ -35,15 +35,17 @@ export class ewColorPickerInputNumberPlugin {
 
   run() {
     if (!this.ewColorPicker) return;
+    const prefix = getPrefix(this.ewColorPicker);
     const inputNumber = this.createInputNumber({
       value: 0,
       disabled: this.options.disabled || false,
+      prefix,
     });
     this.instances.set("default", inputNumber);
     const panelContainer = this.ewColorPicker.getMountPoint("panelContainer");
     if (panelContainer) {
       const bottomRow = panelContainer.querySelector(
-        ".ew-color-picker-bottom-row"
+        `.${prefix}color-picker-bottom-row`
       );
       if (bottomRow) {
         bottomRow.appendChild(inputNumber.getElement());

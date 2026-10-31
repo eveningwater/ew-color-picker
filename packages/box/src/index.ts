@@ -12,7 +12,8 @@ import {
   removeClass,
   warn,
   create,
-  $
+  $,
+  getPrefix
 } from "@ew-color-picker/utils";
 import { ewColorPickerOptions } from "@ew-color-picker/core";
 import { PartialBoxProps } from "./type";
@@ -27,6 +28,10 @@ export default class ewColorPickerBoxPlugin {
   
   // 内部状态控制
   private _hasBox: boolean = true;
+
+  private get prefix(): string {
+    return getPrefix(this.ewColorPicker);
+  }
   
   constructor(public ewColorPicker: ewColorPicker) {
     this.box = null;
@@ -132,10 +137,10 @@ export default class ewColorPickerBoxPlugin {
     }
     
     // 查找或创建盒子容器
-    this.box = $('.ew-color-picker-box', rootElement);
+    this.box = $(`.${this.prefix}color-picker-box`, rootElement);
     if (!this.box) {
       this.box = create("div");
-      addClass(this.box, "ew-color-picker-box");
+      addClass(this.box, `${this.prefix}color-picker-box`);
       if (className) addClass(this.box, className);
       if (style) setStyle(this.box, style);
       insertNode(rootElement, this.box);

@@ -25,6 +25,7 @@ import {
   isObject,
   isString,
   isHTMLElement,
+  DEFAULT_PREFIX,
 } from "@ew-color-picker/utils";
 import ewColorPickerMergeOptions from "./mergeOptions";
 import type {
@@ -306,10 +307,11 @@ export default class ewColorPicker extends EventEmitter {
   }
 
   private createMountPoints(): void {
+    const prefix = this.options.prefix || DEFAULT_PREFIX;
     // 创建主容器
     const rootElement = create("div");
     setAttr(rootElement, {
-      class: "ew-color-picker",
+      class: `${prefix}color-picker`,
       "data-uid": this._color_picker_uid,
     });
     insertNode(this.getContainer(), rootElement);
@@ -320,8 +322,8 @@ export default class ewColorPicker extends EventEmitter {
 
     // 创建面板容器（默认隐藏）
     const panelContainer = create("div");
-    setAttr(panelContainer, { class: "ew-color-picker-panel-container" });
-    addClass(panelContainer, "ew-color-picker-panel-container-hidden");
+    setAttr(panelContainer, { class: `${prefix}color-picker-panel-container` });
+    addClass(panelContainer, `${prefix}color-picker-panel-container-hidden`);
     insertNode(rootElement, panelContainer);
 
     // 设置挂载点
@@ -488,7 +490,8 @@ export default class ewColorPicker extends EventEmitter {
     if (panelContainer && panelContainer.contains(target)) return;
 
     // 如果点击的是颜色盒子，不关闭（避免与盒子切换逻辑冲突）
-    const colorBox = rootElement?.querySelector(".ew-color-picker-box");
+    const prefix = this.options.prefix || DEFAULT_PREFIX;
+    const colorBox = rootElement?.querySelector(`.${prefix}color-picker-box`);
     if (colorBox && colorBox.contains(target)) return;
 
     // 点击面板和盒子之外的区域，关闭面板

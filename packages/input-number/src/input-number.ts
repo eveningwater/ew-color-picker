@@ -12,6 +12,7 @@ import {
   removeElement,
   insertNode,
   isFunction,
+  DEFAULT_PREFIX,
 } from "@ew-color-picker/utils";
 import { upArrowIcon, downArrowIcon } from "@ew-color-picker/utils";
 import ewColorPicker from "@ew-color-picker/core";
@@ -25,6 +26,7 @@ export interface InputNumberOptions {
   disabled?: boolean;
   placeholder?: string;
   size?: "small" | "default" | "large";
+  prefix?: string;
   onChange?: (value: number) => void;
   onBlur?: (value: number) => void;
   onFocus?: (event: FocusEvent) => void;
@@ -38,6 +40,10 @@ export default class InputNumber {
   private downButton: HTMLButtonElement | null;
   private currentValue: number;
   private isFocused: boolean = false;
+
+  private get prefix(): string {
+    return this.options.prefix || DEFAULT_PREFIX;
+  }
 
   // 防抖处理输入事件
   private debouncedOnChange: (value: number) => void;
@@ -56,6 +62,7 @@ export default class InputNumber {
       disabled: false,
       placeholder: "",
       size: "default",
+      prefix: DEFAULT_PREFIX,
       onChange: () => {},
       onBlur: () => {},
       onFocus: () => {},
@@ -75,14 +82,15 @@ export default class InputNumber {
   }
 
   private createElements() {
+    const p = this.prefix;
     // 创建容器
     this.container = create("div");
-    addClass(this.container, "ew-input-number");
-    addClass(this.container, `ew-input-number--${this.options.size}`);
+    addClass(this.container, `${p}input-number`);
+    addClass(this.container, `${p}input-number--${this.options.size}`);
 
     // 创建输入框
     this.input = create<HTMLInputElement>("input");
-    addClass(this.input, "ew-input-number__input");
+    addClass(this.input, `${p}input-number__input`);
     setAttr(this.input, {
       type: "text",
       inputmode: "decimal",
@@ -91,21 +99,21 @@ export default class InputNumber {
 
     // 创建按钮容器
     const buttonContainer = create("div");
-    addClass(buttonContainer, "ew-input-number__buttons");
+    addClass(buttonContainer, `${p}input-number__buttons`);
 
     // 创建上按钮
     this.upButton = create<HTMLButtonElement>("button");
-    addClass(this.upButton, "ew-input-number__button");
-    addClass(this.upButton, "ew-input-number__button--up");
+    addClass(this.upButton, `${p}input-number__button`);
+    addClass(this.upButton, `${p}input-number__button--up`);
     setAttr(this.upButton, { type: "button" });
-    this.upButton.innerHTML = upArrowIcon();
+    this.upButton.innerHTML = upArrowIcon(undefined, undefined, p);
 
     // 创建下按钮
     this.downButton = create<HTMLButtonElement>("button");
-    addClass(this.downButton, "ew-input-number__button");
-    addClass(this.downButton, "ew-input-number__button--down");
+    addClass(this.downButton, `${p}input-number__button`);
+    addClass(this.downButton, `${p}input-number__button--down`);
     setAttr(this.downButton, { type: "button" });
-    this.downButton.innerHTML = downArrowIcon();
+    this.downButton.innerHTML = downArrowIcon(undefined, undefined, p);
 
     // 组装DOM结构
     insertNode(buttonContainer, this.upButton);
@@ -161,7 +169,7 @@ export default class InputNumber {
 
   private handleBlur(event: FocusEvent) {
     this.isFocused = false;
-    this.removeClass(this.container!, "ew-input-number--focused");
+    this.removeClass(this.container!, `${this.prefix}input-number--focused`);
 
     // 应用精度限制和边界检查
     this.updateValue(this.currentValue, false);
@@ -172,7 +180,7 @@ export default class InputNumber {
 
   private handleFocus(event: FocusEvent) {
     this.isFocused = true;
-    this.addClass(this.container!, "ew-input-number--focused");
+    this.addClass(this.container!, `${this.prefix}input-number--focused`);
 
     // 触发focus回调
     this.options.onFocus!(event);
@@ -283,12 +291,12 @@ export default class InputNumber {
     this.options.disabled = disabled;
 
     if (disabled) {
-      this.addClass(this.container!, "ew-input-number--disabled");
+      this.addClass(this.container!, `${this.prefix}input-number--disabled`);
       setAttr(this.input!, { disabled: "true" });
       setAttr(this.upButton!, { disabled: "true" });
       setAttr(this.downButton!, { disabled: "true" });
     } else {
-      this.removeClass(this.container!, "ew-input-number--disabled");
+      this.removeClass(this.container!, `${this.prefix}input-number--disabled`);
       setAttr(this.input!, { disabled: "false" });
       setAttr(this.upButton!, { disabled: "false" });
       setAttr(this.downButton!, { disabled: "false" });

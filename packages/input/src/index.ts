@@ -16,6 +16,7 @@ import {
   extend,
   off,
   removeElement,
+  getPrefix,
 } from "@ew-color-picker/utils";
 import { 
   colorRgbaToHsva, 
@@ -41,6 +42,10 @@ export default class ewColorPickerInputPlugin {
   
   // 内部状态控制
   private _hasInput: boolean = true;
+
+  private get prefix(): string {
+    return getPrefix(this.ewColorPicker);
+  }
   
   // 防抖处理输入事件
   private debouncedOnInputColor: (value: string) => void;
@@ -122,21 +127,21 @@ export default class ewColorPickerInputPlugin {
     }
     
     // 查找底部行容器
-    const bottomRow = $('.ew-color-picker-bottom-row', panelContainer);
+    const bottomRow = $(`.${this.prefix}color-picker-bottom-row`, panelContainer);
     if (!bottomRow) {
       warn('[ewColorPicker] Bottom row container not found');
       return;
     }
     
     // 查找按钮组容器（清空和确认按钮的父元素）
-    let btnGroup = $('.ew-color-picker-drop-btn-group', bottomRow);
+    let btnGroup = $(`.${this.prefix}color-picker-drop-btn-group`, bottomRow);
     
     // 查找或创建 input 容器
-    let inputContainer = $('.ew-color-picker-input-container', bottomRow);
+    let inputContainer = $(`.${this.prefix}color-picker-input-container`, bottomRow);
     if (!inputContainer) {
       inputContainer = create('div');
-      addClass(inputContainer, 'ew-color-picker-input-container');
-      addClass(inputContainer, 'ew-color-picker-input-container-flex');
+      addClass(inputContainer, `${this.prefix}color-picker-input-container`);
+      addClass(inputContainer, `${this.prefix}color-picker-input-container-flex`);
       
       // 如果存在按钮组，插入到按钮组之前
       if (btnGroup && btnGroup.parentNode) {
@@ -148,14 +153,14 @@ export default class ewColorPickerInputPlugin {
     }
     
     // 查找已存在的 input 元素，避免重复插入
-    this.input = $('input.ew-color-picker-input', inputContainer) as HTMLInputElement;
+    this.input = $(`input.${this.prefix}color-picker-input`, inputContainer) as HTMLInputElement;
     if (!this.input) {
       this.input = create<HTMLInputElement>('input');
       if (this.input) {
-        addClass(this.input, 'ew-color-picker-input');
+        addClass(this.input, `${this.prefix}color-picker-input`);
         setAttr(this.input, {
           type: 'text',
-          name: 'ew-color-picker-input',
+          name: `${this.prefix}color-picker-input`,
           placeholder: '请输入颜色值'
         });
         
@@ -291,13 +296,13 @@ export default class ewColorPickerInputPlugin {
 
     if (disabled) {
       this.input.disabled = true;
-      if (!hasClass(this.input, 'ew-input-disabled')) {
-        addClass(this.input, 'ew-input-disabled');
+      if (!hasClass(this.input, `${this.prefix}input-disabled`)) {
+        addClass(this.input, `${this.prefix}input-disabled`);
       }
     } else {
       this.input.disabled = false;
-      if (hasClass(this.input, 'ew-input-disabled')) {
-        removeClass(this.input, 'ew-input-disabled');
+      if (hasClass(this.input, `${this.prefix}input-disabled`)) {
+        removeClass(this.input, `${this.prefix}input-disabled`);
       }
     }
   }

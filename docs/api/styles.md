@@ -23,6 +23,17 @@ import '@ew-color-picker/style/dist/input-number.css'
 两个文件都需要引入。只引入 `index.css` 时，RGB / HSL 模式下的数字输入框会丢失样式。
 :::
 
+## 类名前缀
+
+所有类名默认以 `ew-` 开头（如 `.ew-color-picker-box`、`.ew-input-number`）。可通过构造选项 [`prefix`](./options#prefix) 修改 JS 侧前缀，并通过 SCSS 的 `$prefix` 变量同步修改样式侧前缀：
+
+```scss
+@use "@ew-color-picker/style/src/index.scss" with ($prefix: "my-");
+@use "@ew-color-picker/style/src/input-number.scss" with ($prefix: "my-");
+```
+
+预构建的 `dist/*.css` 固定为 `ew-` 前缀；使用预构建产物时请保持默认的 `prefix` 选项。
+
 其它可用产物：`index.min.css`、`color.css`、`extend.css`、`variable.css`（以及对应 `.min.css`）。
 
 ## CSS 变量

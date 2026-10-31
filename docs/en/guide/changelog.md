@@ -19,6 +19,7 @@ description: Release notes for ew-color-picker, including fixes, features and do
 ### Features
 
 - New `appendTo` option: mount the panel container into `document.body` or any container to avoid `overflow` clipping by dialogs, drawers and scroll containers. The panel then uses viewport-relative positioning, still honors `panelPlacement` with boundary flipping, and re-positions on scroll or resize
+- New `prefix` option: customize the prefix of every CSS class name (default `ew-`) to avoid style collisions when embedding the picker in another library. The SCSS build exposes a matching `$prefix` variable that must stay in sync with the JS option
 
 ### Documentation
 
@@ -26,6 +27,7 @@ description: Release notes for ew-color-picker, including fixes, features and do
 - Removed the non-existent nested `ewColorPickerBox` config in favor of top-level options
 - Corrected the prerequisites of `autoPanelPosition`
 - Added `appendTo` documentation (Chinese and English)
+- Added `prefix` documentation (Chinese and English) with a custom SCSS build example
 
 ## 2.0.0
 

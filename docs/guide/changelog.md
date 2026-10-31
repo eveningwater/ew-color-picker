@@ -19,6 +19,7 @@ description: ew-color-picker 各版本的变更记录，含修复、新增与文
 ### 新增
 
 - `appendTo` 选项：把面板容器挂载到 `document.body` 或任意容器，避免被弹窗、抽屉、滚动容器的 `overflow` 裁剪。启用后面板改为相对视口定位，仍按 `panelPlacement` 计算并做边界翻转，滚动或窗口尺寸变化时自动重算
+- `prefix` 选项：自定义全部 CSS 类名前缀（默认 `ew-`），方便嵌入其他库时避免样式冲突。SCSS 同步提供 `$prefix` 构建变量，需与 JS 选项保持一致
 
 ### 文档
 
@@ -26,6 +27,7 @@ description: ew-color-picker 各版本的变更记录，含修复、新增与文
 - 移除不存在的 `ewColorPickerBox` 嵌套配置写法，统一为顶层选项
 - 修正 `autoPanelPosition` 的生效前提说明
 - 新增 `appendTo` 选项说明（中英文）
+- 新增 `prefix` 选项说明（中英文），含 SCSS 自定义编译示例
 
 ## 2.0.0
 

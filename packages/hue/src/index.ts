@@ -14,6 +14,7 @@ import {
   throttle,
   getRect,
   removeElement,
+  getPrefix,
 } from "@ew-color-picker/utils";
 import { colorRgbaToHsva, colorHsvaToRgba } from "@ew-color-picker/utils";
 import ewColorPicker, { ewColorPickerOptions } from "@ew-color-picker/core";
@@ -35,6 +36,10 @@ export default class ewColorPickerHuePlugin {
   private throttledUpdateHue: (hue: number) => void;
   // 内部状态控制
   private _hasHue: boolean = true;
+
+  private get prefix(): string {
+    return getPrefix(this.ewColorPicker);
+  }
 
   constructor(public ewColorPicker: ewColorPicker) {
     this.handleOptions();
@@ -106,9 +111,10 @@ export default class ewColorPickerHuePlugin {
       warn("[ewColorPicker] Panel container not found");
       return;
     }
+    const p = this.prefix;
     // 移除旧的 hue 条
     const oldHue = $(
-      ".ew-color-picker-slider.ew-color-picker-is-vertical, .ew-color-picker-slider.ew-color-picker-is-horizontal",
+      `.${p}color-picker-slider.${p}color-picker-is-vertical, .${p}color-picker-slider.${p}color-picker-is-horizontal`,
       panelContainer
     );
     if (oldHue) removeElement(oldHue);
@@ -116,21 +122,21 @@ export default class ewColorPickerHuePlugin {
     const hueSlider = create("div");
     addClass(
       hueSlider,
-      "ew-color-picker-slider " +
+      `${p}color-picker-slider ` +
         (this.isHorizontal
-          ? "ew-color-picker-is-horizontal"
-          : "ew-color-picker-is-vertical")
+          ? `${p}color-picker-is-horizontal`
+          : `${p}color-picker-is-vertical`)
     );
     this.hueBar = create("div");
-    addClass(this.hueBar, "ew-color-picker-slider-bar");
+    addClass(this.hueBar, `${p}color-picker-slider-bar`);
     this.hueThumb = create("div");
-    addClass(this.hueThumb, "ew-color-picker-slider-thumb");
+    addClass(this.hueThumb, `${p}color-picker-slider-thumb`);
     insertNode(this.hueBar, this.hueThumb);
     insertNode(hueSlider, this.hueBar);
     // 根据方向决定插入位置
     if (this.isHorizontal) {
       // 水平方向：插入到 bottom-row 之前（底部）
-      const bottomRow = $(".ew-color-picker-bottom-row", panelContainer);
+      const bottomRow = $(`.${p}color-picker-bottom-row`, panelContainer);
       if (bottomRow && bottomRow.parentNode) {
         bottomRow.parentNode.insertBefore(hueSlider, bottomRow);
       } else {
@@ -138,7 +144,7 @@ export default class ewColorPickerHuePlugin {
       }
     } else {
       // 垂直方向：插入到面板之后（顶部）
-      const panel = $(".ew-color-picker-panel", panelContainer);
+      const panel = $(`.${p}color-picker-panel`, panelContainer);
       if (panel && panel.parentNode) {
         panel.parentNode.insertBefore(hueSlider, panel.nextSibling);
       } else {

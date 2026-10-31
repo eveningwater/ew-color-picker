@@ -18,6 +18,7 @@ import {
   colorRgbaToHsva,
   colorHsvaToRgba,
   getStyle,
+  getPrefix,
 } from "@ew-color-picker/utils";
 
 import { ewColorPickerOptions } from "@ew-color-picker/core";
@@ -64,6 +65,10 @@ export default class ewColorPickerPanelPlugin {
 
   // 面板是否被挂载到外部容器（appendTo）
   isPanelAppended: boolean = false;
+
+  private get prefix(): string {
+    return getPrefix(this.ewColorPicker);
+  }
 
   private handleToggle = (isOpen: boolean) => {
     if (!this.isPanelAppended) return;
@@ -151,7 +156,7 @@ export default class ewColorPickerPanelPlugin {
       return;
     }
 
-    const oldPanel = $(".ew-color-picker-panel", panelContainer);
+    const oldPanel = $(`.${this.prefix}color-picker-panel`, panelContainer);
 
     // 动态计算面板宽度
     let panelWidth = 285;
@@ -167,8 +172,8 @@ export default class ewColorPickerPanelPlugin {
     }
     // 如果都是垂直方向，保持285px宽度
     this.panel = create("div");
-    addClass(this.panel, "ew-color-picker-panel");
-    addClass(this.panel, "ew-color-picker-panel-dynamic-size");
+    addClass(this.panel, `${this.prefix}color-picker-panel`);
+    addClass(this.panel, `${this.prefix}color-picker-panel-dynamic-size`);
 
     this.panelWidth = panelWidth;
     this.panelHeight = 180;
@@ -183,21 +188,21 @@ export default class ewColorPickerPanelPlugin {
 
     // 创建颜色面板
     this.whitePanel = create("div");
-    addClass(this.whitePanel, "ew-color-picker-white-panel");
+    addClass(this.whitePanel, `${this.prefix}color-picker-white-panel`);
     insertNode(this.panel, this.whitePanel);
 
     this.blackPanel = create("div");
-    addClass(this.blackPanel, "ew-color-picker-black-panel");
+    addClass(this.blackPanel, `${this.prefix}color-picker-black-panel`);
     insertNode(this.panel, this.blackPanel);
 
     // 创建光标
     this.cursor = create("div");
-    addClass(this.cursor, "ew-color-picker-panel-cursor");
+    addClass(this.cursor, `${this.prefix}color-picker-panel-cursor`);
     insertNode(this.panel, this.cursor);
 
     // 创建底部行容器
     const bottomRow = create("div");
-    addClass(bottomRow, "ew-color-picker-bottom-row");
+    addClass(bottomRow, `${this.prefix}color-picker-bottom-row`);
     insertNode(panelContainer, bottomRow);
 
     // 使用 setTimeout 确保容器完全渲染后再计算尺寸
@@ -562,7 +567,7 @@ export default class ewColorPickerPanelPlugin {
     if (!autoPanelPosition || !ewColorPickerBox) return;
 
     const rootElement = this.ewColorPicker.getMountPoint("root");
-    const colorBox = $(".ew-color-picker-box", rootElement);
+    const colorBox = $(`.${this.prefix}color-picker-box`, rootElement);
     if (!rootElement || !colorBox) return;
 
     // 重新计算容器尺寸
@@ -621,7 +626,7 @@ export default class ewColorPickerPanelPlugin {
     const rootElement = this.ewColorPicker.getMountPoint("root");
     if (!panelContainer || !rootElement) return;
 
-    const colorBox = $(".ew-color-picker-box", rootElement) || rootElement;
+    const colorBox = $(`.${this.prefix}color-picker-box`, rootElement) || rootElement;
     const { offsetWidth: boxWidth, offsetHeight: boxHeight } =
       getElementSize(colorBox);
     const [position = "bottom", align = "center"] = (

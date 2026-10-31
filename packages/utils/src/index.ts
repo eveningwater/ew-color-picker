@@ -11,6 +11,7 @@ export * from "./event";
 export * from "./color";
 export * from "./animation";
 export * from "./icon";
+export * from "./prefix";
 export * from "./consolePlugin";
 export { default as Console } from "./consolePlugin";
 

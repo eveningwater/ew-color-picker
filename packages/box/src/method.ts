@@ -1,4 +1,4 @@
-import { isNumber, isShallowObject, colorToRgba, parseRgbaString } from "@ew-color-picker/utils";
+import { isNumber, isShallowObject, colorToRgba, parseRgbaString, DEFAULT_PREFIX } from "@ew-color-picker/utils";
 import { arrowIcon, closeIcon } from "@ew-color-picker/utils";
 import { PartialBoxProps } from "./type";
 
@@ -20,15 +20,15 @@ export const ICON_SIZE_MAP: Record<string, number> = {
   'large': 20   // 40px * 0.5
 };
 
-export const getBoxChildren = (hasColor: boolean, options: PartialBoxProps & { size?: any }) => {
-  const { boxNoColorIcon = "", boxHasColorIcon = "", size } = options;
+export const getBoxChildren = (hasColor: boolean, options: PartialBoxProps & { size?: any; prefix?: string }) => {
+  const { boxNoColorIcon = "", boxHasColorIcon = "", size, prefix = DEFAULT_PREFIX } = options;
   
   // 计算图标大小
   const iconSize = calculateIconSize(size);
   
   return hasColor
-    ? boxHasColorIcon || arrowIcon("ew-color-picker-box-arrow-icon", iconSize)
-    : boxNoColorIcon || closeIcon("ew-color-picker-box-close-icon", iconSize);
+    ? boxHasColorIcon || arrowIcon(`${prefix}color-picker-box-arrow-icon`, iconSize, prefix)
+    : boxNoColorIcon || closeIcon(`${prefix}color-picker-box-close-icon`, iconSize, prefix);
 };
 
 // 根据背景色亮度选择对比度更高的图标颜色

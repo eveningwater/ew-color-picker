@@ -9,8 +9,9 @@ const injectedStyles = new Map<string, HTMLStyleElement>();
  * 注入样式到页面
  * @param styles 样式内容
  * @param id 样式元素的ID（可选）
+ * @param prefix 类名前缀（默认 ew-）
  */
-export function injectStyles(styles?: string, id?: string): void {
+export function injectStyles(styles?: string, id?: string, prefix = 'ew-'): void {
   // 如果提供了ID，使用ID管理样式
   if (id) {
     // 检查是否已经存在相同ID的样式
@@ -37,7 +38,7 @@ export function injectStyles(styles?: string, id?: string): void {
   // 如果没有提供样式，使用默认样式
   if (!styles) {
     // 这里可以导入默认样式，或者使用内联样式
-    styleContent = `
+    const rawStyles = `
       /* ew-color-picker 默认样式 */
       .ew-color-picker {
         display: inline-block;
@@ -284,6 +285,9 @@ export function injectStyles(styles?: string, id?: string): void {
         transform: translate(-50%, -50%);
       }
     `;
+    styleContent = rawStyles
+      .replace(/\.ew-color-picker-/g, () => `.${prefix}color-picker-`)
+      .replace(/\.ew-color-picker(?![-\w])/g, () => `.${prefix}color-picker`);
   } else {
     styleContent = styles;
   }
