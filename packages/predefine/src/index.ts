@@ -16,7 +16,8 @@ import {
   insertNode,
   ApplyOrder,
   hasClass,
-  isStrictColorFormat // 新增严格颜色格式校验
+  isStrictColorFormat, // 新增严格颜色格式校验
+  getPrefix
 } from "@ew-color-picker/utils";
 import { colorRgbaToHsva, colorToRgba, isValidColor, isAlphaColor } from "@ew-color-picker/utils";
 import { ewColorPickerOptions } from "@ew-color-picker/core";
@@ -45,6 +46,10 @@ export default class ewColorPickerPredefinePlugin {
   private changeHandler: ((color: string) => void) | null = null;
   // 标记是否已绑定事件
   private isEventBound: boolean = false;
+
+  private get prefix(): string {
+    return getPrefix(this.ewColorPicker);
+  }
 
   constructor(public ewColorPicker: ewColorPicker) {
     this.handleOptions();
@@ -98,10 +103,10 @@ export default class ewColorPickerPredefinePlugin {
     }
     
     // 查找或创建预定义色块容器
-    this.container = $('.ew-color-picker-predefine-container', panelContainer);
+    this.container = $(`.${this.prefix}color-picker-predefine-container`, panelContainer);
     if (!this.container) {
       this.container = create('div');
-      addClass(this.container, 'ew-color-picker-predefine-container');
+      addClass(this.container, `${this.prefix}color-picker-predefine-container`);
     }
     
     // 清空旧内容
@@ -116,9 +121,9 @@ export default class ewColorPickerPredefinePlugin {
       validColors.forEach((colorData) => {
         const { color } = this.parseColorData(colorData);
         const item = create('div');
-        addClass(item, 'ew-color-picker-predefine-color');
+        addClass(item, `${this.prefix}color-picker-predefine-color`);
         const colorItem = create('div');
-        addClass(colorItem, 'ew-color-picker-predefine-color-item');
+        addClass(colorItem, `${this.prefix}color-picker-predefine-color-item`);
         setStyle(colorItem, 'backgroundColor', color);
         insertNode(item, colorItem);
         insertNode(this.container!, item);
@@ -180,22 +185,23 @@ export default class ewColorPickerPredefinePlugin {
   private ensureContainerAtCorrectPosition(panelContainer: HTMLElement) {
     if (!this.container) return;
 
+    const p = this.prefix;
     // 优先级1: mode-container
-    const modeContainer = $('.ew-color-picker-mode-container', panelContainer);
+    const modeContainer = $(`.${p}color-picker-mode-container`, panelContainer);
     if (modeContainer) {
       panelContainer.insertBefore(this.container, modeContainer);
       return;
     }
 
     // 优先级2: bottom-row
-    const bottomRow = $('.ew-color-picker-bottom-row', panelContainer);
+    const bottomRow = $(`.${p}color-picker-bottom-row`, panelContainer);
     if (bottomRow) {
       panelContainer.insertBefore(this.container, bottomRow);
       return;
     }
 
     // 优先级3: panel 之后
-    const panel = $('.ew-color-picker-panel', panelContainer);
+    const panel = $(`.${p}color-picker-panel`, panelContainer);
     if (panel && panel.nextSibling) {
       panelContainer.insertBefore(this.container, panel.nextSibling);
       return;
@@ -217,7 +223,7 @@ export default class ewColorPickerPredefinePlugin {
       const { color, disabled } = this.parseColorData(colorData);
 
       if (disabled) {
-        addClass(item, 'ew-color-picker-predefine-color-disabled');
+        addClass(item, `${this.prefix}color-picker-predefine-color-disabled`);
         return;
       }
 
@@ -228,22 +234,23 @@ export default class ewColorPickerPredefinePlugin {
 
       // 失焦事件
       on(item, 'blur', (event: Event) => {
-        removeClass(event.target as HTMLElement, 'ew-color-picker-predefine-color-active');
+        removeClass(event.target as HTMLElement, `${this.prefix}color-picker-predefine-color-active`);
       });
     });
   }
 
   onPredefineColorClick(event: Event, color: string) {
+    const p = this.prefix;
     const clickTarget = event.target as HTMLElement;
     let target = clickTarget;
 
     // 如果点击的是子元素，找到父级的预定义颜色容器
-    if (!hasClass(target, 'ew-color-picker-predefine-color')) {
-      target = target.closest('.ew-color-picker-predefine-color') as HTMLElement || target;
+    if (!hasClass(target, `${p}color-picker-predefine-color`)) {
+      target = target.closest(`.${p}color-picker-predefine-color`) as HTMLElement || target;
     }
     
     // 检查是否被禁用
-    if (hasClass(target, 'ew-color-picker-predefine-color-disabled')) {
+    if (hasClass(target, `${p}color-picker-predefine-color-disabled`)) {
       return; // 如果被禁用，直接返回，不执行任何操作
     }
     
@@ -255,12 +262,12 @@ export default class ewColorPickerPredefinePlugin {
     }
     
     // 添加激活状态
-    addClass(target, 'ew-color-picker-predefine-color-active');
+    addClass(target, `${p}color-picker-predefine-color-active`);
     
     // 移除其他项的激活状态
     this.predefineItems.forEach(item => {
       if (item !== target) {
-        removeClass(item, 'ew-color-picker-predefine-color-active');
+        removeClass(item, `${p}color-picker-predefine-color-active`);
       }
     });
 
@@ -297,9 +304,9 @@ export default class ewColorPickerPredefinePlugin {
   setDisabled(index: number, disabled: boolean) {
     if (this.predefineItems[index]) {
       if (disabled) {
-        addClass(this.predefineItems[index], 'ew-color-picker-predefine-color-disabled');
+        addClass(this.predefineItems[index], `${this.prefix}color-picker-predefine-color-disabled`);
       } else {
-        removeClass(this.predefineItems[index], 'ew-color-picker-predefine-color-disabled');
+        removeClass(this.predefineItems[index], `${this.prefix}color-picker-predefine-color-disabled`);
       }
     }
   }
@@ -343,6 +350,7 @@ export default class ewColorPickerPredefinePlugin {
     
     // 将当前颜色转换为标准格式进行比较
     const currentRgba = colorToRgba(color);
+    const p = this.prefix;
     
     this.predefineItems.forEach((item, index) => {
       const validColors = this.getValidPredefineColors();
@@ -353,9 +361,9 @@ export default class ewColorPickerPredefinePlugin {
       const itemRgba = colorToRgba(itemColor);
       
       if (currentRgba === itemRgba) {
-        addClass(item, 'ew-color-picker-predefine-color-active');
+        addClass(item, `${p}color-picker-predefine-color-active`);
       } else {
-        removeClass(item, 'ew-color-picker-predefine-color-active');
+        removeClass(item, `${p}color-picker-predefine-color-active`);
       }
     });
   }

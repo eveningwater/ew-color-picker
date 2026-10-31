@@ -36,6 +36,7 @@ new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
 | `autoPanelPosition` | `boolean` | `false` | 面板自动定位（需注册 Box 插件且未关闭 `hasBox`） |
 | `panelPlacement` | 见下文 | `'bottom'` | 面板相对盒子的位置 |
 | `appendTo` | `string \| HTMLElement` | `undefined` | 面板容器挂载目标（弹窗 / 滚动容器场景用 `document.body`） |
+| `prefix` | `string` | `'ew-'` | CSS 类名前缀，用于避免与其他库的样式冲突 |
 
 ### 显示开关
 
@@ -244,6 +245,29 @@ new ewColorPicker({
 ```
 
 > 面板容器会脱离实例根节点，仍可通过 `picker.getMountPoint('panelContainer')` 获取；点击面板内部不会触发「点击外部关闭」。
+
+## prefix
+
+- **类型**：`string`
+- **默认值**：`'ew-'`
+
+设置所有 CSS 类名的前缀，默认生成 `.ew-color-picker-*` 这类类名。把组件嵌入到其他库或已有样式体系时，可以改成自定义前缀以避免样式冲突。
+
+```ts
+new ewColorPicker({ el: '#picker', prefix: 'my-' })
+```
+
+> JS 选项的前缀必须与 CSS 构建时使用的前缀一致，否则类名对不上、样式不生效。
+
+若使用源码中的 SCSS 构建样式，通过 `$prefix` 覆盖默认值：
+
+```scss
+@use "@ew-color-picker/style/src/index.scss" with (
+  $prefix: "my-"
+);
+```
+
+直接使用预构建的 `dist/index.css` 时，该类文件仍是 `ew-` 前缀，此时请不要修改 `prefix` 选项。
 
 ## panelPlacement
 

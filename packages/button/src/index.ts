@@ -17,6 +17,7 @@ import {
   debounce,
   colorToRgba,
   colorRgbaToHsva,
+  getPrefix,
 } from "@ew-color-picker/utils";
 import { ewColorPickerOptions } from "@ew-color-picker/core";
 
@@ -40,6 +41,10 @@ export default class ewColorPickerButtonPlugin {
   // 内部状态控制
   private _hasClear: boolean = true;
   private _hasSure: boolean = true;
+
+  private get prefix(): string {
+    return getPrefix(this.ewColorPicker);
+  }
   
   // 防抖处理按钮点击事件
   private debouncedOnClearColor: () => void;
@@ -139,17 +144,17 @@ export default class ewColorPickerButtonPlugin {
     }
     
     // 查找底部行容器
-    const bottomRow = $('.ew-color-picker-bottom-row', panelContainer);
+    const bottomRow = $(`.${this.prefix}color-picker-bottom-row`, panelContainer);
     if (!bottomRow) {
       warn('[ewColorPicker warning]: Bottom row container not found');
       return;
     }
     
     // 查找或创建按钮容器
-    let btnGroup = $('.ew-color-picker-drop-btn-group', bottomRow);
+    let btnGroup = $(`.${this.prefix}color-picker-drop-btn-group`, bottomRow);
     if (!btnGroup) {
       btnGroup = create('div');
-      addClass(btnGroup, 'ew-color-picker-drop-btn-group');
+      addClass(btnGroup, `${this.prefix}color-picker-drop-btn-group`);
       // 插入到 bottomRow 内部
       insertNode(bottomRow, btnGroup);
     }
@@ -160,7 +165,7 @@ export default class ewColorPickerButtonPlugin {
     // 渲染清空按钮
     if (this.hasClear) {
       this.clearButton = create<HTMLButtonElement>('button');
-      addClass(this.clearButton, 'ew-color-picker-clear-btn ew-color-picker-drop-btn');
+      addClass(this.clearButton, `${this.prefix}color-picker-clear-btn ${this.prefix}color-picker-drop-btn`);
       this.setClearText(this.options.clearText || '清空');
       insertNode(btnGroup, this.clearButton);
     }
@@ -168,7 +173,7 @@ export default class ewColorPickerButtonPlugin {
     // 渲染确认按钮
     if (this.hasSure) {
       this.sureButton = create<HTMLButtonElement>('button');
-      addClass(this.sureButton, 'ew-color-picker-sure-btn ew-color-picker-drop-btn');
+      addClass(this.sureButton, `${this.prefix}color-picker-sure-btn ${this.prefix}color-picker-drop-btn`);
       this.setSureText(this.options.sureText || '确认');
       insertNode(btnGroup, this.sureButton);
     }
@@ -281,30 +286,31 @@ export default class ewColorPickerButtonPlugin {
 
   // 根据颜色模式调整按钮组样式
   adjustButtonGroupStyle() {
+    const p = this.prefix;
     const panelContainer = this.ewColorPicker.getMountPoint('panelContainer');
     if (!panelContainer) return;
     
-    const bottomRow = $('.ew-color-picker-bottom-row', panelContainer);
+    const bottomRow = $(`.${p}color-picker-bottom-row`, panelContainer);
     if (!bottomRow) return;
     
-    const btnGroup = $('.ew-color-picker-drop-btn-group', bottomRow);
+    const btnGroup = $(`.${p}color-picker-drop-btn-group`, bottomRow);
     if (!btnGroup) return;
     
     // 检查当前颜色模式
-    const hasMultipleInputs = $('.ew-color-picker-inputs-group', panelContainer) !== null;
+    const hasMultipleInputs = $(`.${p}color-picker-inputs-group`, panelContainer) !== null;
     
     if (hasMultipleInputs) {
       // HSL 或 RGB 模式：按钮组占据一行并居中
-      addClass(btnGroup, 'ew-color-picker-drop-btn-group-multi');
-      removeClass(btnGroup, 'ew-color-picker-drop-btn-group-single');
-      addClass(bottomRow, 'ew-color-picker-bottom-row-multi');
-      removeClass(bottomRow, 'ew-color-picker-bottom-row-single');
+      addClass(btnGroup, `${p}color-picker-drop-btn-group-multi`);
+      removeClass(btnGroup, `${p}color-picker-drop-btn-group-single`);
+      addClass(bottomRow, `${p}color-picker-bottom-row-multi`);
+      removeClass(bottomRow, `${p}color-picker-bottom-row-single`);
     } else {
       // HEX 模式：按钮组正常布局
-      addClass(btnGroup, 'ew-color-picker-drop-btn-group-single');
-      removeClass(btnGroup, 'ew-color-picker-drop-btn-group-multi');
-      addClass(bottomRow, 'ew-color-picker-bottom-row-single');
-      removeClass(bottomRow, 'ew-color-picker-bottom-row-multi');
+      addClass(btnGroup, `${p}color-picker-drop-btn-group-single`);
+      removeClass(btnGroup, `${p}color-picker-drop-btn-group-multi`);
+      addClass(bottomRow, `${p}color-picker-bottom-row-single`);
+      removeClass(bottomRow, `${p}color-picker-bottom-row-multi`);
     }
   }
 

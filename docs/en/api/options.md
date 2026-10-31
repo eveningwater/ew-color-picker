@@ -12,7 +12,7 @@ Every option below can be passed to the constructor. Defaults come from `default
 | Group | Options |
 | --- | --- |
 | Core | `el`, `disabled`, `defaultColor`, `size`, `predefineColor`, `isClickOutside` |
-| Layout | `hueDirection`, `alphaDirection`, `autoPanelPosition`, `panelPlacement`, `appendTo` |
+| Layout | `hueDirection`, `alphaDirection`, `autoPanelPosition`, `panelPlacement`, `appendTo`, `prefix` |
 | Labels | `clearText`, `sureText` |
 | Animation | `togglePickerAnimation`, `pickerAnimationTime` |
 | Plugin switches | `hasBox`, `hasPanel`, `hasInput`, `hasClear`, `hasSure`, `hue`, `alpha`, `showButton`, `showColorMode`, `showInputNumber` |
@@ -115,6 +115,28 @@ new ewColorPicker({
   panelPlacement: 'bottom',
 })
 ```
+
+### prefix
+
+| Type | Default | Description |
+| --- | --- | --- |
+| `string` | `'ew-'` | Prefix of every generated CSS class name. Override it when embedding the picker in another library to avoid style collisions. |
+
+```ts
+new ewColorPicker({ el: '#picker', prefix: 'my-' })
+```
+
+> The JS option must match the prefix used when compiling the styles, otherwise the class names won't line up and CSS won't apply.
+
+When compiling the SCSS sources yourself, override `$prefix`:
+
+```scss
+@use "@ew-color-picker/style/src/index.scss" with (
+  $prefix: "my-"
+);
+```
+
+The prebuilt `dist/index.css` always uses the `ew-` prefix; keep the default `prefix` option when using it.
 
 ### panelPlacement
 

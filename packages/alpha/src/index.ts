@@ -14,6 +14,7 @@ import {
   getRect,
   throttle,
   removeElement,
+  getPrefix,
 } from "@ew-color-picker/utils";
 import { colorRgbaToHsva, colorHsvaToRgba } from "@ew-color-picker/utils";
 import ewColorPicker, { ewColorPickerOptions } from "@ew-color-picker/core";
@@ -35,6 +36,10 @@ export default class ewColorPickerAlphaPlugin {
   private throttledUpdateAlpha: (alpha: number) => void;
   // 内部状态控制
   private _hasAlpha: boolean = true;
+
+  private get prefix(): string {
+    return getPrefix(this.ewColorPicker);
+  }
 
   constructor(public ewColorPicker: ewColorPicker) {
     this.handleOptions();
@@ -107,35 +112,35 @@ export default class ewColorPickerAlphaPlugin {
       return;
     }
     // 移除旧的 alpha 条
-    const oldAlpha = $(".ew-color-picker-slider.ew-alpha", panelContainer);
+    const oldAlpha = $(`.${this.prefix}color-picker-slider.ew-alpha`, panelContainer);
     if (oldAlpha) removeElement(oldAlpha);
     // 创建 alpha 条
     const alphaSlider = create("div");
     addClass(
       alphaSlider,
-      "ew-color-picker-slider ew-alpha " +
+      `${this.prefix}color-picker-slider ew-alpha ` +
         (this.isHorizontal
-          ? "ew-color-picker-is-horizontal"
-          : "ew-color-picker-is-vertical")
+          ? `${this.prefix}color-picker-is-horizontal`
+          : `${this.prefix}color-picker-is-vertical`)
     );
     this.alphaBar = create("div");
-    addClass(this.alphaBar, "ew-color-picker-alpha-slider-bar");
+    addClass(this.alphaBar, `${this.prefix}color-picker-alpha-slider-bar`);
     // 背景层
     const alphaWrapper = create("div");
-    addClass(alphaWrapper, "ew-color-picker-alpha-slider-wrapper");
+    addClass(alphaWrapper, `${this.prefix}color-picker-alpha-slider-wrapper`);
     insertNode(this.alphaBar, alphaWrapper);
     const alphaBg = create("div");
-    addClass(alphaBg, "ew-color-picker-alpha-slider-bg");
+    addClass(alphaBg, `${this.prefix}color-picker-alpha-slider-bg`);
     insertNode(this.alphaBar, alphaBg);
     this.alphaThumb = create("div");
-    addClass(this.alphaThumb, "ew-color-picker-alpha-slider-thumb");
+    addClass(this.alphaThumb, `${this.prefix}color-picker-alpha-slider-thumb`);
     insertNode(this.alphaBar, this.alphaThumb);
     insertNode(alphaSlider, this.alphaBar);
 
     // 根据方向决定插入位置
     if (this.isHorizontal) {
       // 水平方向：插入到 bottom-row 之前（底部）
-      const bottomRow = $(".ew-color-picker-bottom-row", panelContainer);
+      const bottomRow = $(`.${this.prefix}color-picker-bottom-row`, panelContainer);
       if (bottomRow && bottomRow.parentNode) {
         bottomRow.parentNode.insertBefore(alphaSlider, bottomRow);
       } else {
@@ -143,7 +148,7 @@ export default class ewColorPickerAlphaPlugin {
       }
     } else {
       // 垂直方向：插入到面板之后（顶部）
-      const panel = $(".ew-color-picker-panel", panelContainer);
+      const panel = $(`.${this.prefix}color-picker-panel`, panelContainer);
       if (panel && panel.parentNode) {
         panel.parentNode.insertBefore(alphaSlider, panel.nextSibling);
       } else {

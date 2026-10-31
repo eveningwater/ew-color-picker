@@ -773,6 +773,7 @@ new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
 | `autoPanelPosition` | `boolean` | `false` | 面板自动定位（需注册 Box 插件且未关闭 `hasBox`） |
 | `panelPlacement` | 见下文 | `'bottom'` | 面板相对盒子的位置 |
 | `appendTo` | `string \| HTMLElement` | `undefined` | 面板容器挂载目标（弹窗 / 滚动容器场景用 `document.body`） |
+| `prefix` | `string` | `'ew-'` | CSS 类名前缀，用于避免与其他库的样式冲突 |
 
 ### 显示开关
 
@@ -982,6 +983,29 @@ new ewColorPicker({
 
 > 面板容器会脱离实例根节点，仍可通过 `picker.getMountPoint('panelContainer')` 获取；点击面板内部不会触发「点击外部关闭」。
 
+## prefix
+
+- **类型**：`string`
+- **默认值**：`'ew-'`
+
+设置所有 CSS 类名的前缀，默认生成 `.ew-color-picker-*` 这类类名。把组件嵌入到其他库或已有样式体系时，可以改成自定义前缀以避免样式冲突。
+
+```ts
+new ewColorPicker({ el: '#picker', prefix: 'my-' })
+```
+
+> JS 选项的前缀必须与 CSS 构建时使用的前缀一致，否则类名对不上、样式不生效。
+
+若使用源码中的 SCSS 构建样式，通过 `$prefix` 覆盖默认值：
+
+```scss
+@use "@ew-color-picker/style/src/index.scss" with (
+  $prefix: "my-"
+);
+```
+
+直接使用预构建的 `dist/index.css` 时，该类文件仍是 `ew-` 前缀，此时请不要修改 `prefix` 选项。
+
 ## panelPlacement
 
 - **类型**：面板方位字符串
@@ -1179,6 +1203,17 @@ import '@ew-color-picker/style/dist/input-number.css'
 ::: warning
 两个文件都需要引入。只引入 `index.css` 时，RGB / HSL 模式下的数字输入框会丢失样式。
 :::
+
+## 类名前缀
+
+所有类名默认以 `ew-` 开头（如 `.ew-color-picker-box`、`.ew-input-number`）。可通过构造选项 [`prefix`](./options#prefix) 修改 JS 侧前缀，并通过 SCSS 的 `$prefix` 变量同步修改样式侧前缀：
+
+```scss
+@use "@ew-color-picker/style/src/index.scss" with ($prefix: "my-");
+@use "@ew-color-picker/style/src/input-number.scss" with ($prefix: "my-");
+```
+
+预构建的 `dist/*.css` 固定为 `ew-` 前缀；使用预构建产物时请保持默认的 `prefix` 选项。
 
 其它可用产物：`index.min.css`、`color.css`、`extend.css`、`variable.css`（以及对应 `.min.css`）。
 
@@ -1549,6 +1584,7 @@ Source: https://eveningwater.github.io/ew-color-picker/guide/changelog
 ### 新增
 
 - `appendTo` 选项：把面板容器挂载到 `document.body` 或任意容器，避免被弹窗、抽屉、滚动容器的 `overflow` 裁剪。启用后面板改为相对视口定位，仍按 `panelPlacement` 计算并做边界翻转，滚动或窗口尺寸变化时自动重算
+- `prefix` 选项：自定义全部 CSS 类名前缀（默认 `ew-`），方便嵌入其他库时避免样式冲突。SCSS 同步提供 `$prefix` 构建变量，需与 JS 选项保持一致
 
 ### 文档
 
@@ -1556,6 +1592,7 @@ Source: https://eveningwater.github.io/ew-color-picker/guide/changelog
 - 移除不存在的 `ewColorPickerBox` 嵌套配置写法，统一为顶层选项
 - 修正 `autoPanelPosition` 的生效前提说明
 - 新增 `appendTo` 选项说明（中英文）
+- 新增 `prefix` 选项说明（中英文），含 SCSS 自定义编译示例
 
 ## 2.0.0
 
@@ -4380,7 +4417,7 @@ Every option below can be passed to the constructor. Defaults come from `default
 | Group | Options |
 | --- | --- |
 | Core | `el`, `disabled`, `defaultColor`, `size`, `predefineColor`, `isClickOutside` |
-| Layout | `hueDirection`, `alphaDirection`, `autoPanelPosition`, `panelPlacement`, `appendTo` |
+| Layout | `hueDirection`, `alphaDirection`, `autoPanelPosition`, `panelPlacement`, `appendTo`, `prefix` |
 | Labels | `clearText`, `sureText` |
 | Animation | `togglePickerAnimation`, `pickerAnimationTime` |
 | Plugin switches | `hasBox`, `hasPanel`, `hasInput`, `hasClear`, `hasSure`, `hue`, `alpha`, `showButton`, `showColorMode`, `showInputNumber` |
@@ -4483,6 +4520,28 @@ new ewColorPicker({
   panelPlacement: 'bottom',
 })
 ```
+
+### prefix
+
+| Type | Default | Description |
+| --- | --- | --- |
+| `string` | `'ew-'` | Prefix of every generated CSS class name. Override it when embedding the picker in another library to avoid style collisions. |
+
+```ts
+new ewColorPicker({ el: '#picker', prefix: 'my-' })
+```
+
+> The JS option must match the prefix used when compiling the styles, otherwise the class names won't line up and CSS won't apply.
+
+When compiling the SCSS sources yourself, override `$prefix`:
+
+```scss
+@use "@ew-color-picker/style/src/index.scss" with (
+  $prefix: "my-"
+);
+```
+
+The prebuilt `dist/index.css` always uses the `ew-` prefix; keep the default `prefix` option when using it.
 
 ### panelPlacement
 
@@ -4632,6 +4691,17 @@ import '@ew-color-picker/style/dist/input-number.css'
 ::: warning
 Importing only `index.css` leaves RGB/HSL numeric inputs unstyled.
 :::
+
+## Class prefix
+
+All class names start with `ew-` by default (e.g. `.ew-color-picker-box`, `.ew-input-number`). Change the JS-side prefix with the [`prefix`](./options#prefix) constructor option and mirror it in the stylesheet through the SCSS `$prefix` variable:
+
+```scss
+@use "@ew-color-picker/style/src/index.scss" with ($prefix: "my-");
+@use "@ew-color-picker/style/src/input-number.scss" with ($prefix: "my-");
+```
+
+The prebuilt `dist/*.css` files always use the `ew-` prefix; keep the default `prefix` option when using them.
 
 ## CSS variables
 
@@ -4990,6 +5060,7 @@ Source: https://eveningwater.github.io/ew-color-picker/en/guide/changelog
 ### Features
 
 - New `appendTo` option: mount the panel container into `document.body` or any container to avoid `overflow` clipping by dialogs, drawers and scroll containers. The panel then uses viewport-relative positioning, still honors `panelPlacement` with boundary flipping, and re-positions on scroll or resize
+- New `prefix` option: customize the prefix of every CSS class name (default `ew-`) to avoid style collisions when embedding the picker in another library. The SCSS build exposes a matching `$prefix` variable that must stay in sync with the JS option
 
 ### Documentation
 
@@ -4997,6 +5068,7 @@ Source: https://eveningwater.github.io/ew-color-picker/en/guide/changelog
 - Removed the non-existent nested `ewColorPickerBox` config in favor of top-level options
 - Corrected the prerequisites of `autoPanelPosition`
 - Added `appendTo` documentation (Chinese and English)
+- Added `prefix` documentation (Chinese and English) with a custom SCSS build example
 
 ## 2.0.0
 

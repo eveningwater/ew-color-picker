@@ -5,7 +5,8 @@
   "main": "dist/index.css",
   "style": "dist/index.css",
   "files": [
-    "dist"
+    "dist",
+    "src/*.scss"
   ],
   "scripts": {
     "build": "rollup -c rollup.config.mjs",
