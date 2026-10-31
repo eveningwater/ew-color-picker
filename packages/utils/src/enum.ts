@@ -3,7 +3,7 @@ export const enum Direction {
     Vertical = 'vertical',
 }
 
-export const enum ApplyOrder {
+export enum ApplyOrder {
     Pre = 'pre',
     Post = 'post',
 }

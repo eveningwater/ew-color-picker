@@ -1587,6 +1587,7 @@ Source: https://eveningwater.github.io/ew-color-picker/guide/changelog
 
 - `appendTo` 选项：把面板容器挂载到 `document.body` 或任意容器，避免被弹窗、抽屉、滚动容器的 `overflow` 裁剪。启用后面板改为相对视口定位，仍按 `panelPlacement` 计算并做边界翻转，滚动或窗口尺寸变化时自动重算
 - `prefix` 选项：自定义全部 CSS 类名前缀（默认 `ew-`），方便嵌入其他库时避免样式冲突。SCSS 同步提供 `$prefix` 构建变量，需与 JS 选项保持一致
+- `ApplyOrder` 由 `const enum` 改为普通枚举，可直接从 `@ew-color-picker/utils` 运行时导入，编写自定义插件时无需手写 `'pre'` / `'post'` 字符串
 
 ### 文档
 
@@ -1595,6 +1596,7 @@ Source: https://eveningwater.github.io/ew-color-picker/guide/changelog
 - 修正 `autoPanelPosition` 的生效前提说明
 - 新增 `appendTo` 选项说明（中英文）
 - 新增 `prefix` 选项说明（中英文），含 SCSS 自定义编译示例
+- 补充 `applyOrder` 执行顺序说明与用法示例（中英文）
 
 ## 2.0.0
 
@@ -2374,12 +2376,37 @@ new ewColorPicker({ el: '#picker' })
 | 约定 | 说明 |
 | --- | --- |
 | `static pluginName` | 必填，作为 `picker.plugins[pluginName]` 的键，需全局唯一 |
-| `static applyOrder` | `ApplyOrder.Pre`（先渲染）/ `ApplyOrder.Post`（后渲染），默认按注册顺序 |
+| `static applyOrder` | 可选，`ApplyOrder.Pre`（最先）/ 不设置（按注册顺序）/ `ApplyOrder.Post`（最后） |
 | 构造函数 | 接收 core 实例；此时挂载点已创建，可以直接渲染 |
 | `destroy()` | 必须解绑事件、移除 DOM，避免内存泄漏 |
 | 挂载点 | 优先使用 `getMountPoint('root' \| 'panelContainer')`，禁止 `document.querySelector` |
 | 改色 | 只调用 `this.ewColorPicker.setColor(color)`，不要直写其他插件 DOM |
 | 延迟渲染 | 依赖真实尺寸的计算可放在 `setTimeout(..., 0)` 中执行 |
+
+## applyOrder 执行顺序
+
+`static applyOrder` 可选，用于控制插件构造函数的执行先后。取值来自 `@ew-color-picker/utils` 的 `ApplyOrder` 枚举（已编译为普通枚举，可直接在运行时使用）：
+
+| 取值 | 权重 | 适用场景 |
+| --- | --- | --- |
+| `ApplyOrder.Pre` | `-1` | 需要比其他插件先创建共享节点、容器或全局状态 |
+| 不设置 | `0` | 默认，按 `ewColorPicker.use()` 的注册顺序执行 |
+| `ApplyOrder.Post` | `1` | 需要读取其他插件已渲染完成的 DOM |
+
+同一权重内按注册顺序排序，因此默认行为仍然是确定的。`applyOrder` 只影响构造时机，不影响 `change` 等事件回调的顺序。
+
+```ts
+import { ApplyOrder } from '@ew-color-picker/utils'
+
+export default class MyOverlayPlugin {
+  static pluginName = 'myOverlay'
+  static applyOrder = ApplyOrder.Pre // 先于其他插件建立遮罩容器
+
+  // ...
+}
+```
+
+若插件只订阅事件、不依赖其他插件的 DOM，可以不设置 `applyOrder`。
 
 ## 类型扩展
 
@@ -3247,7 +3274,7 @@ ew-color-picker 的核心（`@ew-color-picker/core`）只负责三件事：维�
 | 成员 | 类型 | 说明 |
 | --- | --- | --- |
 | `static pluginName` | `string` | 唯一名称，也是核心 `plugins` 对象的键 |
-| `static applyOrder` | `ApplyOrder` | 执行顺序，`Pre = -1` 先于核心默认逻辑，`Post = 1` 后于核心默认逻辑 |
+| `static applyOrder` | `ApplyOrder` | 执行顺序，`Pre` 最先、未设置按注册顺序、`Post` 最后 |
 | `constructor(core)` | — | 接收核心实例，自行渲染到挂载点并订阅事件 |
 | `destroy()` | 可选 | 卸载时释放 DOM 与事件 |
 
@@ -3259,7 +3286,33 @@ ewColorPicker.use(MyPlugin)
 new ewColorPicker({ el: '#app' })
 ```
 
-`use()` 是幂等的：同一个构造函数重复注册不会产生第二个实例。插件实例可以通过 `core.plugins[pluginName]` 访问。
+`use()` 是幂等的：同一个 `pluginName` 重复注册不会产生第二个实例。插件实例可以通过 `core.plugins[pluginName]` 访问。
+
+## 执行顺序（applyOrder）
+
+`applyOrder` 控制插件构造函数的调用先后，取值来自 `@ew-color-picker/utils` 导出的 `ApplyOrder` 枚举（普通枚举，可在运行时直接使用）：
+
+| 取值 | 排序权重 | 说明 |
+| --- | --- | --- |
+| `ApplyOrder.Pre` | `-1` | 最先实例化，适合创建其他插件要用的共享节点或状态 |
+| 不设置 | `0` | 按 `use()` 注册顺序，排在 Pre 之后、Post 之前 |
+| `ApplyOrder.Post` | `1` | 最后实例化，适合读取其他插件已渲染的 DOM |
+
+同一权重内按注册顺序执行。聚合包按 Console → Box → Panel → … 注册，内置 UI 插件大多标记为 `Post`。
+
+```ts
+import { ApplyOrder } from '@ew-color-picker/utils'
+
+export default class MyPlugin {
+  static pluginName = 'myPlugin'
+  static applyOrder = ApplyOrder.Post
+  // ...
+}
+```
+
+::: tip
+`applyOrder` 只影响**实例化顺序**，不影响运行时事件回调的顺序。只监听 `change` 事件的插件可以不设置。
+:::
 
 ## 内置插件一览
 
@@ -5065,6 +5118,7 @@ Source: https://eveningwater.github.io/ew-color-picker/en/guide/changelog
 
 - New `appendTo` option: mount the panel container into `document.body` or any container to avoid `overflow` clipping by dialogs, drawers and scroll containers. The panel then uses viewport-relative positioning, still honors `panelPlacement` with boundary flipping, and re-positions on scroll or resize
 - New `prefix` option: customize the prefix of every CSS class name (default `ew-`) to avoid style collisions when embedding the picker in another library. The SCSS build exposes a matching `$prefix` variable that must stay in sync with the JS option
+- `ApplyOrder` changed from `const enum` to a regular enum, so it can be imported at runtime from `@ew-color-picker/utils` without hand-writing `'pre'` / `'post'` strings
 
 ### Documentation
 
@@ -5073,6 +5127,7 @@ Source: https://eveningwater.github.io/ew-color-picker/en/guide/changelog
 - Corrected the prerequisites of `autoPanelPosition`
 - Added `appendTo` documentation (Chinese and English)
 - Added `prefix` documentation (Chinese and English) with a custom SCSS build example
+- Added `applyOrder` execution-order documentation and examples (Chinese and English)
 
 ## 2.0.0
 
@@ -5862,7 +5917,7 @@ new ewColorPicker({ el: '#app' })
 | Member | Required | Notes |
 | --- | --- | --- |
 | `static pluginName` | Yes | Unique key in `core.plugins`; missing name logs a warning |
-| `static applyOrder` | No | `ApplyOrder.Pre` / `Post` / `undefined` |
+| `static applyOrder` | No | `ApplyOrder.Pre` (first) / unset (registration order) / `ApplyOrder.Post` (last) |
 | `constructor(core)` | Yes | Receives the instance; render + subscribe here |
 | `destroy()` | No | Unbind DOM events and listeners |
 | `install(core)` | No | Support manual `plugin.install(core)` usage |
@@ -5875,6 +5930,31 @@ new ewColorPicker({ el: '#app' })
 3. Render only into `root` or `panelContainer`.
 4. Scope DOM queries to your own wrapper.
 5. Clean up everything in `destroy()`.
+
+## Execution order (`applyOrder`)
+
+`static applyOrder` is optional and controls construction order. Values come from the `ApplyOrder` enum in `@ew-color-picker/utils` (compiled as a regular runtime enum):
+
+| Value | Weight | When to use |
+| --- | --- | --- |
+| `ApplyOrder.Pre` | `-1` | Create shared nodes, containers or global state before other plugins |
+| unset | `0` | Default; runs in `ewColorPicker.use()` registration order |
+| `ApplyOrder.Post` | `1` | Read DOM already rendered by other plugins |
+
+Plugins with the same weight run in registration order, so the default behavior stays deterministic. `applyOrder` only affects construction time, not event callback order.
+
+```ts
+import { ApplyOrder } from '@ew-color-picker/utils'
+
+export default class MyOverlayPlugin {
+  static pluginName = 'myOverlay'
+  static applyOrder = ApplyOrder.Pre // build the overlay container first
+
+  // ...
+}
+```
+
+Omit `applyOrder` when your plugin only subscribes to events and doesn't depend on other plugins' DOM.
 
 ## Type augmentation
 
@@ -6503,7 +6583,7 @@ The core (`@ew-color-picker/core`) only does three things: keep color state, dis
 | Member | Type | Required |
 | --- | --- | --- |
 | `static pluginName` | `string` | Yes |
-| `static applyOrder` | `ApplyOrder` | No (`Pre = -1`, `Post = 1`) |
+| `static applyOrder` | `ApplyOrder` | No (`Pre` first, unset in registration order, `Post` last) |
 | `constructor(core)` | — | Yes |
 | `destroy()` | `() => void` | No |
 
@@ -6516,6 +6596,32 @@ new ewColorPicker({ el: '#app' })
 ```
 
 `use()` is idempotent. Plugin instances live at `core.plugins[pluginName]`.
+
+## Execution order (`applyOrder`)
+
+`applyOrder` controls the order in which plugin constructors run. Values come from the `ApplyOrder` enum exported by `@ew-color-picker/utils` (a regular runtime enum):
+
+| Value | Weight | Meaning |
+| --- | --- | --- |
+| `ApplyOrder.Pre` | `-1` | Constructed first — create shared nodes or state other plugins rely on |
+| unset | `0` | Registration order, between `Pre` and `Post` |
+| `ApplyOrder.Post` | `1` | Constructed last — read DOM rendered by other plugins |
+
+Plugins with the same weight run in `use()` registration order. The aggregator registers Console → Box → Panel → …, and most built-in UI plugins use `Post`.
+
+```ts
+import { ApplyOrder } from '@ew-color-picker/utils'
+
+export default class MyPlugin {
+  static pluginName = 'myPlugin'
+  static applyOrder = ApplyOrder.Post
+  // ...
+}
+```
+
+::: tip
+`applyOrder` only affects **construction order**, not the order of event callbacks. Plugins that only listen to `change` can omit it.
+:::
 
 ## Built-in plugins
 
