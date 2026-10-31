@@ -50,7 +50,7 @@ ewColorPicker.use(Box).use(Panel)
 ## 输出内容
 
 ```text
- ew-color-picker@2.0.0  联系QQ：854806732  联系微信：eveningwater  github:https://github.com/eveningwater/ew-color-picker
+ ew-color-picker@2.0.1  联系QQ：854806732  联系微信：eveningwater  github:https://github.com/eveningwater/ew-color-picker
 ```
 
 样式通过 `%c` 注入，不影响页面。

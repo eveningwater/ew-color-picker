@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/input-number",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "EW Color Picker Input Number Plugin",
   "main": "dist/input-number.min.js",
   "module": "dist/input-number.esm.js",

@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/hue",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "EW Color Picker Hue Plugin",
   "main": "dist/hue.min.js",
   "module": "dist/hue.esm.js",
