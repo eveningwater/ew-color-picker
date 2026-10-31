@@ -30,6 +30,7 @@ export interface ewColorPickerOptions {
   togglePickerAnimation?: string;
   pickerAnimationTime?: number;
   autoPanelPosition?: boolean;
+  appendTo?: string | HTMLElement;
   panelPlacement?: 'top-start' | 'top' | 'top-end' | 'left-start' | 'left' | 'left-end' | 'right-start' | 'right' | 'right-end' | 'bottom-start' | 'bottom' | 'bottom-end';
   sure?: Function;
   clear?: Function;

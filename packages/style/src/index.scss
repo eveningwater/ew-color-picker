@@ -113,6 +113,8 @@
 
 // 面板容器 - 优化整体布局
 .ew-color-picker-panel-container {
+  // 显式声明盒模型，避免被宿主全局 box-sizing: border-box 影响尺寸计算
+  box-sizing: content-box;
   display: inline-block;
   position: absolute;
   left: 0;

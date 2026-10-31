@@ -35,6 +35,7 @@ new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
 | `pickerAnimationTime` | `number` | `200` | 动画时长（毫秒，上限 10000） |
 | `autoPanelPosition` | `boolean` | `false` | 面板自动定位（需注册 Box 插件且未关闭 `hasBox`） |
 | `panelPlacement` | 见下文 | `'bottom'` | 面板相对盒子的位置 |
+| `appendTo` | `string \| HTMLElement` | `undefined` | 面板容器挂载目标（弹窗 / 滚动容器场景用 `document.body`） |
 
 ### 显示开关
 
@@ -224,6 +225,25 @@ new ewColorPicker({
   autoPanelPosition: true,
 })
 ```
+
+## appendTo
+
+- **类型**：`string | HTMLElement`
+- **默认值**：`undefined`（面板容器默认挂在实例内部）
+
+把面板容器挂载到指定容器，例如 `document.body`，避免面板被弹窗、抽屉或滚动容器的 `overflow` 裁剪。
+
+启用后，面板改为相对视口定位（`position: fixed`），仍按 `panelPlacement` 计算并做边界翻转，滚动或窗口尺寸变化时会自动重新计算位置。
+
+```ts
+new ewColorPicker({
+  el: '#picker',
+  appendTo: document.body,
+  panelPlacement: 'bottom',
+})
+```
+
+> 面板容器会脱离实例根节点，仍可通过 `picker.getMountPoint('panelContainer')` 获取；点击面板内部不会触发「点击外部关闭」。
 
 ## panelPlacement
 
