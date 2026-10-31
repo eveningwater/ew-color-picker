@@ -73,7 +73,7 @@ new ewColorPicker({ el: '#app' })
 | Member | Required | Notes |
 | --- | --- | --- |
 | `static pluginName` | Yes | Unique key in `core.plugins`; missing name logs a warning |
-| `static applyOrder` | No | `ApplyOrder.Pre` / `Post` / `undefined` |
+| `static applyOrder` | No | `ApplyOrder.Pre` (first) / unset (registration order) / `ApplyOrder.Post` (last) |
 | `constructor(core)` | Yes | Receives the instance; render + subscribe here |
 | `destroy()` | No | Unbind DOM events and listeners |
 | `install(core)` | No | Support manual `plugin.install(core)` usage |
@@ -86,6 +86,31 @@ new ewColorPicker({ el: '#app' })
 3. Render only into `root` or `panelContainer`.
 4. Scope DOM queries to your own wrapper.
 5. Clean up everything in `destroy()`.
+
+## Execution order (`applyOrder`)
+
+`static applyOrder` is optional and controls construction order. Values come from the `ApplyOrder` enum in `@ew-color-picker/utils` (compiled as a regular runtime enum):
+
+| Value | Weight | When to use |
+| --- | --- | --- |
+| `ApplyOrder.Pre` | `-1` | Create shared nodes, containers or global state before other plugins |
+| unset | `0` | Default; runs in `ewColorPicker.use()` registration order |
+| `ApplyOrder.Post` | `1` | Read DOM already rendered by other plugins |
+
+Plugins with the same weight run in registration order, so the default behavior stays deterministic. `applyOrder` only affects construction time, not event callback order.
+
+```ts
+import { ApplyOrder } from '@ew-color-picker/utils'
+
+export default class MyOverlayPlugin {
+  static pluginName = 'myOverlay'
+  static applyOrder = ApplyOrder.Pre // build the overlay container first
+
+  // ...
+}
+```
+
+Omit `applyOrder` when your plugin only subscribes to events and doesn't depend on other plugins' DOM.
 
 ## Type augmentation
 

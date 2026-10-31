@@ -71,12 +71,37 @@ new ewColorPicker({ el: '#picker' })
 | 约定 | 说明 |
 | --- | --- |
 | `static pluginName` | 必填，作为 `picker.plugins[pluginName]` 的键，需全局唯一 |
-| `static applyOrder` | `ApplyOrder.Pre`（先渲染）/ `ApplyOrder.Post`（后渲染），默认按注册顺序 |
+| `static applyOrder` | 可选，`ApplyOrder.Pre`（最先）/ 不设置（按注册顺序）/ `ApplyOrder.Post`（最后） |
 | 构造函数 | 接收 core 实例；此时挂载点已创建，可以直接渲染 |
 | `destroy()` | 必须解绑事件、移除 DOM，避免内存泄漏 |
 | 挂载点 | 优先使用 `getMountPoint('root' \| 'panelContainer')`，禁止 `document.querySelector` |
 | 改色 | 只调用 `this.ewColorPicker.setColor(color)`，不要直写其他插件 DOM |
 | 延迟渲染 | 依赖真实尺寸的计算可放在 `setTimeout(..., 0)` 中执行 |
+
+## applyOrder 执行顺序
+
+`static applyOrder` 可选，用于控制插件构造函数的执行先后。取值来自 `@ew-color-picker/utils` 的 `ApplyOrder` 枚举（已编译为普通枚举，可直接在运行时使用）：
+
+| 取值 | 权重 | 适用场景 |
+| --- | --- | --- |
+| `ApplyOrder.Pre` | `-1` | 需要比其他插件先创建共享节点、容器或全局状态 |
+| 不设置 | `0` | 默认，按 `ewColorPicker.use()` 的注册顺序执行 |
+| `ApplyOrder.Post` | `1` | 需要读取其他插件已渲染完成的 DOM |
+
+同一权重内按注册顺序排序，因此默认行为仍然是确定的。`applyOrder` 只影响构造时机，不影响 `change` 等事件回调的顺序。
+
+```ts
+import { ApplyOrder } from '@ew-color-picker/utils'
+
+export default class MyOverlayPlugin {
+  static pluginName = 'myOverlay'
+  static applyOrder = ApplyOrder.Pre // 先于其他插件建立遮罩容器
+
+  // ...
+}
+```
+
+若插件只订阅事件、不依赖其他插件的 DOM，可以不设置 `applyOrder`。
 
 ## 类型扩展
 

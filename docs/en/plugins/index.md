@@ -12,7 +12,7 @@ The core (`@ew-color-picker/core`) only does three things: keep color state, dis
 | Member | Type | Required |
 | --- | --- | --- |
 | `static pluginName` | `string` | Yes |
-| `static applyOrder` | `ApplyOrder` | No (`Pre = -1`, `Post = 1`) |
+| `static applyOrder` | `ApplyOrder` | No (`Pre` first, unset in registration order, `Post` last) |
 | `constructor(core)` | — | Yes |
 | `destroy()` | `() => void` | No |
 
@@ -25,6 +25,32 @@ new ewColorPicker({ el: '#app' })
 ```
 
 `use()` is idempotent. Plugin instances live at `core.plugins[pluginName]`.
+
+## Execution order (`applyOrder`)
+
+`applyOrder` controls the order in which plugin constructors run. Values come from the `ApplyOrder` enum exported by `@ew-color-picker/utils` (a regular runtime enum):
+
+| Value | Weight | Meaning |
+| --- | --- | --- |
+| `ApplyOrder.Pre` | `-1` | Constructed first — create shared nodes or state other plugins rely on |
+| unset | `0` | Registration order, between `Pre` and `Post` |
+| `ApplyOrder.Post` | `1` | Constructed last — read DOM rendered by other plugins |
+
+Plugins with the same weight run in `use()` registration order. The aggregator registers Console → Box → Panel → …, and most built-in UI plugins use `Post`.
+
+```ts
+import { ApplyOrder } from '@ew-color-picker/utils'
+
+export default class MyPlugin {
+  static pluginName = 'myPlugin'
+  static applyOrder = ApplyOrder.Post
+  // ...
+}
+```
+
+::: tip
+`applyOrder` only affects **construction order**, not the order of event callbacks. Plugins that only listen to `change` can omit it.
+:::
 
 ## Built-in plugins
 

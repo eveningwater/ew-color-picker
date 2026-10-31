@@ -14,7 +14,7 @@ ew-color-picker 的核心（`@ew-color-picker/core`）只负责三件事：维�
 | 成员 | 类型 | 说明 |
 | --- | --- | --- |
 | `static pluginName` | `string` | 唯一名称，也是核心 `plugins` 对象的键 |
-| `static applyOrder` | `ApplyOrder` | 执行顺序，`Pre = -1` 先于核心默认逻辑，`Post = 1` 后于核心默认逻辑 |
+| `static applyOrder` | `ApplyOrder` | 执行顺序，`Pre` 最先、未设置按注册顺序、`Post` 最后 |
 | `constructor(core)` | — | 接收核心实例，自行渲染到挂载点并订阅事件 |
 | `destroy()` | 可选 | 卸载时释放 DOM 与事件 |
 
@@ -26,7 +26,33 @@ ewColorPicker.use(MyPlugin)
 new ewColorPicker({ el: '#app' })
 ```
 
-`use()` 是幂等的：同一个构造函数重复注册不会产生第二个实例。插件实例可以通过 `core.plugins[pluginName]` 访问。
+`use()` 是幂等的：同一个 `pluginName` 重复注册不会产生第二个实例。插件实例可以通过 `core.plugins[pluginName]` 访问。
+
+## 执行顺序（applyOrder）
+
+`applyOrder` 控制插件构造函数的调用先后，取值来自 `@ew-color-picker/utils` 导出的 `ApplyOrder` 枚举（普通枚举，可在运行时直接使用）：
+
+| 取值 | 排序权重 | 说明 |
+| --- | --- | --- |
+| `ApplyOrder.Pre` | `-1` | 最先实例化，适合创建其他插件要用的共享节点或状态 |
+| 不设置 | `0` | 按 `use()` 注册顺序，排在 Pre 之后、Post 之前 |
+| `ApplyOrder.Post` | `1` | 最后实例化，适合读取其他插件已渲染的 DOM |
+
+同一权重内按注册顺序执行。聚合包按 Console → Box → Panel → … 注册，内置 UI 插件大多标记为 `Post`。
+
+```ts
+import { ApplyOrder } from '@ew-color-picker/utils'
+
+export default class MyPlugin {
+  static pluginName = 'myPlugin'
+  static applyOrder = ApplyOrder.Post
+  // ...
+}
+```
+
+::: tip
+`applyOrder` 只影响**实例化顺序**，不影响运行时事件回调的顺序。只监听 `change` 事件的插件可以不设置。
+:::
 
 ## 内置插件一览
 
