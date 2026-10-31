@@ -449,8 +449,8 @@ export default class ewColorPicker extends EventEmitter {
       .then(() => {
         if (this.isDestroyed) return;
 
-        // 重置自动定位样式
-        if (autoPanelPosition && hasBox) {
+        // 重置自动定位样式（面板被挂载到外部容器时由 Panel 插件负责定位，不能重置）
+        if (autoPanelPosition && hasBox && !this.options.appendTo) {
           setStyle(panelContainer, {
             position: "absolute",
             left: "0",

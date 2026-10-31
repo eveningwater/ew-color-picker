@@ -772,6 +772,7 @@ new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
 | `pickerAnimationTime` | `number` | `200` | 动画时长（毫秒，上限 10000） |
 | `autoPanelPosition` | `boolean` | `false` | 面板自动定位（需注册 Box 插件且未关闭 `hasBox`） |
 | `panelPlacement` | 见下文 | `'bottom'` | 面板相对盒子的位置 |
+| `appendTo` | `string \| HTMLElement` | `undefined` | 面板容器挂载目标（弹窗 / 滚动容器场景用 `document.body`） |
 
 ### 显示开关
 
@@ -961,6 +962,25 @@ new ewColorPicker({
   autoPanelPosition: true,
 })
 ```
+
+## appendTo
+
+- **类型**：`string | HTMLElement`
+- **默认值**：`undefined`（面板容器默认挂在实例内部）
+
+把面板容器挂载到指定容器，例如 `document.body`，避免面板被弹窗、抽屉或滚动容器的 `overflow` 裁剪。
+
+启用后，面板改为相对视口定位（`position: fixed`），仍按 `panelPlacement` 计算并做边界翻转，滚动或窗口尺寸变化时会自动重新计算位置。
+
+```ts
+new ewColorPicker({
+  el: '#picker',
+  appendTo: document.body,
+  panelPlacement: 'bottom',
+})
+```
+
+> 面板容器会脱离实例根节点，仍可通过 `picker.getMountPoint('panelContainer')` 获取；点击面板内部不会触发「点击外部关闭」。
 
 ## panelPlacement
 
@@ -3560,6 +3580,7 @@ Source: https://eveningwater.github.io/ew-color-picker/plugins/panel
 | `alphaDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | 同上，两者都水平时面板宽 320px |
 | `autoPanelPosition` | `boolean` | `false` | 是否根据触发器位置自动定位面板 |
 | `panelPlacement` | `string` | `'bottom'` | 自动定位时的方向，见下表 |
+| `appendTo` | `string \| HTMLElement` | `undefined` | 把面板容器挂载到外部容器（如 `document.body`），避免被 `overflow` 裁剪 |
 | `hasBox` | `boolean` | `true` | 自动定位需要显示 Box 触发器（读取其尺寸） |
 | `alpha` | `boolean` | 由插件是否存在决定 | 有无透明度插件会影响默认颜色格式 |
 | `disabled` | `boolean` | `false` | 禁用后拖拽不生效 |
@@ -4327,7 +4348,7 @@ Every option below can be passed to the constructor. Defaults come from `default
 | Group | Options |
 | --- | --- |
 | Core | `el`, `disabled`, `defaultColor`, `size`, `predefineColor`, `isClickOutside` |
-| Layout | `hueDirection`, `alphaDirection`, `autoPanelPosition`, `panelPlacement` |
+| Layout | `hueDirection`, `alphaDirection`, `autoPanelPosition`, `panelPlacement`, `appendTo` |
 | Labels | `clearText`, `sureText` |
 | Animation | `togglePickerAnimation`, `pickerAnimationTime` |
 | Plugin switches | `hasBox`, `hasPanel`, `hasInput`, `hasClear`, `hasSure`, `hue`, `alpha`, `showButton`, `showColorMode`, `showInputNumber` |
@@ -4416,6 +4437,20 @@ Controls slider orientation. When both are horizontal, the panel width becomes 3
 | Type | Default | Description |
 | --- | --- | --- |
 | `boolean` | `false` | Position the panel relative to the box automatically. Requires the Box plugin with `hasBox: true`. |
+
+### appendTo
+
+| Type | Default | Description |
+| --- | --- | --- |
+| `string \| HTMLElement` | `undefined` | Mount the panel container into an external container (e.g. `document.body`) so it is not clipped by `overflow` of dialogs or scroll containers. The panel switches to viewport-relative (`position: fixed`) placement, still follows `panelPlacement`, and re-positions on scroll or resize. |
+
+```ts
+new ewColorPicker({
+  el: '#picker',
+  appendTo: document.body,
+  panelPlacement: 'bottom',
+})
+```
 
 ### panelPlacement
 
@@ -6637,6 +6672,7 @@ Source: https://eveningwater.github.io/ew-color-picker/en/plugins/panel
 | `alphaDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | Affects width |
 | `autoPanelPosition` | `boolean` | `false` | Auto placement |
 | `panelPlacement` | `string` | `'bottom'` | See below |
+| `appendTo` | `string \| HTMLElement` | `undefined` | Mount the panel container into an external container (e.g. `document.body`) to avoid `overflow` clipping |
 | `hasBox` | `boolean` | `true` | Auto placement needs the Box trigger (reads its size) |
 | `alpha` | `boolean` | derived | Affects default color format |
 | `disabled` | `boolean` | `false` | Blocks dragging |

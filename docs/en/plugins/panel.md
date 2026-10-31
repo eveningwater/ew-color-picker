@@ -25,6 +25,7 @@ description: The Panel plugin renders the saturation/value area with drag, touch
 | `alphaDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | Affects width |
 | `autoPanelPosition` | `boolean` | `false` | Auto placement |
 | `panelPlacement` | `string` | `'bottom'` | See below |
+| `appendTo` | `string \| HTMLElement` | `undefined` | Mount the panel container into an external container (e.g. `document.body`) to avoid `overflow` clipping |
 | `hasBox` | `boolean` | `true` | Auto placement needs the Box trigger (reads its size) |
 | `alpha` | `boolean` | derived | Affects default color format |
 | `disabled` | `boolean` | `false` | Blocks dragging |

@@ -320,4 +320,36 @@ describe('Panel Plugin 实用功能测试', () => {
       expect(duration).toBeLessThan(100);
     });
   });
+
+  describe('appendTo 外部挂载', () => {
+    it('应该把面板容器移动到目标容器并使用固定定位', () => {
+      const target = document.createElement('div');
+      const root = document.createElement('div');
+      const panelContainer = document.createElement('div');
+      root.appendChild(panelContainer);
+      document.body.appendChild(root);
+      document.body.appendChild(target);
+
+      mockCore = {
+        options: { ewColorPickerPanel: true, appendTo: target },
+        currentColor: '#ff0000',
+        getColor: vi.fn(() => '#ff0000'),
+        setColor: vi.fn(),
+        on: vi.fn(),
+        off: vi.fn(),
+        getMountPoint: vi.fn((name: string) =>
+          name === 'root' ? root : name === 'panelContainer' ? panelContainer : undefined
+        ),
+      };
+
+      plugin = new PanelPlugin(mockCore);
+
+      expect(target.contains(panelContainer)).toBe(true);
+      expect(root.contains(panelContainer)).toBe(false);
+      expect(panelContainer.style.position).toBe('fixed');
+
+      document.body.removeChild(root);
+      document.body.removeChild(target);
+    });
+  });
 }); 

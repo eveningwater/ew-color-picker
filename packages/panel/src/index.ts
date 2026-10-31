@@ -14,6 +14,7 @@ import {
   addClass,
   insertNode,
   isObject,
+  checkContainer,
   colorRgbaToHsva,
   colorHsvaToRgba,
   getStyle,
@@ -61,6 +62,18 @@ export default class ewColorPickerPanelPlugin {
   // 拖拽状态标记
   isDragging: boolean = false;
 
+  // 面板是否被挂载到外部容器（appendTo）
+  isPanelAppended: boolean = false;
+
+  private handleToggle = (isOpen: boolean) => {
+    if (!this.isPanelAppended) return;
+    if (isOpen) this.updateAppendedPanelPosition();
+  };
+
+  private handleReposition = () => {
+    if (this.isPanelAppended) this.updateAppendedPanelPosition();
+  };
+
   // 节流相关
   private lastUpdateTime: number = 0;
   private readonly throttleDelay: number = 16; // 约60fps
@@ -96,6 +109,7 @@ export default class ewColorPickerPanelPlugin {
           this.updateCursorPosition(hsva.s, hsva.v);
         }
       });
+      this.ewColorPicker.on("toggle", this.handleToggle);
     }
 
     this.run();
@@ -119,6 +133,7 @@ export default class ewColorPickerPanelPlugin {
     }
 
     this.render();
+    this.movePanelContainer();
     // 延迟绑定事件，确保DOM完全渲染
     setTimeout(() => {
       this.bindEvents();
@@ -535,6 +550,12 @@ export default class ewColorPickerPanelPlugin {
   }
 
   handleAutoPosition() {
+    // 面板挂载到外部容器时由 appendTo 的定位逻辑统一处理
+    if (this.isPanelAppended) {
+      this.updateAppendedPanelPosition();
+      return;
+    }
+
     const { autoPanelPosition, ewColorPickerBox, panelPlacement } =
       this.ewColorPicker?.options || {};
 
@@ -573,6 +594,53 @@ export default class ewColorPickerPanelPlugin {
         top: `${adjusted.top}px`,
       });
     }
+  }
+
+  // 将面板容器挂载到外部容器（appendTo）
+  movePanelContainer() {
+    const appendTo = this.options.appendTo;
+    if (!appendTo) return;
+
+    const panelContainer = this.ewColorPicker.getMountPoint("panelContainer");
+    if (!panelContainer) return;
+
+    insertNode(checkContainer(appendTo), panelContainer);
+    this.isPanelAppended = true;
+
+    // 面板脱离实例容器后无法再用 top: 100% 定位，改为相对视口定位
+    this.calculateContainerSize();
+    on(window, "scroll", this.handleReposition, { capture: true });
+    on(window, "resize", this.handleReposition);
+    this.updateAppendedPanelPosition();
+  }
+
+  updateAppendedPanelPosition() {
+    if (!this.isPanelAppended) return;
+
+    const panelContainer = this.ewColorPicker.getMountPoint("panelContainer");
+    const rootElement = this.ewColorPicker.getMountPoint("root");
+    if (!panelContainer || !rootElement) return;
+
+    const colorBox = $(".ew-color-picker-box", rootElement) || rootElement;
+    const { offsetWidth: boxWidth, offsetHeight: boxHeight } =
+      getElementSize(colorBox);
+    const [position = "bottom", align = "center"] = (
+      this.options.panelPlacement || "bottom"
+    ).split("-");
+    const { left, top } = this.calculatePosition(
+      position,
+      align,
+      boxWidth,
+      boxHeight
+    );
+    const adjusted = this.adjustForViewport(rootElement, left, top);
+    const rootRect = getRect(rootElement);
+
+    setStyle(panelContainer, {
+      position: "fixed",
+      left: `${rootRect.left + adjusted.left}px`,
+      top: `${rootRect.top + adjusted.top}px`,
+    });
   }
 
   // 计算面板位置（相对于 box）
@@ -668,6 +736,11 @@ export default class ewColorPickerPanelPlugin {
     if (this.panel) {
       off(this.panel, "click", this.handlePanelClick as EventListener);
       off(this.panel, "mousedown", this.handlePanelMouseDown as EventListener);
+    }
+    off(window, "scroll", this.handleReposition, { capture: true });
+    off(window, "resize", this.handleReposition);
+    if (isFunction(this.ewColorPicker?.off)) {
+      this.ewColorPicker.off("toggle", this.handleToggle);
     }
 
     // 清理DOM引用

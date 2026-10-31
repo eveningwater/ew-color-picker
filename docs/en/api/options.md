@@ -12,7 +12,7 @@ Every option below can be passed to the constructor. Defaults come from `default
 | Group | Options |
 | --- | --- |
 | Core | `el`, `disabled`, `defaultColor`, `size`, `predefineColor`, `isClickOutside` |
-| Layout | `hueDirection`, `alphaDirection`, `autoPanelPosition`, `panelPlacement` |
+| Layout | `hueDirection`, `alphaDirection`, `autoPanelPosition`, `panelPlacement`, `appendTo` |
 | Labels | `clearText`, `sureText` |
 | Animation | `togglePickerAnimation`, `pickerAnimationTime` |
 | Plugin switches | `hasBox`, `hasPanel`, `hasInput`, `hasClear`, `hasSure`, `hue`, `alpha`, `showButton`, `showColorMode`, `showInputNumber` |
@@ -101,6 +101,20 @@ Controls slider orientation. When both are horizontal, the panel width becomes 3
 | Type | Default | Description |
 | --- | --- | --- |
 | `boolean` | `false` | Position the panel relative to the box automatically. Requires the Box plugin with `hasBox: true`. |
+
+### appendTo
+
+| Type | Default | Description |
+| --- | --- | --- |
+| `string \| HTMLElement` | `undefined` | Mount the panel container into an external container (e.g. `document.body`) so it is not clipped by `overflow` of dialogs or scroll containers. The panel switches to viewport-relative (`position: fixed`) placement, still follows `panelPlacement`, and re-positions on scroll or resize. |
+
+```ts
+new ewColorPicker({
+  el: '#picker',
+  appendTo: document.body,
+  panelPlacement: 'bottom',
+})
+```
 
 ### panelPlacement
 
