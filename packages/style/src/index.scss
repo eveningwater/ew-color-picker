@@ -85,8 +85,7 @@
 }
 
 // 清除浮动
-.ew-color-picker-panel-container .ew-color-picker-content:after,
-.ew-color-picker-predefine-container:after {
+.ew-color-picker-panel-container .ew-color-picker-content:after {
   content: "";
   display: table;
   clear: both;
@@ -94,8 +93,7 @@
 
 // 浮动
 .ew-color-picker-slider.ew-color-picker-is-vertical .ew-color-picker-alpha-slider-bar,
-.ew-color-picker-slider.ew-color-picker-is-vertical .ew-color-picker-slider-bar,
-.ew-color-picker-predefine-color {
+.ew-color-picker-slider.ew-color-picker-is-vertical .ew-color-picker-slider-bar {
   float: left;
 }
 
@@ -156,10 +154,8 @@
   gap: 12px;
 }
 
-// 颜色面板
+// 颜色面板（尺寸统一由 .ew-color-picker-panel-dynamic-size 的 --panel-width / --panel-height 控制）
 .ew-color-picker-panel {
-  width: 280px;
-  height: 180px;
   border-radius: 8px;
   margin-bottom: 0;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
@@ -374,20 +370,17 @@
 
 // 预定义颜色容器
 .ew-color-picker-predefine-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
   width: 100%;
   font-size: 12px;
   margin-top: 12px;
 }
 
-// 预定义颜色容器清除浮动
-.ew-color-picker-predefine-container:after {
-  visibility: hidden;
-  height: 0;
-}
-
 // 预定义颜色项
 .ew-color-picker-predefine-color {
-  margin: 0 0 8px 8px;
+  margin: 0;
   width: 20px;
   height: 20px;
   border-radius: 4px;
@@ -403,11 +396,6 @@
 // 预定义颜色禁用
 .ew-color-picker-predefine-color.ew-color-picker-predefine-color-disabled {
   cursor: not-allowed;
-}
-
-// 预定义颜色换行
-.ew-color-picker-predefine-color:nth-child(10n+1) {
-  margin-left: 0;
 }
 
 // 预定义颜色悬停
@@ -543,23 +531,6 @@
 // 箭头图标
 .ew-color-picker-arrow-icon {
   fill: #fff;
-}
-
-// 响应式设计
-@media (max-width: 768px) {
-  .ew-color-picker-panel-container {
-    padding: 10px 8px 10px 8px;
-  }
-  .ew-color-picker-panel {
-    width: 200px;
-    height: 120px;
-  }
-  .ew-color-picker-input {
-    width: 120px;
-  }
-  .ew-color-picker-predefine-container {
-    width: 200px;
-  }
 }
 
 // 动画效果
