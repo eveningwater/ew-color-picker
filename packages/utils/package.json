@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/utils",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "utils for ew-color-picker",
   "main": "dist/utils.min.js",
   "module": "dist/utils.esm.js",

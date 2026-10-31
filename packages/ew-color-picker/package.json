@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/ew-color-picker",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "EW Color Picker - A modern color picker component with plugin architecture",
   "main": "dist/index.min.js",
   "module": "dist/index.esm.js",

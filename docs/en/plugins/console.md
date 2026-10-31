@@ -45,7 +45,7 @@ With the all-in-one bundle it is always registered.
 ## Output
 
 ```text
- ew-color-picker@2.0.0   QQ: 854806732  WeChat: eveningwater  github:https://github.com/eveningwater/ew-color-picker
+ ew-color-picker@2.0.1   QQ: 854806732  WeChat: eveningwater  github:https://github.com/eveningwater/ew-color-picker
 ```
 
 ## Methods

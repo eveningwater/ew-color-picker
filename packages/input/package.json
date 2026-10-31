@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/input",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "EW Color Picker Input Plugin",
   "main": "dist/input.min.js",
   "module": "dist/input.esm.js",

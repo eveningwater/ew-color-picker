@@ -1,6 +1,6 @@
 {
   "name": "ew-color-picker",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "EW Color Picker 聚合入口，内部指向 @ew-color-picker/ew-color-picker",
   "main": "index.cjs",
   "module": "index.mjs",

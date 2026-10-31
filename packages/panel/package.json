@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/panel",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "EW Color Picker Panel Plugin",
   "main": "dist/panel.min.js",
   "module": "dist/panel.esm.js",
