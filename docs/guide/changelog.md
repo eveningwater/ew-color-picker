@@ -15,6 +15,8 @@ description: ew-color-picker 各版本的变更记录，含修复、新增与文
 - 面板容器补充 `box-sizing: content-box`，不再依赖宿主全局 `box-sizing` 重置
 - 移除按视口宽度（`max-width: 768px`）写死面板、输入框、预设区尺寸的媒体查询，内部尺寸统一由 `--panel-width` / `--panel-height` 控制
 - 预定义色板改为 flex 自动换行，移除硬编码的「每行 10 个」换行规则，修复色块数量与容器宽度不匹配时的错误换行
+- `use()` 改为按 `pluginName` 去重，避免 HMR、重复 import 或多入口场景重复注册同一插件
+- 插件构造异常改为通过 `console.warn` 输出插件名与错误信息，不再静默吞掉，便于自定义插件调试
 
 ### 新增
 

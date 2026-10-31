@@ -15,6 +15,8 @@ description: Release notes for ew-color-picker, including fixes, features and do
 - Panel container now declares `box-sizing: content-box`, no longer relying on the host global `box-sizing` reset
 - Removed viewport media queries (`max-width: 768px`) that hard-coded panel, input and preset sizes; inner sizes are now driven solely by `--panel-width` / `--panel-height`
 - Predefined swatches now use flex wrapping; removed the hard-coded "10 per row" rule that caused wrong wrapping when the swatch count or container width changed
+- `use()` now deduplicates by `pluginName`, preventing duplicate registration under HMR, repeated imports or multiple entry points
+- Plugin constructor errors are now reported through `console.warn` with the plugin name and error details instead of being silently swallowed, making custom plugin debugging easier
 
 ### Features
 
