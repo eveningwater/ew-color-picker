@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/utils",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "utils for ew-color-picker",
   "main": "dist/utils.min.js",
   "module": "dist/utils.esm.js",
@@ -32,7 +32,7 @@
   },
   "types": "dist/packages/utils/src/index.d.ts",
   "peerDependencies": {
-    "@ew-color-picker/core": "workspace:^2.0.0"
+    "@ew-color-picker/core": "workspace:^"
   },
   "peerDependenciesMeta": {
     "@ew-color-picker/core": {

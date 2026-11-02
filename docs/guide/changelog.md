@@ -5,9 +5,15 @@ description: Release notes for ew-color-picker, including fixes, features and do
 
 # Changelog
 
+## 2.0.2
+
+### Fixes
+
+- Published package manifests now reference the matching release version (`^2.0.2`) for internal dependencies instead of the stale `^2.0.0` range. This prevents mixed installs where a 2.0.1 plugin resolved an older `@ew-color-picker/utils` that did not export `getPrefix`
+
 ## 2.0.1
 
-> These changes are merged into the main branch and reflected in the docs site. The npm packages are not published yet and will be released together with further fixes.
+> These changes have been published to npm and are reflected in the docs site.
 
 ### Fixes
 

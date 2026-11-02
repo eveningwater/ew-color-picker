@@ -87,10 +87,10 @@ importers:
   packages/alpha:
     dependencies:
       '@ew-color-picker/core':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../core
       '@ew-color-picker/utils':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../utils
     devDependencies:
       rimraf:
@@ -109,19 +109,19 @@ importers:
   packages/box:
     dependencies:
       '@ew-color-picker/core':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../core
       '@ew-color-picker/utils':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../utils
 
   packages/button:
     dependencies:
       '@ew-color-picker/core':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../core
       '@ew-color-picker/utils':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../utils
     devDependencies:
       rimraf:
@@ -140,10 +140,10 @@ importers:
   packages/color-mode:
     dependencies:
       '@ew-color-picker/core':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../core
       '@ew-color-picker/utils':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../utils
     devDependencies:
       rollup:
@@ -159,7 +159,7 @@ importers:
   packages/core:
     dependencies:
       '@ew-color-picker/utils':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../utils
     devDependencies:
       '@types/node':
@@ -181,40 +181,40 @@ importers:
   packages/ew-color-picker:
     dependencies:
       '@ew-color-picker/alpha':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../alpha
       '@ew-color-picker/box':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../box
       '@ew-color-picker/button':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../button
       '@ew-color-picker/color-mode':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../color-mode
       '@ew-color-picker/core':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../core
       '@ew-color-picker/hue':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../hue
       '@ew-color-picker/input':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../input
       '@ew-color-picker/input-number':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../input-number
       '@ew-color-picker/panel':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../panel
       '@ew-color-picker/predefine':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../predefine
       '@ew-color-picker/style':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../style
       '@ew-color-picker/utils':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../utils
     devDependencies:
       rimraf:
@@ -233,19 +233,19 @@ importers:
   packages/ew-color-picker-compat:
     dependencies:
       '@ew-color-picker/ew-color-picker':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../ew-color-picker
       '@ew-color-picker/style':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../style
 
   packages/hue:
     dependencies:
       '@ew-color-picker/core':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../core
       '@ew-color-picker/utils':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../utils
     devDependencies:
       rimraf:
@@ -264,10 +264,10 @@ importers:
   packages/input:
     dependencies:
       '@ew-color-picker/core':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../core
       '@ew-color-picker/utils':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../utils
     devDependencies:
       rimraf:
@@ -286,10 +286,10 @@ importers:
   packages/input-number:
     dependencies:
       '@ew-color-picker/core':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../core
       '@ew-color-picker/utils':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../utils
     devDependencies:
       rimraf:
@@ -308,10 +308,10 @@ importers:
   packages/panel:
     dependencies:
       '@ew-color-picker/core':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../core
       '@ew-color-picker/utils':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../utils
     devDependencies:
       rimraf:
@@ -330,10 +330,10 @@ importers:
   packages/predefine:
     dependencies:
       '@ew-color-picker/core':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../core
       '@ew-color-picker/utils':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../utils
     devDependencies:
       rimraf:
@@ -361,7 +361,7 @@ importers:
   packages/utils:
     dependencies:
       '@ew-color-picker/core':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^
         version: link:../core
 
 packages:

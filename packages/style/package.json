@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/style",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "EW Color Picker Styles",
   "main": "dist/index.css",
   "style": "dist/index.css",

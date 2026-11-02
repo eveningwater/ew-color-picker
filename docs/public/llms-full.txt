@@ -1130,9 +1130,15 @@ Source: https://eveningwater.github.io/ew-color-picker/guide/changelog
 
 # Changelog
 
+## 2.0.2
+
+### Fixes
+
+- Published package manifests now reference the matching release version (`^2.0.2`) for internal dependencies instead of the stale `^2.0.0` range. This prevents mixed installs where a 2.0.1 plugin resolved an older `@ew-color-picker/utils` that did not export `getPrefix`
+
 ## 2.0.1
 
-> These changes are merged into the main branch and reflected in the docs site. The npm packages are not published yet and will be released together with further fixes.
+> These changes have been published to npm and are reflected in the docs site.
 
 ### Fixes
 
@@ -2506,7 +2512,7 @@ With the all-in-one bundle it is always registered.
 ## Output
 
 ```text
- ew-color-picker@2.0.1   QQ: 854806732  WeChat: eveningwater  github:https://github.com/eveningwater/ew-color-picker
+ ew-color-picker@2.0.2   QQ: 854806732  WeChat: eveningwater  github:https://github.com/eveningwater/ew-color-picker
 ```
 
 ## Methods
@@ -4673,9 +4679,15 @@ Source: https://eveningwater.github.io/ew-color-picker/zh/guide/changelog
 
 # 更新日志
 
+## 2.0.2
+
+### 修复
+
+- 发布产物中的内部依赖改为指向对应版本（`^2.0.2`），不再沿用旧的 `^2.0.0` 范围。避免 2.0.1 的插件解析到旧版 `@ew-color-picker/utils`，导致 `getPrefix` 不存在而启动报错
+
 ## 2.0.1
 
-> 本版本改动已合入主线并同步到文档站，npm 包暂未发布，后续会随更多修复统一发布。
+> 本版本已发布到 npm，并同步到文档站。
 
 ### 修复
 
@@ -6234,7 +6246,7 @@ ewColorPicker.use(Box).use(Panel)
 ## 输出内容
 
 ```text
- ew-color-picker@2.0.1  联系QQ：854806732  联系微信：eveningwater  github:https://github.com/eveningwater/ew-color-picker
+ ew-color-picker@2.0.2  联系QQ：854806732  联系微信：eveningwater  github:https://github.com/eveningwater/ew-color-picker
 ```
 
 样式通过 `%c` 注入，不影响页面。
