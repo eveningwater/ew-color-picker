@@ -944,7 +944,7 @@ The page below loads real build artifacts: a full picker, a current-color previe
 
 <iframe
   class="demo-frame"
-  src="../../demo.html"
+  src="../demo.html"
   title="ew-color-picker live demo"
   loading="lazy"
 ></iframe>
@@ -4480,7 +4480,7 @@ Source: https://eveningwater.github.io/ew-color-picker/zh/examples/demo
 
 <iframe
   class="demo-frame"
-  src="../demo.html"
+  src="../../demo.html"
   title="ew-color-picker 在线演示"
   loading="lazy"
 ></iframe>
