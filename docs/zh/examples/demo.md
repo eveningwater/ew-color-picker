@@ -9,7 +9,7 @@ description: 在浏览器中直接体验 ew-color-picker：取色、开合面板
 
 <iframe
   class="demo-frame"
-  src="../demo.html"
+  src="../../demo.html"
   title="ew-color-picker 在线演示"
   loading="lazy"
 ></iframe>

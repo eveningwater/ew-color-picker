@@ -9,7 +9,7 @@ The page below loads real build artifacts: a full picker, a current-color previe
 
 <iframe
   class="demo-frame"
-  src="../../demo.html"
+  src="../demo.html"
   title="ew-color-picker live demo"
   loading="lazy"
 ></iframe>
