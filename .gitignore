@@ -4,3 +4,4 @@ gh-pages
 .vitepress/cache
 .vitepress/dist
 **/.vitepress/cache
+.trae/
