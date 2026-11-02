@@ -1,23 +1,23 @@
 ---
-title: Console 控制台插件
-description: Console 插件在浏览器控制台输出版本与作者信息，全页面仅打印一次，可关闭。
+title: Console Plugin
+description: The Console plugin prints a styled version banner once per page and can be omitted by registering plugins manually.
 ---
 
-# Console 控制台
+# Console
 
-`ewColorPickerConsole` 会在控制台打印一条带样式的版本横幅（版本号、QQ、微信、GitHub）。它不影响任何 UI。
+`ewColorPickerConsole` prints a styled banner (version, QQ, WeChat, GitHub) in the browser console. It has no UI.
 
-| 项 | 值 |
+| Item | Value |
 | --- | --- |
-| 包 | `@ew-color-picker/utils`（从 utils 导出 `Console`） |
+| Package | `@ew-color-picker/utils` (exports `Console`) |
 | `pluginName` | `ewColorPickerConsole` |
-| `applyOrder` | 未显式声明（聚合包中最先注册） |
-| 挂载点 | 无（只输出日志） |
-| 访问实例 | `core.plugins.ewColorPickerConsole` |
+| `applyOrder` | not declared (registered first in the bundle) |
+| Mount point | none |
+| Instance | `core.plugins.ewColorPickerConsole` |
 
-## 全页仅一次
+## Printed once
 
-插件内部用一个模块级布尔标记：
+A module-level flag ensures only the first instance prints:
 
 ```ts
 let hasPrintedTips = false
@@ -29,41 +29,33 @@ run() {
 }
 ```
 
-因此无论页面上创建多少个选择器实例，横幅都只出现一次。
+## Disabling
 
-## 关闭方式
-
-Console 没有独立配置项（类型为 `{}`）。最简单的做法是**单独按需注册插件时不要注册它**：
+Console has no options object (`{}`). To skip it, register plugins manually:
 
 ```ts
 import ewColorPicker from '@ew-color-picker/core'
 import Box from '@ew-color-picker/box'
-import Panel from '@ew-color-picker/panel'
-// …
 
-// 不引入 Console，就不会打印横幅
-ewColorPicker.use(Box).use(Panel)
+ewColorPicker.use(Box) // Console not imported → no banner
 ```
 
-如果使用聚合包 `@ew-color-picker/ew-color-picker`，Console 已经注册，无法通过 options 关闭。
+With the all-in-one bundle it is always registered.
 
-## 输出内容
+## Output
 
 ```text
- ew-color-picker@2.0.1  联系QQ：854806732  联系微信：eveningwater  github:https://github.com/eveningwater/ew-color-picker
+ ew-color-picker@2.0.1   QQ: 854806732  WeChat: eveningwater  github:https://github.com/eveningwater/ew-color-picker
 ```
 
-样式通过 `%c` 注入，不影响页面。
+## Methods
 
-## 实例方法
-
-| 方法 | 说明 |
+| Method | Description |
 | --- | --- |
-| `handleOptions` | 合并核心配置（当前无实际用途） |
-| `run` | 输出横幅（受一次性标记保护） |
-| `install` | 兼容手动 `install(core)` 调用 |
+| `handleOptions` | Merge core options (no-op today) |
+| `run` | Print banner (guarded) |
+| `install` | Compatibility for manual `install(core)` |
 
-## 相关
+## Related
 
-- [插件总览](./index.md)
-- [编写自定义插件](../guide/plugin-dev.md)
+- [Plugin overview](./index.md) · [Writing a plugin](../guide/plugin-dev.md)

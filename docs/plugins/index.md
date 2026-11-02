@@ -1,22 +1,20 @@
 ---
-title: 插件总览
-description: ew-color-picker 的插件体系：11 个内置插件的职责、注册顺序与包名，以及插件之间如何协作完成颜色选择。
+title: Plugin Overview
+description: 'The ew-color-picker plugin system: 11 built-in plugins, registration order, mount points and collaboration.'
 ---
 
-# 插件总览
+# Plugin Overview
 
-ew-color-picker 的核心（`@ew-color-picker/core`）只负责三件事：维护颜色状态、派发事件、管理挂载点。**所有可见的 UI 都由插件渲染**，因此你可以按需组合出完全不同的选择器形态。
+The core (`@ew-color-picker/core`) only does three things: keep color state, dispatch events, and manage mount points. **All visible UI is rendered by plugins**, so you can compose very different pickers.
 
-## 插件是怎么工作的
+## How a plugin works
 
-每个插件都是一个普通类，核心只要求：
-
-| 成员 | 类型 | 说明 |
+| Member | Type | Required |
 | --- | --- | --- |
-| `static pluginName` | `string` | 唯一名称，也是核心 `plugins` 对象的键 |
-| `static applyOrder` | `ApplyOrder` | 执行顺序，`Pre` 最先、未设置按注册顺序、`Post` 最后 |
-| `constructor(core)` | — | 接收核心实例，自行渲染到挂载点并订阅事件 |
-| `destroy()` | 可选 | 卸载时释放 DOM 与事件 |
+| `static pluginName` | `string` | Yes |
+| `static applyOrder` | `ApplyOrder` | No (`Pre` first, unset in registration order, `Post` last) |
+| `constructor(core)` | — | Yes |
+| `destroy()` | `() => void` | No |
 
 ```ts
 import ewColorPicker from '@ew-color-picker/core'
@@ -26,19 +24,19 @@ ewColorPicker.use(MyPlugin)
 new ewColorPicker({ el: '#app' })
 ```
 
-`use()` 是幂等的：同一个 `pluginName` 重复注册不会产生第二个实例。插件实例可以通过 `core.plugins[pluginName]` 访问。
+`use()` is idempotent. Plugin instances live at `core.plugins[pluginName]`.
 
-## 执行顺序（applyOrder）
+## Execution order (`applyOrder`)
 
-`applyOrder` 控制插件构造函数的调用先后，取值来自 `@ew-color-picker/utils` 导出的 `ApplyOrder` 枚举（普通枚举，可在运行时直接使用）：
+`applyOrder` controls the order in which plugin constructors run. Values come from the `ApplyOrder` enum exported by `@ew-color-picker/utils` (a regular runtime enum):
 
-| 取值 | 排序权重 | 说明 |
+| Value | Weight | Meaning |
 | --- | --- | --- |
-| `ApplyOrder.Pre` | `-1` | 最先实例化，适合创建其他插件要用的共享节点或状态 |
-| 不设置 | `0` | 按 `use()` 注册顺序，排在 Pre 之后、Post 之前 |
-| `ApplyOrder.Post` | `1` | 最后实例化，适合读取其他插件已渲染的 DOM |
+| `ApplyOrder.Pre` | `-1` | Constructed first — create shared nodes or state other plugins rely on |
+| unset | `0` | Registration order, between `Pre` and `Post` |
+| `ApplyOrder.Post` | `1` | Constructed last — read DOM rendered by other plugins |
 
-同一权重内按注册顺序执行。聚合包按 Console → Box → Panel → … 注册，内置 UI 插件大多标记为 `Post`。
+Plugins with the same weight run in `use()` registration order. The aggregator registers Console → Box → Panel → …, and most built-in UI plugins use `Post`.
 
 ```ts
 import { ApplyOrder } from '@ew-color-picker/utils'
@@ -51,96 +49,82 @@ export default class MyPlugin {
 ```
 
 ::: tip
-`applyOrder` 只影响**实例化顺序**，不影响运行时事件回调的顺序。只监听 `change` 事件的插件可以不设置。
+`applyOrder` only affects **construction order**, not the order of event callbacks. Plugins that only listen to `change` can omit it.
 :::
 
-## 内置插件一览
+## Built-in plugins
 
-聚合包 `@ew-color-picker/ew-color-picker` 的注册顺序如下（顺序决定默认的 DOM 排布）：
+Registration order in `@ew-color-picker/ew-color-picker`:
 
-| # | 插件 | `pluginName` | 包 | 职责 |
+| # | Plugin | `pluginName` | Package | Role |
 | --- | --- | --- | --- | --- |
-| 1 | Console | `ewColorPickerConsole` | `@ew-color-picker/utils` | 控制台输出版本信息，全页仅一次 |
-| 2 | Box | `ewColorPickerBox` | `@ew-color-picker/box` | 触发器色块：显示当前色、打开/关闭面板 |
-| 3 | Panel | `ewColorPickerPanel` | `@ew-color-picker/panel` | 饱和度/明度选择面板 |
-| 4 | Hue | `ewColorPickerHue` | `@ew-color-picker/hue` | 色相滑块 |
-| 5 | Alpha | `ewColorPickerAlpha` | `@ew-color-picker/alpha` | 透明度滑块 |
-| 6 | Input | `ewColorPickerInput` | `@ew-color-picker/input` | 文本颜色输入框 |
-| 7 | InputNumber | `ewColorPickerInputNumber` | `@ew-color-picker/input-number` | RGB/HSL 数值输入组（底层组件） |
-| 8 | Button | `ewColorPickerButton` | `@ew-color-picker/button` | 清空 / 确定按钮 |
-| 9 | Predefine | `ewColorPickerPredefine` | `@ew-color-picker/predefine` | 预定义颜色色块 |
-| 10 | ColorMode | `ewColorPickerColorMode` | `@ew-color-picker/color-mode` | Hex / RGB / HSL 模式切换 |
-| 11 | — | — | `@ew-color-picker/style` | 样式产物（CSS，不是插件） |
+| 1 | Console | `ewColorPickerConsole` | utils | Prints the version banner once |
+| 2 | Box | `ewColorPickerBox` | box | Trigger swatch |
+| 3 | Panel | `ewColorPickerPanel` | panel | Saturation/value panel |
+| 4 | Hue | `ewColorPickerHue` | hue | Hue slider |
+| 5 | Alpha | `ewColorPickerAlpha` | alpha | Alpha slider |
+| 6 | Input | `ewColorPickerInput` | input | Text color input |
+| 7 | InputNumber | `ewColorPickerInputNumber` | input-number | Numeric inputs |
+| 8 | Button | `ewColorPickerButton` | button | Clear / Sure |
+| 9 | Predefine | `ewColorPickerPredefine` | predefine | Swatches |
+| 10 | ColorMode | `ewColorPickerColorMode` | color-mode | Hex / RGB / HSL |
+| 11 | — | — | style | CSS artifacts (not a plugin) |
 
-## 挂载点
+## Mount points
 
-核心在挂载时创建两个容器，插件只能往这两个节点里渲染：
-
-| 挂载点 | 获取方式 | 说明 |
+| Mount point | Access | Contents |
 | --- | --- | --- |
-| `root` | `core.getMountPoint('root')` | 外层容器 `.ew-color-picker`，触发器（Box）放这里 |
-| `panelContainer` | `core.getMountPoint('panelContainer')` | 面板容器 `.ew-color-picker-panel-container`，默认带 `-hidden` 类 |
+| `root` | `core.getMountPoint('root')` | `.ew-color-picker`, hosts Box |
+| `panelContainer` | `core.getMountPoint('panelContainer')` | `.ew-color-picker-panel-container`, hosts everything else |
 
-面板收起时给 `panelContainer` 加 `ew-color-picker-panel-container-hidden`，展开时移除，配合 `togglePickerAnimation` 产生动画。
+The panel container carries `ew-color-picker-panel-container-hidden` while closed.
 
-## 插件之间如何协作
+## Collaboration
 
 ```text
-用户操作 (Box / Panel / Hue / Alpha / Input / Predefine / Button)
+User action (Box / Panel / Hue / Alpha / Input / Predefine / Button)
         │
         ▼
-   core.setColor(color)  ← 唯一的改色入口
+   core.setColor(color)   ← the only color entry
         │
         ├─► emit('change', color)
-        │        ├─ Panel   同步背景色与光标
-        │        ├─ Hue     同步滑块位置
-        │        ├─ Alpha   同步滑块位置
-        │        ├─ Input   同步输入框文本
-        │        ├─ ColorMode 同步 RGB/HSL 输入框
-        │        └─ Box     同步色块背景与图标颜色
+        │     ├─ Panel / Hue / Alpha / Input / ColorMode / Box sync
         │
-        └─► 调用 options.changeColor(color)
+        └─► options.changeColor(color)
 ```
 
-几条硬约束：
+Rules:
 
-- **只有 `core.setColor()` 能改色**，插件之间不直接互调。
-- 插件通过 `core.on('change')` 监听颜色变化，不要轮询 `core.currentColor`。
-- 插件之间通过 `core.plugins.xxx` 读取状态，例如 ColorMode 会判断 `core.plugins.ewColorPickerAlpha` 是否存在来决定默认模式。
-- 需要刷新配置时调用 `core.updateOptions(options)`，核心会广播 `options-update`。
+- Only `core.setColor()` changes color.
+- Subscribe to `change`; don't poll `currentColor`.
+- Read other plugin state via `core.plugins.xxx`.
+- Use `core.updateOptions()` to refresh configuration.
 
-## 按需组合
+## Trimming the UI
 
-只要引用了聚合包，11 个插件就都已注册。你可以用配置项裁剪 UI，而不必卸载插件：
+All plugins are registered by the bundle; disable via options instead of unregistering:
 
 ```ts
 new ewColorPicker({
   el: '#app',
-  hasPanel: false,     // 不要饱和度面板
-  hue: false,          // 不要色相滑块
-  alpha: false,        // 不要透明度滑块
-  hasInput: false,     // 不要输入框
-  hasClear: false,     // 不要清空按钮
-  hasSure: false,      // 不要确定按钮
-  showColorMode: false,// 不要模式切换
+  hasPanel: false,
+  hue: false,
+  alpha: false,
+  hasInput: false,
+  hasClear: false,
+  hasSure: false,
+  showColorMode: false,
   size: 'large',
 })
 ```
 
-::: tip 想要更小的体积？
-按需手动注册插件即可，见[安装](../guide/installation.md#按需引入子包)。
+::: tip Smaller bundle
+Register plugins manually — see [Installation](../guide/installation.md#per-package-imports).
 :::
 
-## 下一步
+## Next steps
 
-- [Box 颜色盒](./box.md)
-- [Panel 颜色面板](./panel.md)
-- [Hue 色相滑块](./hue.md)
-- [Alpha 透明度滑块](./alpha.md)
-- [Input 输入框](./input.md)
-- [InputNumber 数字输入框](./input-number.md)
-- [Button 按钮](./button.md)
-- [Predefine 预定义颜色](./predefine.md)
-- [ColorMode 颜色模式](./color-mode.md)
-- [Console 控制台](./console.md)
-- [编写自定义插件](../guide/plugin-dev.md)
+- [Box](./box.md) · [Panel](./panel.md) · [Hue](./hue.md) · [Alpha](./alpha.md)
+- [Input](./input.md) · [InputNumber](./input-number.md) · [Button](./button.md)
+- [Predefine](./predefine.md) · [ColorMode](./color-mode.md) · [Console](./console.md)
+- [Writing a plugin](../guide/plugin-dev.md)

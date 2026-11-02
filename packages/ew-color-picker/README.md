@@ -25,9 +25,9 @@ console.log(picker.getColor()) // '#6366f1'
 
 ## 相关链接
 
-- 官网文档：https://eveningwater.github.io/ew-color-picker/
-- 快速开始：https://eveningwater.github.io/ew-color-picker/guide/getting-started
-- 在线演示：https://eveningwater.github.io/ew-color-picker/examples/demo
+- 官网文档：https://eveningwater.github.io/ew-color-picker/zh/
+- 快速开始：https://eveningwater.github.io/ew-color-picker/zh/guide/getting-started
+- 在线演示：https://eveningwater.github.io/ew-color-picker/zh/examples/demo
 - 源码仓库：https://github.com/eveningwater/ew-color-picker
 
 ## License

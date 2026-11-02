@@ -1,21 +1,21 @@
 ---
-title: 框架集成
-description: 在 React、Vue 3、Angular 与 Solid 中集成 ew-color-picker 的最小封装写法、生命周期清理与受控同步。
+title: Framework Integration
+description: 'Minimal integration patterns for ew-color-picker in React, Vue 3, Angular and Solid, including lifecycle cleanup and controlled-value sync.'
 ---
 
-# 框架集成
+# Framework Integration
 
-ew-color-picker 只依赖原生 DOM 与事件，没有任何框架运行时依赖，因此在任意框架里都能用同一套方式接入：**挂载时创建实例、卸载时 `destroy()`、受控值通过 `setColor()` 同步**。
+ew-color-picker depends only on plain DOM and events — no framework runtime — so the same approach works everywhere: **create the instance on mount, call `destroy()` on unmount, and sync controlled values through `setColor()`**.
 
-本页给出四个框架的最小可用封装，可直接复制到项目中。官方不单独发布框架封装包，原因见[竞品对比与定位](./comparison)。
+Below are minimal, copy-paste wrappers for four frameworks. No official framework packages are published; the reasoning is covered in [Comparison & Positioning](./comparison).
 
-## 通用要点
+## Common rules
 
-1. **一个挂载点一个实例**：`el` 同时支持选择器字符串与 DOM 元素，推荐传元素引用，天然避免多实例选择器冲突。
-2. **卸载必须 `destroy()`**：实例会在 `document` 上注册点击监听，不销毁会泄漏，并且多实例时可能出现互相开关面板。
-3. **受控同步要防循环**：外部值变化时调用 `setColor()`，而 `setColor()` 会再触发 `change`；比较新旧值再回调即可。
-4. **样式需要引两份**：`index.css` 与 `input-number.css`（数字输入框样式在单独文件里）。
-5. **SSR 场景延迟挂载**：只在浏览器端的生命周期里创建实例（`useEffect` / `onMounted` / `ngAfterViewInit` / `onMount`），避免服务端渲染时访问 DOM。
+1. **One instance per mount point**: `el` accepts either a selector string or a DOM element; prefer the element reference so multiple pickers never collide on selectors.
+2. **Always call `destroy()` on unmount**: the instance registers a `document` click listener. Leaking it breaks other instances by toggling their panels.
+3. **Guard controlled sync against loops**: call `setColor()` when the external value changes, but `setColor()` fires `change` again — compare the incoming value first.
+4. **Import both stylesheets**: `index.css` and `input-number.css` (the number input styles ship in a separate file).
+5. **SSR safety**: create the instance only in browser-side lifecycle hooks (`useEffect` / `onMounted` / `ngAfterViewInit` / `onMount`).
 
 ```ts
 import ewColorPicker from '@ew-color-picker/ew-color-picker'
@@ -62,7 +62,7 @@ export function ColorField({ value, onChange }: Props) {
 }
 ```
 
-React 19 的 StrictMode 会执行两次挂载，上面的 `return () => picker.destroy()` 已经能保证不会残留实例。
+React 19 StrictMode mounts effects twice; the `return () => picker.destroy()` cleanup above prevents leftover instances.
 
 ## Vue 3
 
@@ -105,7 +105,7 @@ onBeforeUnmount(() => {
 </template>
 ```
 
-这样使用时就是标准 `v-model`：
+Usage is the standard `v-model`:
 
 ```vue
 <ColorField v-model="color" />
@@ -152,7 +152,7 @@ export class ColorFieldComponent implements AfterViewInit, OnDestroy {
 }
 ```
 
-配合 `[(value)]` 使用：
+Use it with two-way binding:
 
 ```html
 <ew-color-field [(value)]="color" />
@@ -181,18 +181,18 @@ export function ColorField(props: { value: string; onChange: (color: string) => 
 }
 ```
 
-Solid 的细粒度响应式不需要额外的同步逻辑：把 `props.value` 传进 `createEffect` 里调用 `setColor()` 即可。
+Solid's fine-grained reactivity needs no extra plumbing: call `setColor()` inside a `createEffect` that reads `props.value`.
 
-## 常见问题
+## FAQ
 
-**Q：能不能直接传选择器字符串？**
-可以，`el: '#picker'` 也行。但框架里更推荐传元素引用，页面上有多个同 id 元素时不会串。
+**Can I pass a selector string?**
+Yes, `el: '#picker'` works. Inside a framework, prefer the element reference so duplicate ids cannot clash.
 
-**Q：为什么我的面板被别的实例关掉了？**
-通常是某个实例没有在卸载时 `destroy()`，残留的 `document` 点击监听到处触发开关。
+**Why did another picker close my panel?**
+An instance was not destroyed on unmount, so its leftover `document` click listener toggles panels everywhere.
 
-**Q：`change` 事件会一直循环触发吗？**
-只有在「监听 change 后改写外部值，又用 setColor 写回组件」时才可能循环，用新旧值比较即可切断。
+**Does the `change` event loop forever?**
+Only when you write the value back to the component and the component writes it back with `setColor()`. Compare old and new values to break the loop.
 
-**Q：需要自己写框架封装包吗？**
-上面的代码就是完整封装。如果项目内多处使用，建议把这 20 行沉淀为自己的组件，而不是依赖第三方封装包。
+**Do I need official wrapper packages?**
+The code above is the complete wrapper. If a project uses it in several places, extract these twenty lines into your own component rather than depending on a third-party package.

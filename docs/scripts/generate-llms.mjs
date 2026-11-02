@@ -53,8 +53,8 @@ function toUrl(relPath) {
 }
 
 const SECTIONS = [
-  { title: '中文文档', match: (rel) => !rel.startsWith('en/') },
-  { title: 'English Docs', match: (rel) => rel.startsWith('en/') },
+  { title: 'English Docs', match: (rel) => !rel.startsWith('zh/') },
+  { title: '中文文档', match: (rel) => rel.startsWith('zh/') },
 ]
 
 const files = (await collect(DOCS_DIR)).sort()

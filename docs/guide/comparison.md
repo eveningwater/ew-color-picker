@@ -1,94 +1,94 @@
 ---
-title: 竞品对比与产品定位
-description: 对比 Pickr、iro.js、Coloris、react-colorful、react-color 等成熟颜色选择器，说明 ew-color-picker 的差异、优势、局限与适用场景。
+title: Comparison & Positioning
+description: 'How ew-color-picker compares with Pickr, iro.js, Coloris, react-colorful and react-color, and where it fits.'
 ---
 
-# 竞品对比与产品定位
+# Comparison & Positioning
 
-选颜色选择器时，真正要回答的问题不是「谁功能多」，而是「谁更适合你的 UI 体系」。本页先给出定位，再横向对比几款成熟方案，最后说明各自的适用边界。
+Choosing a color picker is rarely about feature count — it is about whether the component fits your UI system. This page states the positioning first, then compares the mainstream options, and finally explains when each one is the right call.
 
-## 一句话定位
+## Positioning in one sentence
 
-ew-color-picker 不是一套「成品皮肤」，而是一个 **可组装的颜色选择器底座**：核心只维护颜色与事件，所有界面部件都是独立插件，团队可以保留需要的部分、替换不需要的部分，或者基于同一套插件协议写自己的 UI。
+ew-color-picker is not a ready-made skin. It is an **assemblable color picker foundation**: the core only keeps color state and events, and every UI element is an independent plugin. Teams keep what they need, replace what they do not, or write their own UI on the same plugin contract.
 
-适合：中后台系统、低代码平台、组件库、需要和现有设计体系深度融合的产品。
-不适合：只想要一个开箱即用、无需定制的单点选色场景（这类需求用原生 `input[type=color]` 或 Coloris 更省事）。
+Good fit: admin dashboards, low-code platforms, component libraries, and products that must merge deeply with an existing design system.
+Poor fit: a one-off color input where customization is unnecessary — the native `input[type=color]` or Coloris is simpler.
 
-## 横向对比
+## Side-by-side comparison
 
-下表数据来自 npm registry（unpackedSize 与最后发布时间，统计于 2026-10-30），仅作体量参考；功能列按各自官方文档的公开能力整理。
+The numbers below come from the npm registry (`unpackedSize` and last publish date, collected on 2026-10-30) and are only a sense of package size. Feature columns follow each project's public documentation.
 
-| 方案 | 形态 | 框架约束 | 扩展方式 | 体积（unpacked） | 最近发布 |
+| Option | Shape | Framework lock-in | Extension model | Unpacked size | Last publish |
 | --- | --- | --- | --- | --- | --- |
-| **ew-color-picker** | 聚合包 + 13 个插件包（含兼容入口 `ew-color-picker`） | 无（原生 DOM） | 插件注册 / 自写插件 | 聚合包 84.6 KB + 样式 36.1 KB（合计 120.7 KB），`core.min` 11.9 KB（gzip 3.9 KB） | 2026-10 |
-| [Pickr](https://github.com/Simonwep/pickr) | 单包，UMD/ESM | 无 | 主题（classic/monolith/nano）+ 选项 | 280.3 KB | 2026-09 |
-| [iro.js](https://github.com/jaames/iro.js) | 单包 | 无 | 选项 + 组件组合 | 231.4 KB | 2021-07 |
-| [Coloris](https://github.com/melloware/coloris) | 单包 + 一份 CSS | 无 | CSS 变量主题 + 选项 | 152.2 KB | 2026-10 |
-| [react-colorful](https://github.com/omgovich/react-colorful) | React 组件 | React | 组合组件 | 398.4 KB | 2026-09 |
-| [react-color](https://github.com/casesandberg/react-color) | React 组件集 | React | 选择不同 Picker 组件 | 436.3 KB | 2020-10 |
-| [vue-color](https://github.com/linx4200/vue-color) | Vue 组件集 | Vue | 选择不同 Picker 组件 | 391.5 KB | 2025-10 |
-| [@uiw/react-color](https://github.com/uiwjs/react-color) | React 组件集 | React | 按组件引入 | 210.8 KB | 2026-05 |
-| 原生 `input[type=color]` | 浏览器内置 | 无 | 无（样式不可控） | 0 | 随浏览器 |
-| Spectrum | jQuery 插件 | jQuery | 选项 | 1804.2 KB | 2020-05 |
+| **ew-color-picker** | Aggregate package + 13 plugin packages (plus the `ew-color-picker` compat entry) | None (plain DOM) | Plugin registration / custom plugins | Aggregate 84.6 KB + styles 36.1 KB (120.7 KB total); `core.min` 11.9 KB (gzip 3.9 KB) | 2026-10 |
+| [Pickr](https://github.com/Simonwep/pickr) | Single package (UMD/ESM) | None | Themes (classic/monolith/nano) + options | 280.3 KB | 2026-09 |
+| [iro.js](https://github.com/jaames/iro.js) | Single package | None | Options + component composition | 231.4 KB | 2021-07 |
+| [Coloris](https://github.com/melloware/coloris) | Single package + CSS | None | CSS variables + options | 152.2 KB | 2026-10 |
+| [react-colorful](https://github.com/omgovich/react-colorful) | React components | React | Compose components | 398.4 KB | 2026-09 |
+| [react-color](https://github.com/casesandberg/react-color) | React component set | React | Pick a picker component | 436.3 KB | 2020-10 |
+| [vue-color](https://github.com/linx4200/vue-color) | Vue component set | Vue | Pick a picker component | 391.5 KB | 2025-10 |
+| [@uiw/react-color](https://github.com/uiwjs/react-color) | React component set | React | Import per component | 210.8 KB | 2026-05 |
+| Native `input[type=color]` | Built into browsers | None | None (styling is not controllable) | 0 | with browser updates |
+| Spectrum | jQuery plugin | jQuery | Options | 1804.2 KB | 2020-05 |
 
-需要强调的一点：体量数字不能直接等价为运行时开销。ew-color-picker 的聚合包包含 UMD.min 与 ESM 两份产物和 `.d.ts` 声明，实际引入的最小运行时是 `index.min.js` **81.8 KB（gzip 19.4 KB）**，按需只用核心时是 **11.9 KB（gzip 3.9 KB）**；加上两套样式（gzip 约 3.7 KB）即为完整开箱体积，npm 压缩包总计约 29 KB。
+One caveat: unpacked size is not runtime cost. The aggregate package ships two artifacts (UMD.min and ESM) plus `.d.ts` declarations. The smallest runtime you can ship is `index.min.js` at **81.8 KB (gzip 19.4 KB)**, or **11.9 KB (gzip 3.9 KB)** when using the core alone. Add the two style sheets (about 3.7 KB gzipped) for the full out-of-the-box footprint — roughly 29 KB of tarballs in total.
 
-## ew-color-picker 的优势
+## Where ew-color-picker stands out
 
-### 1. 插件是「结构可替换」，不只是「主题可换」
+### 1. Structural replaceability, not just theming
 
-多数同类库的定制方式是换主题、改 CSS 变量或改配置项，UI 的组成结构固定。ew-color-picker 把颜色盒、面板、色相滑块、透明度滑块、输入框、数字输入框、按钮、预定义色板、模式切换器都拆成独立插件，注册哪些、顺序如何、要不要自己的插件，都由使用者决定。
+Most alternatives let you restyle the widget via themes, CSS variables or options while the structure stays fixed. ew-color-picker splits the trigger box, saturation panel, hue slider, alpha slider, text input, number input, buttons, predefined swatches and mode switcher into separate plugins. You decide which ones are registered, in what order, and whether your own plugin replaces them.
 
 ```ts
 import ewColorPicker from '@ew-color-picker/core'
 import Panel from '@ew-color-picker/panel'
 import Hue from '@ew-color-picker/hue'
-// 只注册需要的部件，其余不引入
+// register only what you need
 ewColorPicker.use(Panel).use(Hue)
 ```
 
-### 2. 框架无关，可做框架封装的底座
+### 2. Framework agnostic
 
-核心不依赖 React / Vue / jQuery，只操作原生 DOM 与事件。这意味着同一套插件协议可以同时被 React、Vue、Angular 或低代码运行时封装，而不需要为每个框架维护一套实现。
+The core touches plain DOM and events only — no React, Vue or jQuery runtime. The same plugin contract can back React, Vue, Angular or low-code wrappers without maintaining a separate implementation per framework.
 
-### 3. 单一数据源 + 实例级事件总线
+### 3. Single source of truth with per-instance events
 
-任何插件改色都只走 `core.setColor()`，再由 `change` 事件驱动其他插件同步，不存在多份颜色状态；每个实例有独立事件总线、DOM 与插件实例，多实例场景不会互相污染。
+Every plugin changes color through `core.setColor()`, and the `change` event keeps the rest in sync, so there is never a second copy of the color state. Each instance owns its event bus, DOM and plugin instances, so multi-instance pages do not leak into each other.
 
-### 4. 开箱即用的完整能力
+### 4. Complete out of the box
 
-聚合包（或兼容入口 `ew-color-picker`）默认就带 Hex / RGB / HSL 模式切换、透明度调节、预定义色板、清空/确定按钮与输入校验，不需要像 `react-colorful` 那样自己拼输入框和按钮。
+The aggregate package (or the `ew-color-picker` compat entry) ships Hex / RGB / HSL mode switching, alpha adjustment, predefined swatches, clear/confirm buttons and input validation — things you would otherwise assemble by hand on top of react-colorful.
 
-### 5. 全量 TypeScript 类型
+### 5. TypeScript types everywhere
 
-每个包都输出 `.d.ts`，插件通过 `declare module` 扩展核心配置类型，使用自定义插件时配置项也能获得类型提示。
+Every package emits `.d.ts`; plugins extend the core options via `declare module`, so custom plugins keep type inference too.
 
-### 6. 文档即产品的一部分
+### 6. Documentation as part of the product
 
-中英双语文档站、逐项 API 说明、插件独立文档，并额外提供 `llms.txt` / `llms-full.txt`，方便人和 AI 一起检索接入方式。
+Bilingual documentation, per-API references, one page per plugin, plus `llms.txt` / `llms-full.txt` so both people and AI can look things up.
 
-## 需要正视的局限
+## Limitations to be honest about
 
-- **生态与社区规模小**：下载量、第三方教程、Issue 沉淀都无法与 Pickr、react-color 相比，遇到冷门问题更多要靠读源码。
-- **不提供官方框架绑定包**：React / Vue / Angular / Solid 的接入方式见[框架集成](./framework-integration)，受控组件与 SSR 场景按示例自行封装（约 20 行）。
-- **不支持渐变、多色选择与图片取色**：这类需求目前要选 iro.js 或专门的渐变选择器。
-- **只有需要定制时才要理解插件模型**：默认装聚合入口或 `npm i ew-color-picker` 即可开箱使用；只有在替换局部 UI、组合自有插件时，才需要理解「核心 + 插件」的结构。
-- **想进一步减小体积需按需装子包**：聚合包 84.6 KB、样式 36.1 KB，已与 Coloris 同量级；若只用单个部件，按需安装插件包可以裁到核心 11.9 KB。
+- **Small ecosystem**: download counts, community tutorials and issue history cannot match Pickr or react-color; unusual problems mean reading the source.
+- **No official framework wrappers**: React / Vue / Angular / Solid integration is covered in [Framework Integration](./framework-integration); controlled components and SSR need a thin wrapper of your own (around 20 lines).
+- **No gradients, multi-color editing or eyedropper**: those use cases need iro.js or a dedicated gradient picker.
+- **The plugin model only matters when you customize**: installing the aggregate package or `npm i ew-color-picker` works out of the box; you only need to understand core + plugins when replacing part of the UI or wiring your own plugins.
+- **Shrinking further means installing sub-packages**: the aggregate is 84.6 KB plus 36.1 KB of styles, already in Coloris territory; if you use a single piece, install plugin packages and trim down to the 11.9 KB core.
 
-## 选型建议
+## Choosing the right tool
 
-| 你的场景 | 建议 |
+| Your situation | Recommendation |
 | --- | --- |
-| 只要一个能选色的输入控件，样式不重要 | 原生 `input[type=color]` |
-| 需要轻量、无依赖、主题化但不改结构 | Coloris 或 Pickr |
-| React 项目只要一个面板/滑块 | react-colorful |
-| Vue 项目需要现成组件集 | vue-color 或 @uiw/react-color |
-| 需要渐变、色彩空间转换、游戏/可视化场景 | iro.js |
-| 中后台 / 低代码 / 组件库，需要和设计体系深度融合、替换局部 UI、多实例隔离 | **ew-color-picker** |
-| 需要把选色能力嵌进自己的插件体系或运行时 | **ew-color-picker**（核心 11.9 KB，可只保留核心 + 自写插件） |
+| A plain color input; styling does not matter | Native `input[type=color]` |
+| Lightweight, dependency-free, themeable without structural changes | Coloris or Pickr |
+| React project that only needs a panel or slider | react-colorful |
+| Vue project that wants ready-made components | vue-color or @uiw/react-color |
+| Gradients, color-space work, games or visualizations | iro.js |
+| Admin / low-code / component library needing deep design-system integration, partial UI replacement and instance isolation | **ew-color-picker** |
+| Embedding color selection into your own plugin system or runtime | **ew-color-picker** (11.9 KB core, keep the core and write your own plugins) |
 
-## 相关链接
+## See also
 
-- [项目介绍](./) — 设计理念与包结构
-- [核心概念](./concepts) — 挂载点、插件顺序与事件
-- [编写自定义插件](./plugin-dev) — 用自己的 UI 替换内置插件
+- [Introduction](./) — design principles and package layout
+- [Core Concepts](./concepts) — mount points, plugin order and events
+- [Writing a Plugin](./plugin-dev) — replace the built-in UI with your own

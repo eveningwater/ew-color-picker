@@ -1,181 +1,180 @@
 ---
-title: 样式与类名
-description: 样式入口、CSS 变量、全部类名分组与主题定制方式。
+title: Styles & Classes
+description: Stylesheet entries, CSS variables, class name groups and theming tips for ew-color-picker.
 ---
 
-# 样式与类名
+# Styles & Classes
 
-## 样式入口
+## Stylesheet entries
 
-样式包 `@ew-color-picker/style` 提供两个独立入口：
+| File | Required | Contents |
+| --- | --- | --- |
+| `@ew-color-picker/style/dist/index.css` | Yes | Picker, box, panel, sliders, buttons, mode switcher, predefine |
+| `@ew-color-picker/style/dist/input-number.css` | Yes for numeric inputs | InputNumber component |
 
 ```ts
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 ```
 
-| 文件 | 内容 |
-| --- | --- |
-| `index.css` | 颜色盒、面板、滑块、输入框、按钮、色板、模式切换器 |
-| `input-number.css` | 数字输入框组件 `.ew-input-number` 系列样式 |
-
 ::: warning
-两个文件都需要引入。只引入 `index.css` 时，RGB / HSL 模式下的数字输入框会丢失样式。
+Importing only `index.css` leaves RGB/HSL numeric inputs unstyled.
 :::
 
-## 类名前缀
+## Class prefix
 
-所有类名默认以 `ew-` 开头（如 `.ew-color-picker-box`、`.ew-input-number`）。可通过构造选项 [`prefix`](./options#prefix) 修改 JS 侧前缀，并通过 SCSS 的 `$prefix` 变量同步修改样式侧前缀：
+All class names start with `ew-` by default (e.g. `.ew-color-picker-box`, `.ew-input-number`). Change the JS-side prefix with the [`prefix`](./options#prefix) constructor option and mirror it in the stylesheet through the SCSS `$prefix` variable:
 
 ```scss
 @use "@ew-color-picker/style/src/index.scss" with ($prefix: "my-");
 @use "@ew-color-picker/style/src/input-number.scss" with ($prefix: "my-");
 ```
 
-预构建的 `dist/*.css` 固定为 `ew-` 前缀；使用预构建产物时请保持默认的 `prefix` 选项。
+The prebuilt `dist/*.css` files always use the `ew-` prefix; keep the default `prefix` option when using them.
 
-其它可用产物：`index.min.css`、`color.css`、`extend.css`、`variable.css`（以及对应 `.min.css`）。
+## CSS variables
 
-## CSS 变量
+| Variable | Set on | Default | Description |
+| --- | --- | --- | --- |
+| `--panel-width` | `.ew-color-picker-panel` | computed (285/302/320px) | Panel width |
+| `--panel-height` | `.ew-color-picker-panel` | `180px` | Panel height |
 
-| 变量 | 默认值 | 说明 |
-| --- | --- | --- |
-| `--panel-width` | `285px` | 面板宽度（插件会根据滑块方向动态写入） |
-| `--panel-height` | `180px` | 面板高度 |
+Override them after importing the styles:
 
 ```css
-:root {
-  --panel-width: 300px;
+.ew-color-picker .ew-color-picker-panel {
+  --panel-width: 320px;
   --panel-height: 200px;
 }
 ```
 
-## 类名一览
+## Class reference
 
-### 容器
+### Container
 
-| 类名 | 说明 |
+| Class | Description |
 | --- | --- |
-| `.ew-color-picker` | 实例最外层包装容器（`root` 挂载点） |
-| `.ew-color-picker-panel-container` | 面板容器（`panelContainer` 挂载点） |
-| `.ew-color-picker-box` | 颜色盒 |
-| `.ew-color-picker-box-arrow-icon` | 有颜色时的默认箭头图标 |
-| `.ew-color-picker-box-close-icon` | 无颜色时的默认关闭图标 |
+| `.ew-color-picker` | Root container |
+| `.ew-color-picker-panel-container` | Panel container (absolute) |
+| `.ew-color-picker-panel-container-hidden` | Hidden state |
+| `.ew-color-picker-bottom-row` | Bottom row that hosts inputs and buttons |
 
-### 面板
+### Box
 
-| 类名 | 说明 |
+| Class | Description |
 | --- | --- |
-| `.ew-color-picker-panel` | 颜色面板 |
-| `.ew-color-picker-panel-dynamic-size` | 动态尺寸面板 |
-| `.ew-color-picker-white-panel` | 白色渐变层 |
-| `.ew-color-picker-black-panel` | 黑色渐变层 |
-| `.ew-color-picker-panel-cursor` | 面板取色光标 |
-| `.ew-color-picker-bottom-row` | 面板底部行容器 |
+| `.ew-color-picker-box` | Trigger swatch |
+| `.ew-color-picker-box-arrow-icon` | Default "has color" icon |
+| `.ew-color-picker-box-close-icon` | Default "no color" icon |
+| `.is-disabled` / `.is-readonly` | States |
 
-### 滑块
+### Panel
 
-| 类名 | 说明 |
+| Class | Description |
 | --- | --- |
-| `.ew-color-picker-slider` | 滑块容器 |
-| `.ew-color-picker-slider-bar` | 滑块轨道 |
-| `.ew-color-picker-slider-thumb` | 滑块手柄 |
-| `.ew-color-picker-is-horizontal` | 水平方向 |
-| `.ew-color-picker-is-vertical` | 垂直方向 |
-| `.ew-color-picker-alpha-slider-bg` | 透明度棋盘背景 |
-| `.ew-color-picker-alpha-slider-wrapper` | 透明度滑块包装 |
-| `.ew-color-picker-alpha-slider-thumb` | 透明度手柄 |
+| `.ew-color-picker-panel` | 2D panel |
+| `.ew-color-picker-panel-dynamic-size` | Dynamic size marker |
+| `.ew-color-picker-white-panel` / `.ew-color-picker-black-panel` | Gradient layers |
+| `.ew-color-picker-panel-cursor` | Drag cursor |
 
-### 输入与按钮
+### Sliders
 
-| 类名 | 说明 |
+| Class | Description |
 | --- | --- |
-| `.ew-color-picker-input-container` | 输入区容器 |
-| `.ew-color-picker-input` | 文本输入框 |
-| `.ew-color-picker-input-label` | 输入框前缀标签 |
-| `.ew-color-picker-rgb-r-input` / `-g-input` / `-b-input` / `-a-input` | RGB 分量输入 |
-| `.ew-color-picker-hsl-h-input` / `-s-input` / `-l-input` / `-a-input` | HSL 分量输入 |
-| `.ew-color-picker-drop-btn` | 通用下拉按钮 |
-| `.ew-color-picker-clear-btn` | 清空按钮 |
-| `.ew-color-picker-sure-btn` | 确定按钮 |
-| `.ew-color-picker-mode-up-btn` / `-mode-down-btn` | 模式切换上下按钮 |
+| `.ew-color-picker-slider` | Hue slider root |
+| `.ew-color-picker-is-horizontal` / `.ew-color-picker-is-vertical` | Orientation |
+| `.ew-color-picker-slider-bar` | Hue gradient bar |
+| `.ew-color-picker-slider-thumb` | Hue thumb |
+| `.ew-color-picker-slider.ew-alpha` | Alpha slider root |
+| `.ew-color-picker-alpha-slider-wrapper` | Checkerboard + gradient wrapper |
+| `.ew-color-picker-alpha-slider-bg` / `.ew-color-picker-alpha-slider-bar` | Layers |
+| `.ew-color-picker-alpha-slider-thumb` | Alpha thumb |
 
-### 预定义色板
+### Input & buttons
 
-| 类名 | 说明 |
+| Class | Description |
 | --- | --- |
-| `.ew-color-picker-predefine-container` | 色板容器 |
-| `.ew-color-picker-predefine-color` | 单个色块外层 |
-| `.ew-color-picker-predefine-color-item` | 颜色填充层 |
-| `.ew-color-picker-predefine-color-disabled` | 禁用色块 |
-| `.ew-color-picker-predefine-color-active` | 当前选中色块 |
+| `.ew-color-picker-input-container` / `-flex` | Text input container |
+| `.ew-color-picker-input` | Text input |
+| `.ew-color-picker-input-default` | Default (hex) input |
+| `.ew-input-disabled` | Disabled text input |
+| `.ew-color-picker-drop-btn-group` / `-multi` / `-single` | Button group |
+| `.ew-color-picker-clear-btn` | Clear button |
+| `.ew-color-picker-sure-btn` | Sure button |
+| `.ew-color-picker-drop-btn` | Shared button style |
 
-### 数字输入框
+### Color mode
 
-| 类名 | 说明 |
+| Class | Description |
 | --- | --- |
-| `.ew-input-number` | 数字输入框根节点 |
-| `.ew-input-number--default` / `--small` / `--large` | 尺寸修饰 |
-| `.ew-input-number--focused` / `--disabled` | 聚焦 / 禁用态 |
-| `.ew-input-number__buttons` | 步进按钮容器 |
-| `.ew-input-number__button--up` / `--down` | 增加 / 减少按钮 |
-| `.ew-input-number__input` | 内部 input |
+| `.ew-color-picker-mode-container` | Mode switcher |
+| `.ew-color-picker-mode-up-btn` / `-down-btn` | Arrows |
+| `.ew-color-picker-mode-text` | Current mode label |
+| `.ew-color-picker-inputs-group` | Channel group |
+| `.ew-color-picker-inputs-col` | One channel column |
+| `.ew-color-picker-input-label` | Channel label |
 
-### 状态类
+### Predefine
 
-| 类名 | 说明 |
+| Class | Description |
 | --- | --- |
-| `.is-readonly` | 颜色盒只读 |
-| `.is-disabled` | 禁用态（按钮、输入框等） |
+| `.ew-color-picker-predefine-container` | Swatch container |
+| `.ew-color-picker-predefine-color` | Swatch wrapper |
+| `.ew-color-picker-predefine-color-item` | Color fill |
+| `.ew-color-picker-predefine-color-disabled` | Disabled swatch |
+| `.ew-color-picker-predefine-color-active` | Selected swatch |
 
-## 自定义主题示例
+### InputNumber
+
+| Class | Description |
+| --- | --- |
+| `.ew-input-number` | Root |
+| `.ew-input-number--small` / `--default` / `--large` | Sizes |
+| `.ew-input-number--focused` / `--disabled` | States |
+| `.ew-input-number__input` | Input |
+| `.ew-input-number__buttons` | Stepper container |
+| `.ew-input-number__button--up` / `--down` | Steppers |
+
+## Theming example
 
 ```css
-/* 修改面板尺寸 */
-#picker {
-  --panel-width: 300px;
-  --panel-height: 200px;
-}
-
-/* 自定义颜色盒圆角与边框 */
-#picker .ew-color-picker-box {
-  border-radius: 10px;
-  border: 1px solid rgba(99, 102, 241, 0.45);
-}
-
-/* 自定义按钮 */
-#picker .ew-color-picker-sure-btn {
-  background: #6366f1;
+/* Brand buttons */
+.ew-color-picker-sure-btn {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border: none;
   color: #fff;
-  border-radius: 8px;
 }
 
-/* 自定义选中色块描边 */
-#picker .ew-color-picker-predefine-color-active {
-  outline: 2px solid #6366f1;
-  outline-offset: 2px;
+/* Rounded trigger */
+.ew-color-picker-box {
+  border-radius: 12px;
+}
+
+/* Bigger panel */
+.ew-color-picker-panel {
+  --panel-width: 340px;
+  --panel-height: 200px;
 }
 ```
 
-## 多实例隔离
+## Multi-instance isolation
 
-所有类名都是全局的，但插件内部会通过挂载点限定查询范围。为不同实例追加自定义作用域是最稳妥的方式：
+Class names are global. If you need per-instance styling, pass a `className` (Box) or scope styles to a wrapper:
 
-```ts
-new ewColorPicker({ el: '#picker-a' })
-new ewColorPicker({ el: '#picker-b' })
+```html
+<div class="theme-dark">
+  <div id="picker"></div>
+</div>
 ```
 
 ```css
-#picker-a .ew-color-picker-box { border-radius: 6px; }
-#picker-b .ew-color-picker-box { border-radius: 50%; }
+.theme-dark .ew-color-picker-panel {
+  background: #111827;
+}
 ```
 
-::: tip
-请勿通过 `document.querySelector('.ew-color-picker-box')` 操作实例 DOM，多实例下会命中第一个实例。请使用 `picker.wrapper` 或 `getMountPoint()` 限定范围。
-:::
+## Next steps
 
-## 相关链接
-
-- [配置项](./options)
-- [插件总览](../plugins/)
+- [Options](./options.md)
+- [Box plugin](../plugins/box.md)
+- [InputNumber plugin](../plugins/input-number.md)

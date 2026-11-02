@@ -27,7 +27,7 @@ import '@ew-color-picker/style/dist/input-number.css'
 
 ## 相关链接
 
-- 插件文档：https://eveningwater.github.io/ew-color-picker/plugins/input-number
+- 插件文档：https://eveningwater.github.io/ew-color-picker/zh/plugins/input-number
 - 源码仓库：https://github.com/eveningwater/ew-color-picker
 
 ## License

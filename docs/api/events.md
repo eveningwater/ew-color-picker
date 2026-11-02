@@ -1,177 +1,127 @@
 ---
-title: 事件
-description: change、toggle、sure、clear、options-update、mode-change、destroy 七个事件的触发时机、参数与监听规则。
+title: Events
+description: 'Change, toggle, sure, clear, options-update, mode-change and destroy events: payloads, timing and listener rules.'
 ---
 
-# 事件
+# Events
 
-实例基于 `EventEmitter` 提供事件订阅能力。所有事件都是**实例级**的，不会跨实例传播。
+Every instance has its own event bus. The following types are registered:
 
-## 事件总览
+```ts
+['destroy', 'change', 'sure', 'clear', 'toggle', 'options-update', 'mode-change']
+```
 
-| 事件 | 参数 | 触发时机 |
+Using an unknown type logs a warning; it does not throw.
+
+## Summary
+
+| Event | Payload | Emitted when |
 | --- | --- | --- |
-| `change` | `(color: string)` | `setColor()` 执行后（每次颜色变化） |
-| `toggle` | `(isOpen: boolean)` | 面板展开 / 收起完成后 |
-| `sure` | `(color: string, picker: ewColorPicker)` | 点击“确定”按钮 |
-| `clear` | `()` | 点击“清空”按钮 |
-| `options-update` | `(options)` | `updateOptions()` 执行后 |
-| `mode-change` | `(mode: 'hex' \| 'rgb' \| 'hsl')` | 颜色模式切换后（ColorMode 插件派发） |
-| `destroy` | `()` | 实例销毁时 |
-
-> 事件名必须在上述白名单内。`on()` / `once()` / `off()` 对未知事件会输出警告，便于发现拼写错误。
+| `change` | `(color: string)` | `setColor()` is called |
+| `toggle` | `(isOpen: boolean)` | Panel opened/closed |
+| `sure` | `(color: string, picker)` | Sure button clicked |
+| `clear` | `()` | Clear button clicked |
+| `options-update` | `(options)` | `updateOptions()` finished |
+| `mode-change` | `(mode: 'hex' \| 'rgb' \| 'hsl')` | Color mode switched |
+| `destroy` | `()` | `destroy()` finished |
 
 ## change
 
-颜色变化事件，是最重要的事件。
-
 ```ts
-picker.on('change', (color: string) => {
-  console.log('当前颜色：', color)
-})
+picker.on('change', (color) => console.log(color))
 ```
 
-- 由 `setColor()` 触发；
-- 回调参数为写入的原始颜色字符串（可能与当前输入模式不同，例如 `rgba(...)`）；
-- 与配置项 `changeColor` 同时存在：先触发事件，再调用回调。
+Emitted synchronously by `setColor()`, after `currentColor` and `hsvaColor` are updated. Every UI plugin listens to this event to stay in sync.
 
-```ts
-const picker = new ewColorPicker({
-  el: '#picker',
-  changeColor(color) {
-    document.body.style.background = color
-  },
-})
-
-picker.on('change', (color) => {
-  document.querySelector('#value')!.textContent = color
-})
-```
+Calling `setColor('')` also emits `change('')` (used when clearing).
 
 ## toggle
 
-面板开合事件。
-
 ```ts
-picker.on('toggle', (isOpen: boolean) => {
-  console.log(isOpen ? '面板已打开' : '面板已关闭')
-})
+picker.on('toggle', (isOpen) => console.log(isOpen))
 ```
 
-- `showPanel()` 动画完成后触发 `toggle(true)`；
-- `hidePanel()` 动画完成后触发 `toggle(false)`；
-- 配置项 `togglePicker(isOpen)` 会在事件之后被调用。
+Emitted after the open/close animation promise resolves. `pickerFlag` is already updated when listeners run.
 
 ## sure
 
-确定按钮事件。
-
 ```ts
-picker.on('sure', (color, instance) => {
-  console.log('确认颜色：', color)
-})
+picker.on('sure', (color, picker) => console.log(color))
 ```
 
-- 由 Button 插件在点击“确定”后触发；
-- 回调参数：当前颜色、实例本身；
-- Button 插件会**先**调用配置项 `sure(color, picker)`，**再**触发该事件，最后收起面板。
+Emitted by the Button plugin after `options.sure(color, picker)`. The panel closes afterwards.
 
 ## clear
 
-清空按钮事件。
-
 ```ts
-picker.on('clear', () => {
-  console.log('已清空')
-})
+picker.on('clear', () => console.log('cleared'))
 ```
 
-- Button 插件先执行 `options.clear(picker)`，再触发 `clear` 事件；
-- 点击清空后面板自动收起。
+Emitted by the Button plugin after `options.clear(picker)`. The panel closes afterwards.
 
 ## options-update
 
-配置更新事件。
-
 ```ts
-picker.on('options-update', (options) => {
-  console.log('配置已更新', options)
-})
+picker.on('options-update', (options) => console.log(options))
 ```
 
-- 在 `updateOptions()` 完成配置合并、颜色同步与插件重新渲染后触发；
-- 参数为更新后的完整配置对象。
+Emitted at the end of `updateOptions()`, after plugins have re-rendered.
 
 ## mode-change
 
-颜色模式切换事件，由 ColorMode 插件派发。
-
 ```ts
-picker.on('mode-change', (mode) => {
-  console.log('切换到：', mode) // 'hex' | 'rgb' | 'hsl'
-})
+picker.on('mode-change', (mode) => console.log(mode))
 ```
 
-- 可通过 `picker.plugins.ewColorPickerColorMode.setMode(mode)` 主动切换；
-- 配置项 `changeMode(mode, picker)` 与该事件都会在切换后执行。
+Emitted by the ColorMode plugin. `mode` is `'hex'`, `'rgb'` or `'hsl'`.
 
 ## destroy
 
-销毁事件。
-
 ```ts
-picker.on('destroy', () => {
-  console.log('实例已销毁')
-})
+picker.on('destroy', () => console.log('destroyed'))
 ```
 
-- 在 `destroy()` 的末尾触发，此时 DOM 已被移除、插件引用已清空。
+Emitted at the very end of `destroy()`, after plugin cleanup and DOM removal.
 
-## 订阅技巧
+## Listener rules
 
-### 只监听一次
+### once
 
 ```ts
-picker.once('sure', (color) => {
-  console.log('只会执行一次：', color)
-})
+picker.once('change', (color) => console.log('first change only', color))
 ```
 
-### 解绑指定监听
+### off
 
 ```ts
 const handler = (color: string) => console.log(color)
 picker.on('change', handler)
 picker.off('change', handler)
+
+picker.off('change') // remove all change listeners
+picker.off()         // remove everything
 ```
 
-### 解绑全部监听
+### Stopping propagation
 
-```ts
-picker.off('change') // 清空 change 事件的所有监听
-picker.off()         // 清空所有事件监听
-```
-
-### 中断后续监听
-
-监听函数返回 `true` 时，`trigger` 会停止执行后续监听器：
+Return `true` from a listener to stop the remaining listeners of the same event:
 
 ```ts
 picker.on('change', (color) => {
-  if (someCondition) return true
+  if (color === '#000000') return true // stop here
 })
 ```
 
-## trigger 与 emit
+### trigger vs emit
 
-```ts
-picker.trigger('change', '#ff0000') // 只通知监听器
-picker.emit('sure', '#ff0000', picker) // 通知监听器 + 调用 options.sure()
-```
+| Method | Calls listeners | Calls option callbacks |
+| --- | --- | --- |
+| `trigger(type, ...args)` | Yes | No |
+| `emit(type, ...args)` | Yes | Yes, for `clear` / `sure` / `toggle` |
 
-日常开发中无需手动派发，插件会在合适的时机自行触发。
+`emit('clear')` invokes `options.clear()` with no arguments; `emit('sure')` invokes `options.sure()` with no arguments; `emit('toggle', isOpen)` forwards `isOpen` to `options.togglePicker`.
 
-## 相关链接
+## Next steps
 
-- [回调](./callbacks)
-- [实例方法](./methods)
+- [Callbacks](./callbacks.md)
+- [Methods](./methods.md)

@@ -16,136 +16,136 @@ const pageUrl = (path: string) =>
 const CN_MIRROR = 'https://ew-color-picker.eveningwater.com/'
 
 const zhNav = [
-  { text: '指南', link: '/guide/', activeMatch: '/guide/' },
-  { text: 'API', link: '/api/options', activeMatch: '/api/' },
-  { text: '插件', link: '/plugins/', activeMatch: '/plugins/' },
-  { text: '示例', link: '/examples/', activeMatch: '/examples/' },
-  { text: '框架集成', link: '/guide/framework-integration', activeMatch: '/guide/framework-integration' },
-  { text: '在线演示', link: '/examples/demo', activeMatch: '/examples/demo' },
-  { text: '国内访问', link: CN_MIRROR, target: '_blank', rel: 'noopener' },
+  { text: '指南', link: '/zh/guide/', activeMatch: '/zh/guide/' },
+  { text: 'API', link: '/zh/api/options', activeMatch: '/zh/api/' },
+  { text: '插件', link: '/zh/plugins/', activeMatch: '/zh/plugins/' },
+  { text: '示例', link: '/zh/examples/', activeMatch: '/zh/examples/' },
+  { text: '框架集成', link: '/zh/guide/framework-integration', activeMatch: '/zh/guide/framework-integration' },
+  { text: '在线演示', link: '/zh/examples/demo', activeMatch: '/zh/examples/demo' },
+  { text: '国内访问', link: `${CN_MIRROR}zh/`, target: '_blank', rel: 'noopener' },
   { text: '其他项目', link: 'https://www.eveningwater.com', target: '_blank', rel: 'noopener' },
 ]
 
 const enNav = [
-  { text: 'Guide', link: '/en/guide/', activeMatch: '/en/guide/' },
-  { text: 'API', link: '/en/api/options', activeMatch: '/en/api/' },
-  { text: 'Plugins', link: '/en/plugins/', activeMatch: '/en/plugins/' },
-  { text: 'Examples', link: '/en/examples/', activeMatch: '/en/examples/' },
-  { text: 'Frameworks', link: '/en/guide/framework-integration', activeMatch: '/en/guide/framework-integration' },
-  { text: 'Live Demo', link: '/en/examples/demo', activeMatch: '/en/examples/demo' },
-  { text: 'China Site', link: `${CN_MIRROR}en/`, target: '_blank', rel: 'noopener' },
+  { text: 'Guide', link: '/guide/', activeMatch: '/guide/' },
+  { text: 'API', link: '/api/options', activeMatch: '/api/' },
+  { text: 'Plugins', link: '/plugins/', activeMatch: '/plugins/' },
+  { text: 'Examples', link: '/examples/', activeMatch: '/examples/' },
+  { text: 'Frameworks', link: '/guide/framework-integration', activeMatch: '/guide/framework-integration' },
+  { text: 'Live Demo', link: '/examples/demo', activeMatch: '/examples/demo' },
+  { text: 'China Site', link: `${CN_MIRROR}`, target: '_blank', rel: 'noopener' },
   { text: 'More Projects', link: 'https://www.eveningwater.com', target: '_blank', rel: 'noopener' },
 ]
 
 const zhSidebar = {
-  '/guide/': [
+  '/zh/guide/': [
     {
       text: '开始',
       items: [
-        { text: '项目介绍', link: '/guide/' },
-        { text: '竞品对比与定位', link: '/guide/comparison' },
-        { text: '安装', link: '/guide/installation' },
-        { text: '快速开始', link: '/guide/getting-started' },
-        { text: '核心概念', link: '/guide/concepts' },
-        { text: '编写自定义插件', link: '/guide/plugin-dev' },
-        { text: '框架集成', link: '/guide/framework-integration' },
-        { text: '更新日志', link: '/guide/changelog' },
+        { text: '项目介绍', link: '/zh/guide/' },
+        { text: '竞品对比与定位', link: '/zh/guide/comparison' },
+        { text: '安装', link: '/zh/guide/installation' },
+        { text: '快速开始', link: '/zh/guide/getting-started' },
+        { text: '核心概念', link: '/zh/guide/concepts' },
+        { text: '编写自定义插件', link: '/zh/guide/plugin-dev' },
+        { text: '框架集成', link: '/zh/guide/framework-integration' },
+        { text: '更新日志', link: '/zh/guide/changelog' },
       ],
     },
   ],
-  '/api/': [
+  '/zh/api/': [
     {
       text: 'API 参考',
       items: [
-        { text: '配置项', link: '/api/options' },
-        { text: '实例方法', link: '/api/methods' },
-        { text: '事件', link: '/api/events' },
-        { text: '回调', link: '/api/callbacks' },
-        { text: '样式与类名', link: '/api/styles' },
+        { text: '配置项', link: '/zh/api/options' },
+        { text: '实例方法', link: '/zh/api/methods' },
+        { text: '事件', link: '/zh/api/events' },
+        { text: '回调', link: '/zh/api/callbacks' },
+        { text: '样式与类名', link: '/zh/api/styles' },
       ],
     },
   ],
-  '/plugins/': [
+  '/zh/plugins/': [
     {
       text: '插件',
       items: [
-        { text: '插件总览', link: '/plugins/' },
-        { text: 'Box 颜色盒', link: '/plugins/box' },
-        { text: 'Panel 颜色面板', link: '/plugins/panel' },
-        { text: 'Hue 色相滑块', link: '/plugins/hue' },
-        { text: 'Alpha 透明度滑块', link: '/plugins/alpha' },
-        { text: 'Input 输入框', link: '/plugins/input' },
-        { text: 'InputNumber 数字输入框', link: '/plugins/input-number' },
-        { text: 'Button 按钮', link: '/plugins/button' },
-        { text: 'Predefine 预定义颜色', link: '/plugins/predefine' },
-        { text: 'ColorMode 颜色模式', link: '/plugins/color-mode' },
-        { text: 'Console 控制台', link: '/plugins/console' },
+        { text: '插件总览', link: '/zh/plugins/' },
+        { text: 'Box 颜色盒', link: '/zh/plugins/box' },
+        { text: 'Panel 颜色面板', link: '/zh/plugins/panel' },
+        { text: 'Hue 色相滑块', link: '/zh/plugins/hue' },
+        { text: 'Alpha 透明度滑块', link: '/zh/plugins/alpha' },
+        { text: 'Input 输入框', link: '/zh/plugins/input' },
+        { text: 'InputNumber 数字输入框', link: '/zh/plugins/input-number' },
+        { text: 'Button 按钮', link: '/zh/plugins/button' },
+        { text: 'Predefine 预定义颜色', link: '/zh/plugins/predefine' },
+        { text: 'ColorMode 颜色模式', link: '/zh/plugins/color-mode' },
+        { text: 'Console 控制台', link: '/zh/plugins/console' },
       ],
     },
   ],
-  '/examples/': [
+  '/zh/examples/': [
     {
       text: '示例',
       items: [
-        { text: '示例索引', link: '/examples/' },
-        { text: '在线演示', link: '/examples/demo' },
+        { text: '示例索引', link: '/zh/examples/' },
+        { text: '在线演示', link: '/zh/examples/demo' },
       ],
     },
   ],
 }
 
 const enSidebar = {
-  '/en/guide/': [
+  '/guide/': [
     {
       text: 'Getting Started',
       items: [
-        { text: 'Introduction', link: '/en/guide/' },
-        { text: 'Comparison & Positioning', link: '/en/guide/comparison' },
-        { text: 'Installation', link: '/en/guide/installation' },
-        { text: 'Quick Start', link: '/en/guide/getting-started' },
-        { text: 'Core Concepts', link: '/en/guide/concepts' },
-        { text: 'Writing a Plugin', link: '/en/guide/plugin-dev' },
-        { text: 'Framework Integration', link: '/en/guide/framework-integration' },
-        { text: 'Changelog', link: '/en/guide/changelog' },
+        { text: 'Introduction', link: '/guide/' },
+        { text: 'Comparison & Positioning', link: '/guide/comparison' },
+        { text: 'Installation', link: '/guide/installation' },
+        { text: 'Quick Start', link: '/guide/getting-started' },
+        { text: 'Core Concepts', link: '/guide/concepts' },
+        { text: 'Writing a Plugin', link: '/guide/plugin-dev' },
+        { text: 'Framework Integration', link: '/guide/framework-integration' },
+        { text: 'Changelog', link: '/guide/changelog' },
       ],
     },
   ],
-  '/en/api/': [
+  '/api/': [
     {
       text: 'API Reference',
       items: [
-        { text: 'Options', link: '/en/api/options' },
-        { text: 'Methods', link: '/en/api/methods' },
-        { text: 'Events', link: '/en/api/events' },
-        { text: 'Callbacks', link: '/en/api/callbacks' },
-        { text: 'Styles & Classes', link: '/en/api/styles' },
+        { text: 'Options', link: '/api/options' },
+        { text: 'Methods', link: '/api/methods' },
+        { text: 'Events', link: '/api/events' },
+        { text: 'Callbacks', link: '/api/callbacks' },
+        { text: 'Styles & Classes', link: '/api/styles' },
       ],
     },
   ],
-  '/en/plugins/': [
+  '/plugins/': [
     {
       text: 'Plugins',
       items: [
-        { text: 'Overview', link: '/en/plugins/' },
-        { text: 'Box', link: '/en/plugins/box' },
-        { text: 'Panel', link: '/en/plugins/panel' },
-        { text: 'Hue', link: '/en/plugins/hue' },
-        { text: 'Alpha', link: '/en/plugins/alpha' },
-        { text: 'Input', link: '/en/plugins/input' },
-        { text: 'InputNumber', link: '/en/plugins/input-number' },
-        { text: 'Button', link: '/en/plugins/button' },
-        { text: 'Predefine', link: '/en/plugins/predefine' },
-        { text: 'ColorMode', link: '/en/plugins/color-mode' },
-        { text: 'Console', link: '/en/plugins/console' },
+        { text: 'Overview', link: '/plugins/' },
+        { text: 'Box', link: '/plugins/box' },
+        { text: 'Panel', link: '/plugins/panel' },
+        { text: 'Hue', link: '/plugins/hue' },
+        { text: 'Alpha', link: '/plugins/alpha' },
+        { text: 'Input', link: '/plugins/input' },
+        { text: 'InputNumber', link: '/plugins/input-number' },
+        { text: 'Button', link: '/plugins/button' },
+        { text: 'Predefine', link: '/plugins/predefine' },
+        { text: 'ColorMode', link: '/plugins/color-mode' },
+        { text: 'Console', link: '/plugins/console' },
       ],
     },
   ],
-  '/en/examples/': [
+  '/examples/': [
     {
       text: 'Examples',
       items: [
-        { text: 'Index', link: '/en/examples/' },
-        { text: 'Live Demo', link: '/en/examples/demo' },
+        { text: 'Index', link: '/examples/' },
+        { text: 'Live Demo', link: '/examples/demo' },
       ],
     },
   ],
@@ -198,9 +198,9 @@ function transformHead({ pageData }: any) {
 
   const cleanUrl = pageUrl(path)
 
-  const isEn = path.startsWith('en/')
-  const zhPath = isEn ? path.replace(/^en\//, '') : path
-  const enPath = isEn ? path : `en/${path}`
+  const isZh = path.startsWith('zh/')
+  const zhPath = isZh ? path : `zh/${path}`
+  const enPath = isZh ? path.replace(/^zh\//, '') : path
 
   const zhUrl = pageUrl(zhPath)
   const enUrl = pageUrl(enPath)
@@ -217,7 +217,7 @@ function transformHead({ pageData }: any) {
     ['link', { rel: 'canonical', href: cleanUrl }],
     ['link', { rel: 'alternate', hreflang: 'zh-CN', href: zhUrl }],
     ['link', { rel: 'alternate', hreflang: 'en', href: enUrl }],
-    ['link', { rel: 'alternate', hreflang: 'x-default', href: zhUrl }],
+    ['link', { rel: 'alternate', hreflang: 'x-default', href: enUrl }],
     ['meta', { property: 'og:url', content: cleanUrl }],
     ['meta', { property: 'og:title', content: title }],
     ['meta', { property: 'og:description', content: description }],
@@ -250,10 +250,11 @@ function transformHead({ pageData }: any) {
 }
 
 export default defineConfig({
-  lang: 'zh-CN',
+  lang: 'en-US',
   title: 'ew-color-picker',
   titleTemplate: ':title | ew-color-picker',
-  description: '事件驱动 + 插件化的现代颜色选择器，支持 Hex / RGB / HSL 与透明度调节',
+  description:
+    'Event-driven, plugin-based modern color picker with Hex / RGB / HSL support and alpha adjustment.',
   base: BASE,
   cleanUrls: CLEAN,
   outDir: '../gh-pages',
@@ -274,30 +275,8 @@ export default defineConfig({
   },
   locales: {
     root: {
-      label: '简体中文',
-      lang: 'zh-CN',
-      title: 'ew-color-picker',
-      description: '事件驱动 + 插件化的现代颜色选择器，支持 Hex / RGB / HSL 与透明度调节',
-      themeConfig: {
-        logo: '/logo.svg',
-        siteTitle: 'ew-color-picker',
-        nav: zhNav,
-        sidebar: zhSidebar,
-        outline: { level: [2, 3], label: '本页目录' },
-        docFooter: { prev: '上一篇', next: '下一篇' },
-        lastUpdated: { text: '最后更新' },
-        search: zhSearch,
-        socialLinks: [{ icon: 'github', link: GITHUB }],
-        footer: {
-          message: `基于 MIT 许可发布 · <a href="${BASE}llms.txt">llms.txt</a> · <a href="${CN_MIRROR}" target="_blank" rel="noopener">国内访问</a> · <a href="https://www.eveningwater.com" target="_blank" rel="noopener">其他项目</a>`,
-          copyright: 'Copyright © 2024-present eveningwater',
-        },
-      },
-    },
-    en: {
       label: 'English',
       lang: 'en-US',
-      link: '/en/',
       title: 'ew-color-picker',
       description:
         'Event-driven, plugin-based modern color picker with Hex / RGB / HSL support and alpha adjustment.',
@@ -312,7 +291,29 @@ export default defineConfig({
         search: enSearch,
         socialLinks: [{ icon: 'github', link: GITHUB }],
         footer: {
-          message: `Released under the MIT License · <a href="${BASE}llms.txt">llms.txt</a> · <a href="${CN_MIRROR}en/" target="_blank" rel="noopener">China site</a> · <a href="https://www.eveningwater.com" target="_blank" rel="noopener">More projects</a>`,
+          message: `Released under the MIT License · <a href="${BASE}llms.txt">llms.txt</a> · <a href="${CN_MIRROR}" target="_blank" rel="noopener">China site</a> · <a href="https://www.eveningwater.com" target="_blank" rel="noopener">More projects</a>`,
+          copyright: 'Copyright © 2024-present eveningwater',
+        },
+      },
+    },
+    zh: {
+      label: '简体中文',
+      lang: 'zh-CN',
+      link: '/zh/',
+      title: 'ew-color-picker',
+      description: '事件驱动 + 插件化的现代颜色选择器，支持 Hex / RGB / HSL 与透明度调节',
+      themeConfig: {
+        logo: '/logo.svg',
+        siteTitle: 'ew-color-picker',
+        nav: zhNav,
+        sidebar: zhSidebar,
+        outline: { level: [2, 3], label: '本页目录' },
+        docFooter: { prev: '上一篇', next: '下一篇' },
+        lastUpdated: { text: '最后更新' },
+        search: zhSearch,
+        socialLinks: [{ icon: 'github', link: GITHUB }],
+        footer: {
+          message: `基于 MIT 许可发布 · <a href="${BASE}llms.txt">llms.txt</a> · <a href="${CN_MIRROR}zh/" target="_blank" rel="noopener">国内访问</a> · <a href="https://www.eveningwater.com" target="_blank" rel="noopener">其他项目</a>`,
           copyright: 'Copyright © 2024-present eveningwater',
         },
       },

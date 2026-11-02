@@ -1,116 +1,103 @@
 ---
-title: 快速开始
-description: 几分钟内创建第一个 ew-color-picker 实例：容器、配置、事件、方法与销毁。
+title: Quick Start
+description: 'Create your first ew-color-picker instance in minutes: container, options, events, methods and cleanup.'
 ---
 
-# 快速开始
+# Quick Start
 
-## 1. 准备容器
-
-颜色选择器会挂载到指定容器中。容器宽度由内容自适应，建议给容器留出足够空间。
+## 1. Prepare a container
 
 ```html
 <div id="picker"></div>
 ```
 
-## 2. 初始化
-
 ```ts
 import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
+```
 
+## 2. Create an instance
+
+There are three equivalent ways to pass the container:
+
+```ts
+// Selector
+new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
+
+// DOM element
+const el = document.getElementById('picker')!
+new ewColorPicker(el, { defaultColor: '#6366f1' })
+
+// Element in options object (same as the first form)
+new ewColorPicker({ el, defaultColor: '#6366f1' })
+```
+
+If `el` is provided, the picker **mounts automatically**. Without `el`, call `mount()` yourself later.
+
+## 3. Listen for changes
+
+```ts
 const picker = new ewColorPicker({
   el: '#picker',
   defaultColor: '#6366f1',
 })
 
-console.log(picker.getColor()) // '#6366f1'
-```
-
-`el` 支持三种写法：
-
-```ts
-new ewColorPicker('#picker')            // 选择器
-new ewColorPicker(document.querySelector('#picker')!) // 元素
-new ewColorPicker({ el: '#picker' })    // 配置对象
-```
-
-## 3. 监听颜色变化
-
-```ts
-const picker = new ewColorPicker({
-  el: '#picker',
-  changeColor(color) {
-    console.log('实时颜色：', color)
-  },
-  sure(color, instance) {
-    console.log('点击确定：', color, instance)
-  },
-  clear(instance) {
-    console.log('点击清空')
-  },
-})
-```
-
-也可以使用事件订阅：
-
-```ts
 picker.on('change', (color) => {
-  document.body.style.background = color
+  console.log('Current color:', color)
+})
+
+picker.on('sure', (color) => {
+  console.log('Confirmed:', color)
 })
 ```
 
-## 4. 常用的完整配置
+## 4. A fuller example
 
 ```ts
 const picker = new ewColorPicker({
   el: '#picker',
-  defaultColor: 'rgba(99, 102, 241, 0.8)',
-  predefineColor: [
-    '#6366f1',
-    '#8b5cf6',
-    '#06b6d4',
-    '#22c55e',
-    { color: '#ef4444', disabled: true },
-  ],
+  defaultColor: '#6366f1',
   size: 'large',
   hueDirection: 'horizontal',
   alphaDirection: 'horizontal',
-  panelPlacement: 'bottom-end',
+  predefineColor: ['#ef4444', '#22c55e', '#3b82f6', '#a855f7'],
+  clearText: 'Reset',
+  sureText: 'Apply',
   autoPanelPosition: true,
+  panelPlacement: 'bottom-start',
   togglePickerAnimation: 'height',
-  pickerAnimationTime: 240,
-  clearText: '重置',
-  sureText: '应用',
-  changeColor(color) {
-    console.log(color)
-  },
+  pickerAnimationTime: 250,
 })
+
+picker.on('change', (color) => console.log('change', color))
+picker.on('toggle', (open) => console.log('panel', open ? 'open' : 'closed'))
+picker.on('mode-change', (mode) => console.log('mode', mode))
 ```
 
-## 5. 实例方法
+## 5. Methods
 
 ```ts
-picker.setColor('#ff0000')  // 修改颜色（唯一入口）
-picker.getColor()           // 获取当前颜色字符串
-picker.openPicker()         // 展开面板
-picker.closePicker()        // 收起面板
-picker.updateOptions({ disabled: true }) // 运行时更新配置
-picker.destroy()            // 销毁实例，解绑事件
+picker.getColor()          // current color string
+picker.getHsvaColor()      // { h, s, v, a }
+picker.setColor('#22c55e') // programmatic change (emits change)
+picker.showPanel()
+picker.hidePanel()
+picker.updateOptions({ size: 'small' })
 ```
 
-## 6. 销毁
+Full reference: [Methods](../api/methods.md).
 
-页面卸载或组件卸载时务必调用 `destroy()`，它会移除 DOM、解绑全局事件并清空插件。
+## 6. Cleanup
 
 ```ts
 picker.destroy()
-console.log(picker.getDestroyedStatus()) // true
 ```
 
-## 下一步
+`destroy()` removes DOM, unbinds DOM events, clears listeners, and emits `destroy`. After destruction, most methods become no-ops; check `picker.getDestroyedStatus()`.
 
-- [核心概念](./concepts) — 理解插件挂载点与事件流
-- [配置项](../api/options) — 查看全部可选参数
-- [插件](../plugins/) — 按需组合界面
+## Next steps
+
+- [Core concepts](./concepts.md)
+- [Options](../api/options.md)
+- [Plugin overview](../plugins/index.md)

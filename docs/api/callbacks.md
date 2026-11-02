@@ -1,176 +1,127 @@
 ---
-title: 回调
-description: 核心回调与各插件回调的签名、触发时机，以及回调与事件的差异对比。
+title: Callbacks
+description: 'Core and plugin-level callbacks: changeColor, sure, clear, togglePicker, onClick, onChange, changeMode and their signatures.'
 ---
 
-# 回调
+# Callbacks
 
-回调是配置对象中的函数字段，与[事件](./events)不同：**回调一个事件类型只能配置一个**，而事件可以注册多个监听器。回调由具体插件在合适的时机直接调用。
+Callbacks are functions passed through options. Unlike events, they are bound to a specific plugin or the core.
 
-## 核心回调
+## Core callbacks
 
-### changeColor
-
-颜色变化时调用，由 `setColor()` 直接调用。
+| Callback | Signature | Triggered by |
+| --- | --- | --- |
+| `changeColor` | `(color: string) => void` | `core.setColor()` |
+| `sure` | `(color: string, picker) => void` | Sure button |
+| `clear` | `(picker) => void` | Clear button |
+| `togglePicker` | `(isOpen: boolean) => void` | `showPanel()` / `hidePanel()` |
 
 ```ts
-new ewColorPicker({
-  el: '#picker',
-  changeColor(color: string) {
-    console.log(color)
-  },
+const picker = new ewColorPicker({
+  el: '#app',
+  changeColor: (color) => console.log(color),
+  sure: (color, instance) => console.log(color, instance.getColor()),
+  clear: (instance) => console.log('cleared', instance.getColor()),
+  togglePicker: (open) => console.log(open ? 'open' : 'closed'),
 })
 ```
 
-| 参数 | 类型 | 说明 |
-| --- | --- | --- |
-| `color` | `string` | 最新颜色字符串 |
+::: tip Callback vs event
+`changeColor` runs **inside** `setColor()` in addition to the `change` event. `sure` / `clear` are invoked by the Button plugin with arguments, while `core.emit('sure')` invokes them without arguments.
+:::
 
-执行顺序：`trigger('change', color)` → `options.changeColor(color)`。
-
-### sure
-
-点击“确定”时调用，由 Button 插件在触发 `sure` 事件之前调用。
-
-```ts
-new ewColorPicker({
-  el: '#picker',
-  sure(color: string, picker: ewColorPicker) {
-    console.log('确定：', color)
-  },
-})
-```
-
-| 参数 | 类型 | 说明 |
-| --- | --- | --- |
-| `color` | `string` | 当前颜色 |
-| `picker` | `ewColorPicker` | 实例 |
-
-### clear
-
-点击“清空”时调用，由 Button 插件在触发 `clear` 事件之前调用。
-
-```ts
-new ewColorPicker({
-  el: '#picker',
-  clear(picker: ewColorPicker) {
-    console.log('清空')
-  },
-})
-```
-
-| 参数 | 类型 | 说明 |
-| --- | --- | --- |
-| `picker` | `ewColorPicker` | 实例 |
-
-### togglePicker
-
-面板开合时调用，分别在 `showPanel()` / `hidePanel()` 动画完成后执行。
-
-```ts
-new ewColorPicker({
-  el: '#picker',
-  togglePicker(isOpen: boolean) {
-    console.log(isOpen ? '打开' : '关闭')
-  },
-})
-```
-
-| 参数 | 类型 | 说明 |
-| --- | --- | --- |
-| `isOpen` | `boolean` | `true` 展开，`false` 收起 |
-
-## 插件级回调
+## Plugin-level callbacks
 
 ### Box
 
-颜色盒回调是顶层配置项（没有 `ewColorPickerBox` 嵌套对象写法）。
+| Callback | Signature | Notes |
+| --- | --- | --- |
+| `onClick` | `(boxPlugin) => void` | After the panel toggle; blocked when `disabled` / `readonly` |
+| `onMouseEnter` | `(boxPlugin) => void` | Mouse enter |
+| `onMouseLeave` | `(boxPlugin) => void` | Mouse leave |
 
 ```ts
 new ewColorPicker({
-  el: '#picker',
-  onClick(plugin) {},      // 点击颜色盒
-  onMouseEnter(plugin) {}, // 鼠标移入
-  onMouseLeave(plugin) {}, // 鼠标移出
+  el: '#app',
+  onClick: (box) => console.log('box clicked', box.hasBox),
 })
 ```
 
-| 回调 | 参数 | 说明 |
-| --- | --- | --- |
-| `onClick` | `ewColorPickerBoxPlugin` | 点击颜色盒（默认开合行为不受影响） |
-| `onMouseEnter` | `ewColorPickerBoxPlugin` | 鼠标移入 |
-| `onMouseLeave` | `ewColorPickerBoxPlugin` | 鼠标移出 |
-
 ### Input
 
-通过 `changeColor` 配置（与核心 `changeColor` 同名，Input 插件会在用户输入合法颜色后调用）。
+| Callback | Signature | Notes |
+| --- | --- | --- |
+| `changeColor` | `(rgba: string) => void` | Valid input parsed and applied |
 
 ```ts
 new ewColorPicker({
-  el: '#picker',
-  changeColor(color) {
-    console.log('输入框提交：', color) // rgba 字符串
-  },
+  el: '#app',
+  hasInput: true,
+  changeColor: (rgba) => console.log('input applied', rgba),
 })
 ```
 
 ### InputNumber
 
+| Callback | Signature | Notes |
+| --- | --- | --- |
+| `onChange` | `(value: number) => void` | Debounced 300ms; not called on construction |
+| `onBlur` | `(value: number) => void` | Input blurred |
+| `onFocus` | `(event: FocusEvent) => void` | Input focused |
+
 ```ts
 import { InputNumber } from '@ew-color-picker/input-number'
 
-const input = new InputNumber({
-  value: 128,
+new InputNumber({
+  value: 50,
   min: 0,
-  max: 255,
-  step: 1,
-  onChange(value) {
-    console.log('数值变化：', value)
-  },
-  onBlur(value) {
-    console.log('失焦：', value)
-  },
-  onFocus(event) {
-    console.log('聚焦：', event)
-  },
+  max: 100,
+  onChange: (v) => console.log(v),
+  onBlur: (v) => console.log('blur', v),
+  onFocus: (e) => console.log('focus', e),
 })
 ```
 
-| 回调 | 参数 | 说明 |
+### Predefine
+
+| Callback | Signature | Notes |
 | --- | --- | --- |
-| `onChange` | `value: number` | 数值变化（含输入与步进） |
-| `onBlur` | `value: number` | 失焦 |
-| `onFocus` | `FocusEvent` | 聚焦 |
+| `changeColor` | `(rgba: string) => void` | Swatch clicked and applied |
 
 ### ColorMode
 
+| Callback | Signature | Notes |
+| --- | --- | --- |
+| `changeMode` | `(mode, picker) => void` | After switching to `'hex' \| 'rgb' \| 'hsl'` |
+
 ```ts
 new ewColorPicker({
-  el: '#picker',
-  changeMode(mode, picker) {
-    console.log('模式：', mode) // 'hex' | 'rgb' | 'hsl'
-  },
+  el: '#app',
+  changeMode: (mode, instance) => console.log(mode, instance.getColor()),
 })
 ```
 
-| 参数 | 类型 | 说明 |
+### Button
+
+| Callback | Signature | Notes |
 | --- | --- | --- |
-| `mode` | `ColorMode` | 当前模式 |
-| `picker` | `ewColorPicker` | 实例 |
+| `clear` | `(picker) => void` | Clear clicked |
+| `sure` | `(color, picker) => void` | Sure clicked |
 
-## 回调 vs 事件
+## Callback vs event
 
-| 维度 | 回调 | 事件 |
+| Aspect | Callback | Event |
 | --- | --- | --- |
-| 数量 | 每种一个 | 可注册多个 |
-| 注册方式 | 构造配置 | `on` / `once` |
-| 解绑 | 需 `updateOptions` 覆盖 | `off` |
-| 调用者 | 具体插件直接调用 | 插件 / 核心 `trigger` |
-| 适用场景 | 单一业务处理 | 多监听、组件通信、插件同步 |
+| Registration | Options object | `on()` / `once()` |
+| Multiple handlers | One per option | Many |
+| Removal | `updateOptions({ changeColor: noop })` | `off()` |
+| Return value effect | Ignored | `true` stops propagation |
+| Access to plugin instance | Usually provided | Only via payload |
 
-推荐：插件与核心内部同步使用事件；业务侧单一入口使用回调即可。
+Prefer events for analytics or multiple consumers; prefer callbacks for a single owner of the behavior.
 
-## 相关链接
+## Next steps
 
-- [事件](./events)
-- [配置项](./options)
+- [Events](./events.md)
+- [Options](./options.md)
+- [Plugin overview](../plugins/index.md)

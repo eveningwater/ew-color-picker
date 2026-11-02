@@ -23,7 +23,7 @@ const picker = new ewColorPicker({ el: '#picker' })
 
 ## 相关链接
 
-- 插件文档：https://eveningwater.github.io/ew-color-picker/plugins/box
+- 插件文档：https://eveningwater.github.io/ew-color-picker/zh/plugins/box
 - 源码仓库：https://github.com/eveningwater/ew-color-picker
 
 ## License

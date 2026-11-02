@@ -19,7 +19,7 @@ emitter.on('change', (color) => console.log(color))
 
 ## 相关链接
 
-- 文档：https://eveningwater.github.io/ew-color-picker/guide/concepts
+- 文档：https://eveningwater.github.io/ew-color-picker/zh/guide/concepts
 - 源码仓库：https://github.com/eveningwater/ew-color-picker
 
 ## License

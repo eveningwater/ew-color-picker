@@ -1,13 +1,13 @@
 ---
-title: 示例集
-description: ew-color-picker 的 12 个典型用法：基础、布局、预设色、按钮、事件、定位、动画、禁用、模式、API、数字输入、多实例。
+title: Examples
+description: 'Twelve typical ew-color-picker scenarios: basic, layout, presets, buttons, events, placement, animation, disabled, modes, API, numeric inputs, multiple instances.'
 ---
 
-# 示例集
+# Examples
 
-下面是 12 个覆盖主要场景的最小示例。仓库 `examples/` 目录下有对应的完整 HTML 文件，可直接用浏览器打开。
+Twelve minimal recipes. Runnable HTML files live in the repository's `examples/` directory.
 
-## 1. 基础用法
+## 1. Basic
 
 ```html
 <div id="app"></div>
@@ -18,7 +18,7 @@ description: ew-color-picker 的 12 个典型用法：基础、布局、预设�
 </script>
 ```
 
-## 2. 布局与方向
+## 2. Layout & orientation
 
 ```ts
 new ewColorPicker({
@@ -29,7 +29,7 @@ new ewColorPicker({
 })
 ```
 
-## 3. 预定义颜色
+## 3. Predefined colors
 
 ```ts
 new ewColorPicker({
@@ -38,32 +38,32 @@ new ewColorPicker({
 })
 ```
 
-## 4. 按钮控制
+## 4. Buttons
 
 ```ts
 new ewColorPicker({
   el: '#app',
   hasClear: false,
-  sureText: '应用颜色',
-  sure: (color) => console.log('应用：', color),
+  sureText: 'Apply color',
+  sure: (color) => console.log(color),
 })
 ```
 
-## 5. 事件与回调
+## 5. Events & callbacks
 
 ```ts
 const picker = new ewColorPicker({
   el: '#app',
-  changeColor: (color) => console.log('回调：', color),
+  changeColor: (color) => console.log('callback', color),
 })
 
-picker.once('change', (color) => console.log('只监听一次：', color))
-picker.on('sure', (color) => console.log('确定：', color))
-picker.on('clear', () => console.log('清空'))
-picker.on('toggle', (open) => console.log('面板：', open ? '展开' : '收起'))
+picker.once('change', (color) => console.log('once', color))
+picker.on('sure', (color) => console.log('sure', color))
+picker.on('clear', () => console.log('clear'))
+picker.on('toggle', (open) => console.log(open))
 ```
 
-## 6. 面板自动定位
+## 6. Auto panel placement
 
 ```ts
 new ewColorPicker({
@@ -73,7 +73,7 @@ new ewColorPicker({
 })
 ```
 
-## 7. 开合动画
+## 7. Toggle animation
 
 ```ts
 new ewColorPicker({
@@ -83,36 +83,33 @@ new ewColorPicker({
 })
 ```
 
-可用动画：`default`、`height`、`opacity`。`pickerAnimationTime` 上限 10000ms。
+Available: `default`, `height`, `opacity`. Maximum duration is 10000ms.
 
-## 8. 禁用与只读
+## 8. Disabled & readonly
 
 ```ts
-// 完全禁用
 new ewColorPicker({ el: '#app', disabled: true })
-
-// 只读：阻止点击，仅展示
 new ewColorPicker({ el: '#app', readonly: true, defaultColor: '#84cc16' })
 ```
 
-## 9. 颜色模式
+## 9. Color modes
 
 ```ts
 new ewColorPicker({
   el: '#app',
   defaultMode: 'rgb',
   showColorMode: true,
-  changeMode: (mode) => console.log('模式：', mode),
+  changeMode: (mode) => console.log(mode),
 })
 ```
 
-## 10. 实例 API
+## 10. Instance API
 
 ```ts
 const picker = new ewColorPicker({ el: '#app', defaultColor: '#f43f5e' })
 
-console.log(picker.getColor())        // 当前颜色
-console.log(picker.getHsvaColor())    // { h, s, v, a }
+console.log(picker.getColor())
+console.log(picker.getHsvaColor())
 picker.setColor('#22c55e')
 picker.updateOptions({ size: 'large' })
 picker.showPanel()
@@ -120,22 +117,17 @@ picker.hidePanel()
 picker.destroy()
 ```
 
-## 11. 数字输入框
+## 11. Numeric input
 
 ```ts
 import { InputNumber } from '@ew-color-picker/input-number'
 import '@ew-color-picker/style/dist/input-number.css'
 
-const num = new InputNumber({
-  value: 50,
-  min: 0,
-  max: 100,
-  onChange: (v) => console.log(v),
-})
+const num = new InputNumber({ value: 50, min: 0, max: 100, onChange: console.log })
 document.body.appendChild(num.getElement())
 ```
 
-## 12. 多实例
+## 12. Multiple instances
 
 ```ts
 [...document.querySelectorAll('.picker')].forEach((el) => {
@@ -143,13 +135,11 @@ document.body.appendChild(num.getElement())
 })
 ```
 
-::: warning 不要直接传 NodeList
-构造函数不接受 `NodeList` / 数组，必须逐个实例化。每个实例的事件、挂载点、输入框都是隔离的。
+::: warning No NodeList
+The constructor does not accept a NodeList or array. Instantiate one by one. Events, mount points and inputs are isolated per instance.
 :::
 
-## 相关
+## Related
 
-- [在线演示](./demo.md)
-- [配置项](../api/options.md)
-- [实例方法](../api/methods.md)
-- [事件](../api/events.md)
+- [Live demo](./demo.md)
+- [Options](../api/options.md) · [Methods](../api/methods.md) · [Events](../api/events.md)

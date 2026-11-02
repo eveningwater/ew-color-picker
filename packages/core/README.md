@@ -21,8 +21,8 @@ const picker = new ewColorPicker({ el: '#picker' })
 
 ## 相关链接
 
-- 核心概念：https://eveningwater.github.io/ew-color-picker/guide/concepts
-- 编写插件：https://eveningwater.github.io/ew-color-picker/guide/plugin-dev
+- 核心概念：https://eveningwater.github.io/ew-color-picker/zh/guide/concepts
+- 编写插件：https://eveningwater.github.io/ew-color-picker/zh/guide/plugin-dev
 - 源码仓库：https://github.com/eveningwater/ew-color-picker
 
 ## License
