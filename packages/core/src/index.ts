@@ -541,7 +541,8 @@ export default class ewColorPicker extends EventEmitter {
           }
         },
         (error) => {
-          warn(
+          // 插件构造失败必须始终可见，不能依赖 __DEV__ 开关
+          console.warn(
             `[ewColorPicker warning]: Failed to apply plugin '${name}': ${error}`
           );
         }
