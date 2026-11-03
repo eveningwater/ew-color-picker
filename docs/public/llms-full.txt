@@ -2031,7 +2031,7 @@ Source: https://eveningwater.github.io/ew-color-picker/
 <div class="doc-section">
   <h2>Try it now</h2>
   <p class="subtitle">A real, running color picker rendered directly from the built artifacts.</p>
-  <iframe class="demo-frame" src="../demo.html" title="ew-color-picker live demo" loading="lazy"></iframe>
+  <iframe class="demo-frame" src="./demo.html" title="ew-color-picker live demo" loading="lazy"></iframe>
 </div>
 
 <div class="doc-section">
