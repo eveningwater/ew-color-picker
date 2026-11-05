@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# 文档索引（供 AI / 搜索使用）
+Sitemap: https://eveningwater.github.io/ew-color-picker/sitemap.xml
