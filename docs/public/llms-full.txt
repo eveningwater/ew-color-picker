@@ -5583,7 +5583,7 @@ Source: https://eveningwater.github.io/ew-color-picker/zh/
 <div class="doc-section">
   <h2>立即体验</h2>
   <p class="subtitle">下面是一个真实运行的颜色选择器，由本站直接加载构建产物渲染。</p>
-  <iframe class="demo-frame" src="./demo.html" title="ew-color-picker 在线演示" loading="lazy"></iframe>
+  <iframe class="demo-frame" src="../demo.html" title="ew-color-picker 在线演示" loading="lazy"></iframe>
 </div>
 
 <div class="doc-section">
