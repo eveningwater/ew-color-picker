@@ -57,6 +57,7 @@
   padding: 0;
   min-height: 0;
   box-sizing: border-box;
+  line-height: 0;
   transition: background 0.2s;
   color: #666;
 }
@@ -70,10 +71,10 @@
 }
 
 .ew-input-number__icon {
-  width: 14px;
-  height: 14px;
+  width: 10px;
+  height: 10px;
+  flex: 0 0 10px;
   display: block;
   margin: 0 auto;
-  vertical-align: middle;
   pointer-events: none;
 }

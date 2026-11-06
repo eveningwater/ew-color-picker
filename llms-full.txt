@@ -504,7 +504,9 @@ Every option below can be passed to the constructor. Defaults come from `default
 | Layout | `hueDirection`, `alphaDirection`, `autoPanelPosition`, `panelPlacement`, `appendTo`, `prefix` |
 | Labels | `clearText`, `sureText` |
 | Animation | `togglePickerAnimation`, `pickerAnimationTime` |
-| Plugin switches | `hasBox`, `hasPanel`, `hasInput`, `hasClear`, `hasSure`, `hue`, `alpha`, `showButton`, `showColorMode`, `showInputNumber` |
+| Plugin switches | `hasBox`, `hasPanel`, `hasInput`, `hasClear`, `hasSure`, `hue`, `alpha`, `showButton`, `showColorMode`, `showInputNumber`, `showEyedropper`, `showCopyColor` |
+| Eyedropper | `eyedropperText`, `onEyedropperPick` |
+| CopyColor | `copyColorText`, `copiedText`, `onCopyColor` |
 | Plugin config objects | `ewColorPickerPanel`, `ewColorPickerColorMode` |
 | Box extras | `boxNoColorIcon`, `boxHasColorIcon`, `readonly`, `className`, `style` |
 | Callbacks | `changeColor`, `sure`, `clear`, `togglePicker` |
@@ -680,6 +682,8 @@ Values above 10000 are clamped.
 | `showButton` | `boolean` | `true` | Hide clear + sure buttons at once |
 | `showColorMode` | `boolean` | `true` | Hide the Hex/RGB/HSL switcher |
 | `showInputNumber` | `boolean` | `true` | Skip the InputNumber plugin's own numeric input; ColorMode channel inputs are unaffected |
+| `showEyedropper` | `boolean` | `true` | Hide the screen picker button; unsupported browsers never render it |
+| `showCopyColor` | `boolean` | `true` | Hide the copy-to-clipboard button |
 
 ```ts
 new ewColorPicker({
@@ -692,6 +696,25 @@ new ewColorPicker({
   hasSure: false,
 })
 ```
+
+## Eyedropper
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `eyedropperText` | `string` | `undefined` | Accessible label and tooltip; when set, also rendered as visible text |
+| `onEyedropperPick` | `(color: string) => void` | — | Called with the picked `sRGBHex` value |
+
+See [Eyedropper plugin](../plugins/eyedropper.md) for browser support and cancellation behaviour.
+
+## CopyColor
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `copyColorText` | `string` | `'复制颜色到剪贴板'` | Accessible label and tooltip |
+| `copiedText` | `string` | `'已复制'` | Temporary tooltip after a successful copy |
+| `onCopyColor` | `(color: string) => void` | — | Called with the copied color value |
+
+See [CopyColor plugin](../plugins/copy-color.md) for clipboard fallback and click behaviour.
 
 ## Plugin config objects
 
@@ -813,6 +836,7 @@ Override them after importing the styles:
 | `.ew-color-picker-panel-container` | Panel container (absolute) |
 | `.ew-color-picker-panel-container-hidden` | Hidden state |
 | `.ew-color-picker-bottom-row` | Bottom row that hosts inputs and buttons |
+| `.ew-color-picker-extra-row` | Toolbar row above the bottom row (eyedropper / copy buttons) |
 
 ### Box
 
@@ -857,6 +881,9 @@ Override them after importing the styles:
 | `.ew-color-picker-clear-btn` | Clear button |
 | `.ew-color-picker-sure-btn` | Sure button |
 | `.ew-color-picker-drop-btn` | Shared button style |
+| `.ew-color-picker-eyedropper-btn` | Eyedropper button |
+| `.ew-color-picker-copy-btn` | Copy color button |
+| `.ew-color-picker-copy-tip` | Copy success toast bubble |
 
 ### Color mode
 
@@ -985,7 +1012,7 @@ Source: https://eveningwater.github.io/ew-color-picker/examples/
 
 # Examples
 
-Twelve minimal recipes. Runnable HTML files live in the repository's `examples/` directory.
+Fourteen minimal recipes. Runnable HTML files live in the repository's `examples/` directory.
 
 ## 1. Basic
 
@@ -1119,6 +1146,32 @@ document.body.appendChild(num.getElement())
 The constructor does not accept a NodeList or array. Instantiate one by one. Events, mount points and inputs are isolated per instance.
 :::
 
+## 13. Eyedropper
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  showEyedropper: true,
+  onEyedropperPick: (color) => console.log(color),
+})
+```
+
+The button sits in its own toolbar row above the color value input and only renders in browsers supporting the EyeDropper API. See the [Eyedropper plugin](../plugins/eyedropper.md).
+
+## 14. Copy color
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  showCopyColor: true,
+  copyColorText: 'Copy color to clipboard',
+  copiedText: 'Copied',
+  onCopyColor: (color) => console.log(color),
+})
+```
+
+The copy button sits in its own toolbar row above the color value input, is filled with the current color, and shows a short success toast. See the [CopyColor plugin](../plugins/copy-color.md).
+
 ## Related
 
 - [Live demo](./demo.md)
@@ -1129,6 +1182,21 @@ The constructor does not accept a NodeList or array. Instantiate one by one. Eve
 Source: https://eveningwater.github.io/ew-color-picker/guide/changelog
 
 # Changelog
+
+## 2.0.3
+
+> This release has been published to npm and the docs site has been updated.
+
+### Features
+
+- New `@ew-color-picker/eyedropper` plugin: sample colors from anywhere on screen through the native EyeDropper API. It detects browser support, writes the result with `core.setColor()`, supports `showEyedropper` / `eyedropperText` / `onEyedropperPick`, and silently ignores `AbortError` when the user cancels
+- New `@ew-color-picker/copy-color` plugin: copy the current color to the clipboard with one click. The button is filled with the current color and uses contrast-aware icons, prefers the async Clipboard API with a `execCommand` fallback, shows a short built-in success toast, and supports `showCopyColor` / `copyColorText` / `copiedText` / `onCopyColor`
+- The eyedropper and copy buttons now live in their own toolbar row above the color value input, instead of sharing the row with the Clear / Sure buttons
+
+### Fixes
+
+- Fixed the InputNumber stepper arrows: they now carry the correct icon class and render at 10px, staying centered inside the button instead of overflowing and being clipped by the divider
+- Fixed RGB / HSL channel inputs resetting to `0` on the first stepper click; internal values are now synced with the current color so increment/decrement starts from the current channel value
 
 ## 2.0.2
 
@@ -1241,7 +1309,7 @@ Bilingual documentation, per-API references, one page per plugin, plus `llms.txt
 
 - **Small ecosystem**: download counts, community tutorials and issue history cannot match Pickr or react-color; unusual problems mean reading the source.
 - **No official framework wrappers**: React / Vue / Angular / Solid integration is covered in [Framework Integration](./framework-integration); controlled components and SSR need a thin wrapper of your own (around 20 lines).
-- **No gradients, multi-color editing or eyedropper**: those use cases need iro.js or a dedicated gradient picker.
+- **No gradients or multi-color editing**: those use cases need iro.js or a dedicated gradient picker. Screen sampling is covered by the optional `@ew-color-picker/eyedropper` plugin in Chromium-based browsers.
 - **The plugin model only matters when you customize**: installing the aggregate package or `npm i ew-color-picker` works out of the box; you only need to understand core + plugins when replacing part of the UI or wiring your own plugins.
 - **Shrinking further means installing sub-packages**: the aggregate is 84.6 KB plus 36.1 KB of styles, already in Coloris territory; if you use a single piece, install plugin packages and trim down to the 11.9 KB core.
 
@@ -1253,6 +1321,7 @@ Bilingual documentation, per-API references, one page per plugin, plus `llms.txt
 | Lightweight, dependency-free, themeable without structural changes | Coloris or Pickr |
 | React project that only needs a panel or slider | react-colorful |
 | Vue project that wants ready-made components | vue-color or @uiw/react-color |
+| Sample colors from anywhere on screen | **ew-color-picker** (optional Eyedropper plugin, Chromium-based browsers) |
 | Gradients, color-space work, games or visualizations | iro.js |
 | Admin / low-code / component library needing deep design-system integration, partial UI replacement and instance isolation | **ew-color-picker** |
 | Embedding color selection into your own plugin system or runtime | **ew-color-picker** (11.9 KB core, keep the core and write your own plugins) |
@@ -1701,7 +1770,7 @@ Core (@ew-color-picker/core)
 | Testable | Each plugin can be tested in isolation |
 | Extensible | Add features without touching the core |
 
-## The 14 packages
+## The 16 packages
 
 | Package | Responsibility |
 | --- | --- |
@@ -1719,6 +1788,8 @@ Core (@ew-color-picker/core)
 | `@ew-color-picker/button` | Clear / Sure buttons |
 | `@ew-color-picker/predefine` | Predefined color swatches |
 | `@ew-color-picker/color-mode` | Hex / RGB / HSL mode switching |
+| `@ew-color-picker/eyedropper` | Screen color picker via the native EyeDropper API (Chromium) |
+| `@ew-color-picker/copy-color` | Copy the current color to the clipboard |
 
 ## Data flow
 
@@ -1801,7 +1872,7 @@ npm install ew-color-picker
 
 v2 is a breaking rewrite; v1 and v2 APIs cannot be mixed:
 
-- **Architecture**: v1 was a single configurable package; v2 splits into 13 packages plus a compat entry where every UI part is a plugin, composable via `Core.use(Plugin)`
+- **Architecture**: v1 was a single configurable package; v2 splits into 15 packages plus a compat entry where every UI part is a plugin, composable via `Core.use(Plugin)`
 - **Package name**: `ew-color-picker` remains the entry, but now points to `@ew-color-picker/ew-color-picker`
 - **Styles**: both `index.css` and `input-number.css` must be imported explicitly
 - **Options and events**: plugin options such as `hasAlpha` and `hasBox` differ from v1; re-integrate against the live demo on this site
@@ -2047,11 +2118,30 @@ Source: https://eveningwater.github.io/ew-color-picker/
     </a>
     <a class="doc-card" href="./plugins/">
       <h3>Plugin system</h3>
-      <p>What each of the 10 built-in plugins does, how to configure them, and how to compose them.</p>
+      <p>What each of the 12 built-in plugins does, how to configure them, and how to compose them.</p>
     </a>
     <a class="doc-card" href="./guide/plugin-dev">
       <h3>Write a plugin</h3>
       <p>Follow the pluginName / applyOrder contract to build a registrable, destroyable plugin.</p>
+    </a>
+  </div>
+</div>
+
+<div class="doc-section">
+  <h2>What's new in 2.0.3</h2>
+  <p class="subtitle">The latest release is published on npm and reflected in these docs.</p>
+  <div class="doc-cards">
+    <a class="doc-card" href="./plugins/eyedropper">
+      <h3>Eyedropper plugin</h3>
+      <p>Pick colors from anywhere on screen with the native EyeDropper API, with capability detection and graceful cancellation.</p>
+    </a>
+    <a class="doc-card" href="./plugins/copy-color">
+      <h3>Copy color</h3>
+      <p>One-click clipboard copy with a contrast-aware button and a built-in success toast.</p>
+    </a>
+    <a class="doc-card" href="./guide/changelog">
+      <h3>Full changelog</h3>
+      <p>All features, fixes and documentation updates shipped in 2.0.3.</p>
     </a>
   </div>
 </div>
@@ -2512,7 +2602,7 @@ With the all-in-one bundle it is always registered.
 ## Output
 
 ```text
- ew-color-picker@2.0.2   QQ: 854806732  WeChat: eveningwater  github:https://github.com/eveningwater/ew-color-picker
+ ew-color-picker@2.0.3   QQ: 854806732  WeChat: eveningwater  github:https://github.com/eveningwater/ew-color-picker
 ```
 
 ## Methods
@@ -2526,6 +2616,160 @@ With the all-in-one bundle it is always registered.
 ## Related
 
 - [Plugin overview](./index.md) · [Writing a plugin](../guide/plugin-dev.md)
+
+## CopyColor Plugin
+
+Source: https://eveningwater.github.io/ew-color-picker/plugins/copy-color
+
+# CopyColor
+
+`ewColorPickerCopyColor` renders a round copy button in its own toolbar row above the value input. Its background shows the current color, and clicking it writes the current color value to the clipboard and shows a short success toast.
+
+| Item | Value |
+| --- | --- |
+| Package | `@ew-color-picker/copy-color` |
+| `pluginName` | `ewColorPickerCopyColor` |
+| `applyOrder` | `Post` |
+| Mount point | `panelContainer` → `.ew-color-picker-extra-row` (toolbar row above the input row) |
+| Instance | `core.plugins.ewColorPickerCopyColor` |
+
+## Options
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `showCopyColor` | `boolean` | `true` | Set `false` to hide the copy button |
+| `copyColorText` | `string` | `'复制颜色到剪贴板'` | Button `title` / `aria-label` |
+| `copiedText` | `string` | `'已复制'` | Text of the success toast shown for 1.5s |
+| `onCopyColor` | `(color: string) => void` | — | Called with the copied color value |
+
+```ts
+import ewColorPicker from '@ew-color-picker/core'
+import CopyColor from '@ew-color-picker/copy-color'
+
+ewColorPicker.use(CopyColor)
+
+new ewColorPicker({
+  el: '#app',
+  copyColorText: 'Copy color',
+  copiedText: 'Copied',
+  onCopyColor: (color) => console.log('copied', color),
+})
+```
+
+## Click behaviour
+
+1. Read the current value from `core.getColor()`; an empty value does nothing;
+2. Prefer `navigator.clipboard.writeText()`;
+3. Fall back to a temporary `<textarea>` + `document.execCommand('copy')` when the Clipboard API is unavailable (for example on plain HTTP pages);
+4. On success, show a toast bubble next to the button with `copiedText` for 1.5s, then call `options.onCopyColor?.(color)`;
+5. On failure, print a `console.warn` and keep the current color unchanged.
+
+The copied string is the exact value returned by `core.getColor()` — a hex string in hex mode, `rgba()` / `hsla()` when alpha is enabled.
+
+## DOM
+
+```html
+<div class="ew-color-picker-copy-group">
+  <button type="button" class="ew-color-picker-copy-btn" title="复制颜色到剪贴板" aria-label="复制颜色到剪贴板">
+    <svg class="ew-color-picker-icon" viewBox="0 0 24 24">…</svg>
+  </button>
+  <div class="ew-color-picker-copy-tip" role="status" aria-live="polite">已复制</div>
+</div>
+```
+
+The button background follows `change`, and the icon switches between dark and light based on the background luminance. The toast is a self-contained element styled by the package itself, so no extra message library or global styles are required.
+
+## Methods
+
+| Method / property | Signature | Description |
+| --- | --- | --- |
+| `run` | `() => void` | Remove the old node, render and bind |
+| `updateOptions` | `() => void` | Re-read options and re-render |
+| `destroy` | `() => void` | Unbind events and remove the node |
+| `container` / `button` / `tip` | `HTMLElement \| null` | Current DOM references |
+
+## Related
+
+- [Eyedropper](./eyedropper.md) · [Button](./button.md) · [Plugin overview](./) · [Options · callbacks](../api/callbacks.md)
+
+## Eyedropper Plugin
+
+Source: https://eveningwater.github.io/ew-color-picker/plugins/eyedropper
+
+# Eyedropper
+
+`ewColorPickerEyedropper` renders a screen color picker button in its own toolbar row above the value input. It uses the browser-native [EyeDropper API](https://developer.mozilla.org/en-US/docs/Web/API/EyeDropper_API), and writes the picked color straight back through `core.setColor()`.
+
+| Item | Value |
+| --- | --- |
+| Package | `@ew-color-picker/eyedropper` |
+| `pluginName` | `ewColorPickerEyedropper` |
+| `applyOrder` | `Post` |
+| Mount point | `panelContainer` → `.ew-color-picker-extra-row` (toolbar row above the input row) |
+| Instance | `core.plugins.ewColorPickerEyedropper` |
+
+## Browser support
+
+The EyeDropper API is available in Chromium-based browsers (Chrome / Edge). When `'EyeDropper' in window` is false the plugin renders **nothing**, so it is safe to register everywhere.
+
+Some browsers also require `open()` to run inside a user gesture (a click), and cross-origin iframes may reject the request.
+
+## Options
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `showEyedropper` | `boolean` | `true` | Set `false` to hide the button; unsupported browsers never render it |
+| `eyedropperText` | `string` | `undefined` | Accessible label and tooltip (falls back to `'取色'`); when set it is also rendered as visible text |
+| `onEyedropperPick` | `(color: string) => void` | — | Called with the picked `sRGBHex` value |
+
+```ts
+import ewColorPicker from '@ew-color-picker/core'
+import Eyedropper from '@ew-color-picker/eyedropper'
+
+ewColorPicker.use(Eyedropper)
+
+new ewColorPicker({
+  el: '#app',
+  eyedropperText: 'Pick from screen',
+  onEyedropperPick: (color) => console.log('picked', color),
+})
+```
+
+## Click behaviour
+
+1. Call `new EyeDropper().open()` inside the click gesture;
+2. On success, `core.setColor(result.sRGBHex)` and then `options.onEyedropperPick?.(result.sRGBHex)`;
+3. On `AbortError` (user pressed <kbd>Esc</kbd>) nothing happens — no callback, no warning;
+4. On any other error a `console.warn` is printed and the current color is unchanged.
+
+`core.setColor()` emits `change`, so Panel / Hue / Alpha / Input / ColorMode / Box all update automatically.
+
+## DOM
+
+```html
+<div class="ew-color-picker-eyedropper-group">
+  <button type="button" class="ew-color-picker-eyedropper-btn" title="取色" aria-label="取色">
+    <svg class="ew-color-picker-icon" viewBox="0 0 24 24">…</svg>
+    <!-- rendered only when eyedropperText is set -->
+    <span class="ew-color-picker-eyedropper-text">取色</span>
+  </button>
+</div>
+```
+
+The button lives in its own group inside `.ew-color-picker-extra-row`, rather than the Button plugin's `.ew-color-picker-drop-btn-group`, because that group is cleared on every render. The empty toolbar row is removed automatically when no plugin needs it.
+
+## Methods
+
+| Method / property | Signature | Description |
+| --- | --- | --- |
+| `run` | `() => void` | Capability check, remove the old node, render and bind |
+| `updateOptions` | `() => void` | Re-read options and re-render |
+| `destroy` | `() => void` | Unbind and remove the node; pending picks are ignored |
+| `container` / `button` | `HTMLElement \| null` | Current DOM references |
+
+## Related
+
+- [Button](./button.md) · [Plugin overview](./) · [Options · callbacks](../api/callbacks.md)
 
 ## Hue Plugin
 
@@ -2675,7 +2919,9 @@ Registration order in `@ew-color-picker/ew-color-picker`:
 | 8 | Button | `ewColorPickerButton` | button | Clear / Sure |
 | 9 | Predefine | `ewColorPickerPredefine` | predefine | Swatches |
 | 10 | ColorMode | `ewColorPickerColorMode` | color-mode | Hex / RGB / HSL |
-| 11 | — | — | style | CSS artifacts (not a plugin) |
+| 11 | Eyedropper | `ewColorPickerEyedropper` | eyedropper | Screen color picker (Chromium) |
+| 12 | CopyColor | `ewColorPickerCopyColor` | copy-color | Copy the current color to the clipboard |
+| 13 | — | — | style | CSS artifacts (not a plugin) |
 
 ## Mount points
 
@@ -2733,8 +2979,9 @@ Register plugins manually — see [Installation](../guide/installation.md#per-pa
 
 - [Box](./box.md) · [Panel](./panel.md) · [Hue](./hue.md) · [Alpha](./alpha.md)
 - [Input](./input.md) · [InputNumber](./input-number.md) · [Button](./button.md)
-- [Predefine](./predefine.md) · [ColorMode](./color-mode.md) · [Console](./console.md)
-- [Writing a plugin](../guide/plugin-dev.md)
+- [Predefine](./predefine.md) · [ColorMode](./color-mode.md) · [Eyedropper](./eyedropper.md)
+- [CopyColor](./copy-color.md)
+- [Console](./console.md) · [Writing a plugin](../guide/plugin-dev.md)
 
 ## InputNumber Plugin
 
@@ -3898,6 +4145,27 @@ new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
 | `showButton` | `boolean` | `true` | 是否渲染按钮组 |
 | `showColorMode` | `boolean` | `true` | 是否显示颜色模式切换器 |
 | `showInputNumber` | `boolean` | `true` | 是否渲染数字输入框 |
+| `showEyedropper` | `boolean` | `true` | 是否显示吸管取色按钮；浏览器不支持时始终不渲染 |
+| `showCopyColor` | `boolean` | `true` | 是否显示复制颜色按钮 |
+
+### 吸管配置
+
+| 配置项 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `eyedropperText` | `string` | `undefined` | 按钮的 `title` / `aria-label`；设置后同时作为可见文本显示 |
+| `onEyedropperPick` | `(color: string) => void` | - | 吸管取色成功回调，参数为 `sRGBHex` 颜色值 |
+
+浏览器支持与取消行为见 [Eyedropper 吸管插件](../plugins/eyedropper.md)。
+
+### 复制颜色配置
+
+| 配置项 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `copyColorText` | `string` | `'复制颜色到剪贴板'` | 按钮的 `title` / `aria-label` |
+| `copiedText` | `string` | `'已复制'` | 复制成功后临时显示的提示文案 |
+| `onCopyColor` | `(color: string) => void` | - | 复制成功回调，参数为复制的颜色值 |
+
+剪贴板降级与点击行为见 [CopyColor 复制颜色插件](../plugins/copy-color.md)。
 
 ### 插件配置对象
 
@@ -3914,6 +4182,7 @@ new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
 | `sure` | `(color: string, picker: ewColorPicker) => void` | 点击确定时调用 |
 | `clear` | `(picker: ewColorPicker) => void` | 点击清空时调用 |
 | `togglePicker` | `(isOpen: boolean) => void` | 面板开合时调用 |
+| `onEyedropperPick` | `(color: string) => void` | 吸管取色成功时调用 |
 
 ## el
 
@@ -4362,6 +4631,7 @@ import '@ew-color-picker/style/dist/input-number.css'
 | `.ew-color-picker-black-panel` | 黑色渐变层 |
 | `.ew-color-picker-panel-cursor` | 面板取色光标 |
 | `.ew-color-picker-bottom-row` | 面板底部行容器 |
+| `.ew-color-picker-extra-row` | 底部行上方的工具栏行（吸管 / 复制按钮） |
 
 ### 滑块
 
@@ -4389,6 +4659,9 @@ import '@ew-color-picker/style/dist/input-number.css'
 | `.ew-color-picker-clear-btn` | 清空按钮 |
 | `.ew-color-picker-sure-btn` | 确定按钮 |
 | `.ew-color-picker-mode-up-btn` / `-mode-down-btn` | 模式切换上下按钮 |
+| `.ew-color-picker-eyedropper-btn` | 吸管取色按钮 |
+| `.ew-color-picker-copy-btn` | 复制颜色按钮 |
+| `.ew-color-picker-copy-tip` | 复制成功提示气泡 |
 
 ### 预定义色板
 
@@ -4524,7 +4797,7 @@ Source: https://eveningwater.github.io/ew-color-picker/zh/examples/
 
 # 示例集
 
-下面是 12 个覆盖主要场景的最小示例。仓库 `examples/` 目录下有对应的完整 HTML 文件，可直接用浏览器打开。
+下面是 14 个覆盖主要场景的最小示例。仓库 `examples/` 目录下有对应的完整 HTML 文件，可直接用浏览器打开。
 
 ## 1. 基础用法
 
@@ -4666,6 +4939,32 @@ document.body.appendChild(num.getElement())
 构造函数不接受 `NodeList` / 数组，必须逐个实例化。每个实例的事件、挂载点、输入框都是隔离的。
 :::
 
+## 13. 吸管取色
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  showEyedropper: true,
+  onEyedropperPick: (color) => console.log('拾取：', color),
+})
+```
+
+吸管按钮位于输入框上方的工具栏行，仅在支持 EyeDropper API 的浏览器中渲染。详见 [Eyedropper 插件](../plugins/eyedropper.md)。
+
+## 14. 复制颜色到剪贴板
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  showCopyColor: true,
+  copyColorText: '复制颜色到剪贴板',
+  copiedText: '已复制',
+  onCopyColor: (color) => console.log('已复制：', color),
+})
+```
+
+复制按钮位于输入框上方的工具栏行，底色跟随当前颜色，复制成功后会弹出提示。详见 [CopyColor 插件](../plugins/copy-color.md)。
+
 ## 相关
 
 - [在线演示](./demo.md)
@@ -4678,6 +4977,21 @@ document.body.appendChild(num.getElement())
 Source: https://eveningwater.github.io/ew-color-picker/zh/guide/changelog
 
 # 更新日志
+
+## 2.0.3
+
+> 本版本已发布到 npm，文档站已同步更新。
+
+### 新增
+
+- 新增 `@ew-color-picker/eyedropper` 吸管插件：基于浏览器原生 EyeDropper API 从屏幕任意位置取色，自动检测能力，通过 `core.setColor()` 写回结果，支持 `showEyedropper` / `eyedropperText` / `onEyedropperPick`，用户取消时静默忽略 `AbortError`
+- 新增 `@ew-color-picker/copy-color` 复制颜色插件：一键复制当前颜色到剪贴板。按钮底色跟随当前颜色并按对比度自动切换图标颜色，优先使用异步剪贴板 API，失败时降级到 `execCommand`，复制成功后弹出内置提示气泡，支持 `showCopyColor` / `copyColorText` / `copiedText` / `onCopyColor`
+- 吸管按钮与复制按钮改为放在颜色值输入框上方的独立工具栏行，不再与输入框、清空 / 确定按钮挤在同一行
+
+### 修复
+
+- 修复数字输入框步进按钮的上下箭头：补齐图标类名并将尺寸调整为 10px，图标现在完全居中，不再溢出被分割线裁剪
+- 修复 RGB / HSL 分通道输入框首次点击上下箭头时颜色值被重置为 0 的问题：颜色变化时同步输入框内部值，加减从当前通道值开始计算
 
 ## 2.0.2
 
@@ -4790,7 +5104,7 @@ ewColorPicker.use(Panel).use(Hue)
 
 - **生态与社区规模小**：下载量、第三方教程、Issue 沉淀都无法与 Pickr、react-color 相比，遇到冷门问题更多要靠读源码。
 - **不提供官方框架绑定包**：React / Vue / Angular / Solid 的接入方式见[框架集成](./framework-integration)，受控组件与 SSR 场景按示例自行封装（约 20 行）。
-- **不支持渐变、多色选择与图片取色**：这类需求目前要选 iro.js 或专门的渐变选择器。
+- **不支持渐变与多色编辑**：这类需求目前要选 iro.js 或专门的渐变选择器；屏幕取色可由可选的 `@ew-color-picker/eyedropper` 插件提供（仅 Chromium 系浏览器）。
 - **只有需要定制时才要理解插件模型**：默认装聚合入口或 `npm i ew-color-picker` 即可开箱使用；只有在替换局部 UI、组合自有插件时，才需要理解「核心 + 插件」的结构。
 - **想进一步减小体积需按需装子包**：聚合包 84.6 KB、样式 36.1 KB，已与 Coloris 同量级；若只用单个部件，按需安装插件包可以裁到核心 11.9 KB。
 
@@ -4802,6 +5116,7 @@ ewColorPicker.use(Panel).use(Hue)
 | 需要轻量、无依赖、主题化但不改结构 | Coloris 或 Pickr |
 | React 项目只要一个面板/滑块 | react-colorful |
 | Vue 项目需要现成组件集 | vue-color 或 @uiw/react-color |
+| 需要从屏幕任意位置取色 | **ew-color-picker**（可选 Eyedropper 插件，Chromium 系浏览器） |
 | 需要渐变、色彩空间转换、游戏/可视化场景 | iro.js |
 | 中后台 / 低代码 / 组件库，需要和设计体系深度融合、替换局部 UI、多实例隔离 | **ew-color-picker** |
 | 需要把选色能力嵌进自己的插件体系或运行时 | **ew-color-picker**（核心 11.9 KB，可只保留核心 + 自写插件） |
@@ -5270,6 +5585,8 @@ ew-color-picker 是一个基于 **事件驱动 + 插件系统** 的颜色选择�
 | `@ew-color-picker/button` | 清空 / 确定按钮 |
 | `@ew-color-picker/predefine` | 预定义颜色色板 |
 | `@ew-color-picker/color-mode` | Hex / RGB / HSL 模式切换 |
+| `@ew-color-picker/eyedropper` | 屏幕吸管取色（原生 EyeDropper API，Chromium） |
+| `@ew-color-picker/copy-color` | 复制当前颜色到剪贴板 |
 | `@ew-color-picker/console` | 控制台版本横幅（已并入 utils） |
 
 ## 数据流
@@ -5340,7 +5657,7 @@ npm install ew-color-picker
 
 v2 是破坏性重构，v1 与 v2 的 API 不能混用：
 
-- **架构**：v1 是配置式单包；v2 拆分为 13 个包 + 1 个兼容入口，界面全部由插件组装，可通过 `Core.use(Plugin)` 自由组合与替换
+- **架构**：v1 是配置式单包；v2 拆分为 15 个包 + 1 个兼容入口，界面全部由插件组装，可通过 `Core.use(Plugin)` 自由组合与替换
 - **包名**：`ew-color-picker` 仍是入口，但内部指向 `@ew-color-picker/ew-color-picker`
 - **样式**：需要显式引入 `index.css` 与 `input-number.css` 两个文件
 - **配置与事件**：插件相关配置项（如 `hasAlpha`、`hasBox`）与 v1 有差异，请按本站在线演示重新接入
@@ -5369,6 +5686,7 @@ pnpm add @ew-color-picker/box @ew-color-picker/panel
 | `@ew-color-picker/button` | 清空 / 确定按钮 |
 | `@ew-color-picker/predefine` | 预定义色板 |
 | `@ew-color-picker/color-mode` | 颜色模式切换 |
+| `@ew-color-picker/eyedropper` | 屏幕吸管取色（Chromium） |
 
 手动注册插件：
 
@@ -5408,7 +5726,7 @@ new ewColorPicker({ el: '#picker' })
 
 ```bash
 pnpm install          # 安装依赖
-pnpm run build:all    # 构建全部 14 个包
+pnpm run build:all    # 构建全部 16 个包
 pnpm run test         # 运行测试
 pnpm run dev:preview  # 启动 examples 预览（Vite）
 ```
@@ -5599,11 +5917,30 @@ Source: https://eveningwater.github.io/ew-color-picker/zh/
     </a>
     <a class="doc-card" href="./plugins/">
       <h3>插件体系</h3>
-      <p>了解 10 个内置插件各自的职责、配置与方法，以及如何组合使用。</p>
+      <p>了解 12 个内置插件各自的职责、配置与方法，以及如何组合使用。</p>
     </a>
     <a class="doc-card" href="./guide/plugin-dev">
       <h3>自定义插件</h3>
       <p>按照 pluginName / applyOrder 约定，编写可注册、可销毁的插件。</p>
+    </a>
+  </div>
+</div>
+
+<div class="doc-section">
+  <h2>2.0.3 更新内容</h2>
+  <p class="subtitle">最新版本已发布到 npm，本文档站已同步更新。</p>
+  <div class="doc-cards">
+    <a class="doc-card" href="./plugins/eyedropper">
+      <h3>吸管取色插件</h3>
+      <p>基于原生 EyeDropper API 从屏幕任意位置取色，自带能力检测与取消静默处理。</p>
+    </a>
+    <a class="doc-card" href="./plugins/copy-color">
+      <h3>复制颜色插件</h3>
+      <p>一键复制当前颜色，按钮底色跟随颜色并自动切换图标，复制成功弹出内置提示。</p>
+    </a>
+    <a class="doc-card" href="./guide/changelog">
+      <h3>完整更新日志</h3>
+      <p>查看 2.0.3 的全部新增功能、修复项与文档变更。</p>
     </a>
   </div>
 </div>
@@ -6246,7 +6583,7 @@ ewColorPicker.use(Box).use(Panel)
 ## 输出内容
 
 ```text
- ew-color-picker@2.0.2  联系QQ：854806732  联系微信：eveningwater  github:https://github.com/eveningwater/ew-color-picker
+ ew-color-picker@2.0.3  联系QQ：854806732  联系微信：eveningwater  github:https://github.com/eveningwater/ew-color-picker
 ```
 
 样式通过 `%c` 注入，不影响页面。
@@ -6263,6 +6600,160 @@ ewColorPicker.use(Box).use(Panel)
 
 - [插件总览](./index.md)
 - [编写自定义插件](../guide/plugin-dev.md)
+
+## CopyColor 复制颜色插件
+
+Source: https://eveningwater.github.io/ew-color-picker/zh/plugins/copy-color
+
+# CopyColor 复制颜色
+
+`ewColorPickerCopyColor` 在颜色值输入框上方的独立工具栏行中渲染一个圆形复制按钮，按钮背景实时显示当前颜色，点击后把当前颜色值写入系统剪贴板，并弹出短暂的复制成功提示。
+
+| 项 | 值 |
+| --- | --- |
+| 包 | `@ew-color-picker/copy-color` |
+| `pluginName` | `ewColorPickerCopyColor` |
+| `applyOrder` | `Post` |
+| 挂载点 | `panelContainer` → `.ew-color-picker-extra-row`（输入框上方的工具栏行） |
+| 访问实例 | `core.plugins.ewColorPickerCopyColor` |
+
+## 配置项
+
+| 配置 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `showCopyColor` | `boolean` | `true` | `false` 时隐藏复制按钮 |
+| `copyColorText` | `string` | `'复制颜色到剪贴板'` | 按钮的 `title` / `aria-label` |
+| `copiedText` | `string` | `'已复制'` | 复制成功后提示气泡的文案，显示 1.5 秒 |
+| `onCopyColor` | `(color: string) => void` | - | 复制成功回调，参数为复制的颜色值 |
+
+```ts
+import ewColorPicker from '@ew-color-picker/core'
+import CopyColor from '@ew-color-picker/copy-color'
+
+ewColorPicker.use(CopyColor)
+
+new ewColorPicker({
+  el: '#app',
+  copyColorText: '复制颜色',
+  copiedText: '复制成功',
+  onCopyColor: (color) => console.log('已复制', color),
+})
+```
+
+## 点击行为
+
+1. 通过 `core.getColor()` 读取当前颜色，颜色为空时不做任何处理；
+2. 优先调用 `navigator.clipboard.writeText()`；
+3. Clipboard API 不可用（例如非 HTTPS 页面）时，降级为临时 `<textarea>` + `document.execCommand('copy')`；
+4. 复制成功后，在按钮旁弹出 `copiedText` 提示气泡并保持 1.5 秒，同时调用 `options.onCopyColor?.(color)`；
+5. 复制失败时输出 `console.warn`，当前颜色保持不变。
+
+复制的字符串就是 `core.getColor()` 的原始值：HEX 模式下为十六进制，启用透明度时为 `rgba()` / `hsla()`。
+
+## DOM
+
+```html
+<div class="ew-color-picker-copy-group">
+  <button type="button" class="ew-color-picker-copy-btn" title="复制颜色到剪贴板" aria-label="复制颜色到剪贴板">
+    <svg class="ew-color-picker-icon" viewBox="0 0 24 24">…</svg>
+  </button>
+  <div class="ew-color-picker-copy-tip" role="status" aria-live="polite">已复制</div>
+</div>
+```
+
+按钮背景会跟随 `change` 事件更新，图标颜色根据背景亮度自动切换深色 / 白色。提示气泡是插件自带的独立节点，样式由本包维护，不需要引入额外的消息提示库或全局样式。
+
+## 方法
+
+| 方法 / 属性 | 签名 | 说明 |
+| --- | --- | --- |
+| `run` | `() => void` | 移除旧节点、渲染并绑定事件 |
+| `updateOptions` | `() => void` | 重新读取配置并重新渲染 |
+| `destroy` | `() => void` | 解绑事件并移除节点 |
+| `container` / `button` / `tip` | `HTMLElement \| null` | 当前 DOM 引用 |
+
+## 相关链接
+
+- [Eyedropper 吸管](./eyedropper.md) · [Button 按钮](./button.md) · [插件总览](./) · [回调](../api/callbacks.md)
+
+## Eyedropper 吸管插件
+
+Source: https://eveningwater.github.io/ew-color-picker/zh/plugins/eyedropper
+
+# Eyedropper 吸管
+
+`ewColorPickerEyedropper` 在颜色值输入框上方独立的工具栏行中渲染一个屏幕取色按钮，基于浏览器原生 [EyeDropper API](https://developer.mozilla.org/zh-CN/docs/Web/API/EyeDropper_API)，取到的颜色直接通过 `core.setColor()` 写回选择器。
+
+| 项 | 值 |
+| --- | --- |
+| 包 | `@ew-color-picker/eyedropper` |
+| `pluginName` | `ewColorPickerEyedropper` |
+| `applyOrder` | `Post` |
+| 挂载点 | `panelContainer` → `.ew-color-picker-extra-row`（输入框上方的工具栏行） |
+| 访问实例 | `core.plugins.ewColorPickerEyedropper` |
+
+## 浏览器支持
+
+EyeDropper API 目前在 Chromium 系浏览器（Chrome / Edge 等）中可用。当 `'EyeDropper' in window` 为假时，插件**不渲染任何节点**，因此可以放心在所有环境注册。
+
+部分浏览器还要求 `open()` 必须在用户手势（点击）中调用，跨域 iframe 内也可能被拒绝。
+
+## 配置项
+
+| 配置 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `showEyedropper` | `boolean` | `true` | `false` 时隐藏按钮；浏览器不支持时始终不渲染 |
+| `eyedropperText` | `string` | `undefined` | 按钮的 `title` / `aria-label`（缺省为 `'取色'`）；设置后同时作为可见文本显示 |
+| `onEyedropperPick` | `(color: string) => void` | - | 取色成功回调，参数为 `sRGBHex` 颜色值 |
+
+```ts
+import ewColorPicker from '@ew-color-picker/core'
+import Eyedropper from '@ew-color-picker/eyedropper'
+
+ewColorPicker.use(Eyedropper)
+
+new ewColorPicker({
+  el: '#app',
+  eyedropperText: '从屏幕取色',
+  onEyedropperPick: (color) => console.log('取到的颜色', color),
+})
+```
+
+## 点击行为
+
+1. 在点击手势内调用 `new EyeDropper().open()`；
+2. 成功后先 `core.setColor(result.sRGBHex)`，再调用 `options.onEyedropperPick?.(result.sRGBHex)`；
+3. 用户按 <kbd>Esc</kbd> 取消时抛出 `AbortError`，插件静默处理：不回调、不输出警告；
+4. 其他错误会通过 `console.warn` 输出，当前颜色保持不变。
+
+`core.setColor()` 会触发 `change` 事件，因此 Panel / Hue / Alpha / Input / ColorMode / Box 会自动同步。
+
+## DOM
+
+```html
+<div class="ew-color-picker-eyedropper-group">
+  <button type="button" class="ew-color-picker-eyedropper-btn" title="取色" aria-label="取色">
+    <svg class="ew-color-picker-icon" viewBox="0 0 24 24">…</svg>
+    <!-- 仅在设置了 eyedropperText 时渲染 -->
+    <span class="ew-color-picker-eyedropper-text">取色</span>
+  </button>
+</div>
+```
+
+按钮使用独立的分组，放在 `.ew-color-picker-extra-row` 工具栏行内，而不是 Button 插件的 `.ew-color-picker-drop-btn-group`，因为后者在每次渲染时会被清空。当没有任何插件使用该工具栏行时，空行会自动移除。
+
+## 方法
+
+| 方法 / 属性 | 签名 | 说明 |
+| --- | --- | --- |
+| `run` | `() => void` | 检测能力、移除旧节点、渲染并绑定事件 |
+| `updateOptions` | `() => void` | 重新读取配置并重新渲染 |
+| `destroy` | `() => void` | 解绑事件并移除节点；未完成的取色结果会被忽略 |
+| `container` / `button` | `HTMLElement \| null` | 当前 DOM 引用 |
+
+## 相关链接
+
+- [Button 按钮](./button.md) · [插件总览](./) · [回调](../api/callbacks.md)
 
 ## Hue 色相滑块插件
 
@@ -6446,7 +6937,9 @@ export default class MyPlugin {
 | 8 | Button | `ewColorPickerButton` | `@ew-color-picker/button` | 清空 / 确定按钮 |
 | 9 | Predefine | `ewColorPickerPredefine` | `@ew-color-picker/predefine` | 预定义颜色色块 |
 | 10 | ColorMode | `ewColorPickerColorMode` | `@ew-color-picker/color-mode` | Hex / RGB / HSL 模式切换 |
-| 11 | — | — | `@ew-color-picker/style` | 样式产物（CSS，不是插件） |
+| 11 | Eyedropper | `ewColorPickerEyedropper` | `@ew-color-picker/eyedropper` | 屏幕吸管取色（Chromium） |
+| 12 | CopyColor | `ewColorPickerCopyColor` | `@ew-color-picker/copy-color` | 复制当前颜色到剪贴板 |
+| 13 | — | — | `@ew-color-picker/style` | 样式产物（CSS，不是插件） |
 
 ## 挂载点
 
@@ -6487,7 +6980,7 @@ export default class MyPlugin {
 
 ## 按需组合
 
-只要引用了聚合包，11 个插件就都已注册。你可以用配置项裁剪 UI，而不必卸载插件：
+只要引用了聚合包，12 个插件就都已注册。你可以用配置项裁剪 UI，而不必卸载插件：
 
 ```ts
 new ewColorPicker({
@@ -6518,6 +7011,8 @@ new ewColorPicker({
 - [Button 按钮](./button.md)
 - [Predefine 预定义颜色](./predefine.md)
 - [ColorMode 颜色模式](./color-mode.md)
+- [Eyedropper 吸管](./eyedropper.md)
+- [CopyColor 复制颜色](./copy-color.md)
 - [Console 控制台](./console.md)
 - [编写自定义插件](../guide/plugin-dev.md)
 
