@@ -31,7 +31,7 @@ features:
     details: 内置 Hex、RGB、HSL 三种输入模式，支持透明度滑块、预定义色板与色相/透明度双方向布局。
   - icon: 📦
     title: 多包分发
-    details: 13 个独立子包，既可一键引入聚合包，也可只安装需要的插件，天然支持 Tree Shaking。
+    details: 16 个包，既可一键引入聚合包，也可只安装需要的插件，天然支持 Tree Shaking。
   - icon: 🛡️
     title: 类型完备
     details: 全部包使用 TypeScript 编写并输出声明文件，配置项、插件方法、事件回调都有完整类型提示。
@@ -59,11 +59,30 @@ features:
     </a>
     <a class="doc-card" href="./plugins/">
       <h3>插件体系</h3>
-      <p>了解 10 个内置插件各自的职责、配置与方法，以及如何组合使用。</p>
+      <p>了解 12 个内置插件各自的职责、配置与方法，以及如何组合使用。</p>
     </a>
     <a class="doc-card" href="./guide/plugin-dev">
       <h3>自定义插件</h3>
       <p>按照 pluginName / applyOrder 约定，编写可注册、可销毁的插件。</p>
+    </a>
+  </div>
+</div>
+
+<div class="doc-section">
+  <h2>2.0.3 更新内容</h2>
+  <p class="subtitle">最新版本已发布到 npm，本文档站已同步更新。</p>
+  <div class="doc-cards">
+    <a class="doc-card" href="./plugins/eyedropper">
+      <h3>吸管取色插件</h3>
+      <p>基于原生 EyeDropper API 从屏幕任意位置取色，自带能力检测与取消静默处理。</p>
+    </a>
+    <a class="doc-card" href="./plugins/copy-color">
+      <h3>复制颜色插件</h3>
+      <p>一键复制当前颜色，按钮底色跟随颜色并自动切换图标，复制成功弹出内置提示。</p>
+    </a>
+    <a class="doc-card" href="./guide/changelog">
+      <h3>完整更新日志</h3>
+      <p>查看 2.0.3 的全部新增功能、修复项与文档变更。</p>
     </a>
   </div>
 </div>

@@ -31,7 +31,7 @@ features:
     details: Hex, RGB and HSL input modes built in, plus an alpha slider, predefined swatches and horizontal/vertical hue and alpha layouts.
   - icon: 📦
     title: Multi-package Distribution
-    details: 13 independent packages. Install the all-in-one bundle or only the plugins you need — tree-shaking friendly by design.
+    details: 16 packages. Install the all-in-one bundle or only the plugins you need — tree-shaking friendly by design.
   - icon: 🛡️
     title: Fully Typed
     details: Every package is written in TypeScript and ships declaration files. Options, plugin methods and callbacks are fully typed.
@@ -59,11 +59,30 @@ features:
     </a>
     <a class="doc-card" href="./plugins/">
       <h3>Plugin system</h3>
-      <p>What each of the 10 built-in plugins does, how to configure them, and how to compose them.</p>
+      <p>What each of the 12 built-in plugins does, how to configure them, and how to compose them.</p>
     </a>
     <a class="doc-card" href="./guide/plugin-dev">
       <h3>Write a plugin</h3>
       <p>Follow the pluginName / applyOrder contract to build a registrable, destroyable plugin.</p>
+    </a>
+  </div>
+</div>
+
+<div class="doc-section">
+  <h2>What's new in 2.0.3</h2>
+  <p class="subtitle">The latest release is published on npm and reflected in these docs.</p>
+  <div class="doc-cards">
+    <a class="doc-card" href="./plugins/eyedropper">
+      <h3>Eyedropper plugin</h3>
+      <p>Pick colors from anywhere on screen with the native EyeDropper API, with capability detection and graceful cancellation.</p>
+    </a>
+    <a class="doc-card" href="./plugins/copy-color">
+      <h3>Copy color</h3>
+      <p>One-click clipboard copy with a contrast-aware button and a built-in success toast.</p>
+    </a>
+    <a class="doc-card" href="./guide/changelog">
+      <h3>Full changelog</h3>
+      <p>All features, fixes and documentation updates shipped in 2.0.3.</p>
     </a>
   </div>
 </div>

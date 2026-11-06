@@ -10,9 +10,12 @@
 pnpm add @ew-color-picker/ew-color-picker @ew-color-picker/style
 ```
 
+最新版本：`2.0.3` · [更新日志](https://eveningwater.github.io/ew-color-picker/zh/guide/changelog)
+
 - 官网文档：https://eveningwater.github.io/ew-color-picker/zh/
 - 国内访问（阿里云 ESA）：https://ew-color-picker.eveningwater.com/zh/
 - 在线演示：https://eveningwater.github.io/ew-color-picker/zh/examples/demo
+- 更新日志：https://eveningwater.github.io/ew-color-picker/zh/guide/changelog
 - 其他项目：https://www.eveningwater.com
 - AI 文档索引：[llms.txt](https://eveningwater.github.io/ew-color-picker/llms.txt) · [llms-full.txt](https://eveningwater.github.io/ew-color-picker/llms-full.txt)
 

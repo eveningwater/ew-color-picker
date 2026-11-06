@@ -1185,6 +1185,8 @@ Source: https://eveningwater.github.io/ew-color-picker/guide/changelog
 
 ## 2.0.3
 
+> This release has been published to npm and the docs site has been updated.
+
 ### Features
 
 - New `@ew-color-picker/eyedropper` plugin: sample colors from anywhere on screen through the native EyeDropper API. It detects browser support, writes the result with `core.setColor()`, supports `showEyedropper` / `eyedropperText` / `onEyedropperPick`, and silently ignores `AbortError` when the user cancels
@@ -2116,11 +2118,30 @@ Source: https://eveningwater.github.io/ew-color-picker/
     </a>
     <a class="doc-card" href="./plugins/">
       <h3>Plugin system</h3>
-      <p>What each of the 10 built-in plugins does, how to configure them, and how to compose them.</p>
+      <p>What each of the 12 built-in plugins does, how to configure them, and how to compose them.</p>
     </a>
     <a class="doc-card" href="./guide/plugin-dev">
       <h3>Write a plugin</h3>
       <p>Follow the pluginName / applyOrder contract to build a registrable, destroyable plugin.</p>
+    </a>
+  </div>
+</div>
+
+<div class="doc-section">
+  <h2>What's new in 2.0.3</h2>
+  <p class="subtitle">The latest release is published on npm and reflected in these docs.</p>
+  <div class="doc-cards">
+    <a class="doc-card" href="./plugins/eyedropper">
+      <h3>Eyedropper plugin</h3>
+      <p>Pick colors from anywhere on screen with the native EyeDropper API, with capability detection and graceful cancellation.</p>
+    </a>
+    <a class="doc-card" href="./plugins/copy-color">
+      <h3>Copy color</h3>
+      <p>One-click clipboard copy with a contrast-aware button and a built-in success toast.</p>
+    </a>
+    <a class="doc-card" href="./guide/changelog">
+      <h3>Full changelog</h3>
+      <p>All features, fixes and documentation updates shipped in 2.0.3.</p>
     </a>
   </div>
 </div>
@@ -4959,6 +4980,8 @@ Source: https://eveningwater.github.io/ew-color-picker/zh/guide/changelog
 
 ## 2.0.3
 
+> 本版本已发布到 npm，文档站已同步更新。
+
 ### 新增
 
 - 新增 `@ew-color-picker/eyedropper` 吸管插件：基于浏览器原生 EyeDropper API 从屏幕任意位置取色，自动检测能力，通过 `core.setColor()` 写回结果，支持 `showEyedropper` / `eyedropperText` / `onEyedropperPick`，用户取消时静默忽略 `AbortError`
@@ -5894,11 +5917,30 @@ Source: https://eveningwater.github.io/ew-color-picker/zh/
     </a>
     <a class="doc-card" href="./plugins/">
       <h3>插件体系</h3>
-      <p>了解 10 个内置插件各自的职责、配置与方法，以及如何组合使用。</p>
+      <p>了解 12 个内置插件各自的职责、配置与方法，以及如何组合使用。</p>
     </a>
     <a class="doc-card" href="./guide/plugin-dev">
       <h3>自定义插件</h3>
       <p>按照 pluginName / applyOrder 约定，编写可注册、可销毁的插件。</p>
+    </a>
+  </div>
+</div>
+
+<div class="doc-section">
+  <h2>2.0.3 更新内容</h2>
+  <p class="subtitle">最新版本已发布到 npm，本文档站已同步更新。</p>
+  <div class="doc-cards">
+    <a class="doc-card" href="./plugins/eyedropper">
+      <h3>吸管取色插件</h3>
+      <p>基于原生 EyeDropper API 从屏幕任意位置取色，自带能力检测与取消静默处理。</p>
+    </a>
+    <a class="doc-card" href="./plugins/copy-color">
+      <h3>复制颜色插件</h3>
+      <p>一键复制当前颜色，按钮底色跟随颜色并自动切换图标，复制成功弹出内置提示。</p>
+    </a>
+    <a class="doc-card" href="./guide/changelog">
+      <h3>完整更新日志</h3>
+      <p>查看 2.0.3 的全部新增功能、修复项与文档变更。</p>
     </a>
   </div>
 </div>

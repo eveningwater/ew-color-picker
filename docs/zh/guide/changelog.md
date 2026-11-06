@@ -7,6 +7,8 @@ description: ew-color-picker 各版本的变更记录，含修复、新增与文
 
 ## 2.0.3
 
+> 本版本已发布到 npm，文档站已同步更新。
+
 ### 新增
 
 - 新增 `@ew-color-picker/eyedropper` 吸管插件：基于浏览器原生 EyeDropper API 从屏幕任意位置取色，自动检测能力，通过 `core.setColor()` 写回结果，支持 `showEyedropper` / `eyedropperText` / `onEyedropperPick`，用户取消时静默忽略 `AbortError`

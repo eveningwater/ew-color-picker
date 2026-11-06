@@ -7,6 +7,8 @@ description: Release notes for ew-color-picker, including fixes, features and do
 
 ## 2.0.3
 
+> This release has been published to npm and the docs site has been updated.
+
 ### Features
 
 - New `@ew-color-picker/eyedropper` plugin: sample colors from anywhere on screen through the native EyeDropper API. It detects browser support, writes the result with `core.setColor()`, supports `showEyedropper` / `eyedropperText` / `onEyedropperPick`, and silently ignores `AbortError` when the user cancels
