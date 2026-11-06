@@ -1,6 +1,6 @@
 ---
 title: 插件总览
-description: ew-color-picker 的插件体系：11 个内置插件的职责、注册顺序与包名，以及插件之间如何协作完成颜色选择。
+description: ew-color-picker 的插件体系：12 个内置插件的职责、注册顺序与包名，以及插件之间如何协作完成颜色选择。
 ---
 
 # 插件总览
@@ -70,7 +70,9 @@ export default class MyPlugin {
 | 8 | Button | `ewColorPickerButton` | `@ew-color-picker/button` | 清空 / 确定按钮 |
 | 9 | Predefine | `ewColorPickerPredefine` | `@ew-color-picker/predefine` | 预定义颜色色块 |
 | 10 | ColorMode | `ewColorPickerColorMode` | `@ew-color-picker/color-mode` | Hex / RGB / HSL 模式切换 |
-| 11 | — | — | `@ew-color-picker/style` | 样式产物（CSS，不是插件） |
+| 11 | Eyedropper | `ewColorPickerEyedropper` | `@ew-color-picker/eyedropper` | 屏幕吸管取色（Chromium） |
+| 12 | CopyColor | `ewColorPickerCopyColor` | `@ew-color-picker/copy-color` | 复制当前颜色到剪贴板 |
+| 13 | — | — | `@ew-color-picker/style` | 样式产物（CSS，不是插件） |
 
 ## 挂载点
 
@@ -111,7 +113,7 @@ export default class MyPlugin {
 
 ## 按需组合
 
-只要引用了聚合包，11 个插件就都已注册。你可以用配置项裁剪 UI，而不必卸载插件：
+只要引用了聚合包，12 个插件就都已注册。你可以用配置项裁剪 UI，而不必卸载插件：
 
 ```ts
 new ewColorPicker({
@@ -142,5 +144,7 @@ new ewColorPicker({
 - [Button 按钮](./button.md)
 - [Predefine 预定义颜色](./predefine.md)
 - [ColorMode 颜色模式](./color-mode.md)
+- [Eyedropper 吸管](./eyedropper.md)
+- [CopyColor 复制颜色](./copy-color.md)
 - [Console 控制台](./console.md)
 - [编写自定义插件](../guide/plugin-dev.md)

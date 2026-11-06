@@ -72,6 +72,7 @@ import '@ew-color-picker/style/dist/input-number.css'
 | `.ew-color-picker-black-panel` | 黑色渐变层 |
 | `.ew-color-picker-panel-cursor` | 面板取色光标 |
 | `.ew-color-picker-bottom-row` | 面板底部行容器 |
+| `.ew-color-picker-extra-row` | 底部行上方的工具栏行（吸管 / 复制按钮） |
 
 ### 滑块
 
@@ -99,6 +100,9 @@ import '@ew-color-picker/style/dist/input-number.css'
 | `.ew-color-picker-clear-btn` | 清空按钮 |
 | `.ew-color-picker-sure-btn` | 确定按钮 |
 | `.ew-color-picker-mode-up-btn` / `-mode-down-btn` | 模式切换上下按钮 |
+| `.ew-color-picker-eyedropper-btn` | 吸管取色按钮 |
+| `.ew-color-picker-copy-btn` | 复制颜色按钮 |
+| `.ew-color-picker-copy-tip` | 复制成功提示气泡 |
 
 ### 预定义色板
 

@@ -1,6 +1,6 @@
 ---
 title: Plugin Overview
-description: 'The ew-color-picker plugin system: 11 built-in plugins, registration order, mount points and collaboration.'
+description: 'The ew-color-picker plugin system: 12 built-in plugins, registration order, mount points and collaboration.'
 ---
 
 # Plugin Overview
@@ -68,7 +68,9 @@ Registration order in `@ew-color-picker/ew-color-picker`:
 | 8 | Button | `ewColorPickerButton` | button | Clear / Sure |
 | 9 | Predefine | `ewColorPickerPredefine` | predefine | Swatches |
 | 10 | ColorMode | `ewColorPickerColorMode` | color-mode | Hex / RGB / HSL |
-| 11 | — | — | style | CSS artifacts (not a plugin) |
+| 11 | Eyedropper | `ewColorPickerEyedropper` | eyedropper | Screen color picker (Chromium) |
+| 12 | CopyColor | `ewColorPickerCopyColor` | copy-color | Copy the current color to the clipboard |
+| 13 | — | — | style | CSS artifacts (not a plugin) |
 
 ## Mount points
 
@@ -126,5 +128,6 @@ Register plugins manually — see [Installation](../guide/installation.md#per-pa
 
 - [Box](./box.md) · [Panel](./panel.md) · [Hue](./hue.md) · [Alpha](./alpha.md)
 - [Input](./input.md) · [InputNumber](./input-number.md) · [Button](./button.md)
-- [Predefine](./predefine.md) · [ColorMode](./color-mode.md) · [Console](./console.md)
-- [Writing a plugin](../guide/plugin-dev.md)
+- [Predefine](./predefine.md) · [ColorMode](./color-mode.md) · [Eyedropper](./eyedropper.md)
+- [CopyColor](./copy-color.md)
+- [Console](./console.md) · [Writing a plugin](../guide/plugin-dev.md)

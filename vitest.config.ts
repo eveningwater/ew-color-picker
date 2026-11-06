@@ -33,6 +33,8 @@ export default defineConfig({
       '@ew-color-picker/predefine': resolve(__dirname, './packages/predefine/src'),
       '@ew-color-picker/color-mode': resolve(__dirname, './packages/color-mode/src'),
       '@ew-color-picker/box': resolve(__dirname, './packages/box/src'),
+      '@ew-color-picker/eyedropper': resolve(__dirname, './packages/eyedropper/src'),
+      '@ew-color-picker/copy-color': resolve(__dirname, './packages/copy-color/src'),
       '@ew-color-picker/style': resolve(__dirname, './packages/style/src'),
     }
   }

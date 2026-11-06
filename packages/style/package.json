@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/style",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "EW Color Picker Styles",
   "main": "dist/index.css",
   "style": "dist/index.css",
@@ -15,9 +15,12 @@
   },
   "keywords": [
     "color-picker",
+    "color-picker-styles",
     "styles",
     "scss",
-    "css"
+    "css",
+    "theme",
+    "design-system"
   ],
   "author": "eveningwater(854806732@qq.com)",
   "license": "MIT",

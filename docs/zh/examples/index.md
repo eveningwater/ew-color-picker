@@ -1,11 +1,11 @@
 ---
 title: 示例集
-description: ew-color-picker 的 12 个典型用法：基础、布局、预设色、按钮、事件、定位、动画、禁用、模式、API、数字输入、多实例。
+description: ew-color-picker 的 14 个典型用法：基础、布局、预设色、按钮、事件、定位、动画、禁用、模式、API、数字输入、多实例、吸管取色、复制颜色。
 ---
 
 # 示例集
 
-下面是 12 个覆盖主要场景的最小示例。仓库 `examples/` 目录下有对应的完整 HTML 文件，可直接用浏览器打开。
+下面是 14 个覆盖主要场景的最小示例。仓库 `examples/` 目录下有对应的完整 HTML 文件，可直接用浏览器打开。
 
 ## 1. 基础用法
 
@@ -146,6 +146,32 @@ document.body.appendChild(num.getElement())
 ::: warning 不要直接传 NodeList
 构造函数不接受 `NodeList` / 数组，必须逐个实例化。每个实例的事件、挂载点、输入框都是隔离的。
 :::
+
+## 13. 吸管取色
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  showEyedropper: true,
+  onEyedropperPick: (color) => console.log('拾取：', color),
+})
+```
+
+吸管按钮位于输入框上方的工具栏行，仅在支持 EyeDropper API 的浏览器中渲染。详见 [Eyedropper 插件](../plugins/eyedropper.md)。
+
+## 14. 复制颜色到剪贴板
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  showCopyColor: true,
+  copyColorText: '复制颜色到剪贴板',
+  copiedText: '已复制',
+  onCopyColor: (color) => console.log('已复制：', color),
+})
+```
+
+复制按钮位于输入框上方的工具栏行，底色跟随当前颜色，复制成功后会弹出提示。详见 [CopyColor 插件](../plugins/copy-color.md)。
 
 ## 相关
 

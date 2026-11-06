@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/utils",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "utils for ew-color-picker",
   "main": "dist/utils.min.js",
   "module": "dist/utils.esm.js",
@@ -21,7 +21,13 @@
   "keywords": [
     "ew-color-picker",
     "utils",
-    "ew-color-picker-utils"
+    "ew-color-picker-utils",
+    "color",
+    "color-conversion",
+    "event-emitter",
+    "dom",
+    "utilities",
+    "typescript"
   ],
   "author": "eveningwater(854806732@qq.com)",
   "license": "MIT",

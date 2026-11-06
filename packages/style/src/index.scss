@@ -781,3 +781,118 @@ $prefix: "ew-" !default;
   line-height: 32px;
   width: 100%;
 }
+
+// ========== 工具栏行（吸管 / 复制等按钮，单独一行） ========== //
+.#{$prefix}color-picker-extra-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+// ========== Eyedropper 吸管插件 ========== //
+.#{$prefix}color-picker-eyedropper-group {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+.#{$prefix}color-picker-eyedropper-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 28px;
+  padding: 0 6px;
+  box-sizing: border-box;
+  font-size: 12px;
+  line-height: 1;
+  color: #606266;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+  transition: color 0.1s, border-color 0.1s;
+  white-space: nowrap;
+}
+.#{$prefix}color-picker-eyedropper-btn:hover {
+  color: #4096ef;
+  border-color: #dcdfe6;
+}
+.#{$prefix}color-picker-eyedropper-btn:focus-visible {
+  border-color: #4096ef;
+}
+.#{$prefix}color-picker-eyedropper-btn .#{$prefix}color-picker-icon {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+// ========== CopyColor 复制颜色插件 ========== //
+.#{$prefix}color-picker-copy-group {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  position: relative;
+}
+.#{$prefix}color-picker-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  padding: 0;
+  box-sizing: border-box;
+  border: 1px solid #dcdfe6;
+  border-radius: 50%;
+  background-color: #fff;
+  color: #333;
+  outline: none;
+  cursor: pointer;
+  transition: box-shadow 0.2s, border-color 0.2s, transform 0.1s;
+}
+.#{$prefix}color-picker-copy-btn:hover,
+.#{$prefix}color-picker-copy-btn:focus-visible {
+  border-color: #4096ef;
+  box-shadow: 0 0 0 2px rgba(64, 150, 239, 0.18);
+}
+.#{$prefix}color-picker-copy-btn:active {
+  transform: scale(0.94);
+}
+.#{$prefix}color-picker-copy-btn.#{$prefix}color-picker-copy-btn-copied {
+  border-color: #52c41a;
+  box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.18);
+}
+.#{$prefix}color-picker-copy-btn .#{$prefix}color-picker-icon {
+  display: block;
+  width: 14px;
+  height: 14px;
+}
+// 复制成功提示气泡
+.#{$prefix}color-picker-copy-tip {
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  padding: 3px 8px;
+  border: 1px solid #e5e6eb;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+  color: #333;
+  font-size: 12px;
+  line-height: 18px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-4px, -50%);
+  transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+  pointer-events: none;
+  z-index: 2;
+}
+.#{$prefix}color-picker-copy-tip.#{$prefix}color-picker-copy-tip-show {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0, -50%);
+}

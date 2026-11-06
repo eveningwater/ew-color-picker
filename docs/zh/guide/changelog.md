@@ -5,6 +5,19 @@ description: ew-color-picker 各版本的变更记录，含修复、新增与文
 
 # 更新日志
 
+## 2.0.3
+
+### 新增
+
+- 新增 `@ew-color-picker/eyedropper` 吸管插件：基于浏览器原生 EyeDropper API 从屏幕任意位置取色，自动检测能力，通过 `core.setColor()` 写回结果，支持 `showEyedropper` / `eyedropperText` / `onEyedropperPick`，用户取消时静默忽略 `AbortError`
+- 新增 `@ew-color-picker/copy-color` 复制颜色插件：一键复制当前颜色到剪贴板。按钮底色跟随当前颜色并按对比度自动切换图标颜色，优先使用异步剪贴板 API，失败时降级到 `execCommand`，复制成功后弹出内置提示气泡，支持 `showCopyColor` / `copyColorText` / `copiedText` / `onCopyColor`
+- 吸管按钮与复制按钮改为放在颜色值输入框上方的独立工具栏行，不再与输入框、清空 / 确定按钮挤在同一行
+
+### 修复
+
+- 修复数字输入框步进按钮的上下箭头：补齐图标类名并将尺寸调整为 10px，图标现在完全居中，不再溢出被分割线裁剪
+- 修复 RGB / HSL 分通道输入框首次点击上下箭头时颜色值被重置为 0 的问题：颜色变化时同步输入框内部值，加减从当前通道值开始计算
+
 ## 2.0.2
 
 ### 修复

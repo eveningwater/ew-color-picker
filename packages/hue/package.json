@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/hue",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "EW Color Picker Hue Plugin",
   "main": "dist/hue.min.js",
   "module": "dist/hue.esm.js",
@@ -16,8 +16,10 @@
   "keywords": [
     "color-picker",
     "hue",
+    "slider",
     "plugin",
-    "typescript"
+    "typescript",
+    "ui"
   ],
   "author": "eveningwater(854806732@qq.com)",
   "license": "MIT",

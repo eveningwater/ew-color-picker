@@ -15,7 +15,9 @@ Every option below can be passed to the constructor. Defaults come from `default
 | Layout | `hueDirection`, `alphaDirection`, `autoPanelPosition`, `panelPlacement`, `appendTo`, `prefix` |
 | Labels | `clearText`, `sureText` |
 | Animation | `togglePickerAnimation`, `pickerAnimationTime` |
-| Plugin switches | `hasBox`, `hasPanel`, `hasInput`, `hasClear`, `hasSure`, `hue`, `alpha`, `showButton`, `showColorMode`, `showInputNumber` |
+| Plugin switches | `hasBox`, `hasPanel`, `hasInput`, `hasClear`, `hasSure`, `hue`, `alpha`, `showButton`, `showColorMode`, `showInputNumber`, `showEyedropper`, `showCopyColor` |
+| Eyedropper | `eyedropperText`, `onEyedropperPick` |
+| CopyColor | `copyColorText`, `copiedText`, `onCopyColor` |
 | Plugin config objects | `ewColorPickerPanel`, `ewColorPickerColorMode` |
 | Box extras | `boxNoColorIcon`, `boxHasColorIcon`, `readonly`, `className`, `style` |
 | Callbacks | `changeColor`, `sure`, `clear`, `togglePicker` |
@@ -191,6 +193,8 @@ Values above 10000 are clamped.
 | `showButton` | `boolean` | `true` | Hide clear + sure buttons at once |
 | `showColorMode` | `boolean` | `true` | Hide the Hex/RGB/HSL switcher |
 | `showInputNumber` | `boolean` | `true` | Skip the InputNumber plugin's own numeric input; ColorMode channel inputs are unaffected |
+| `showEyedropper` | `boolean` | `true` | Hide the screen picker button; unsupported browsers never render it |
+| `showCopyColor` | `boolean` | `true` | Hide the copy-to-clipboard button |
 
 ```ts
 new ewColorPicker({
@@ -203,6 +207,25 @@ new ewColorPicker({
   hasSure: false,
 })
 ```
+
+## Eyedropper
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `eyedropperText` | `string` | `undefined` | Accessible label and tooltip; when set, also rendered as visible text |
+| `onEyedropperPick` | `(color: string) => void` | — | Called with the picked `sRGBHex` value |
+
+See [Eyedropper plugin](../plugins/eyedropper.md) for browser support and cancellation behaviour.
+
+## CopyColor
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `copyColorText` | `string` | `'复制颜色到剪贴板'` | Accessible label and tooltip |
+| `copiedText` | `string` | `'已复制'` | Temporary tooltip after a successful copy |
+| `onCopyColor` | `(color: string) => void` | — | Called with the copied color value |
+
+See [CopyColor plugin](../plugins/copy-color.md) for clipboard fallback and click behaviour.
 
 ## Plugin config objects
 

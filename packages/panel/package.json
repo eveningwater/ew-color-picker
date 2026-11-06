@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/panel",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "EW Color Picker Panel Plugin",
   "main": "dist/panel.min.js",
   "module": "dist/panel.esm.js",
@@ -16,8 +16,11 @@
   "keywords": [
     "color-picker",
     "panel",
+    "saturation",
+    "brightness",
     "plugin",
-    "typescript"
+    "typescript",
+    "ui"
   ],
   "author": "eveningwater(854806732@qq.com)",
   "license": "MIT",

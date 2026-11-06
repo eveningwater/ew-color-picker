@@ -1,11 +1,11 @@
 ---
 title: Examples
-description: 'Twelve typical ew-color-picker scenarios: basic, layout, presets, buttons, events, placement, animation, disabled, modes, API, numeric inputs, multiple instances.'
+description: 'Fourteen typical ew-color-picker scenarios: basic, layout, presets, buttons, events, placement, animation, disabled, modes, API, numeric inputs, multiple instances, eyedropper, copy color.'
 ---
 
 # Examples
 
-Twelve minimal recipes. Runnable HTML files live in the repository's `examples/` directory.
+Fourteen minimal recipes. Runnable HTML files live in the repository's `examples/` directory.
 
 ## 1. Basic
 
@@ -138,6 +138,32 @@ document.body.appendChild(num.getElement())
 ::: warning No NodeList
 The constructor does not accept a NodeList or array. Instantiate one by one. Events, mount points and inputs are isolated per instance.
 :::
+
+## 13. Eyedropper
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  showEyedropper: true,
+  onEyedropperPick: (color) => console.log(color),
+})
+```
+
+The button sits in its own toolbar row above the color value input and only renders in browsers supporting the EyeDropper API. See the [Eyedropper plugin](../plugins/eyedropper.md).
+
+## 14. Copy color
+
+```ts
+new ewColorPicker({
+  el: '#app',
+  showCopyColor: true,
+  copyColorText: 'Copy color to clipboard',
+  copiedText: 'Copied',
+  onCopyColor: (color) => console.log(color),
+})
+```
+
+The copy button sits in its own toolbar row above the color value input, is filled with the current color, and shows a short success toast. See the [CopyColor plugin](../plugins/copy-color.md).
 
 ## Related
 

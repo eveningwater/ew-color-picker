@@ -52,6 +52,27 @@ new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
 | `showButton` | `boolean` | `true` | 是否渲染按钮组 |
 | `showColorMode` | `boolean` | `true` | 是否显示颜色模式切换器 |
 | `showInputNumber` | `boolean` | `true` | 是否渲染数字输入框 |
+| `showEyedropper` | `boolean` | `true` | 是否显示吸管取色按钮；浏览器不支持时始终不渲染 |
+| `showCopyColor` | `boolean` | `true` | 是否显示复制颜色按钮 |
+
+### 吸管配置
+
+| 配置项 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `eyedropperText` | `string` | `undefined` | 按钮的 `title` / `aria-label`；设置后同时作为可见文本显示 |
+| `onEyedropperPick` | `(color: string) => void` | - | 吸管取色成功回调，参数为 `sRGBHex` 颜色值 |
+
+浏览器支持与取消行为见 [Eyedropper 吸管插件](../plugins/eyedropper.md)。
+
+### 复制颜色配置
+
+| 配置项 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `copyColorText` | `string` | `'复制颜色到剪贴板'` | 按钮的 `title` / `aria-label` |
+| `copiedText` | `string` | `'已复制'` | 复制成功后临时显示的提示文案 |
+| `onCopyColor` | `(color: string) => void` | - | 复制成功回调，参数为复制的颜色值 |
+
+剪贴板降级与点击行为见 [CopyColor 复制颜色插件](../plugins/copy-color.md)。
 
 ### 插件配置对象
 
@@ -68,6 +89,7 @@ new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
 | `sure` | `(color: string, picker: ewColorPicker) => void` | 点击确定时调用 |
 | `clear` | `(picker: ewColorPicker) => void` | 点击清空时调用 |
 | `togglePicker` | `(isOpen: boolean) => void` | 面板开合时调用 |
+| `onEyedropperPick` | `(color: string) => void` | 吸管取色成功时调用 |
 
 ## el
 

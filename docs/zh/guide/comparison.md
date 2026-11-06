@@ -71,7 +71,7 @@ ewColorPicker.use(Panel).use(Hue)
 
 - **生态与社区规模小**：下载量、第三方教程、Issue 沉淀都无法与 Pickr、react-color 相比，遇到冷门问题更多要靠读源码。
 - **不提供官方框架绑定包**：React / Vue / Angular / Solid 的接入方式见[框架集成](./framework-integration)，受控组件与 SSR 场景按示例自行封装（约 20 行）。
-- **不支持渐变、多色选择与图片取色**：这类需求目前要选 iro.js 或专门的渐变选择器。
+- **不支持渐变与多色编辑**：这类需求目前要选 iro.js 或专门的渐变选择器；屏幕取色可由可选的 `@ew-color-picker/eyedropper` 插件提供（仅 Chromium 系浏览器）。
 - **只有需要定制时才要理解插件模型**：默认装聚合入口或 `npm i ew-color-picker` 即可开箱使用；只有在替换局部 UI、组合自有插件时，才需要理解「核心 + 插件」的结构。
 - **想进一步减小体积需按需装子包**：聚合包 84.6 KB、样式 36.1 KB，已与 Coloris 同量级；若只用单个部件，按需安装插件包可以裁到核心 11.9 KB。
 
@@ -83,6 +83,7 @@ ewColorPicker.use(Panel).use(Hue)
 | 需要轻量、无依赖、主题化但不改结构 | Coloris 或 Pickr |
 | React 项目只要一个面板/滑块 | react-colorful |
 | Vue 项目需要现成组件集 | vue-color 或 @uiw/react-color |
+| 需要从屏幕任意位置取色 | **ew-color-picker**（可选 Eyedropper 插件，Chromium 系浏览器） |
 | 需要渐变、色彩空间转换、游戏/可视化场景 | iro.js |
 | 中后台 / 低代码 / 组件库，需要和设计体系深度融合、替换局部 UI、多实例隔离 | **ew-color-picker** |
 | 需要把选色能力嵌进自己的插件体系或运行时 | **ew-color-picker**（核心 11.9 KB，可只保留核心 + 自写插件） |

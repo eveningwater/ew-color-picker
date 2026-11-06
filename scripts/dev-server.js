@@ -25,8 +25,10 @@ const packageDependencies = {
   'color-mode': ['core', 'utils'],
   'box': ['core', 'utils'],
   'input-number': ['utils'],
+  'eyedropper': ['core', 'utils'],
+  'copy-color': ['core', 'utils'],
   'style': [],
-  'ew-color-picker': ['alpha', 'hue', 'panel', 'input', 'button', 'predefine', 'color-mode', 'box', 'input-number', 'style', 'core', 'utils']
+  'ew-color-picker': ['alpha', 'hue', 'panel', 'input', 'button', 'predefine', 'color-mode', 'eyedropper', 'copy-color', 'box', 'input-number', 'style', 'core', 'utils']
 };
 
 // 包名到 npm 包名的映射
@@ -42,6 +44,8 @@ const packageNameMap = {
   'color-mode': '@ew-color-picker/color-mode',
   'box': '@ew-color-picker/box',
   'input-number': '@ew-color-picker/input-number',
+  'eyedropper': '@ew-color-picker/eyedropper',
+  'copy-color': '@ew-color-picker/copy-color',
   'style': '@ew-color-picker/style',
   'ew-color-picker': '@ew-color-picker/ew-color-picker'
 };

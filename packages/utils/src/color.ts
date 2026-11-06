@@ -608,6 +608,40 @@ export function parseRgbaString(rgbaString: string): RgbaColor | null {
 }
 
 /**
+ * 根据背景色亮度返回对比度更高的前景色
+ * @param color 背景色
+ * @param lightColor 浅色背景下使用的前景色
+ * @param darkColor 深色背景下使用的前景色
+ */
+export function getContrastColor(
+  color?: string,
+  lightColor = "#333333",
+  darkColor = "#ffffff"
+): string {
+  if (!color) return darkColor;
+
+  const rgbaString = colorToRgba(color);
+  if (!rgbaString) return darkColor;
+
+  const rgba = parseRgbaString(rgbaString);
+  if (!rgba) return darkColor;
+
+  // 半透明颜色按叠加在白色底上计算实际呈现的颜色
+  const channelLuminance = (channel: number) => {
+    const blended = (channel * rgba.a + 255 * (1 - rgba.a)) / 255;
+    return blended <= 0.03928
+      ? blended / 12.92
+      : ((blended + 0.055) / 1.055) ** 2.4;
+  };
+  const luminance =
+    0.2126 * channelLuminance(rgba.r) +
+    0.7152 * channelLuminance(rgba.g) +
+    0.0722 * channelLuminance(rgba.b);
+
+  return luminance > 0.5 ? lightColor : darkColor;
+}
+
+/**
  * 严格校验颜色字符串是否为标准格式（hex、rgb、rgba、hsl、hsla、transparent）
  */
 export function isStrictColorFormat(color: string): boolean {

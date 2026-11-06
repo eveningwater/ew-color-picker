@@ -28,3 +28,17 @@ export const downArrowIcon = (className?: string, size?: number, prefix = DEFAUL
     className
   )}" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4236"${sizeAttr}><path d="M512 714.666667c-8.533333 0-17.066667-2.133333-23.466667-8.533334l-341.333333-341.333333c-12.8-12.8-12.8-32 0-44.8 12.8-12.8 32-12.8 44.8 0l320 317.866667 317.866667-320c12.8-12.8 32-12.8 44.8 0 12.8 12.8 12.8 32 0 44.8L533.333333 704c-4.266667 8.533333-12.8 10.666667-21.333333 10.666667z" fill="#666666" p-id="4237"></path></svg>`;
 };
+
+export const eyedropperIcon = (className?: string, size?: number, prefix = DEFAULT_PREFIX) => {
+  const sizeAttr = size && size > 0 ? ` width="${size}" height="${size}"` : "";
+  return `<svg class="${prefix}color-picker-icon${handleClassName(
+    className
+  )}" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="currentColor"${sizeAttr}><path d="M17.66 5.41l.92.92-2.69 2.69-.92-.92 2.69-2.69M17.67 3c-.26 0-.51.1-.71.29l-3.12 3.12-1.93-1.91-1.41 1.41 1.42 1.42L3 16.25V21h4.75l8.92-8.92 1.42 1.42 1.41-1.41-1.92-1.92 3.12-3.12c.4-.4.29-.71.29-.71L17.67 3z"></path></svg>`;
+};
+
+export const copyIcon = (className?: string, size?: number, prefix = DEFAULT_PREFIX) => {
+  const sizeAttr = size && size > 0 ? ` width="${size}" height="${size}"` : "";
+  return `<svg class="${prefix}color-picker-icon${handleClassName(
+    className
+  )}" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="currentColor"${sizeAttr}><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg>`;
+};

@@ -106,14 +106,14 @@ export default class InputNumber {
     addClass(this.upButton, `${p}input-number__button`);
     addClass(this.upButton, `${p}input-number__button--up`);
     setAttr(this.upButton, { type: "button" });
-    this.upButton.innerHTML = upArrowIcon(undefined, undefined, p);
+    this.upButton.innerHTML = upArrowIcon(`${p}input-number__icon`, undefined, p);
 
     // 创建下按钮
     this.downButton = create<HTMLButtonElement>("button");
     addClass(this.downButton, `${p}input-number__button`);
     addClass(this.downButton, `${p}input-number__button--down`);
     setAttr(this.downButton, { type: "button" });
-    this.downButton.innerHTML = downArrowIcon(undefined, undefined, p);
+    this.downButton.innerHTML = downArrowIcon(`${p}input-number__icon`, undefined, p);
 
     // 组装DOM结构
     insertNode(buttonContainer, this.upButton);
@@ -283,8 +283,9 @@ export default class InputNumber {
     return this.currentValue;
   }
 
-  public setValue(value: number) {
-    this.updateValue(value);
+  public setValue(value: number, triggerChange: boolean = true) {
+    // triggerChange 为 false 时只同步显示值与内部值，不触发 onChange
+    this.updateValue(value, triggerChange);
   }
 
   public setDisabled(disabled: boolean) {

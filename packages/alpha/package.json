@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/alpha",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "EW Color Picker Alpha Plugin",
   "main": "dist/alpha.min.js",
   "module": "dist/alpha.esm.js",
@@ -16,8 +16,12 @@
   "keywords": [
     "color-picker",
     "alpha",
+    "transparency",
+    "opacity",
+    "slider",
     "plugin",
-    "typescript"
+    "typescript",
+    "ui"
   ],
   "author": "eveningwater(854806732@qq.com)",
   "license": "MIT",

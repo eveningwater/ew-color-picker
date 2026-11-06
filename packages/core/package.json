@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/core",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "core for ew-color-picker",
   "main": "dist/core.min.js",
   "module": "dist/core.esm.js",
@@ -23,7 +23,14 @@
   "homepage": "https://eveningwater.github.io/ew-color-picker/",
   "keywords": [
     "ew-color-picker",
-    "core"
+    "core",
+    "color-picker",
+    "colorpicker",
+    "typescript",
+    "plugin-system",
+    "event-emitter",
+    "framework-agnostic",
+    "vanilla-js"
   ],
   "author": "eveningwater(854806732@qq.com)",
   "license": "MIT",

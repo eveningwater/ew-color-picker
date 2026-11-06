@@ -71,6 +71,28 @@ describe('color-mode Plugin', () => {
   });
 
   describe('color mode functionality', () => {
+    it('should step channel input from its current displayed value', async () => {
+      new ColorModePlugin(mockCore);
+
+      const rInput = container.querySelector(
+        '.ew-color-picker-rgb-r-input input'
+      ) as HTMLInputElement;
+      expect(rInput).toBeTruthy();
+      // 默认色 #ff0000 → R 通道显示 255
+      expect(rInput.value).toBe('255');
+
+      // 首次点击下箭头应从 255 减到 254，而不是从内部初始值 0 开始计算
+      const downButton = container.querySelector(
+        '.ew-color-picker-rgb-r-input .ew-input-number__button--down'
+      ) as HTMLButtonElement;
+      downButton.click();
+
+      expect(rInput.value).toBe('254');
+
+      // 等待防抖后的颜色更新完成，避免影响后续用例
+      await new Promise((resolve) => setTimeout(resolve, 350));
+    });
+
     it('should create mode buttons for different color formats', () => {
       const plugin = new ColorModePlugin(mockCore);
       

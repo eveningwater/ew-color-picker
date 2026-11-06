@@ -45,7 +45,7 @@ npm install ew-color-picker
 
 v2 是破坏性重构，v1 与 v2 的 API 不能混用：
 
-- **架构**：v1 是配置式单包；v2 拆分为 13 个包 + 1 个兼容入口，界面全部由插件组装，可通过 `Core.use(Plugin)` 自由组合与替换
+- **架构**：v1 是配置式单包；v2 拆分为 15 个包 + 1 个兼容入口，界面全部由插件组装，可通过 `Core.use(Plugin)` 自由组合与替换
 - **包名**：`ew-color-picker` 仍是入口，但内部指向 `@ew-color-picker/ew-color-picker`
 - **样式**：需要显式引入 `index.css` 与 `input-number.css` 两个文件
 - **配置与事件**：插件相关配置项（如 `hasAlpha`、`hasBox`）与 v1 有差异，请按本站在线演示重新接入
@@ -74,6 +74,7 @@ pnpm add @ew-color-picker/box @ew-color-picker/panel
 | `@ew-color-picker/button` | 清空 / 确定按钮 |
 | `@ew-color-picker/predefine` | 预定义色板 |
 | `@ew-color-picker/color-mode` | 颜色模式切换 |
+| `@ew-color-picker/eyedropper` | 屏幕吸管取色（Chromium） |
 
 手动注册插件：
 
@@ -113,7 +114,7 @@ new ewColorPicker({ el: '#picker' })
 
 ```bash
 pnpm install          # 安装依赖
-pnpm run build:all    # 构建全部 14 个包
+pnpm run build:all    # 构建全部 16 个包
 pnpm run test         # 运行测试
 pnpm run dev:preview  # 启动 examples 预览（Vite）
 ```

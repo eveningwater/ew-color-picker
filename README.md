@@ -4,6 +4,12 @@
 
 Event-driven, plugin-based modern color picker. The core only keeps color state and an event bus — all UI is assembled from plugins that can be composed, replaced, or extended.
 
+**[Try the live demo →](https://eveningwater.github.io/ew-color-picker/examples/demo)** · **[Documentation](https://eveningwater.github.io/ew-color-picker/)**
+
+```bash
+pnpm add @ew-color-picker/ew-color-picker @ew-color-picker/style
+```
+
 - Documentation: https://eveningwater.github.io/ew-color-picker/
 - China mirror (Alibaba Cloud ESA): https://ew-color-picker.eveningwater.com/
 - Live demo: https://eveningwater.github.io/ew-color-picker/examples/demo
@@ -12,12 +18,12 @@ Event-driven, plugin-based modern color picker. The core only keeps color state 
 
 ## Features
 
-- **Plugin architecture** — Box, Panel, Hue, Alpha, Input, InputNumber, Button, Predefine and ColorMode are independent plugins
+- **Plugin architecture** — Box, Panel, Hue, Alpha, Input, InputNumber, Button, Predefine, ColorMode, Eyedropper and CopyColor are independent plugins
 - **Event driven** — `change` / `sure` / `clear` / `toggle` / `mode-change` / `options-update` / `destroy`
 - **Multiple color spaces** — Hex, RGB and HSL input modes with alpha support
 - **Fully typed** — every package is written in TypeScript and ships declarations
 - **Instance isolation** — each instance owns its event bus, DOM and plugin instances
-- **Tree-shakeable** — 14 packages; import only the plugins you need
+- **Tree-shakeable** — 15 packages; import only the plugins you need
 
 ## Packages
 
@@ -36,6 +42,8 @@ Event-driven, plugin-based modern color picker. The core only keeps color state 
 | `@ew-color-picker/button` | Clear / Sure buttons |
 | `@ew-color-picker/predefine` | Predefined swatches |
 | `@ew-color-picker/color-mode` | Hex / RGB / HSL mode switching |
+| `@ew-color-picker/eyedropper` | Screen color picker via the native EyeDropper API (Chromium) |
+| `@ew-color-picker/copy-color` | Copy the current color to the clipboard |
 
 ## Install
 
@@ -133,6 +141,10 @@ picker.on('mode-change', (mode) => console.log('mode:', mode))
 | `hasClear` / `hasSure` | `boolean` | `true` | Toggle buttons |
 | `hue` / `alpha` | `boolean` | `true` | Toggle sliders |
 | `showButton` / `showColorMode` / `showInputNumber` | `boolean` | `true` | Toggle bottom area |
+| `showEyedropper` | `boolean` | `true` | Toggle the screen picker (Chromium only) |
+| `showCopyColor` | `boolean` | `true` | Toggle the copy-to-clipboard button |
+| `eyedropperText` | `string` | `undefined` | Eyedropper label / tooltip; also rendered as visible text |
+| `copyColorText` / `copiedText` | `string` | `'复制颜色到剪贴板'` / `'已复制'` | Copy button tooltip / success hint |
 | `defaultMode` | `'hex' \| 'rgb' \| 'hsl'` | `'rgb'` with Alpha, else `'hex'` | Initial mode |
 | `readonly` | `boolean` | `false` | Block box clicks |
 | `className` / `style` | `string \| object` | `''` | Box class / inline style |
@@ -140,6 +152,8 @@ picker.on('mode-change', (mode) => console.log('mode:', mode))
 | `sure` | `(color, picker) => void` | - | Sure callback |
 | `clear` | `(picker) => void` | - | Clear callback |
 | `togglePicker` | `(isOpen) => void` | - | Panel toggle callback |
+| `onEyedropperPick` | `(color) => void` | - | Eyedropper pick callback |
+| `onCopyColor` | `(color) => void` | - | Copy-to-clipboard success callback |
 
 Full reference: [Options](https://eveningwater.github.io/ew-color-picker/api/options).
 

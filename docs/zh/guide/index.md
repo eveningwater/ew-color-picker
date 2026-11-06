@@ -1,6 +1,6 @@
 ---
 title: 项目介绍
-description: ew-color-picker 是事件驱动、插件化的颜色选择器。了解核心职责、14 个包的划分与数据流。
+description: ew-color-picker 是事件驱动、插件化的颜色选择器。了解核心职责、16 个包的划分与数据流。
 ---
 
 # 项目介绍
@@ -40,6 +40,8 @@ ew-color-picker 是一个基于 **事件驱动 + 插件系统** 的颜色选择�
 | `@ew-color-picker/button` | 清空 / 确定按钮 |
 | `@ew-color-picker/predefine` | 预定义颜色色板 |
 | `@ew-color-picker/color-mode` | Hex / RGB / HSL 模式切换 |
+| `@ew-color-picker/eyedropper` | 屏幕吸管取色（原生 EyeDropper API，Chromium） |
+| `@ew-color-picker/copy-color` | 复制当前颜色到剪贴板 |
 | `@ew-color-picker/console` | 控制台版本横幅（已并入 utils） |
 
 ## 数据流

@@ -58,6 +58,7 @@ Override them after importing the styles:
 | `.ew-color-picker-panel-container` | Panel container (absolute) |
 | `.ew-color-picker-panel-container-hidden` | Hidden state |
 | `.ew-color-picker-bottom-row` | Bottom row that hosts inputs and buttons |
+| `.ew-color-picker-extra-row` | Toolbar row above the bottom row (eyedropper / copy buttons) |
 
 ### Box
 
@@ -102,6 +103,9 @@ Override them after importing the styles:
 | `.ew-color-picker-clear-btn` | Clear button |
 | `.ew-color-picker-sure-btn` | Sure button |
 | `.ew-color-picker-drop-btn` | Shared button style |
+| `.ew-color-picker-eyedropper-btn` | Eyedropper button |
+| `.ew-color-picker-copy-btn` | Copy color button |
+| `.ew-color-picker-copy-tip` | Copy success toast bubble |
 
 ### Color mode
 

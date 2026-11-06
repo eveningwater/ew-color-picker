@@ -5,6 +5,19 @@ description: Release notes for ew-color-picker, including fixes, features and do
 
 # Changelog
 
+## 2.0.3
+
+### Features
+
+- New `@ew-color-picker/eyedropper` plugin: sample colors from anywhere on screen through the native EyeDropper API. It detects browser support, writes the result with `core.setColor()`, supports `showEyedropper` / `eyedropperText` / `onEyedropperPick`, and silently ignores `AbortError` when the user cancels
+- New `@ew-color-picker/copy-color` plugin: copy the current color to the clipboard with one click. The button is filled with the current color and uses contrast-aware icons, prefers the async Clipboard API with a `execCommand` fallback, shows a short built-in success toast, and supports `showCopyColor` / `copyColorText` / `copiedText` / `onCopyColor`
+- The eyedropper and copy buttons now live in their own toolbar row above the color value input, instead of sharing the row with the Clear / Sure buttons
+
+### Fixes
+
+- Fixed the InputNumber stepper arrows: they now carry the correct icon class and render at 10px, staying centered inside the button instead of overflowing and being clipped by the divider
+- Fixed RGB / HSL channel inputs resetting to `0` on the first stepper click; internal values are now synced with the current color so increment/decrement starts from the current channel value
+
 ## 2.0.2
 
 ### Fixes

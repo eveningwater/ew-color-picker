@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/input",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "EW Color Picker Input Plugin",
   "main": "dist/input.min.js",
   "module": "dist/input.esm.js",
@@ -16,8 +16,10 @@
   "keywords": [
     "color-picker",
     "input",
+    "text-input",
     "plugin",
-    "typescript"
+    "typescript",
+    "ui"
   ],
   "author": "eveningwater(854806732@qq.com)",
   "license": "MIT",

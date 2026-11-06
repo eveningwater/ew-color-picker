@@ -1,7 +1,7 @@
 {
   "name": "ew-color-picker-monorepo",
   "private": true,
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "一个基于typescript封装的颜色选择器",
   "type": "module",
   "scripts": {
@@ -14,6 +14,7 @@
     "build:button": "pnpm -r build:button",
     "build:predefine": "pnpm -r build:predefine",
     "build:colorMode": "pnpm -r build:colorMode",
+    "build:eyedropper": "pnpm -r build:eyedropper",
     "build:ewColorPicker": "pnpm -r build:ewColorPicker",
     "build:style": "pnpm -r build:style",
     "build:box": "pnpm -r build:box",

@@ -71,7 +71,7 @@ Bilingual documentation, per-API references, one page per plugin, plus `llms.txt
 
 - **Small ecosystem**: download counts, community tutorials and issue history cannot match Pickr or react-color; unusual problems mean reading the source.
 - **No official framework wrappers**: React / Vue / Angular / Solid integration is covered in [Framework Integration](./framework-integration); controlled components and SSR need a thin wrapper of your own (around 20 lines).
-- **No gradients, multi-color editing or eyedropper**: those use cases need iro.js or a dedicated gradient picker.
+- **No gradients or multi-color editing**: those use cases need iro.js or a dedicated gradient picker. Screen sampling is covered by the optional `@ew-color-picker/eyedropper` plugin in Chromium-based browsers.
 - **The plugin model only matters when you customize**: installing the aggregate package or `npm i ew-color-picker` works out of the box; you only need to understand core + plugins when replacing part of the UI or wiring your own plugins.
 - **Shrinking further means installing sub-packages**: the aggregate is 84.6 KB plus 36.1 KB of styles, already in Coloris territory; if you use a single piece, install plugin packages and trim down to the 11.9 KB core.
 
@@ -83,6 +83,7 @@ Bilingual documentation, per-API references, one page per plugin, plus `llms.txt
 | Lightweight, dependency-free, themeable without structural changes | Coloris or Pickr |
 | React project that only needs a panel or slider | react-colorful |
 | Vue project that wants ready-made components | vue-color or @uiw/react-color |
+| Sample colors from anywhere on screen | **ew-color-picker** (optional Eyedropper plugin, Chromium-based browsers) |
 | Gradients, color-space work, games or visualizations | iro.js |
 | Admin / low-code / component library needing deep design-system integration, partial UI replacement and instance isolation | **ew-color-picker** |
 | Embedding color selection into your own plugin system or runtime | **ew-color-picker** (11.9 KB core, keep the core and write your own plugins) |

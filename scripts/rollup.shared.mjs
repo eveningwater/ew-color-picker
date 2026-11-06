@@ -29,6 +29,8 @@ export const PACKAGES = {
   'input-number': { pkgName: 'input-number', globalName: 'InputNumber', external: [UTILS], exports: 'named' },
   predefine: { pkgName: 'predefine', globalName: 'Predefine', external: [CORE, UTILS], exports: 'default' },
   'color-mode': { pkgName: 'color-mode', globalName: 'ColorMode', distName: 'colorMode', external: [CORE, UTILS], exports: 'default' },
+  eyedropper: { pkgName: 'eyedropper', globalName: 'Eyedropper', external: [CORE, UTILS], exports: 'default' },
+  'copy-color': { pkgName: 'copy-color', globalName: 'CopyColor', external: [CORE, UTILS], exports: 'default' },
   'ew-color-picker': {
     pkgName: 'ew-color-picker',
     globalName: 'ewColorPicker',
@@ -47,6 +49,8 @@ export const PACKAGES = {
       '@ew-color-picker/input-number',
       '@ew-color-picker/predefine',
       '@ew-color-picker/color-mode',
+      '@ew-color-picker/eyedropper',
+      '@ew-color-picker/copy-color',
     ],
   },
 };

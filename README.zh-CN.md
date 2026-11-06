@@ -4,6 +4,12 @@
 
 事件驱动 + 插件化的现代颜色选择器。核心只维护颜色状态与事件，界面全部由插件组装，可按需组合、替换与扩展。
 
+**[立即体验在线演示 →](https://eveningwater.github.io/ew-color-picker/zh/examples/demo)** · **[中文文档](https://eveningwater.github.io/ew-color-picker/zh/)**
+
+```bash
+pnpm add @ew-color-picker/ew-color-picker @ew-color-picker/style
+```
+
 - 官网文档：https://eveningwater.github.io/ew-color-picker/zh/
 - 国内访问（阿里云 ESA）：https://ew-color-picker.eveningwater.com/zh/
 - 在线演示：https://eveningwater.github.io/ew-color-picker/zh/examples/demo
@@ -12,12 +18,12 @@
 
 ## 特性
 
-- **插件架构**：Box、Panel、Hue、Alpha、Input、InputNumber、Button、Predefine、ColorMode 全部是独立插件
+- **插件架构**：Box、Panel、Hue、Alpha、Input、InputNumber、Button、Predefine、ColorMode、Eyedropper、CopyColor 全部是独立插件
 - **事件驱动**：`change` / `sure` / `clear` / `toggle` / `mode-change` / `options-update` / `destroy`
 - **多颜色模式**：Hex、RGB、HSL 输入切换，支持透明度
 - **完整类型**：全部包使用 TypeScript 编写并输出声明文件
 - **多实例隔离**：每个实例拥有独立事件总线、DOM 与插件实例
-- **按需加载**：14 个独立包，可只引入所需插件
+- **按需加载**：15 个独立包，可只引入所需插件
 
 ## 包结构
 
@@ -36,6 +42,8 @@
 | `@ew-color-picker/button` | 清空 / 确定按钮 |
 | `@ew-color-picker/predefine` | 预定义颜色 |
 | `@ew-color-picker/color-mode` | Hex / RGB / HSL 模式切换 |
+| `@ew-color-picker/eyedropper` | 屏幕吸管取色（原生 EyeDropper API，Chromium） |
+| `@ew-color-picker/copy-color` | 复制当前颜色到剪贴板 |
 
 ## 安装
 
@@ -133,6 +141,10 @@ picker.on('mode-change', (mode) => console.log('模式：', mode))
 | `hasClear` / `hasSure` | `boolean` | `true` | 控制按钮 |
 | `hue` / `alpha` | `boolean` | `true` | 控制滑块 |
 | `showButton` / `showColorMode` / `showInputNumber` | `boolean` | `true` | 控制底部区域 |
+| `showEyedropper` | `boolean` | `true` | 控制吸管按钮（仅 Chromium） |
+| `showCopyColor` | `boolean` | `true` | 控制复制颜色按钮 |
+| `eyedropperText` | `string` | `undefined` | 吸管按钮文案 / 提示，设置后可见 |
+| `copyColorText` / `copiedText` | `string` | `'复制颜色到剪贴板'` / `'已复制'` | 复制按钮提示 / 复制成功提示 |
 | `defaultMode` | `'hex' \| 'rgb' \| 'hsl'` | 有 Alpha 时 `rgb`，否则 `hex` | 初始模式 |
 | `readonly` | `boolean` | `false` | 只读：阻止点击色块 |
 | `className` / `style` | `string \| object` | `''` | 色块额外类名 / 内联样式 |
@@ -140,6 +152,8 @@ picker.on('mode-change', (mode) => console.log('模式：', mode))
 | `sure` | `(color, picker) => void` | - | 确定回调 |
 | `clear` | `(picker) => void` | - | 清空回调 |
 | `togglePicker` | `(isOpen) => void` | - | 面板开合回调 |
+| `onEyedropperPick` | `(color) => void` | - | 吸管取色回调 |
+| `onCopyColor` | `(color) => void` | - | 复制颜色成功回调 |
 
 完整说明见[配置项文档](https://eveningwater.github.io/ew-color-picker/zh/api/options)。
 

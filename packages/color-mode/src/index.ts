@@ -62,6 +62,9 @@ export default class ewColorPickerColorModePlugin {
   // 防抖处理颜色更新事件
   private debouncedUpdateColorFromRgb: () => void;
   private debouncedUpdateColorFromHsl: () => void;
+
+  // RGB/HSL 各通道的 InputNumber 实例，保证显示值与内部值一致
+  private inputNumberInstances: Map<string, InputNumber> = new Map();
   
   // 事件处理函数引用，用于正确解绑
   private boundEventHandlers: Array<{ element: HTMLElement; event: string; handler: EventListener }> = [];
@@ -361,9 +364,13 @@ export default class ewColorPickerColorModePlugin {
     // 检查input插件是否被禁用
     if (this.inputPlugin && !this.inputPlugin.hasInput) {
       // 如果input插件被禁用，清空容器但不创建任何输入框
+      this.clearInputNumberInstances();
       inputContainer.innerHTML = '';
       return;
     }
+
+    // 销毁旧模式的通道实例，避免内部值与新建的 DOM 脱节
+    this.clearInputNumberInstances();
 
     // 根据模式创建新的输入框
     if (this.currentMode === 'hex') {
@@ -435,6 +442,7 @@ export default class ewColorPickerColorModePlugin {
           }
         });
         input = inputNumber.getElement();
+        this.inputNumberInstances.set(label.toLowerCase(), inputNumber);
         addClass(input, `${p}color-picker-rgb-${label.toLowerCase()}-input`);
       } else if (this.currentMode === 'hsl') {
         // HSL模式：H使用InputNumber，S和L使用普通input，A使用InputNumber
@@ -454,6 +462,7 @@ export default class ewColorPickerColorModePlugin {
             }
           });
           input = inputNumber.getElement();
+          this.inputNumberInstances.set('h', inputNumber);
         } else if (idx === 3 && this.hasAlphaPlugin) {
           // A通道：0-1
           const inputNumber = new InputNumber({
@@ -470,6 +479,7 @@ export default class ewColorPickerColorModePlugin {
             }
           });
           input = inputNumber.getElement();
+          this.inputNumberInstances.set('a', inputNumber);
         } else {
           // S和L通道：0-100%
           input = create<HTMLInputElement>('input');
@@ -522,6 +532,31 @@ export default class ewColorPickerColorModePlugin {
     return ($(`.${p}color-picker-input-container`, bottomRow) as HTMLElement) || document;
   }
 
+  // 将通道值写入 InputNumber 实例（同时更新内部值），普通 input 直接写 DOM
+  private syncChannelValue(
+    label: string,
+    input: HTMLInputElement | null,
+    value: string
+  ) {
+    const instance = this.inputNumberInstances.get(label);
+    if (instance) {
+      const numValue = parseFloat(value);
+      if (!isNaN(numValue)) {
+        instance.setValue(numValue, false);
+      }
+      return;
+    }
+    if (input) {
+      input.value = value;
+    }
+  }
+
+  // 销毁已创建的通道实例并清空引用
+  private clearInputNumberInstances() {
+    this.inputNumberInstances.forEach((instance) => instance.destroy());
+    this.inputNumberInstances.clear();
+  }
+
   updateInputValues(color: string) {
     if (!color) return;
 
@@ -543,11 +578,11 @@ export default class ewColorPickerColorModePlugin {
       const bInput = $(`.${p}color-picker-rgb-b-input input`, scope) as HTMLInputElement;
       const aInput = $(`.${p}color-picker-rgb-a-input input`, scope) as HTMLInputElement;
 
-      // 更新值
-      if (rInput) rInput.value = Math.round(rgba.r).toString();
-      if (gInput) gInput.value = Math.round(rgba.g).toString();
-      if (bInput) bInput.value = Math.round(rgba.b).toString();
-      if (aInput) aInput.value = rgba.a.toFixed(2);
+      // 更新值（InputNumber 通道同时同步内部值，避免箭头从 0 开始计算）
+      this.syncChannelValue('r', rInput, Math.round(rgba.r).toString());
+      this.syncChannelValue('g', gInput, Math.round(rgba.g).toString());
+      this.syncChannelValue('b', bInput, Math.round(rgba.b).toString());
+      this.syncChannelValue('a', aInput, rgba.a.toFixed(2));
     } else if (this.currentMode === 'hsl') {
       const hsl = rgbToHsl(rgba.r, rgba.g, rgba.b);
       
@@ -558,10 +593,10 @@ export default class ewColorPickerColorModePlugin {
       const aInput = $(`.${p}color-picker-hsl-a-input input`, scope) as HTMLInputElement;
 
       // 更新值
-      if (hInput) hInput.value = Math.round(hsl.h).toString();
-      if (sInput) sInput.value = Math.round(hsl.s).toString() + '%';
-      if (lInput) lInput.value = Math.round(hsl.l).toString() + '%';
-      if (aInput) aInput.value = rgba.a.toFixed(2);
+      this.syncChannelValue('h', hInput, Math.round(hsl.h).toString());
+      this.syncChannelValue('s', sInput, Math.round(hsl.s).toString() + '%');
+      this.syncChannelValue('l', lInput, Math.round(hsl.l).toString() + '%');
+      this.syncChannelValue('a', aInput, rgba.a.toFixed(2));
     }
   }
 
@@ -823,6 +858,9 @@ export default class ewColorPickerColorModePlugin {
   }
 
   destroy() {
+    // 销毁通道输入实例
+    this.clearInputNumberInstances();
+
     // 移除所有绑定的事件监听器
     this.boundEventHandlers.forEach(({ element, event, handler }) => {
       off(element, event, handler);

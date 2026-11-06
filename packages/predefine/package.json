@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/predefine",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "EW Color Picker Predefine Plugin",
   "main": "dist/predefine.min.js",
   "module": "dist/predefine.esm.js",
@@ -16,8 +16,12 @@
   "keywords": [
     "color-picker",
     "predefine",
+    "preset-colors",
+    "swatch",
+    "palette",
     "plugin",
-    "typescript"
+    "typescript",
+    "ui"
   ],
   "author": "eveningwater(854806732@qq.com)",
   "license": "MIT",

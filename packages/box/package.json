@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/box",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "box for ew-color-picker",
   "main": "dist/box.min.js",
   "module": "dist/box.esm.js",
@@ -20,7 +20,12 @@
   "homepage": "https://eveningwater.github.io/ew-color-picker/",
   "keywords": [
     "ew-color-picker",
-    "box"
+    "box",
+    "color-picker",
+    "swatch",
+    "trigger",
+    "plugin",
+    "ui"
   ],
   "author": "eveningwater(854806732@qq.com)",
   "license": "MIT",
