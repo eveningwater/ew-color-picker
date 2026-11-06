@@ -36,6 +36,15 @@ new ewColorPicker(document.querySelector('#picker')!) // 元素
 new ewColorPicker({ el: '#picker' })    // 配置对象
 ```
 
+也可以使用 `createEwColorPicker` 工厂函数，内部等价于 `new ewColorPicker(options)`：
+
+```ts
+import { createEwColorPicker } from '@ew-color-picker/ew-color-picker'
+// 无 scope 入口同样可用：import { createEwColorPicker } from 'ew-color-picker'
+
+const picker = createEwColorPicker({ el: '#picker', defaultColor: '#6366f1' })
+```
+
 ## 3. 监听颜色变化
 
 ```ts

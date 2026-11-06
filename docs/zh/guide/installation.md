@@ -29,7 +29,7 @@ import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 ```
 
-> `index.css` 是核心样式，`input-number.css` 是数字输入框组件的独立样式入口，**两者都需要引入**，否则 RGB / HSL 模式下的数字框会失去样式。
+> `index.css` 是核心样式，`input-number.css` 是数字输入框组件的独立样式入口，**两者都需要引入**，否则 RGB / HSL 模式下的数字框会失去样式。使用 Select 组件时，再额外引入 `select.css`。
 
 如果希望沿用 v1 的包名，也可以直接安装无 scope 的聚合入口包，二者等价：
 
@@ -45,7 +45,7 @@ npm install ew-color-picker
 
 v2 是破坏性重构，v1 与 v2 的 API 不能混用：
 
-- **架构**：v1 是配置式单包；v2 拆分为 15 个包 + 1 个兼容入口，界面全部由插件组装，可通过 `Core.use(Plugin)` 自由组合与替换
+- **架构**：v1 是配置式单包；v2 拆分为 16 个包 + 1 个兼容入口，界面全部由插件组装，可通过 `Core.use(Plugin)` 自由组合与替换
 - **包名**：`ew-color-picker` 仍是入口，但内部指向 `@ew-color-picker/ew-color-picker`
 - **样式**：需要显式引入 `index.css` 与 `input-number.css` 两个文件
 - **配置与事件**：插件相关配置项（如 `hasAlpha`、`hasBox`）与 v1 有差异，请按本站在线演示重新接入

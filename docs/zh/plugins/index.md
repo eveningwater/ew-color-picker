@@ -1,6 +1,6 @@
 ---
 title: 插件总览
-description: ew-color-picker 的插件体系：12 个内置插件的职责、注册顺序与包名，以及插件之间如何协作完成颜色选择。
+description: ew-color-picker 的插件体系：13 个内置插件的职责、注册顺序与包名，以及插件之间如何协作完成颜色选择。
 ---
 
 # 插件总览
@@ -67,12 +67,13 @@ export default class MyPlugin {
 | 5 | Alpha | `ewColorPickerAlpha` | `@ew-color-picker/alpha` | 透明度滑块 |
 | 6 | Input | `ewColorPickerInput` | `@ew-color-picker/input` | 文本颜色输入框 |
 | 7 | InputNumber | `ewColorPickerInputNumber` | `@ew-color-picker/input-number` | RGB/HSL 数值输入组（底层组件） |
-| 8 | Button | `ewColorPickerButton` | `@ew-color-picker/button` | 清空 / 确定按钮 |
-| 9 | Predefine | `ewColorPickerPredefine` | `@ew-color-picker/predefine` | 预定义颜色色块 |
-| 10 | ColorMode | `ewColorPickerColorMode` | `@ew-color-picker/color-mode` | Hex / RGB / HSL 模式切换 |
-| 11 | Eyedropper | `ewColorPickerEyedropper` | `@ew-color-picker/eyedropper` | 屏幕吸管取色（Chromium） |
-| 12 | CopyColor | `ewColorPickerCopyColor` | `@ew-color-picker/copy-color` | 复制当前颜色到剪贴板 |
-| 13 | — | — | `@ew-color-picker/style` | 样式产物（CSS，不是插件） |
+| 8 | Select | `ewColorPickerSelect` | `@ew-color-picker/select` | 下拉选择组件（仅在有选项时渲染） |
+| 9 | Button | `ewColorPickerButton` | `@ew-color-picker/button` | 清空 / 确定按钮 |
+| 10 | Predefine | `ewColorPickerPredefine` | `@ew-color-picker/predefine` | 预定义颜色色块 |
+| 11 | ColorMode | `ewColorPickerColorMode` | `@ew-color-picker/color-mode` | Hex / RGB / HSL 模式切换 |
+| 12 | Eyedropper | `ewColorPickerEyedropper` | `@ew-color-picker/eyedropper` | 屏幕吸管取色（Chromium） |
+| 13 | CopyColor | `ewColorPickerCopyColor` | `@ew-color-picker/copy-color` | 复制当前颜色到剪贴板 |
+| 14 | — | — | `@ew-color-picker/style` | 样式产物（CSS，不是插件） |
 
 ## 挂载点
 
@@ -113,7 +114,7 @@ export default class MyPlugin {
 
 ## 按需组合
 
-只要引用了聚合包，12 个插件就都已注册。你可以用配置项裁剪 UI，而不必卸载插件：
+只要引用了聚合包，13 个插件就都已注册。你可以用配置项裁剪 UI，而不必卸载插件：
 
 ```ts
 new ewColorPicker({
@@ -141,6 +142,7 @@ new ewColorPicker({
 - [Alpha 透明度滑块](./alpha.md)
 - [Input 输入框](./input.md)
 - [InputNumber 数字输入框](./input-number.md)
+- [Select 下拉选择](./select.md)
 - [Button 按钮](./button.md)
 - [Predefine 预定义颜色](./predefine.md)
 - [ColorMode 颜色模式](./color-mode.md)

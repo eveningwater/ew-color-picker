@@ -11,6 +11,7 @@ description: Stylesheet entries, CSS variables, class name groups and theming ti
 | --- | --- | --- |
 | `@ew-color-picker/style/dist/index.css` | Yes | Picker, box, panel, sliders, buttons, mode switcher, predefine |
 | `@ew-color-picker/style/dist/input-number.css` | Yes for numeric inputs | InputNumber component |
+| `@ew-color-picker/style/dist/select.css` | Only when using Select | Select dropdown component |
 
 ```ts
 import '@ew-color-picker/style/dist/index.css'
@@ -18,7 +19,7 @@ import '@ew-color-picker/style/dist/input-number.css'
 ```
 
 ::: warning
-Importing only `index.css` leaves RGB/HSL numeric inputs unstyled.
+Importing only `index.css` leaves RGB/HSL numeric inputs unstyled. Add `select.css` only when you use the Select component.
 :::
 
 ## Class prefix
@@ -138,6 +139,21 @@ Override them after importing the styles:
 | `.ew-input-number__input` | Input |
 | `.ew-input-number__buttons` | Stepper container |
 | `.ew-input-number__button--up` / `--down` | Steppers |
+
+### Select
+
+| Class | Description |
+| --- | --- |
+| `.ew-select` | Root |
+| `.ew-select--small` / `--default` / `--large` | Sizes |
+| `.ew-select--open` / `--disabled` | States |
+| `.ew-select__trigger` | Trigger button |
+| `.ew-select__value` / `--placeholder` | Current value text |
+| `.ew-select__clear` / `--hidden` / `-icon` | Clear button and its visibility state |
+| `.ew-select__arrow` / `-icon` | Arrow indicator |
+| `.ew-select__dropdown` | Dropdown layer |
+| `.ew-select__option` | One option |
+| `.ew-select__option--selected` / `--active` / `--disabled` | Option states |
 
 ## Theming example
 

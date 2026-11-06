@@ -1,11 +1,11 @@
 ---
 title: Examples
-description: 'Fourteen typical ew-color-picker scenarios: basic, layout, presets, buttons, events, placement, animation, disabled, modes, API, numeric inputs, multiple instances, eyedropper, copy color.'
+description: 'Fifteen typical ew-color-picker scenarios: basic, layout, presets, buttons, events, placement, animation, disabled, modes, API, numeric inputs, multiple instances, eyedropper, copy color, select.'
 ---
 
 # Examples
 
-Fourteen minimal recipes. Runnable HTML files live in the repository's `examples/` directory.
+Fifteen minimal recipes. Runnable HTML files live in the repository's `examples/` directory.
 
 ## 1. Basic
 
@@ -164,6 +164,25 @@ new ewColorPicker({
 ```
 
 The copy button sits in its own toolbar row above the color value input, is filled with the current color, and shows a short success toast. See the [CopyColor plugin](../plugins/copy-color.md).
+
+## 15. Select dropdown
+
+```ts
+import '@ew-color-picker/style/dist/select.css'
+
+new ewColorPicker({
+  el: '#app',
+  selectItems: [
+    { label: 'Linear', value: 'linear' },
+    { label: 'Radial', value: 'radial' },
+  ],
+  selectValue: 'linear',
+  onSelectChange: (value) => console.log(value),
+  onSelectClear: () => console.log('cleared'),
+})
+```
+
+The dropdown only renders when `selectItems` is not empty. Once a value is selected, a clear icon appears; clicking it resets the selection. See the [Select plugin](../plugins/select.md).
 
 ## Related
 

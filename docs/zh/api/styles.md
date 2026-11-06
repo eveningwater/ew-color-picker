@@ -18,9 +18,10 @@ import '@ew-color-picker/style/dist/input-number.css'
 | --- | --- |
 | `index.css` | 颜色盒、面板、滑块、输入框、按钮、色板、模式切换器 |
 | `input-number.css` | 数字输入框组件 `.ew-input-number` 系列样式 |
+| `select.css` | 下拉选择组件 `.ew-select` 系列样式（使用 Select 时引入） |
 
 ::: warning
-两个文件都需要引入。只引入 `index.css` 时，RGB / HSL 模式下的数字输入框会丢失样式。
+`index.css` 与 `input-number.css` 都需要引入。只引入 `index.css` 时，RGB / HSL 模式下的数字输入框会丢失样式；使用 Select 组件时还需额外引入 `select.css`。
 :::
 
 ## 类名前缀
@@ -124,6 +125,21 @@ import '@ew-color-picker/style/dist/input-number.css'
 | `.ew-input-number__buttons` | 步进按钮容器 |
 | `.ew-input-number__button--up` / `--down` | 增加 / 减少按钮 |
 | `.ew-input-number__input` | 内部 input |
+
+### 下拉选择
+
+| 类名 | 说明 |
+| --- | --- |
+| `.ew-select` | 下拉选择根节点 |
+| `.ew-select--small` / `--default` / `--large` | 尺寸修饰 |
+| `.ew-select--open` / `--disabled` | 展开 / 禁用态 |
+| `.ew-select__trigger` | 触发器按钮 |
+| `.ew-select__value` / `--placeholder` | 当前值文本 |
+| `.ew-select__clear` / `--hidden` / `-icon` | 清空按钮及其显隐状态 |
+| `.ew-select__arrow` / `-icon` | 下拉箭头 |
+| `.ew-select__dropdown` | 下拉层 |
+| `.ew-select__option` | 单个选项 |
+| `.ew-select__option--selected` / `--active` / `--disabled` | 选中 / 高亮 / 禁用 |
 
 ### 状态类
 

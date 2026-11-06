@@ -33,6 +33,15 @@ new ewColorPicker(el, { defaultColor: '#6366f1' })
 new ewColorPicker({ el, defaultColor: '#6366f1' })
 ```
 
+Or use the `createEwColorPicker` factory, which is exactly `new ewColorPicker(options)` under the hood:
+
+```ts
+import { createEwColorPicker } from '@ew-color-picker/ew-color-picker'
+// also available from the unscoped entry: import { createEwColorPicker } from 'ew-color-picker'
+
+const picker = createEwColorPicker({ el: '#picker', defaultColor: '#6366f1' })
+```
+
 If `el` is provided, the picker **mounts automatically**. Without `el`, call `mount()` yourself later.
 
 ## 3. Listen for changes

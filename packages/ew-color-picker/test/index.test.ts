@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { create } from '../../utils/src/dom';
-import EWColorPicker from '../src/index';
+import EWColorPicker, { createEwColorPicker } from '../src/index';
 
 describe('EWColorPicker', () => {
   let container: HTMLElement;
@@ -227,6 +227,22 @@ describe('EWColorPicker', () => {
       
       // Verify that warnings are logged (in development mode)
       expect(colorPicker).toBeDefined();
+    });
+  });
+
+  describe('createEwColorPicker', () => {
+    it('should create an instance via the factory', () => {
+      colorPicker = createEwColorPicker({ el: container, defaultColor: '#ff0000' });
+
+      expect(colorPicker).toBeInstanceOf(EWColorPicker);
+      expect(colorPicker.options.defaultColor).toBe('#ff0000');
+      expect(colorPicker.getContainer()).toBe(container);
+    });
+
+    it('should accept an element directly', () => {
+      colorPicker = createEwColorPicker(container);
+
+      expect(colorPicker).toBeInstanceOf(EWColorPicker);
     });
   });
 }); 

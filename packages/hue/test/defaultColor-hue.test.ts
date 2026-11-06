@@ -100,4 +100,48 @@ describe('Hue Plugin - defaultColor Integration', () => {
       expect(typeof huePlugin.updateHueThumbPosition).toBe('function');
     });
   });
+
+  describe('syncColor on panel open', () => {
+    const rect = {
+      width: 100,
+      height: 200,
+      left: 0,
+      top: 0,
+      right: 100,
+      bottom: 200,
+      x: 0,
+      y: 0,
+      toJSON: () => ({})
+    };
+
+    it('syncColor 应按当前颜色的色相更新垂直滑块位置', () => {
+      const picker = new ewColorPicker({
+        el: container,
+        defaultColor: '#0000ff'
+      });
+      const huePlugin = picker.plugins.ewColorPickerHue;
+      huePlugin.hueBar.getBoundingClientRect = () => rect as DOMRect;
+
+      huePlugin.syncColor('#00ff00'); // hue = 120
+
+      expect(parseFloat(huePlugin.hueThumb.style.top)).toBeCloseTo(
+        (1 - 120 / 360) * 200,
+        3
+      );
+    });
+
+    it('syncColor 应忽略空颜色', () => {
+      const picker = new ewColorPicker({
+        el: container,
+        defaultColor: '#0000ff'
+      });
+      const huePlugin = picker.plugins.ewColorPickerHue;
+      huePlugin.hueBar.getBoundingClientRect = () => rect as DOMRect;
+      huePlugin.syncColor('#0000ff');
+
+      const before = huePlugin.hueThumb.style.top;
+      huePlugin.syncColor('');
+      expect(huePlugin.hueThumb.style.top).toBe(before);
+    });
+  });
 }); 

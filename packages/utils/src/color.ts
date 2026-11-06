@@ -261,6 +261,15 @@ export function colorRgbaToHsva(rgba: string): HsvaColor {
   if (!rgba || typeof rgba !== 'string') {
     return { h: 0, s: 100, v: 100, a: 1 };
   }
+
+  // 兼容 hex / rgb / 颜色关键字等非 rgba 输入，先统一转换为 rgba
+  if (!/^rgba?\(/i.test(rgba.replace(/\s+/g, ' ').trim())) {
+    const converted = colorToRgba(rgba);
+    if (!converted) {
+      return { h: 0, s: 100, v: 100, a: 1 };
+    }
+    rgba = converted;
+  }
   
   // 清理输入字符串，移除多余空格
   const cleanRgba = rgba.replace(/\s+/g, ' ').trim();

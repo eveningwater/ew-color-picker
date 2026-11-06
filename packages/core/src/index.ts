@@ -267,17 +267,11 @@ export default class ewColorPicker extends EventEmitter {
 
     if (defaultColor) {
       let defaultColorValue = defaultColor;
-      const hasAlphaPlugin = this.plugins?.ewColorPickerAlpha;
-      if (hasAlphaPlugin) {
-        // 如果 defaultColor 是 hex 格式，转换为 rgba 格式
-        if (defaultColor.startsWith("#")) {
-          defaultColorValue = colorToRgba(defaultColor);
-        }
-      } else {
-        // 如果 defaultColor 是 rgba 格式，转换为 hex 格式
-        if (defaultColor.startsWith("rgba")) {
-          defaultColorValue = colorRgbaToHex(defaultColor);
-        }
+      // 注意：此时实例插件尚未创建，需通过静态插件注册表判断 alpha 插件是否已注册
+      const hasAlphaPlugin = ewColorPicker.pluginsMap["ewColorPickerAlpha"];
+      // 未启用 alpha 插件时，rgba 默认值降级为 hex，避免保留无效的透明度信息
+      if (!hasAlphaPlugin && defaultColor.startsWith("rgba")) {
+        defaultColorValue = colorRgbaToHex(defaultColor);
       }
 
       this.currentColor = defaultColorValue;

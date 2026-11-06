@@ -142,6 +142,26 @@ describe('Panel Plugin 实用功能测试', () => {
       panelElement = container.querySelector('.ew-color-picker-panel') as HTMLElement;
       expect(panelElement).toBeTruthy();
     });
+
+    it('hue 垂直、alpha 水平时面板宽度应留出垂直色相柱空间', () => {
+      mockCore.options.hueDirection = 'vertical';
+      mockCore.options.alphaDirection = 'horizontal';
+      plugin = new PanelPlugin(mockCore);
+
+      // 容器内容宽度 320px，垂直色相柱占 4px margin + 15px 宽度
+      expect(plugin.panelWidth).toBe(301);
+      expect(plugin.panel!.style.getPropertyValue('--panel-width')).toBe('301px');
+    });
+
+    it('hue 水平、alpha 垂直时 alpha 柱应右移与横向 hue 柱对齐', () => {
+      mockCore.options.hueDirection = 'horizontal';
+      mockCore.options.alphaDirection = 'vertical';
+      plugin = new PanelPlugin(mockCore);
+
+      // 面板 304px + 垂直透明度柱（4px margin + 12px）= 320px
+      expect(plugin.panelWidth).toBe(304);
+      expect(plugin.panel!.style.getPropertyValue('--panel-width')).toBe('304px');
+    });
   });
 
   describe('光标位置测试', () => {
@@ -350,6 +370,29 @@ describe('Panel Plugin 实用功能测试', () => {
 
       document.body.removeChild(root);
       document.body.removeChild(target);
+    });
+  });
+
+  describe('色相背景同步', () => {
+    it('无初始颜色时 syncColor 应补上色相背景', () => {
+      mockCore.getColor = vi.fn(() => '');
+      plugin = new PanelPlugin(mockCore);
+
+      expect(plugin.panel!.style.background).toBe('');
+
+      plugin.syncColor('#ff0000');
+
+      expect(plugin.panel!.style.background).toContain('255');
+      expect(plugin.cursor!.style.left).not.toBe('');
+    });
+
+    it('syncColor 应忽略空颜色', () => {
+      plugin = new PanelPlugin(mockCore);
+      const originalBackground = plugin.panel!.style.background;
+
+      plugin.syncColor('');
+
+      expect(plugin.panel!.style.background).toBe(originalBackground);
     });
   });
 }); 

@@ -1,0 +1,50 @@
+{
+  "name": "@ew-color-picker/select",
+  "version": "2.0.3",
+  "description": "EW Color Picker Select Plugin",
+  "main": "dist/select.min.js",
+  "module": "dist/select.esm.js",
+  "types": "dist/packages/select/src/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c ../../scripts/rollup.config.mjs",
+    "dev": "rollup -c ../../scripts/rollup.config.mjs -w",
+    "clean": "rimraf dist"
+  },
+  "keywords": [
+    "color-picker",
+    "select",
+    "dropdown",
+    "plugin",
+    "typescript",
+    "ui"
+  ],
+  "author": "eveningwater(854806732@qq.com)",
+  "license": "MIT",
+  "dependencies": {
+    "@ew-color-picker/core": "workspace:^",
+    "@ew-color-picker/utils": "workspace:^"
+  },
+  "devDependencies": {
+    "@ew-color-picker/core": "workspace:*",
+    "@ew-color-picker/utils": "workspace:*",
+    "rollup": "^3.0.0",
+    "rollup-plugin-typescript2": "^0.34.0",
+    "typescript": "^4.9.0",
+    "rimraf": "^3.0.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eveningwater/ew-color-picker.git",
+    "directory": "packages/select"
+  },
+  "homepage": "https://eveningwater.github.io/ew-color-picker/",
+  "bugs": {
+    "url": "https://github.com/eveningwater/ew-color-picker/issues"
+  }
+}

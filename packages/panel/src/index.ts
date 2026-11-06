@@ -163,12 +163,13 @@ export default class ewColorPickerPanelPlugin {
     if (this.isAlphaHorizontal && this.isHueHorizontal) {
       // 如果都是水平方向，需要320px宽度（外层容器最小宽度）
       panelWidth = 320;
-    } else if (
-      (this.isAlphaHorizontal && !this.isHueHorizontal) ||
-      (!this.isAlphaHorizontal && this.isHueHorizontal)
-    ) {
-      // 如果一个是水平，一个是垂直，需要297px宽度,4px的margin-left,似乎要多1px的偏差
-      panelWidth = 285 + 12 + 5;
+    } else if (this.isAlphaHorizontal && !this.isHueHorizontal) {
+      // hue 垂直、alpha 水平：面板 + 垂直色相柱（4px margin + 15px）= 320px
+      panelWidth = 320 - 4 - 15;
+    } else if (!this.isAlphaHorizontal && this.isHueHorizontal) {
+      // hue 水平、alpha 垂直：面板 + 垂直透明度柱（4px margin + 12px）= 320px，
+      // 使 alpha 柱右边缘与下方横向 hue 柱对齐
+      panelWidth = 320 - 4 - 12;
     }
     // 如果都是垂直方向，保持285px宽度
     this.panel = create("div");
@@ -507,6 +508,15 @@ export default class ewColorPickerPanelPlugin {
         background: hueColor,
       });
     }
+  }
+
+  // 供 core.syncAllPlugins 调用：无初始颜色时打开面板后补上色相背景与光标位置
+  syncColor(color: string) {
+    if (!this.panel || !color) return;
+    const hsva = colorRgbaToHsva(color);
+    if (isNaN(hsva.h)) return;
+    this.updateHueBg(hsva.h);
+    this.updateCursorPosition(hsva.s, hsva.v);
   }
 
   calculateContainerSize() {

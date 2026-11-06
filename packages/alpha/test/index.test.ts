@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import AlphaPlugin from '../src/index';
+import ewColorPicker from '../../ew-color-picker/src/index';
 import { createMockCore } from '../../../test/mockCore';
 
 describe('Alpha Plugin', () => {
@@ -99,7 +100,7 @@ describe('Alpha Plugin', () => {
       
       // Simulate color change event
       const colorChangeHandler = mockCore.on.mock.calls.find(
-        call => call[0] === 'change'
+        (call: string[]) => call[0] === 'change'
       )?.[1];
       
       expect(colorChangeHandler).toBeDefined();
@@ -142,6 +143,60 @@ describe('Alpha Plugin', () => {
       // alpha 元素应被移除（destroy 会清理 DOM 引用）
       expect(plugin.alphaBar).toBeNull();
       expect(plugin.alphaThumb).toBeNull();
+    });
+  });
+
+  describe('syncColor on panel open', () => {
+    const rect = {
+      width: 100,
+      height: 200,
+      left: 0,
+      top: 0,
+      right: 100,
+      bottom: 200,
+      x: 0,
+      y: 0,
+      toJSON: () => ({})
+    };
+
+    it('syncColor 应按当前颜色的透明度更新滑块位置', () => {
+      const plugin = new AlphaPlugin(mockCore);
+      plugin.alphaBar!.getBoundingClientRect = () => rect as DOMRect;
+
+      plugin.syncColor('rgba(0, 0, 0, 0.5)');
+
+      expect(parseFloat(plugin.alphaThumb!.style.top)).toBeCloseTo(
+        (1 - 0.5) * 200,
+        3
+      );
+    });
+
+    it('syncColor 应忽略空颜色', () => {
+      const plugin = new AlphaPlugin(mockCore);
+      plugin.alphaBar!.getBoundingClientRect = () => rect as DOMRect;
+      plugin.syncColor('#ff0000');
+
+      const before = plugin.alphaThumb!.style.top;
+      plugin.syncColor('');
+      expect(plugin.alphaThumb!.style.top).toBe(before);
+    });
+  });
+
+  describe('rgba 默认值与 alpha 插件', () => {
+    it('启用 alpha 插件时默认 rgba 颜色应保留透明度', () => {
+      const el = document.createElement('div');
+      document.body.appendChild(el);
+
+      const picker = new ewColorPicker({
+        el,
+        defaultColor: 'rgba(255, 255, 233, 0.5)'
+      });
+
+      expect(picker.plugins.ewColorPickerAlpha).toBeDefined();
+      expect(picker.getHsvaColor().a).toBe(0.5);
+
+      picker.destroy();
+      document.body.removeChild(el);
     });
   });
 }); 

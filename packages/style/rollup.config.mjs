@@ -1,75 +1,53 @@
 import scss from 'rollup-plugin-scss';
 
+// 每个 scss 入口产出 .css 与 .min.css 两份
 const buildType = [
-  {
-    ext: '.css',
-    env: 'development',
-  },
-  {
-    ext: '.min.css',
-    env: 'production',
-  },
+  { ext: '.css', minify: false },
+  { ext: '.min.css', minify: true },
 ];
+
+const entries = ['index', 'input-number', 'select'];
+
+function getBanner(name) {
+  return `/*!\n * @ew-color-picker/style${name === 'index' ? '' : ' ' + name}\n * (c) 2024-${new Date().getFullYear()} eveningwater(854806732@qq.com)\n * Released under the MIT License.\n */`;
+}
 
 function generateBuildConfigs() {
   const result = [];
-  buildType.forEach((type) => {
-    const isMin = type.ext.indexOf('min') > -1;
-    // index.scss 构建
-    const config = {
-      input: 'src/index.scss',
-      output: {
-        file: `dist/index${type.ext}`,
-        banner: `/*!\n * @ew-color-picker/style\n * (c) 2024-${new Date().getFullYear()} eveningwater(854806732@qq.com)\n * Released under the MIT License.\n */`,
-      },
-      plugins: [
-        scss({
-          failOnError: true,
-          outputStyle: isMin ? 'compressed' : 'expanded',
-          sourceMap: false,
-          // 直接输出到文件
-          fileName: `index${type.ext}`,
-        }),
-      ],
-      // 减少 rollup 警告
-      onwarn(warning, warn) {
-        if (warning.code === 'EMPTY_BUNDLE') return;
-        warn(warning);
-      },
-    };
-    Object.defineProperties(config, {
-      packageName: { value: 'style' },
-      ext: { value: type.ext },
-    });
-    result.push(config);
 
-    // input-number.scss 构建
-    const inputNumberConfig = {
-      input: 'src/input-number.scss',
-      output: {
-        file: `dist/input-number${type.ext}`,
-        banner: `/*!\n * @ew-color-picker/style input-number\n * (c) 2024-${new Date().getFullYear()} eveningwater(854806732@qq.com)\n * Released under the MIT License.\n */`,
-      },
-      plugins: [
-        scss({
-          failOnError: true,
-          outputStyle: isMin ? 'compressed' : 'expanded',
-          sourceMap: false,
-          fileName: `input-number${type.ext}`,
-        }),
-      ],
-      onwarn(warning, warn) {
-        if (warning.code === 'EMPTY_BUNDLE') return;
-        warn(warning);
-      },
-    };
-    Object.defineProperties(inputNumberConfig, {
-      packageName: { value: 'style' },
-      ext: { value: type.ext },
-    });
-    result.push(inputNumberConfig);
-  });
+  for (const entry of entries) {
+    for (const type of buildType) {
+      const outName = `${entry}${type.ext}`;
+      const config = {
+        input: `src/${entry}.scss`,
+        output: {
+          file: `dist/${outName}`,
+          banner: getBanner(entry),
+        },
+        plugins: [
+          scss({
+            failOnError: true,
+            outputStyle: type.minify ? 'compressed' : 'expanded',
+            sourceMap: false,
+            // 直接输出到文件
+            fileName: outName,
+          }),
+        ],
+        // 减少 rollup 警告
+        onwarn(warning, warn) {
+          if (warning.code === 'EMPTY_BUNDLE') return;
+          warn(warning);
+        },
+      };
+      Object.defineProperties(config, {
+        packageName: { value: 'style' },
+        ext: { value: type.ext },
+      });
+      result.push(config);
+    }
+  }
+
   return result;
 }
 
-export default generateBuildConfigs(); 
+export default generateBuildConfigs();

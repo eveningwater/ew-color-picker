@@ -1,6 +1,6 @@
 ---
 title: Introduction
-description: ew-color-picker is an event-driven, plugin-based color picker. Learn what the core does and how the 16 packages fit together.
+description: ew-color-picker is an event-driven, plugin-based color picker. Learn what the core does and how the 17 packages fit together.
 ---
 
 # Introduction
@@ -27,7 +27,7 @@ Core (@ew-color-picker/core)
 | Testable | Each plugin can be tested in isolation |
 | Extensible | Add features without touching the core |
 
-## The 16 packages
+## The 17 packages
 
 | Package | Responsibility |
 | --- | --- |
@@ -42,6 +42,7 @@ Core (@ew-color-picker/core)
 | `@ew-color-picker/alpha` | Alpha slider (0–1) |
 | `@ew-color-picker/input` | Text color input with validation |
 | `@ew-color-picker/input-number` | Numeric input component + plugin |
+| `@ew-color-picker/select` | Dropdown select component + plugin |
 | `@ew-color-picker/button` | Clear / Sure buttons |
 | `@ew-color-picker/predefine` | Predefined color swatches |
 | `@ew-color-picker/color-mode` | Hex / RGB / HSL mode switching |

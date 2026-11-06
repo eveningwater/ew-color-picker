@@ -304,6 +304,9 @@ importers:
       '@ew-color-picker/predefine':
         specifier: workspace:^
         version: link:../predefine
+      '@ew-color-picker/select':
+        specifier: workspace:^
+        version: link:../select
       '@ew-color-picker/style':
         specifier: workspace:^
         version: link:../style
@@ -444,6 +447,28 @@ importers:
         version: 4.9.5
 
   packages/predefine:
+    dependencies:
+      '@ew-color-picker/core':
+        specifier: workspace:^
+        version: link:../core
+      '@ew-color-picker/utils':
+        specifier: workspace:^
+        version: link:../utils
+    devDependencies:
+      rimraf:
+        specifier: ^3.0.2
+        version: 3.0.2
+      rollup:
+        specifier: ^3.0.0
+        version: 3.29.5
+      rollup-plugin-typescript2:
+        specifier: ^0.34.0
+        version: 0.34.1(rollup@3.29.5)(typescript@4.9.5)
+      typescript:
+        specifier: ^4.9.0
+        version: 4.9.5
+
+  packages/select:
     dependencies:
       '@ew-color-picker/core':
         specifier: workspace:^
@@ -2780,18 +2805,6 @@ packages:
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
-  ws@8.18.3:
-    resolution: {integrity: sha512-PEIGCY5tSlUt50cqyMXfCzX+oOPqN0vuGqWzbcJ2xvnkzkq46oOpz7dQaTDBdfICb4N14+GARUDw2XV2N4tvzg==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-
   ws@8.22.1:
     resolution: {integrity: sha512-oyL6OPYme/CmiFvNuGzeoxCJ4nOrZE2O1FwM9MWM1AsGri6nLXB2pg+lNA8aLeXMSav0J6eIVS1j6vUPzUtK9g==}
     engines: {node: '>=10.0.0'}
@@ -4341,7 +4354,7 @@ snapshots:
       whatwg-encoding: 3.1.1
       whatwg-mimetype: 4.0.0
       whatwg-url: 14.2.0
-      ws: 8.18.3
+      ws: 8.22.1
       xml-name-validator: 5.0.0
     transitivePeerDependencies:
       - bufferutil
@@ -5181,9 +5194,6 @@ snapshots:
       strip-ansi: 7.1.0
 
   wrappy@1.0.2: {}
-
-  ws@8.18.3:
-    optional: true
 
   ws@8.22.1: {}
 

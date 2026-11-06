@@ -277,6 +277,14 @@ export default class ewColorPickerHuePlugin {
     }
   }
 
+  // 供 core.syncAllPlugins 调用：面板显示后按当前颜色重新定位色相滑块
+  syncColor(color: string) {
+    if (!this.hueThumb || !this.hueBar || !color) return;
+    const hsva = colorRgbaToHsva(color);
+    if (isNaN(hsva.h)) return;
+    this.updateHueThumbPosition(hsva.h);
+  }
+
   updateHueThumbPosition(hue: number) {
     if (!this.hueThumb || !this.hueBar) return;
     const isHorizontal = this.isHorizontal;

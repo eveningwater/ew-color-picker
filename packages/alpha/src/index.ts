@@ -247,6 +247,14 @@ export default class ewColorPickerAlphaPlugin {
     }
   }
 
+  // 供 core.syncAllPlugins 调用：面板显示后按当前颜色重新定位透明度滑块
+  syncColor(color: string) {
+    if (!this.alphaThumb || !this.alphaBar || !color) return;
+    const hsva = colorRgbaToHsva(color);
+    if (isNaN(hsva.a)) return;
+    this.updateAlphaThumbPosition(hsva.a);
+  }
+
   updateAlphaThumbPosition(alpha: number) {
     if (!this.alphaThumb || !this.alphaBar) return;
     const isHorizontal = this.isHorizontal;
