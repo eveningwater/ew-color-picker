@@ -29,12 +29,14 @@ Event-driven, plugin-based color picker with Hex / RGB / HSL support, alpha chan
 - [Alpha Plugin](https://eveningwater.github.io/ew-color-picker/plugins/alpha): The Alpha plugin adds a 0–1 opacity slider, outputs rgba colors, and supports horizontal/vertical orientation.
 - [Box Plugin](https://eveningwater.github.io/ew-color-picker/plugins/box): The Box plugin renders the trigger swatch, toggles the panel, and adapts icon color to background luminance.
 - [Button Plugin](https://eveningwater.github.io/ew-color-picker/plugins/button): Clear and Sure buttons: custom labels, visibility toggles, disabled state, clear/sure events and callbacks.
+- [Checkbox Plugin](https://eveningwater.github.io/ew-color-picker/plugins/checkbox): The checkbox component and plugin: options, methods, accessibility and styles.
 - [ColorMode Plugin](https://eveningwater.github.io/ew-color-picker/plugins/color-mode): Switch between Hex / RGB / HSL, rebuild channel inputs, and listen to the mode-change event.
 - [Console Plugin](https://eveningwater.github.io/ew-color-picker/plugins/console): The Console plugin prints a styled version banner once per page and can be omitted by registering plugins manually.
 - [CopyColor Plugin](https://eveningwater.github.io/ew-color-picker/plugins/copy-color): Copy the current color value to the clipboard with one click: a round color preview button, clipboard fallback and a success toast bubble.
 - [Eyedropper Plugin](https://eveningwater.github.io/ew-color-picker/plugins/eyedropper): Pick colors from anywhere on screen with the native EyeDropper API: capability detection, callback and graceful cancellation.
+- [Gradient Plugin](https://eveningwater.github.io/ew-color-picker/plugins/gradient): The gradient editor plugin: linear/radial/conic, repeating gradients, angles, positions, double-position stops and interpolation color spaces.
 - [Hue Plugin](https://eveningwater.github.io/ew-color-picker/plugins/hue): The Hue plugin renders a 0–360° slider with horizontal/vertical orientation, click, drag and runtime toggle.
-- [Plugin Overview](https://eveningwater.github.io/ew-color-picker/plugins/): The ew-color-picker plugin system: 13 built-in plugins, registration order, mount points and collaboration.
+- [Plugin Overview](https://eveningwater.github.io/ew-color-picker/plugins/): The ew-color-picker plugin system: 15 built-in plugins, registration order, mount points and collaboration.
 - [InputNumber Plugin](https://eveningwater.github.io/ew-color-picker/plugins/input-number): The InputNumber plugin and standalone component: options, methods, sizes and events for numeric color inputs.
 - [Input Plugin](https://eveningwater.github.io/ew-color-picker/plugins/input): The Input plugin provides a validated hex/rgb/hsl text field with debounce and disabled state.
 - [Panel Plugin](https://eveningwater.github.io/ew-color-picker/plugins/panel): The Panel plugin renders the saturation/value area with drag, touch support, auto placement and dynamic sizing.
@@ -62,12 +64,14 @@ Event-driven, plugin-based color picker with Hex / RGB / HSL support, alpha chan
 - [Alpha 透明度滑块插件](https://eveningwater.github.io/ew-color-picker/zh/plugins/alpha): Alpha 插件为 ew-color-picker 增加 0–1 透明度滑块，输出 rgba 颜色，支持水平/垂直方向与运行时开关。
 - [Box 颜色盒插件](https://eveningwater.github.io/ew-color-picker/zh/plugins/box): Box 插件是 ew-color-picker 的触发器：渲染当前颜色色块，点击打开或关闭面板，并负责图标颜色随背景自适应。
 - [Button 按钮插件](https://eveningwater.github.io/ew-color-picker/zh/plugins/button): Button 插件渲染清空与确定按钮，支持自定义文案、禁用、动态显隐，并触发 clear / sure 事件。
+- [Checkbox 复选框插件](https://eveningwater.github.io/ew-color-picker/zh/plugins/checkbox): Checkbox 插件与独立复选框组件：配置项、方法、无障碍与样式。
 - [ColorMode 颜色模式插件](https://eveningwater.github.io/ew-color-picker/zh/plugins/color-mode): 在 Hex / RGB / HSL 三种颜色模式之间切换，并驱动分通道输入组，触发 mode-change 事件。
 - [Console 控制台插件](https://eveningwater.github.io/ew-color-picker/zh/plugins/console): Console 插件在浏览器控制台输出版本与作者信息，全页面仅打印一次，可关闭。
 - [CopyColor 复制颜色插件](https://eveningwater.github.io/ew-color-picker/zh/plugins/copy-color): CopyColor 插件在输入框上方的工具栏行渲染圆形复制按钮，按钮背景跟随当前颜色，点击即可把当前颜色值写入剪贴板，并弹出复制成功提示。
 - [Eyedropper 吸管插件](https://eveningwater.github.io/ew-color-picker/zh/plugins/eyedropper): Eyedropper 插件使用浏览器原生 EyeDropper API 从屏幕取色，自动检测能力、支持回调与取消静默处理。
+- [Gradient 渐变插件](https://eveningwater.github.io/ew-color-picker/zh/plugins/gradient): 渐变编辑插件：线性/径向/锥形、重复渐变、角度与位置、双位置色标与插值色彩空间。
 - [Hue 色相滑块插件](https://eveningwater.github.io/ew-color-picker/zh/plugins/hue): Hue 插件渲染 0–360 度色相滑块，支持水平/垂直方向、点击跳转、拖拽与运行时开关。
-- [插件总览](https://eveningwater.github.io/ew-color-picker/zh/plugins/): ew-color-picker 的插件体系：13 个内置插件的职责、注册顺序与包名，以及插件之间如何协作完成颜色选择。
+- [插件总览](https://eveningwater.github.io/ew-color-picker/zh/plugins/): ew-color-picker 的插件体系：15 个内置插件的职责、注册顺序与包名，以及插件之间如何协作完成颜色选择。
 - [InputNumber 数字输入框插件](https://eveningwater.github.io/ew-color-picker/zh/plugins/input-number): InputNumber 插件与底层 InputNumber 组件的配置、方法、尺寸与事件，用于 RGB/HSL 分通道数值输入。
 - [Input 颜色输入框插件](https://eveningwater.github.io/ew-color-picker/zh/plugins/input): Input 插件提供可直接输入 hex/rgb/rgba/hsl/hsla 的文本框，带校验、防抖与禁用态。
 - [Panel 颜色面板插件](https://eveningwater.github.io/ew-color-picker/zh/plugins/panel): Panel 插件渲染饱和度/明度二维选择面板，支持拖拽与触摸、自动定位、面板尺寸自适应。

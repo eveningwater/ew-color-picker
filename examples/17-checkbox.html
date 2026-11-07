@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17. 复选框（Checkbox）</title>
+    <link rel="stylesheet" href="../packages/style/dist/index.css">
+    <link rel="stylesheet" href="../packages/style/dist/checkbox.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f5; }
+        .demo { max-width: 900px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; }
+        .item { margin-bottom: 24px; padding: 15px; border: 1px solid #e8e8e8; border-radius: 6px; }
+        .title { font-weight: 600; margin-bottom: 10px; }
+        .row { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+        .result { margin-top: 10px; padding: 8px; background: #f8f9fa; border-radius: 4px; font-family: monospace; font-size: 13px; }
+        .hint { color: #999; font-size: 12px; margin-top: 8px; }
+    </style>
+</head>
+<body>
+    <div class="demo">
+        <h2>17. 复选框（Checkbox）</h2>
+
+        <div class="item">
+            <div class="title">1. 插件（在面板底部行渲染）</div>
+            <div id="picker1"></div>
+            <div class="result" id="result1">checked: false</div>
+            <div class="hint">通过 checkboxLabel 开启渲染，切换后触发 onCheckboxChange。</div>
+        </div>
+
+        <div class="item">
+            <div class="title">2. 独立组件（默认尺寸、选中态）</div>
+            <div class="row" id="components"></div>
+        </div>
+
+        <div class="item">
+            <div class="title">3. 尺寸与禁用</div>
+            <div class="row" id="sizes"></div>
+        </div>
+    </div>
+    <script type="module">
+        import ewColorPicker from '../packages/ew-color-picker/src/index.ts';
+        import { Checkbox } from '../packages/checkbox/src/index.ts';
+
+        new ewColorPicker({
+            el: '#picker1',
+            defaultColor: '#4096ef',
+            checkboxLabel: '反向渐变',
+            checkboxChecked: false,
+            onCheckboxChange(checked) {
+                document.getElementById('result1').textContent = `checked: ${checked}`;
+            }
+        });
+
+        const basic = new Checkbox({
+            label: '未选中',
+            onChange(checked) {
+                basic.setLabel(checked ? '已选中' : '未选中');
+            }
+        });
+        const checked = new Checkbox({ label: '默认选中', checked: true });
+        document.getElementById('components').appendChild(basic.getElement());
+        document.getElementById('components').appendChild(checked.getElement());
+
+        ['small', 'default', 'large'].forEach((size) => {
+            const checkbox = new Checkbox({ label: size, checked: true, size });
+            document.getElementById('sizes').appendChild(checkbox.getElement());
+        });
+        const disabled = new Checkbox({ label: '禁用', checked: true, disabled: true });
+        document.getElementById('sizes').appendChild(disabled.getElement());
+    </script>
+</body>
+</html>

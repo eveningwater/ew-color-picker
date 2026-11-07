@@ -20,7 +20,7 @@ The numbers below come from the npm registry (`unpackedSize` and last publish da
 
 | Option | Shape | Framework lock-in | Extension model | Unpacked size | Last publish |
 | --- | --- | --- | --- | --- | --- |
-| **ew-color-picker** | Aggregate package + 13 plugin packages (plus the `ew-color-picker` compat entry) | None (plain DOM) | Plugin registration / custom plugins | Aggregate 84.6 KB + styles 36.1 KB (120.7 KB total); `core.min` 11.9 KB (gzip 3.9 KB) | 2026-10 |
+| **ew-color-picker** | Aggregate package + 14 plugin packages (plus the `ew-color-picker` compat entry) | None (plain DOM) | Plugin registration / custom plugins | Aggregate 84.6 KB + styles 36.1 KB (120.7 KB total); `core.min` 11.9 KB (gzip 3.9 KB) | 2026-10 |
 | [Pickr](https://github.com/Simonwep/pickr) | Single package (UMD/ESM) | None | Themes (classic/monolith/nano) + options | 280.3 KB | 2026-09 |
 | [iro.js](https://github.com/jaames/iro.js) | Single package | None | Options + component composition | 231.4 KB | 2021-07 |
 | [Coloris](https://github.com/melloware/coloris) | Single package + CSS | None | CSS variables + options | 152.2 KB | 2026-10 |
@@ -71,7 +71,7 @@ Bilingual documentation, per-API references, one page per plugin, plus `llms.txt
 
 - **Small ecosystem**: download counts, community tutorials and issue history cannot match Pickr or react-color; unusual problems mean reading the source.
 - **No official framework wrappers**: React / Vue / Angular / Solid integration is covered in [Framework Integration](./framework-integration); controlled components and SSR need a thin wrapper of your own (around 20 lines).
-- **No gradients or multi-color editing**: those use cases need iro.js or a dedicated gradient picker. Screen sampling is covered by the optional `@ew-color-picker/eyedropper` plugin in Chromium-based browsers.
+- **Gradients and screen sampling are optional plugins**: linear / radial / conic gradient editing ships as the optional `@ew-color-picker/gradient` plugin, and screen sampling as `@ew-color-picker/eyedropper` (Chromium-based browsers). For heavier color-space math and visualization work, iro.js is still the better fit.
 - **The plugin model only matters when you customize**: installing the aggregate package or `npm i ew-color-picker` works out of the box; you only need to understand core + plugins when replacing part of the UI or wiring your own plugins.
 - **Shrinking further means installing sub-packages**: the aggregate is 84.6 KB plus 36.1 KB of styles, already in Coloris territory; if you use a single piece, install plugin packages and trim down to the 11.9 KB core.
 

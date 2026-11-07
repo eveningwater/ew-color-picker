@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16. 渐变颜色选择器（Gradient）</title>
+    <link rel="stylesheet" href="../packages/style/dist/index.css">
+    <link rel="stylesheet" href="../packages/style/dist/input-number.css">
+    <link rel="stylesheet" href="../packages/style/dist/select.css">
+    <link rel="stylesheet" href="../packages/style/dist/checkbox.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f5; }
+        .demo { max-width: 900px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; }
+        .item { margin-bottom: 24px; padding: 15px; border: 1px solid #e8e8e8; border-radius: 6px; }
+        .title { font-weight: 600; margin-bottom: 10px; }
+        .result { margin-top: 10px; padding: 8px; background: #f8f9fa; border-radius: 4px; font-family: monospace; font-size: 13px; word-break: break-all; }
+        .preview { margin-top: 10px; height: 40px; border-radius: 6px; border: 1px solid #e5e6eb; }
+        .hint { color: #999; font-size: 12px; margin-top: 8px; }
+    </style>
+</head>
+<body>
+    <div class="demo">
+        <h2>16. 渐变颜色选择器（Gradient）</h2>
+
+        <div class="item">
+            <div class="title">1. 线性渐变（可拖拽色标）</div>
+            <div id="picker1"></div>
+            <div class="preview" id="preview1"></div>
+            <div class="result" id="result1">linear-gradient(180deg, #ef4444, #3b82f6)</div>
+            <div class="hint">拖拽预览条上的圆形手柄可调整色标位置，点击预览条空白处可新增色标，主面板改色会写回当前选中的色标。</div>
+        </div>
+
+        <div class="item">
+            <div class="title">2. 通过 CSS 字符串初始化（径向渐变）</div>
+            <div id="picker2"></div>
+            <div class="preview" id="preview2"></div>
+            <div class="result" id="result2"></div>
+        </div>
+
+        <div class="item">
+            <div class="title">3. 锥形 + 重复渐变 + 双位置色标</div>
+            <div id="picker3"></div>
+            <div class="preview" id="preview3"></div>
+            <div class="result" id="result3"></div>
+            <div class="hint">示例使用 4 个色标，其中第一个为双位置色标（0% ~ 20%），渐变为 repeating-conic-gradient。</div>
+        </div>
+
+        <div class="item">
+            <div class="title">4. OKLab 插值</div>
+            <div id="picker4"></div>
+            <div class="preview" id="preview4"></div>
+            <div class="result" id="result4"></div>
+            <div class="hint">同一组色标在 OKLab 与 sRGB 插值下的中点颜色不同；编辑器中的「插值」下拉框可切换。</div>
+        </div>
+    </div>
+    <script type="module">
+        import ewColorPicker from '../packages/ew-color-picker/src/index.ts';
+
+        function bindResult(id, css) {
+            document.getElementById(id).textContent = css;
+            document.getElementById(id.replace('result', 'preview')).style.background = css;
+        }
+
+        const picker1 = new ewColorPicker({
+            el: '#picker1',
+            defaultColor: '#ef4444',
+            gradientStops: ['#ef4444', '#f59e0b', '#3b82f6'],
+            gradientType: 'linear',
+            gradientAngle: 90,
+            gradientChange(css) {
+                bindResult('result1', css);
+            }
+        });
+        bindResult('result1', picker1.plugins.ewColorPickerGradient.getGradient());
+
+        const picker2 = new ewColorPicker({
+            el: '#picker2',
+            defaultColor: '#22c55e',
+            gradient:
+                'radial-gradient(circle farthest-corner at 30% 30%, #22c55e 0%, #0ea5e9 60%, #1e293b 100%)',
+            gradientChange(css) {
+                bindResult('result2', css);
+            }
+        });
+        bindResult('result2', picker2.plugins.ewColorPickerGradient.getGradient());
+
+        const picker3 = new ewColorPicker({
+            el: '#picker3',
+            gradientStops: [
+                { color: '#f43f5e', position: 0, position2: 20 },
+                '#facc15',
+                '#22c55e',
+                '#3b82f6'
+            ],
+            gradientType: 'conic',
+            gradientRepeating: true,
+            gradientChange(css) {
+                bindResult('result3', css);
+            }
+        });
+        bindResult('result3', picker3.plugins.ewColorPickerGradient.getGradient());
+
+        const picker4 = new ewColorPicker({
+            el: '#picker4',
+            defaultColor: '#ff0000',
+            gradientStops: ['#ff0000', '#0000ff'],
+            gradientInterpolation: 'oklab',
+            gradientChange(css) {
+                bindResult('result4', css);
+            }
+        });
+        bindResult('result4', picker4.plugins.ewColorPickerGradient.getGradient());
+    </script>
+</body>
+</html>

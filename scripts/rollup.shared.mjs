@@ -12,8 +12,17 @@ const rootDir = path.resolve(__dirname, '..');
 
 const CORE = '@ew-color-picker/core';
 const UTILS = '@ew-color-picker/utils';
+const SELECT = '@ew-color-picker/select';
+const INPUT_NUMBER = '@ew-color-picker/input-number';
+const CHECKBOX = '@ew-color-picker/checkbox';
 // external 依赖对应的 UMD 全局变量
-const GLOBAL_NAMES = { [CORE]: 'Core', [UTILS]: 'Utils' };
+const GLOBAL_NAMES = {
+  [CORE]: 'Core',
+  [UTILS]: 'Utils',
+  [SELECT]: 'Select',
+  [INPUT_NUMBER]: 'InputNumber',
+  [CHECKBOX]: 'Checkbox',
+};
 
 // pkgName: npm 包名（用于 banner）；globalName: UMD 全局变量名；
 // distName: 输出文件名（默认与目录名相同）；exports/declaration: 按需覆盖
@@ -28,10 +37,17 @@ export const PACKAGES = {
   input: { pkgName: 'input', globalName: 'Input', external: [CORE, UTILS], exports: 'default' },
   'input-number': { pkgName: 'input-number', globalName: 'InputNumber', external: [UTILS], exports: 'named' },
   select: { pkgName: 'select', globalName: 'Select', external: [UTILS], exports: 'named' },
+  checkbox: { pkgName: 'checkbox', globalName: 'Checkbox', external: [UTILS], exports: 'named' },
   predefine: { pkgName: 'predefine', globalName: 'Predefine', external: [CORE, UTILS], exports: 'default' },
   'color-mode': { pkgName: 'color-mode', globalName: 'ColorMode', distName: 'colorMode', external: [CORE, UTILS], exports: 'default' },
   eyedropper: { pkgName: 'eyedropper', globalName: 'Eyedropper', external: [CORE, UTILS], exports: 'default' },
   'copy-color': { pkgName: 'copy-color', globalName: 'CopyColor', external: [CORE, UTILS], exports: 'default' },
+  gradient: {
+    pkgName: 'gradient',
+    globalName: 'Gradient',
+    external: [CORE, UTILS, SELECT, INPUT_NUMBER, CHECKBOX],
+    exports: 'named',
+  },
   'ew-color-picker': {
     pkgName: 'ew-color-picker',
     globalName: 'ewColorPicker',
@@ -49,10 +65,12 @@ export const PACKAGES = {
       '@ew-color-picker/input',
       '@ew-color-picker/input-number',
       '@ew-color-picker/select',
+      '@ew-color-picker/checkbox',
       '@ew-color-picker/predefine',
       '@ew-color-picker/color-mode',
       '@ew-color-picker/eyedropper',
       '@ew-color-picker/copy-color',
+      '@ew-color-picker/gradient',
     ],
   },
 };

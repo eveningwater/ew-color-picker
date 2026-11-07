@@ -1,0 +1,118 @@
+@import './variable.scss';
+// 类名前缀，可通过 @use ... with ($prefix: "my-") 自定义，需与 JS 侧 prefix 选项保持一致
+$prefix: "ew-" !default;
+
+.#{$prefix}checkbox {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #666;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+// 原生 input 只保留语义与键盘能力，视觉交给自定义方块
+.#{$prefix}checkbox__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+  opacity: 0;
+}
+
+.#{$prefix}checkbox__box {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid #d9d9d9;
+  border-radius: 4px;
+  background: #fff;
+  box-sizing: border-box;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+
+.#{$prefix}checkbox__check-icon {
+  display: block;
+  width: 10px;
+  height: 10px;
+  color: #fff;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+
+.#{$prefix}checkbox__input:checked + .#{$prefix}checkbox__box {
+  border-color: #4096ef;
+  background: #4096ef;
+}
+
+.#{$prefix}checkbox__input:checked + .#{$prefix}checkbox__box .#{$prefix}checkbox__check-icon {
+  opacity: 1;
+}
+
+.#{$prefix}checkbox__input:focus-visible + .#{$prefix}checkbox__box {
+  box-shadow: 0 0 0 2px rgba(64, 150, 239, 0.18);
+}
+
+.#{$prefix}checkbox--disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.#{$prefix}checkbox--disabled .#{$prefix}checkbox__box {
+  border-color: #e5e6eb;
+  background: #f7f8fa;
+}
+
+.#{$prefix}checkbox--disabled .#{$prefix}checkbox__input:checked + .#{$prefix}checkbox__box {
+  border-color: #c8c9cc;
+  background: #c8c9cc;
+}
+
+.#{$prefix}checkbox--small {
+  gap: 4px;
+  font-size: 12px;
+}
+
+.#{$prefix}checkbox--small .#{$prefix}checkbox__box {
+  flex: 0 0 14px;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+
+.#{$prefix}checkbox--small .#{$prefix}checkbox__check-icon {
+  width: 9px;
+  height: 9px;
+}
+
+.#{$prefix}checkbox--large {
+  gap: 8px;
+  font-size: 14px;
+}
+
+.#{$prefix}checkbox--large .#{$prefix}checkbox__box {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.#{$prefix}checkbox--large .#{$prefix}checkbox__check-icon {
+  width: 12px;
+  height: 12px;
+}

@@ -896,3 +896,111 @@ $prefix: "ew-" !default;
   visibility: visible;
   transform: translate(0, -50%);
 }
+
+// 渐变色编辑器
+.#{$prefix}gradient-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  margin-top: 8px;
+  box-sizing: border-box;
+  font-size: 12px;
+}
+.#{$prefix}gradient-preview {
+  position: relative;
+  padding: 0 7px;
+  cursor: crosshair;
+}
+.#{$prefix}gradient-preview-bar {
+  position: relative;
+  height: 14px;
+  border: 1px solid #e5e6eb;
+  border-radius: 7px;
+  box-sizing: border-box;
+  cursor: crosshair;
+}
+.#{$prefix}gradient-handle {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  margin: 0;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.22);
+  box-sizing: border-box;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  z-index: 3;
+  outline: none;
+}
+.#{$prefix}gradient-handle.#{$prefix}gradient-handle-active {
+  box-shadow: 0 0 0 2px #1890ff;
+  z-index: 4;
+}
+.#{$prefix}gradient-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  min-height: 24px;
+}
+.#{$prefix}gradient-label {
+  color: #666;
+  font-size: 12px;
+  line-height: 24px;
+  white-space: nowrap;
+}
+.#{$prefix}gradient-select {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+.#{$prefix}gradient-select .#{$prefix}select {
+  width: 100%;
+}
+.#{$prefix}gradient-text {
+  flex: 1;
+  min-width: 0;
+  height: 24px;
+  padding: 0 6px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 12px;
+  outline: none;
+}
+.#{$prefix}gradient-text:focus {
+  border-color: #4096ef;
+  box-shadow: 0 0 0 2px rgba(64, 150, 239, 0.18);
+}
+.#{$prefix}gradient-btn {
+  flex: none;
+  height: 24px;
+  padding: 0 6px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  background: #fff;
+  color: #333;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, transform 0.2s;
+}
+.#{$prefix}gradient-btn:hover {
+  border-color: #4096ef;
+  color: #4096ef;
+}
+.#{$prefix}gradient-btn:active {
+  transform: scale(0.94);
+}
+.#{$prefix}gradient-container .#{$prefix}input-number {
+  flex: none;
+  width: 84px;
+}
+.#{$prefix}gradient-container .#{$prefix}input-number__buttons {
+  width: 24px;
+  min-width: 24px;
+}

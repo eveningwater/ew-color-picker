@@ -30,12 +30,14 @@ export default defineConfig({
       '@ew-color-picker/input': resolve(__dirname, './packages/input/src'),
       '@ew-color-picker/input-number': resolve(__dirname, './packages/input-number/src'),
       '@ew-color-picker/select': resolve(__dirname, './packages/select/src'),
+      '@ew-color-picker/checkbox': resolve(__dirname, './packages/checkbox/src'),
       '@ew-color-picker/button': resolve(__dirname, './packages/button/src'),
       '@ew-color-picker/predefine': resolve(__dirname, './packages/predefine/src'),
       '@ew-color-picker/color-mode': resolve(__dirname, './packages/color-mode/src'),
       '@ew-color-picker/box': resolve(__dirname, './packages/box/src'),
       '@ew-color-picker/eyedropper': resolve(__dirname, './packages/eyedropper/src'),
       '@ew-color-picker/copy-color': resolve(__dirname, './packages/copy-color/src'),
+      '@ew-color-picker/gradient': resolve(__dirname, './packages/gradient/src'),
       '@ew-color-picker/style': resolve(__dirname, './packages/style/src'),
     }
   }

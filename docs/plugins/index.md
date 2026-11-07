@@ -1,6 +1,6 @@
 ---
 title: Plugin Overview
-description: 'The ew-color-picker plugin system: 13 built-in plugins, registration order, mount points and collaboration.'
+description: 'The ew-color-picker plugin system: 15 built-in plugins, registration order, mount points and collaboration.'
 ---
 
 # Plugin Overview
@@ -66,12 +66,14 @@ Registration order in `@ew-color-picker/ew-color-picker`:
 | 6 | Input | `ewColorPickerInput` | input | Text color input |
 | 7 | InputNumber | `ewColorPickerInputNumber` | input-number | Numeric inputs |
 | 8 | Select | `ewColorPickerSelect` | select | Dropdown component (renders only when items are configured) |
-| 9 | Button | `ewColorPickerButton` | button | Clear / Sure |
-| 10 | Predefine | `ewColorPickerPredefine` | predefine | Swatches |
-| 11 | ColorMode | `ewColorPickerColorMode` | color-mode | Hex / RGB / HSL |
-| 12 | Eyedropper | `ewColorPickerEyedropper` | eyedropper | Screen color picker (Chromium) |
-| 13 | CopyColor | `ewColorPickerCopyColor` | copy-color | Copy the current color to the clipboard |
-| 14 | — | — | style | CSS artifacts (not a plugin) |
+| 9 | Checkbox | `ewColorPickerCheckbox` | checkbox | Checkbox component (renders only when a label is configured) |
+| 10 | Button | `ewColorPickerButton` | button | Clear / Sure |
+| 11 | Predefine | `ewColorPickerPredefine` | predefine | Swatches |
+| 12 | ColorMode | `ewColorPickerColorMode` | color-mode | Hex / RGB / HSL |
+| 13 | Eyedropper | `ewColorPickerEyedropper` | eyedropper | Screen color picker (Chromium) |
+| 14 | CopyColor | `ewColorPickerCopyColor` | copy-color | Copy the current color to the clipboard |
+| 15 | Gradient | `ewColorPickerGradient` | gradient | Gradient editor with draggable stops (hidden by default) |
+| 16 | — | — | style | CSS artifacts (not a plugin) |
 
 ## Mount points
 
@@ -128,7 +130,7 @@ Register plugins manually — see [Installation](../guide/installation.md#per-pa
 ## Next steps
 
 - [Box](./box.md) · [Panel](./panel.md) · [Hue](./hue.md) · [Alpha](./alpha.md)
-- [Input](./input.md) · [InputNumber](./input-number.md) · [Select](./select.md) · [Button](./button.md)
+- [Input](./input.md) · [InputNumber](./input-number.md) · [Select](./select.md) · [Checkbox](./checkbox.md) · [Button](./button.md)
 - [Predefine](./predefine.md) · [ColorMode](./color-mode.md) · [Eyedropper](./eyedropper.md)
-- [CopyColor](./copy-color.md)
+- [CopyColor](./copy-color.md) · [Gradient](./gradient.md)
 - [Console](./console.md) · [Writing a plugin](../guide/plugin-dev.md)

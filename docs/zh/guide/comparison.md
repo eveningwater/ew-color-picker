@@ -20,7 +20,7 @@ ew-color-picker 不是一套「成品皮肤」，而是一个 **可组装的颜�
 
 | 方案 | 形态 | 框架约束 | 扩展方式 | 体积（unpacked） | 最近发布 |
 | --- | --- | --- | --- | --- | --- |
-| **ew-color-picker** | 聚合包 + 13 个插件包（含兼容入口 `ew-color-picker`） | 无（原生 DOM） | 插件注册 / 自写插件 | 聚合包 84.6 KB + 样式 36.1 KB（合计 120.7 KB），`core.min` 11.9 KB（gzip 3.9 KB） | 2026-10 |
+| **ew-color-picker** | 聚合包 + 14 个插件包（含兼容入口 `ew-color-picker`） | 无（原生 DOM） | 插件注册 / 自写插件 | 聚合包 84.6 KB + 样式 36.1 KB（合计 120.7 KB），`core.min` 11.9 KB（gzip 3.9 KB） | 2026-10 |
 | [Pickr](https://github.com/Simonwep/pickr) | 单包，UMD/ESM | 无 | 主题（classic/monolith/nano）+ 选项 | 280.3 KB | 2026-09 |
 | [iro.js](https://github.com/jaames/iro.js) | 单包 | 无 | 选项 + 组件组合 | 231.4 KB | 2021-07 |
 | [Coloris](https://github.com/melloware/coloris) | 单包 + 一份 CSS | 无 | CSS 变量主题 + 选项 | 152.2 KB | 2026-10 |
@@ -71,7 +71,7 @@ ewColorPicker.use(Panel).use(Hue)
 
 - **生态与社区规模小**：下载量、第三方教程、Issue 沉淀都无法与 Pickr、react-color 相比，遇到冷门问题更多要靠读源码。
 - **不提供官方框架绑定包**：React / Vue / Angular / Solid 的接入方式见[框架集成](./framework-integration)，受控组件与 SSR 场景按示例自行封装（约 20 行）。
-- **不支持渐变与多色编辑**：这类需求目前要选 iro.js 或专门的渐变选择器；屏幕取色可由可选的 `@ew-color-picker/eyedropper` 插件提供（仅 Chromium 系浏览器）。
+- **渐变与屏幕取色属于可选插件**：线性/径向/锥形渐变编辑由可选的 `@ew-color-picker/gradient` 插件提供，屏幕取色由 `@ew-color-picker/eyedropper` 插件提供（仅 Chromium 系浏览器）；更复杂的色彩空间运算与可视化场景仍建议选 iro.js。
 - **只有需要定制时才要理解插件模型**：默认装聚合入口或 `npm i ew-color-picker` 即可开箱使用；只有在替换局部 UI、组合自有插件时，才需要理解「核心 + 插件」的结构。
 - **想进一步减小体积需按需装子包**：聚合包 84.6 KB、样式 36.1 KB，已与 Coloris 同量级；若只用单个部件，按需安装插件包可以裁到核心 11.9 KB。
 

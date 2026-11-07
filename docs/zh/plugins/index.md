@@ -1,6 +1,6 @@
 ---
 title: 插件总览
-description: ew-color-picker 的插件体系：13 个内置插件的职责、注册顺序与包名，以及插件之间如何协作完成颜色选择。
+description: ew-color-picker 的插件体系：15 个内置插件的职责、注册顺序与包名，以及插件之间如何协作完成颜色选择。
 ---
 
 # 插件总览
@@ -68,12 +68,14 @@ export default class MyPlugin {
 | 6 | Input | `ewColorPickerInput` | `@ew-color-picker/input` | 文本颜色输入框 |
 | 7 | InputNumber | `ewColorPickerInputNumber` | `@ew-color-picker/input-number` | RGB/HSL 数值输入组（底层组件） |
 | 8 | Select | `ewColorPickerSelect` | `@ew-color-picker/select` | 下拉选择组件（仅在有选项时渲染） |
-| 9 | Button | `ewColorPickerButton` | `@ew-color-picker/button` | 清空 / 确定按钮 |
-| 10 | Predefine | `ewColorPickerPredefine` | `@ew-color-picker/predefine` | 预定义颜色色块 |
-| 11 | ColorMode | `ewColorPickerColorMode` | `@ew-color-picker/color-mode` | Hex / RGB / HSL 模式切换 |
-| 12 | Eyedropper | `ewColorPickerEyedropper` | `@ew-color-picker/eyedropper` | 屏幕吸管取色（Chromium） |
-| 13 | CopyColor | `ewColorPickerCopyColor` | `@ew-color-picker/copy-color` | 复制当前颜色到剪贴板 |
-| 14 | — | — | `@ew-color-picker/style` | 样式产物（CSS，不是插件） |
+| 9 | Checkbox | `ewColorPickerCheckbox` | `@ew-color-picker/checkbox` | 复选框组件（仅在有文本时渲染） |
+| 10 | Button | `ewColorPickerButton` | `@ew-color-picker/button` | 清空 / 确定按钮 |
+| 11 | Predefine | `ewColorPickerPredefine` | `@ew-color-picker/predefine` | 预定义颜色色块 |
+| 12 | ColorMode | `ewColorPickerColorMode` | `@ew-color-picker/color-mode` | Hex / RGB / HSL 模式切换 |
+| 13 | Eyedropper | `ewColorPickerEyedropper` | `@ew-color-picker/eyedropper` | 屏幕吸管取色（Chromium） |
+| 14 | CopyColor | `ewColorPickerCopyColor` | `@ew-color-picker/copy-color` | 复制当前颜色到剪贴板 |
+| 15 | Gradient | `ewColorPickerGradient` | `@ew-color-picker/gradient` | 渐变色编辑器（默认隐藏，可拖拽色标） |
+| 16 | — | — | `@ew-color-picker/style` | 样式产物（CSS，不是插件） |
 
 ## 挂载点
 
@@ -114,7 +116,7 @@ export default class MyPlugin {
 
 ## 按需组合
 
-只要引用了聚合包，13 个插件就都已注册。你可以用配置项裁剪 UI，而不必卸载插件：
+只要引用了聚合包，15 个插件就都已注册。你可以用配置项裁剪 UI，而不必卸载插件：
 
 ```ts
 new ewColorPicker({
@@ -143,10 +145,12 @@ new ewColorPicker({
 - [Input 输入框](./input.md)
 - [InputNumber 数字输入框](./input-number.md)
 - [Select 下拉选择](./select.md)
+- [Checkbox 复选框](./checkbox.md)
 - [Button 按钮](./button.md)
 - [Predefine 预定义颜色](./predefine.md)
 - [ColorMode 颜色模式](./color-mode.md)
 - [Eyedropper 吸管](./eyedropper.md)
 - [CopyColor 复制颜色](./copy-color.md)
+- [Gradient 渐变](./gradient.md)
 - [Console 控制台](./console.md)
 - [编写自定义插件](../guide/plugin-dev.md)

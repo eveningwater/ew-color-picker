@@ -1,0 +1,67 @@
+{
+  "name": "@ew-color-picker/gradient",
+  "version": "2.0.3",
+  "description": "EW Color Picker Gradient Editor Plugin",
+  "main": "dist/gradient.min.js",
+  "module": "dist/gradient.esm.js",
+  "types": "dist/packages/gradient/src/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c ../../scripts/rollup.config.mjs",
+    "dev": "rollup -c ../../scripts/rollup.config.mjs -w",
+    "clean": "rimraf dist"
+  },
+  "keywords": [
+    "color-picker",
+    "colorpicker",
+    "gradient",
+    "gradient-editor",
+    "linear-gradient",
+    "radial-gradient",
+    "conic-gradient",
+    "repeating-gradient",
+    "css",
+    "plugin",
+    "typescript",
+    "ui",
+    "ui-component",
+    "design-system",
+    "framework-agnostic",
+    "vanilla-js",
+    "plugin-system"
+  ],
+  "author": "eveningwater(854806732@qq.com)",
+  "license": "MIT",
+  "dependencies": {
+    "@ew-color-picker/core": "workspace:^",
+    "@ew-color-picker/utils": "workspace:^",
+    "@ew-color-picker/select": "workspace:^",
+    "@ew-color-picker/input-number": "workspace:^",
+    "@ew-color-picker/checkbox": "workspace:^"
+  },
+  "devDependencies": {
+    "@ew-color-picker/core": "workspace:*",
+    "@ew-color-picker/utils": "workspace:*",
+    "@ew-color-picker/select": "workspace:*",
+    "@ew-color-picker/input-number": "workspace:*",
+    "@ew-color-picker/checkbox": "workspace:*",
+    "rollup": "^3.0.0",
+    "rollup-plugin-typescript2": "^0.34.0",
+    "typescript": "^4.9.0",
+    "rimraf": "^3.0.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eveningwater/ew-color-picker.git",
+    "directory": "packages/gradient"
+  },
+  "homepage": "https://eveningwater.github.io/ew-color-picker/",
+  "bugs": {
+    "url": "https://github.com/eveningwater/ew-color-picker/issues"
+  }
+}

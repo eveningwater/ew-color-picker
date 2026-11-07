@@ -6,7 +6,7 @@ const buildType = [
   { ext: '.min.css', minify: true },
 ];
 
-const entries = ['index', 'input-number', 'select'];
+const entries = ['index', 'input-number', 'select', 'checkbox'];
 
 function getBanner(name) {
   return `/*!\n * @ew-color-picker/style${name === 'index' ? '' : ' ' + name}\n * (c) 2024-${new Date().getFullYear()} eveningwater(854806732@qq.com)\n * Released under the MIT License.\n */`;

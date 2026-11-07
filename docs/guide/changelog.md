@@ -14,6 +14,8 @@ description: Release notes for ew-color-picker, including fixes, features and do
 - New `@ew-color-picker/eyedropper` plugin: sample colors from anywhere on screen through the native EyeDropper API. It detects browser support, writes the result with `core.setColor()`, supports `showEyedropper` / `eyedropperText` / `onEyedropperPick`, and silently ignores `AbortError` when the user cancels
 - New `@ew-color-picker/copy-color` plugin: copy the current color to the clipboard with one click. The button is filled with the current color and uses contrast-aware icons, prefers the async Clipboard API with a `execCommand` fallback, shows a short built-in success toast, and supports `showCopyColor` / `copyColorText` / `copiedText` / `onCopyColor`
 - The eyedropper and copy buttons now live in their own toolbar row above the color value input, instead of sharing the row with the Clear / Sure buttons
+- New `@ew-color-picker/gradient` plugin: a gradient editor with draggable stops, linear/radial/conic types, repeating gradients, angle and position controls, double-position stops, and interpolation hints (`srgb`, `srgb-linear`, `hsl`, `oklab`, `oklch`). CSS strings round-trip through `parseGradient` / `serializeGradient`, and the editor is hidden unless `showGradient: true` or `gradient` / `gradientStops` is provided
+- New `@ew-color-picker/checkbox` component and plugin: replaces the native checkbox visual with a themed box while keeping the underlying native input for semantics and keyboard support. The plugin renders in the bottom row when `checkboxLabel` is provided and supports `showCheckbox` / `checkboxChecked` / `checkboxDisabled` / `onCheckboxChange`
 
 ### Fixes
 

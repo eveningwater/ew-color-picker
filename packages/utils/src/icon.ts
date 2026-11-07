@@ -36,6 +36,13 @@ export const eyedropperIcon = (className?: string, size?: number, prefix = DEFAU
   )}" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="currentColor"${sizeAttr}><path d="M17.66 5.41l.92.92-2.69 2.69-.92-.92 2.69-2.69M17.67 3c-.26 0-.51.1-.71.29l-3.12 3.12-1.93-1.91-1.41 1.41 1.42 1.42L3 16.25V21h4.75l8.92-8.92 1.42 1.42 1.41-1.41-1.92-1.92 3.12-3.12c.4-.4.29-.71.29-.71L17.67 3z"></path></svg>`;
 };
 
+export const checkIcon = (className?: string, size?: number, prefix = DEFAULT_PREFIX) => {
+  const sizeAttr = size && size > 0 ? ` width="${size}" height="${size}"` : "";
+  return `<svg class="${prefix}color-picker-icon${handleClassName(
+    className
+  )}" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="currentColor"${sizeAttr}><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg>`;
+};
+
 export const copyIcon = (className?: string, size?: number, prefix = DEFAULT_PREFIX) => {
   const sizeAttr = size && size > 0 ? ` width="${size}" height="${size}"` : "";
   return `<svg class="${prefix}color-picker-icon${handleClassName(

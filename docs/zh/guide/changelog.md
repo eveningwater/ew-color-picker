@@ -14,6 +14,8 @@ description: ew-color-picker 各版本的变更记录，含修复、新增与文
 - 新增 `@ew-color-picker/eyedropper` 吸管插件：基于浏览器原生 EyeDropper API 从屏幕任意位置取色，自动检测能力，通过 `core.setColor()` 写回结果，支持 `showEyedropper` / `eyedropperText` / `onEyedropperPick`，用户取消时静默忽略 `AbortError`
 - 新增 `@ew-color-picker/copy-color` 复制颜色插件：一键复制当前颜色到剪贴板。按钮底色跟随当前颜色并按对比度自动切换图标颜色，优先使用异步剪贴板 API，失败时降级到 `execCommand`，复制成功后弹出内置提示气泡，支持 `showCopyColor` / `copyColorText` / `copiedText` / `onCopyColor`
 - 吸管按钮与复制按钮改为放在颜色值输入框上方的独立工具栏行，不再与输入框、清空 / 确定按钮挤在同一行
+- 新增 `@ew-color-picker/gradient` 渐变插件：提供可拖拽色标的渐变编辑器，支持线性 / 径向 / 锥形、重复渐变、角度与位置、双位置色标，以及 `srgb` / `srgb-linear` / `hsl` / `oklab` / `oklch` 插值提示。CSS 字符串可通过 `parseGradient` / `serializeGradient` 稳定回环，默认仅在 `showGradient: true` 或提供 `gradient` / `gradientStops` 时渲染
+- 新增 `@ew-color-picker/checkbox` 复选框组件与插件：用主题化方块替代原生复选框外观，底层保留原生 input 以维持语义与键盘操作。插件在提供 `checkboxLabel` 时渲染到面板底部行，支持 `showCheckbox` / `checkboxChecked` / `checkboxDisabled` / `onCheckboxChange`
 
 ### 修复
 
