@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/predefine",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "EW Color Picker Predefine Plugin",
   "main": "dist/predefine.min.js",
   "module": "dist/predefine.esm.js",

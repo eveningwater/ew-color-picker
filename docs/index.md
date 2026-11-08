@@ -69,20 +69,20 @@ features:
 </div>
 
 <div class="doc-section">
-  <h2>What's new in 2.0.3</h2>
+  <h2>What's new in 2.0.4</h2>
   <p class="subtitle">The latest release is published on npm and reflected in these docs.</p>
   <div class="doc-cards">
-    <a class="doc-card" href="./plugins/eyedropper">
-      <h3>Eyedropper plugin</h3>
-      <p>Pick colors from anywhere on screen with the native EyeDropper API, with capability detection and graceful cancellation.</p>
+    <a class="doc-card" href="./plugins/gradient">
+      <h3>Gradient plugin</h3>
+      <p>Linear, radial and conic gradients with draggable stops, repeating mode and interpolation color spaces.</p>
     </a>
-    <a class="doc-card" href="./plugins/copy-color">
-      <h3>Copy color</h3>
-      <p>One-click clipboard copy with a contrast-aware button and a built-in success toast.</p>
+    <a class="doc-card" href="./plugins/checkbox">
+      <h3>Checkbox plugin</h3>
+      <p>A themed checkbox that keeps native input semantics and keyboard support.</p>
     </a>
     <a class="doc-card" href="./guide/changelog">
       <h3>Full changelog</h3>
-      <p>All features, fixes and documentation updates shipped in 2.0.3.</p>
+      <p>All features, fixes and documentation updates shipped in 2.0.4.</p>
     </a>
   </div>
 </div>

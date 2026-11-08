@@ -1218,6 +1218,23 @@ Source: https://eveningwater.github.io/ew-color-picker/guide/changelog
 
 # Changelog
 
+## 2.0.4
+
+### Features
+
+- New `@ew-color-picker/select` component and plugin: custom option lists with placeholder, sizes, keyboard navigation, click-outside closing and ARIA support, an optional clear icon via `selectClearable`, and `selectItems` / `selectValue` / `selectPlaceholder` / `onSelectChange` / `onSelectClear` options. Renders only when `selectItems` is non-empty
+- New `@ew-color-picker/gradient` plugin: a gradient editor with draggable stops, linear/radial/conic types, repeating gradients, angle and position controls, double-position stops, and interpolation hints (`srgb`, `srgb-linear`, `hsl`, `oklab`, `oklch`). CSS strings round-trip through `parseGradient` / `serializeGradient`, and the editor is hidden unless `showGradient: true` or `gradient` / `gradientStops` is provided
+- New `@ew-color-picker/checkbox` component and plugin: replaces the native checkbox visual with a themed box while keeping the underlying native input for semantics and keyboard support. The plugin renders in the bottom row when `checkboxLabel` is provided and supports `showCheckbox` / `checkboxChecked` / `checkboxDisabled` / `onCheckboxChange`
+- The aggregate package now exports a `createEwColorPicker(options)` factory, and the `ew-color-picker` compat entry exposes the same factory
+
+### Fixes
+
+- Fixed `defaultColor` handling: instance plugins are not created yet at that point, so the check now reads the static plugin registry to see whether the alpha plugin is registered; without alpha, an rgba default correctly falls back to hex
+- Fixed the hue bar background, panel cursor and hue / alpha thumb positions being wrong when the panel opens without an initial color (or with a color set later): everything is re-synced against the current color once the panel is shown
+- Fixed the panel width calculation for different hue / alpha direction combinations, which pushed same-row elements onto a new line and misaligned the edges
+- Fixed `colorRgbaToHsva` only accepting rgba strings; it now also handles hex / rgb / color keywords
+- Fixed the gradient editor stop-row layout: number inputs clipped their values and the Remove / Add buttons were pushed onto a new line; inputs are now wider with compact steppers and tighter gaps so everything fits on one row
+
 ## 2.0.3
 
 > This release has been published to npm and the docs site has been updated.
@@ -1227,8 +1244,6 @@ Source: https://eveningwater.github.io/ew-color-picker/guide/changelog
 - New `@ew-color-picker/eyedropper` plugin: sample colors from anywhere on screen through the native EyeDropper API. It detects browser support, writes the result with `core.setColor()`, supports `showEyedropper` / `eyedropperText` / `onEyedropperPick`, and silently ignores `AbortError` when the user cancels
 - New `@ew-color-picker/copy-color` plugin: copy the current color to the clipboard with one click. The button is filled with the current color and uses contrast-aware icons, prefers the async Clipboard API with a `execCommand` fallback, shows a short built-in success toast, and supports `showCopyColor` / `copyColorText` / `copiedText` / `onCopyColor`
 - The eyedropper and copy buttons now live in their own toolbar row above the color value input, instead of sharing the row with the Clear / Sure buttons
-- New `@ew-color-picker/gradient` plugin: a gradient editor with draggable stops, linear/radial/conic types, repeating gradients, angle and position controls, double-position stops, and interpolation hints (`srgb`, `srgb-linear`, `hsl`, `oklab`, `oklch`). CSS strings round-trip through `parseGradient` / `serializeGradient`, and the editor is hidden unless `showGradient: true` or `gradient` / `gradientStops` is provided
-- New `@ew-color-picker/checkbox` component and plugin: replaces the native checkbox visual with a themed box while keeping the underlying native input for semantics and keyboard support. The plugin renders in the bottom row when `checkboxLabel` is provided and supports `showCheckbox` / `checkboxChecked` / `checkboxDisabled` / `onCheckboxChange`
 
 ### Fixes
 
@@ -2175,20 +2190,20 @@ Source: https://eveningwater.github.io/ew-color-picker/
 </div>
 
 <div class="doc-section">
-  <h2>What's new in 2.0.3</h2>
+  <h2>What's new in 2.0.4</h2>
   <p class="subtitle">The latest release is published on npm and reflected in these docs.</p>
   <div class="doc-cards">
-    <a class="doc-card" href="./plugins/eyedropper">
-      <h3>Eyedropper plugin</h3>
-      <p>Pick colors from anywhere on screen with the native EyeDropper API, with capability detection and graceful cancellation.</p>
+    <a class="doc-card" href="./plugins/gradient">
+      <h3>Gradient plugin</h3>
+      <p>Linear, radial and conic gradients with draggable stops, repeating mode and interpolation color spaces.</p>
     </a>
-    <a class="doc-card" href="./plugins/copy-color">
-      <h3>Copy color</h3>
-      <p>One-click clipboard copy with a contrast-aware button and a built-in success toast.</p>
+    <a class="doc-card" href="./plugins/checkbox">
+      <h3>Checkbox plugin</h3>
+      <p>A themed checkbox that keeps native input semantics and keyboard support.</p>
     </a>
     <a class="doc-card" href="./guide/changelog">
       <h3>Full changelog</h3>
-      <p>All features, fixes and documentation updates shipped in 2.0.3.</p>
+      <p>All features, fixes and documentation updates shipped in 2.0.4.</p>
     </a>
   </div>
 </div>
@@ -2756,7 +2771,7 @@ With the all-in-one bundle it is always registered.
 ## Output
 
 ```text
- ew-color-picker@2.0.3   QQ: 854806732  WeChat: eveningwater  github:https://github.com/eveningwater/ew-color-picker
+ ew-color-picker@2.0.4   QQ: 854806732  WeChat: eveningwater  github:https://github.com/eveningwater/ew-color-picker
 ```
 
 ## Methods
@@ -5434,6 +5449,23 @@ Source: https://eveningwater.github.io/ew-color-picker/zh/guide/changelog
 
 # 更新日志
 
+## 2.0.4
+
+### 新增
+
+- 新增 `@ew-color-picker/select` 下拉选择组件与插件：支持自定义选项、占位符、尺寸、键盘操作、外部点击关闭与 ARIA 无障碍规范，可通过 `selectClearable` 开启清空图标，配置项含 `selectItems` / `selectValue` / `selectPlaceholder` / `onSelectChange` / `onSelectClear`，仅在 `selectItems` 非空时渲染
+- 新增 `@ew-color-picker/gradient` 渐变插件：提供可拖拽色标的渐变编辑器，支持线性 / 径向 / 锥形、重复渐变、角度与位置、双位置色标，以及 `srgb` / `srgb-linear` / `hsl` / `oklab` / `oklch` 插值提示。CSS 字符串可通过 `parseGradient` / `serializeGradient` 稳定回环，默认仅在 `showGradient: true` 或提供 `gradient` / `gradientStops` 时渲染
+- 新增 `@ew-color-picker/checkbox` 复选框组件与插件：用主题化方块替代原生复选框外观，底层保留原生 input 以维持语义与键盘操作。插件在提供 `checkboxLabel` 时渲染到面板底部行，支持 `showCheckbox` / `checkboxChecked` / `checkboxDisabled` / `onCheckboxChange`
+- 聚合包新增 `createEwColorPicker(options)` 工厂函数导出，兼容入口包 `ew-color-picker` 同步支持该导出
+
+### 修复
+
+- 修复 `defaultColor` 的判断逻辑：此时实例插件尚未创建，改为按静态插件注册表判断 alpha 插件是否已注册；未启用 alpha 时，rgba 格式的默认值正确降级为 hex
+- 修复无初始颜色或延迟设置颜色时打开面板，色相柱背景、面板光标与色相 / 透明度滑块位置不正确的问题：面板显示后会按当前颜色重新同步定位
+- 修复色相柱与透明度柱在不同方向组合下面板宽度计算不准确，导致同排元素换行、左右边缘无法对齐的问题
+- 修复 `colorRgbaToHsva` 只接受 rgba 字符串的问题，现在兼容 hex / rgb / 颜色关键字等输入
+- 修复渐变编辑器停靠点行的布局问题：数字输入框数值被裁剪、删除 / 新增按钮被挤到下一行；输入框加宽并压缩步进按钮宽度与行间距后，单行内完整展示
+
 ## 2.0.3
 
 > 本版本已发布到 npm，文档站已同步更新。
@@ -5443,8 +5475,6 @@ Source: https://eveningwater.github.io/ew-color-picker/zh/guide/changelog
 - 新增 `@ew-color-picker/eyedropper` 吸管插件：基于浏览器原生 EyeDropper API 从屏幕任意位置取色，自动检测能力，通过 `core.setColor()` 写回结果，支持 `showEyedropper` / `eyedropperText` / `onEyedropperPick`，用户取消时静默忽略 `AbortError`
 - 新增 `@ew-color-picker/copy-color` 复制颜色插件：一键复制当前颜色到剪贴板。按钮底色跟随当前颜色并按对比度自动切换图标颜色，优先使用异步剪贴板 API，失败时降级到 `execCommand`，复制成功后弹出内置提示气泡，支持 `showCopyColor` / `copyColorText` / `copiedText` / `onCopyColor`
 - 吸管按钮与复制按钮改为放在颜色值输入框上方的独立工具栏行，不再与输入框、清空 / 确定按钮挤在同一行
-- 新增 `@ew-color-picker/gradient` 渐变插件：提供可拖拽色标的渐变编辑器，支持线性 / 径向 / 锥形、重复渐变、角度与位置、双位置色标，以及 `srgb` / `srgb-linear` / `hsl` / `oklab` / `oklch` 插值提示。CSS 字符串可通过 `parseGradient` / `serializeGradient` 稳定回环，默认仅在 `showGradient: true` 或提供 `gradient` / `gradientStops` 时渲染
-- 新增 `@ew-color-picker/checkbox` 复选框组件与插件：用主题化方块替代原生复选框外观，底层保留原生 input 以维持语义与键盘操作。插件在提供 `checkboxLabel` 时渲染到面板底部行，支持 `showCheckbox` / `checkboxChecked` / `checkboxDisabled` / `onCheckboxChange`
 
 ### 修复
 
@@ -6395,20 +6425,20 @@ Source: https://eveningwater.github.io/ew-color-picker/zh/
 </div>
 
 <div class="doc-section">
-  <h2>2.0.3 更新内容</h2>
+  <h2>2.0.4 更新内容</h2>
   <p class="subtitle">最新版本已发布到 npm，本文档站已同步更新。</p>
   <div class="doc-cards">
-    <a class="doc-card" href="./plugins/eyedropper">
-      <h3>吸管取色插件</h3>
-      <p>基于原生 EyeDropper API 从屏幕任意位置取色，自带能力检测与取消静默处理。</p>
+    <a class="doc-card" href="./plugins/gradient">
+      <h3>渐变插件</h3>
+      <p>线性、径向、锥形渐变编辑器，可拖拽色标，支持重复渐变与多种插值色彩空间。</p>
     </a>
-    <a class="doc-card" href="./plugins/copy-color">
-      <h3>复制颜色插件</h3>
-      <p>一键复制当前颜色，按钮底色跟随颜色并自动切换图标，复制成功弹出内置提示。</p>
+    <a class="doc-card" href="./plugins/checkbox">
+      <h3>复选框插件</h3>
+      <p>主题化复选框外观，底层保留原生 input 的语义与键盘操作。</p>
     </a>
     <a class="doc-card" href="./guide/changelog">
       <h3>完整更新日志</h3>
-      <p>查看 2.0.3 的全部新增功能、修复项与文档变更。</p>
+      <p>查看 2.0.4 的全部新增功能、修复项与文档变更。</p>
     </a>
   </div>
 </div>
@@ -7158,7 +7188,7 @@ ewColorPicker.use(Box).use(Panel)
 ## 输出内容
 
 ```text
- ew-color-picker@2.0.3  联系QQ：854806732  联系微信：eveningwater  github:https://github.com/eveningwater/ew-color-picker
+ ew-color-picker@2.0.4  联系QQ：854806732  联系微信：eveningwater  github:https://github.com/eveningwater/ew-color-picker
 ```
 
 样式通过 `%c` 注入，不影响页面。

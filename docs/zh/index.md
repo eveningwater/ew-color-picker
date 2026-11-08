@@ -69,20 +69,20 @@ features:
 </div>
 
 <div class="doc-section">
-  <h2>2.0.3 更新内容</h2>
+  <h2>2.0.4 更新内容</h2>
   <p class="subtitle">最新版本已发布到 npm，本文档站已同步更新。</p>
   <div class="doc-cards">
-    <a class="doc-card" href="./plugins/eyedropper">
-      <h3>吸管取色插件</h3>
-      <p>基于原生 EyeDropper API 从屏幕任意位置取色，自带能力检测与取消静默处理。</p>
+    <a class="doc-card" href="./plugins/gradient">
+      <h3>渐变插件</h3>
+      <p>线性、径向、锥形渐变编辑器，可拖拽色标，支持重复渐变与多种插值色彩空间。</p>
     </a>
-    <a class="doc-card" href="./plugins/copy-color">
-      <h3>复制颜色插件</h3>
-      <p>一键复制当前颜色，按钮底色跟随颜色并自动切换图标，复制成功弹出内置提示。</p>
+    <a class="doc-card" href="./plugins/checkbox">
+      <h3>复选框插件</h3>
+      <p>主题化复选框外观，底层保留原生 input 的语义与键盘操作。</p>
     </a>
     <a class="doc-card" href="./guide/changelog">
       <h3>完整更新日志</h3>
-      <p>查看 2.0.3 的全部新增功能、修复项与文档变更。</p>
+      <p>查看 2.0.4 的全部新增功能、修复项与文档变更。</p>
     </a>
   </div>
 </div>

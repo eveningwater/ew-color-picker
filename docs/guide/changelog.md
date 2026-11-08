@@ -5,6 +5,23 @@ description: Release notes for ew-color-picker, including fixes, features and do
 
 # Changelog
 
+## 2.0.4
+
+### Features
+
+- New `@ew-color-picker/select` component and plugin: custom option lists with placeholder, sizes, keyboard navigation, click-outside closing and ARIA support, an optional clear icon via `selectClearable`, and `selectItems` / `selectValue` / `selectPlaceholder` / `onSelectChange` / `onSelectClear` options. Renders only when `selectItems` is non-empty
+- New `@ew-color-picker/gradient` plugin: a gradient editor with draggable stops, linear/radial/conic types, repeating gradients, angle and position controls, double-position stops, and interpolation hints (`srgb`, `srgb-linear`, `hsl`, `oklab`, `oklch`). CSS strings round-trip through `parseGradient` / `serializeGradient`, and the editor is hidden unless `showGradient: true` or `gradient` / `gradientStops` is provided
+- New `@ew-color-picker/checkbox` component and plugin: replaces the native checkbox visual with a themed box while keeping the underlying native input for semantics and keyboard support. The plugin renders in the bottom row when `checkboxLabel` is provided and supports `showCheckbox` / `checkboxChecked` / `checkboxDisabled` / `onCheckboxChange`
+- The aggregate package now exports a `createEwColorPicker(options)` factory, and the `ew-color-picker` compat entry exposes the same factory
+
+### Fixes
+
+- Fixed `defaultColor` handling: instance plugins are not created yet at that point, so the check now reads the static plugin registry to see whether the alpha plugin is registered; without alpha, an rgba default correctly falls back to hex
+- Fixed the hue bar background, panel cursor and hue / alpha thumb positions being wrong when the panel opens without an initial color (or with a color set later): everything is re-synced against the current color once the panel is shown
+- Fixed the panel width calculation for different hue / alpha direction combinations, which pushed same-row elements onto a new line and misaligned the edges
+- Fixed `colorRgbaToHsva` only accepting rgba strings; it now also handles hex / rgb / color keywords
+- Fixed the gradient editor stop-row layout: number inputs clipped their values and the Remove / Add buttons were pushed onto a new line; inputs are now wider with compact steppers and tighter gaps so everything fits on one row
+
 ## 2.0.3
 
 > This release has been published to npm and the docs site has been updated.
@@ -14,8 +31,6 @@ description: Release notes for ew-color-picker, including fixes, features and do
 - New `@ew-color-picker/eyedropper` plugin: sample colors from anywhere on screen through the native EyeDropper API. It detects browser support, writes the result with `core.setColor()`, supports `showEyedropper` / `eyedropperText` / `onEyedropperPick`, and silently ignores `AbortError` when the user cancels
 - New `@ew-color-picker/copy-color` plugin: copy the current color to the clipboard with one click. The button is filled with the current color and uses contrast-aware icons, prefers the async Clipboard API with a `execCommand` fallback, shows a short built-in success toast, and supports `showCopyColor` / `copyColorText` / `copiedText` / `onCopyColor`
 - The eyedropper and copy buttons now live in their own toolbar row above the color value input, instead of sharing the row with the Clear / Sure buttons
-- New `@ew-color-picker/gradient` plugin: a gradient editor with draggable stops, linear/radial/conic types, repeating gradients, angle and position controls, double-position stops, and interpolation hints (`srgb`, `srgb-linear`, `hsl`, `oklab`, `oklch`). CSS strings round-trip through `parseGradient` / `serializeGradient`, and the editor is hidden unless `showGradient: true` or `gradient` / `gradientStops` is provided
-- New `@ew-color-picker/checkbox` component and plugin: replaces the native checkbox visual with a themed box while keeping the underlying native input for semantics and keyboard support. The plugin renders in the bottom row when `checkboxLabel` is provided and supports `showCheckbox` / `checkboxChecked` / `checkboxDisabled` / `onCheckboxChange`
 
 ### Fixes
 
