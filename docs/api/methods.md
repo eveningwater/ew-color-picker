@@ -21,6 +21,28 @@ new ewColorPicker(el, options)
 
 If `el` (or the first argument) is provided, `mount()` is called automatically.
 
+## createEwColorPicker
+
+The aggregate package `@ew-color-picker/ew-color-picker` and the unscoped `ew-color-picker` entry also export a factory. It is exactly `new ewColorPicker(options)` without the `new` keyword:
+
+```ts
+import { createEwColorPicker } from 'ew-color-picker'
+
+const picker = createEwColorPicker({
+  el: '#picker',
+  defaultColor: '#6366f1',
+})
+
+picker.setColor('#f00')
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `options` | `string \| HTMLElement \| ewColorPickerOptions` | Same as the first constructor argument |
+| Returns | `ewColorPicker` | A mounted instance ready for instance methods |
+
+When using the on-demand core package (`@ew-color-picker/core`), call `new ewColorPicker(options)` directly — the factory is only shipped by the aggregate package.
+
 ## Static methods
 
 ### use

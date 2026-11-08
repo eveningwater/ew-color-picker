@@ -285,6 +285,12 @@ export default defineConfig({
     lineNumbers: true,
     theme: { light: 'github-light', dark: 'github-dark' },
   },
+  // VitePress 的 __VP_LOCAL_SEARCH__ 编译标志只读取顶层 themeConfig.search，
+  // 仅在 locales 内声明会导致搜索组件在构建时被裁掉，这里必须在顶层声明。
+  // 各 locale 内的 search 配置负责覆盖翻译文案。
+  themeConfig: {
+    search: enSearch,
+  },
   locales: {
     root: {
       label: 'English',
