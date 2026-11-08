@@ -789,6 +789,7 @@ Source: https://eveningwater.github.io/ew-color-picker/api/styles
 | --- | --- | --- |
 | `@ew-color-picker/style/dist/index.css` | Yes | Picker, box, panel, sliders, buttons, mode switcher, predefine |
 | `@ew-color-picker/style/dist/input-number.css` | Yes for numeric inputs | InputNumber component |
+| `@ew-color-picker/style/dist/select.css` | Only when using Select | Select dropdown component |
 
 ```ts
 import '@ew-color-picker/style/dist/index.css'
@@ -796,7 +797,7 @@ import '@ew-color-picker/style/dist/input-number.css'
 ```
 
 ::: warning
-Importing only `index.css` leaves RGB/HSL numeric inputs unstyled.
+Importing only `index.css` leaves RGB/HSL numeric inputs unstyled. Add `select.css` only when you use the Select component.
 :::
 
 ## Class prefix
@@ -917,6 +918,21 @@ Override them after importing the styles:
 | `.ew-input-number__buttons` | Stepper container |
 | `.ew-input-number__button--up` / `--down` | Steppers |
 
+### Select
+
+| Class | Description |
+| --- | --- |
+| `.ew-select` | Root |
+| `.ew-select--small` / `--default` / `--large` | Sizes |
+| `.ew-select--open` / `--disabled` | States |
+| `.ew-select__trigger` | Trigger button |
+| `.ew-select__value` / `--placeholder` | Current value text |
+| `.ew-select__clear` / `--hidden` / `-icon` | Clear button and its visibility state |
+| `.ew-select__arrow` / `-icon` | Arrow indicator |
+| `.ew-select__dropdown` | Dropdown layer |
+| `.ew-select__option` | One option |
+| `.ew-select__option--selected` / `--active` / `--disabled` | Option states |
+
 ## Theming example
 
 ```css
@@ -1012,7 +1028,7 @@ Source: https://eveningwater.github.io/ew-color-picker/examples/
 
 # Examples
 
-Fourteen minimal recipes. Runnable HTML files live in the repository's `examples/` directory.
+Fifteen minimal recipes. Runnable HTML files live in the repository's `examples/` directory.
 
 ## 1. Basic
 
@@ -1172,6 +1188,25 @@ new ewColorPicker({
 
 The copy button sits in its own toolbar row above the color value input, is filled with the current color, and shows a short success toast. See the [CopyColor plugin](../plugins/copy-color.md).
 
+## 15. Select dropdown
+
+```ts
+import '@ew-color-picker/style/dist/select.css'
+
+new ewColorPicker({
+  el: '#app',
+  selectItems: [
+    { label: 'Linear', value: 'linear' },
+    { label: 'Radial', value: 'radial' },
+  ],
+  selectValue: 'linear',
+  onSelectChange: (value) => console.log(value),
+  onSelectClear: () => console.log('cleared'),
+})
+```
+
+The dropdown only renders when `selectItems` is not empty. Once a value is selected, a clear icon appears; clicking it resets the selection. See the [Select plugin](../plugins/select.md).
+
 ## Related
 
 - [Live demo](./demo.md)
@@ -1182,6 +1217,23 @@ The copy button sits in its own toolbar row above the color value input, is fill
 Source: https://eveningwater.github.io/ew-color-picker/guide/changelog
 
 # Changelog
+
+## 2.0.4
+
+### Features
+
+- New `@ew-color-picker/select` component and plugin: custom option lists with placeholder, sizes, keyboard navigation, click-outside closing and ARIA support, an optional clear icon via `selectClearable`, and `selectItems` / `selectValue` / `selectPlaceholder` / `onSelectChange` / `onSelectClear` options. Renders only when `selectItems` is non-empty
+- New `@ew-color-picker/gradient` plugin: a gradient editor with draggable stops, linear/radial/conic types, repeating gradients, angle and position controls, double-position stops, and interpolation hints (`srgb`, `srgb-linear`, `hsl`, `oklab`, `oklch`). CSS strings round-trip through `parseGradient` / `serializeGradient`, and the editor is hidden unless `showGradient: true` or `gradient` / `gradientStops` is provided
+- New `@ew-color-picker/checkbox` component and plugin: replaces the native checkbox visual with a themed box while keeping the underlying native input for semantics and keyboard support. The plugin renders in the bottom row when `checkboxLabel` is provided and supports `showCheckbox` / `checkboxChecked` / `checkboxDisabled` / `onCheckboxChange`
+- The aggregate package now exports a `createEwColorPicker(options)` factory, and the `ew-color-picker` compat entry exposes the same factory
+
+### Fixes
+
+- Fixed `defaultColor` handling: instance plugins are not created yet at that point, so the check now reads the static plugin registry to see whether the alpha plugin is registered; without alpha, an rgba default correctly falls back to hex
+- Fixed the hue bar background, panel cursor and hue / alpha thumb positions being wrong when the panel opens without an initial color (or with a color set later): everything is re-synced against the current color once the panel is shown
+- Fixed the panel width calculation for different hue / alpha direction combinations, which pushed same-row elements onto a new line and misaligned the edges
+- Fixed `colorRgbaToHsva` only accepting rgba strings; it now also handles hex / rgb / color keywords
+- Fixed the gradient editor stop-row layout: number inputs clipped their values and the Remove / Add buttons were pushed onto a new line; inputs are now wider with compact steppers and tighter gaps so everything fits on one row
 
 ## 2.0.3
 
@@ -1258,7 +1310,7 @@ The numbers below come from the npm registry (`unpackedSize` and last publish da
 
 | Option | Shape | Framework lock-in | Extension model | Unpacked size | Last publish |
 | --- | --- | --- | --- | --- | --- |
-| **ew-color-picker** | Aggregate package + 13 plugin packages (plus the `ew-color-picker` compat entry) | None (plain DOM) | Plugin registration / custom plugins | Aggregate 84.6 KB + styles 36.1 KB (120.7 KB total); `core.min` 11.9 KB (gzip 3.9 KB) | 2026-10 |
+| **ew-color-picker** | Aggregate package + 14 plugin packages (plus the `ew-color-picker` compat entry) | None (plain DOM) | Plugin registration / custom plugins | Aggregate 84.6 KB + styles 36.1 KB (120.7 KB total); `core.min` 11.9 KB (gzip 3.9 KB) | 2026-10 |
 | [Pickr](https://github.com/Simonwep/pickr) | Single package (UMD/ESM) | None | Themes (classic/monolith/nano) + options | 280.3 KB | 2026-09 |
 | [iro.js](https://github.com/jaames/iro.js) | Single package | None | Options + component composition | 231.4 KB | 2021-07 |
 | [Coloris](https://github.com/melloware/coloris) | Single package + CSS | None | CSS variables + options | 152.2 KB | 2026-10 |
@@ -1309,7 +1361,7 @@ Bilingual documentation, per-API references, one page per plugin, plus `llms.txt
 
 - **Small ecosystem**: download counts, community tutorials and issue history cannot match Pickr or react-color; unusual problems mean reading the source.
 - **No official framework wrappers**: React / Vue / Angular / Solid integration is covered in [Framework Integration](./framework-integration); controlled components and SSR need a thin wrapper of your own (around 20 lines).
-- **No gradients or multi-color editing**: those use cases need iro.js or a dedicated gradient picker. Screen sampling is covered by the optional `@ew-color-picker/eyedropper` plugin in Chromium-based browsers.
+- **Gradients and screen sampling are optional plugins**: linear / radial / conic gradient editing ships as the optional `@ew-color-picker/gradient` plugin, and screen sampling as `@ew-color-picker/eyedropper` (Chromium-based browsers). For heavier color-space math and visualization work, iro.js is still the better fit.
 - **The plugin model only matters when you customize**: installing the aggregate package or `npm i ew-color-picker` works out of the box; you only need to understand core + plugins when replacing part of the UI or wiring your own plugins.
 - **Shrinking further means installing sub-packages**: the aggregate is 84.6 KB plus 36.1 KB of styles, already in Coloris territory; if you use a single piece, install plugin packages and trim down to the 11.9 KB core.
 
@@ -1673,6 +1725,15 @@ new ewColorPicker(el, { defaultColor: '#6366f1' })
 new ewColorPicker({ el, defaultColor: '#6366f1' })
 ```
 
+Or use the `createEwColorPicker` factory, which is exactly `new ewColorPicker(options)` under the hood:
+
+```ts
+import { createEwColorPicker } from '@ew-color-picker/ew-color-picker'
+// also available from the unscoped entry: import { createEwColorPicker } from 'ew-color-picker'
+
+const picker = createEwColorPicker({ el: '#picker', defaultColor: '#6366f1' })
+```
+
 If `el` is provided, the picker **mounts automatically**. Without `el`, call `mount()` yourself later.
 
 ## 3. Listen for changes
@@ -1770,7 +1831,7 @@ Core (@ew-color-picker/core)
 | Testable | Each plugin can be tested in isolation |
 | Extensible | Add features without touching the core |
 
-## The 16 packages
+## The 17 packages
 
 | Package | Responsibility |
 | --- | --- |
@@ -1785,6 +1846,7 @@ Core (@ew-color-picker/core)
 | `@ew-color-picker/alpha` | Alpha slider (0–1) |
 | `@ew-color-picker/input` | Text color input with validation |
 | `@ew-color-picker/input-number` | Numeric input component + plugin |
+| `@ew-color-picker/select` | Dropdown select component + plugin |
 | `@ew-color-picker/button` | Clear / Sure buttons |
 | `@ew-color-picker/predefine` | Predefined color swatches |
 | `@ew-color-picker/color-mode` | Hex / RGB / HSL mode switching |
@@ -1855,7 +1917,7 @@ const picker = new ewColorPicker({ el: '#app' })
 ```
 
 ::: warning Two stylesheets
-`index.css` covers the picker. `input-number.css` is required for the numeric inputs used by RGB/HSL modes. Import both.
+`index.css` covers the picker. `input-number.css` is required for the numeric inputs used by RGB/HSL modes. Import both. The optional `select.css` is only needed for the Select component.
 :::
 
 To keep the v1 package name, install the unscoped entry package instead — it is equivalent:
@@ -1872,7 +1934,7 @@ npm install ew-color-picker
 
 v2 is a breaking rewrite; v1 and v2 APIs cannot be mixed:
 
-- **Architecture**: v1 was a single configurable package; v2 splits into 15 packages plus a compat entry where every UI part is a plugin, composable via `Core.use(Plugin)`
+- **Architecture**: v1 was a single configurable package; v2 splits into 16 packages plus a compat entry where every UI part is a plugin, composable via `Core.use(Plugin)`
 - **Package name**: `ew-color-picker` remains the entry, but now points to `@ew-color-picker/ew-color-picker`
 - **Styles**: both `index.css` and `input-number.css` must be imported explicitly
 - **Options and events**: plugin options such as `hasAlpha` and `hasBox` differ from v1; re-integrate against the live demo on this site
@@ -2128,20 +2190,20 @@ Source: https://eveningwater.github.io/ew-color-picker/
 </div>
 
 <div class="doc-section">
-  <h2>What's new in 2.0.3</h2>
+  <h2>What's new in 2.0.4</h2>
   <p class="subtitle">The latest release is published on npm and reflected in these docs.</p>
   <div class="doc-cards">
-    <a class="doc-card" href="./plugins/eyedropper">
-      <h3>Eyedropper plugin</h3>
-      <p>Pick colors from anywhere on screen with the native EyeDropper API, with capability detection and graceful cancellation.</p>
+    <a class="doc-card" href="./plugins/gradient">
+      <h3>Gradient plugin</h3>
+      <p>Linear, radial and conic gradients with draggable stops, repeating mode and interpolation color spaces.</p>
     </a>
-    <a class="doc-card" href="./plugins/copy-color">
-      <h3>Copy color</h3>
-      <p>One-click clipboard copy with a contrast-aware button and a built-in success toast.</p>
+    <a class="doc-card" href="./plugins/checkbox">
+      <h3>Checkbox plugin</h3>
+      <p>A themed checkbox that keeps native input semantics and keyboard support.</p>
     </a>
     <a class="doc-card" href="./guide/changelog">
       <h3>Full changelog</h3>
-      <p>All features, fixes and documentation updates shipped in 2.0.3.</p>
+      <p>All features, fixes and documentation updates shipped in 2.0.4.</p>
     </a>
   </div>
 </div>
@@ -2459,6 +2521,113 @@ const picker = new ewColorPicker({
 
 - [Events · clear / sure](../api/events.md) · [Options · clearText](../api/options.md#labels)
 
+## Checkbox Plugin
+
+Source: https://eveningwater.github.io/ew-color-picker/plugins/checkbox
+
+# Checkbox
+
+`@ew-color-picker/checkbox` has two parts:
+
+1. **Plugin** `ewColorPickerCheckbox` — renders a checkbox in the bottom row when `checkboxLabel` is provided;
+2. **Component** `Checkbox` — a standalone controlled checkbox built on a native input for semantics and keyboard support, with a custom visual box.
+
+| Item | Value |
+| --- | --- |
+| Package | `@ew-color-picker/checkbox` |
+| `pluginName` | `ewColorPickerCheckbox` |
+| `applyOrder` | `Post` |
+| Mount point | `panelContainer` → `.ew-color-picker-bottom-row` (renders only when `checkboxLabel` is set) |
+| Access instance | `core.plugins.ewColorPickerCheckbox` |
+
+::: warning Additional styles required
+```ts
+import '@ew-color-picker/style/dist/checkbox.css'
+```
+Without it the checkbox has no visual.
+:::
+
+## Options
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `showCheckbox` | `boolean` | `true` | Set to `false` to hide the checkbox |
+| `checkboxLabel` | `string` | `undefined` | Label text; nothing renders when empty |
+| `checkboxChecked` | `boolean` | `false` | Initial checked state |
+| `checkboxDisabled` | `boolean` | `false` | Disable interaction |
+| `onCheckboxChange` | `(checked: boolean) => void` | - | Fired after the user toggles the checkbox |
+
+```ts
+import ewColorPicker from '@ew-color-picker/core'
+import Checkbox from '@ew-color-picker/checkbox'
+
+ewColorPicker.use(Checkbox)
+
+new ewColorPicker({
+  el: '#app',
+  checkboxLabel: 'Repeating',
+  checkboxChecked: true,
+  onCheckboxChange: (checked) => console.log(checked),
+})
+```
+
+## Plugin methods
+
+| Method | Signature | Description |
+| --- | --- | --- |
+| `createCheckbox` | `(options) => Checkbox` | Create a component instance |
+| `updateOptions` | `() => void` | Re-read options and re-render |
+| `run` | `() => void` | Render the checkbox when a label is present |
+| `destroy` | `() => void` | Remove the checkbox and release events |
+
+## Checkbox component
+
+```ts
+import { Checkbox } from '@ew-color-picker/checkbox'
+```
+
+### Options
+
+| Option | Type | Default |
+| --- | --- | --- |
+| `checked` | `boolean` | `false` |
+| `label` | `string` | `''` |
+| `disabled` | `boolean` | `false` |
+| `size` | `'small' \| 'default' \| 'large'` | `'default'` |
+| `prefix` | `string` | `'ew-'` |
+| `onChange` | `(checked: boolean) => void` | - |
+
+### Methods
+
+| Method | Signature | Description |
+| --- | --- | --- |
+| `isChecked` | `() => boolean` | Current checked state |
+| `setChecked` | `(checked, triggerChange?) => void` | Set state; pass `false` to skip `onChange` |
+| `setLabel` | `(label) => void` | Replace the label text |
+| `setDisabled` | `(disabled) => void` | Toggle the disabled state |
+| `getElement` | `() => HTMLLabelElement` | Root node |
+| `destroy` | `() => void` | Unbind events and remove the node |
+
+## Accessibility
+
+The component keeps a native `<input type="checkbox">` visually hidden inside a `<label>`, so clicking the box or the label toggles it and keyboard focus / <kbd>Space</kbd> work as expected. The native input drives the visual box through `:checked` and `:focus-visible`, while disabled states are mirrored with `input.disabled` and the `ew-checkbox--disabled` class.
+
+## DOM
+
+```html
+<label class="ew-checkbox ew-checkbox--default ew-checkbox--checked">
+  <input class="ew-checkbox__input" type="checkbox" checked />
+  <span class="ew-checkbox__box">
+    <svg class="ew-color-picker-icon ew-checkbox__check-icon">…</svg>
+  </span>
+  <span class="ew-checkbox__label">Repeating</span>
+</label>
+```
+
+## Related
+
+- [Gradient](./gradient.md) · [Select](./select.md) · [Styles & classes](../api/styles.md)
+
 ## ColorMode Plugin
 
 Source: https://eveningwater.github.io/ew-color-picker/plugins/color-mode
@@ -2602,7 +2771,7 @@ With the all-in-one bundle it is always registered.
 ## Output
 
 ```text
- ew-color-picker@2.0.3   QQ: 854806732  WeChat: eveningwater  github:https://github.com/eveningwater/ew-color-picker
+ ew-color-picker@2.0.4   QQ: 854806732  WeChat: eveningwater  github:https://github.com/eveningwater/ew-color-picker
 ```
 
 ## Methods
@@ -2771,6 +2940,136 @@ The button lives in its own group inside `.ew-color-picker-extra-row`, rather th
 
 - [Button](./button.md) · [Plugin overview](./) · [Options · callbacks](../api/callbacks.md)
 
+## Gradient Plugin
+
+Source: https://eveningwater.github.io/ew-color-picker/plugins/gradient
+
+# Gradient
+
+`@ew-color-picker/gradient` adds a gradient editor to the panel: a preview bar with draggable color stops, type/angle controls, radial and conic options, interpolation hints and a CSS string that round-trips with the parser.
+
+::: warning Position: an extension of the picker, not a standalone gradient picker
+The plugin only edits gradient structure (stops, positions, type, angle, repeating and interpolation). It has no color-picking UI of its own: the color of the selected stop is chosen through the picker's panel (Panel / Hue / Alpha / InputNumber) and written back via `syncStopsOnChange`. It therefore requires `panelContainer` and cannot be used without the color picker. If you only need to edit gradient data or build your own gradient component, use the exported pure helpers `parseGradient`, `serializeGradient` and `interpolateStops` instead.
+:::
+
+| Item | Value |
+| --- | --- |
+| Package | `@ew-color-picker/gradient` |
+| `pluginName` | `ewColorPickerGradient` |
+| `applyOrder` | `Post` |
+| Mount point | `panelContainer` (inserted before `.ew-color-picker-bottom-row`) |
+| Instance | `core.plugins.ewColorPickerGradient` |
+
+::: tip Rendering is opt-in
+The editor is hidden by default. It renders when `showGradient: true` or when `gradient` / `gradientStops` is provided.
+:::
+
+```ts
+import ewColorPicker from '@ew-color-picker/core'
+import Gradient from '@ew-color-picker/gradient'
+
+ewColorPicker.use(Gradient)
+
+new ewColorPicker({
+  el: '#app',
+  gradientStops: ['#ff0000', '#0000ff'],
+  gradientType: 'linear',
+  gradientAngle: 90,
+  gradientChange: (css, value) => console.log(css),
+})
+```
+
+The editor needs the panel: with `hasPanel: false` (or `ewColorPickerPanel: false`) the plugin warns and renders nothing.
+
+## Plugin options
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `showGradient` | `boolean` | `false` | Set `true` to render without passing stops |
+| `gradient` | `string \| GradientValue` | — | Initial gradient; a CSS string is parsed first |
+| `gradientType` | `'linear' \| 'radial' \| 'conic'` | `'linear'` | Gradient type |
+| `gradientRepeating` | `boolean` | `false` | Render a repeating gradient |
+| `gradientStops` | `Array<string \| GradientStop>` | current color + white | Initial stops |
+| `gradientAngle` | `number` | `180` | Linear angle in degrees |
+| `gradientInterpolation` | `string \| null` | `null` | Interpolation color space, e.g. `oklab`, `oklch longer hue` |
+| `minGradientStops` | `number` | `2` | Minimum number of stops |
+| `maxGradientStops` | `number` | `8` | Maximum number of stops |
+| `syncStopsOnChange` | `boolean` | `true` | Write panel color changes back to the selected stop |
+| `gradientChange` | `(css, value) => void` | — | Called whenever the gradient changes |
+
+`GradientStop` is `{ color: string; position?: number; position2?: number }`. A stop with `position2` is a double-position stop that holds its color across the range.
+
+## Plugin methods
+
+| Method | Signature | Description |
+| --- | --- | --- |
+| `getGradient` | `() => string` | Serialize the current gradient to CSS |
+| `getGradientValue` | `() => GradientValue` | Structured copy of the current gradient |
+| `getStops` | `() => GradientStop[]` | Copy of the current stops |
+| `setGradient` | `(string \| Partial<GradientValue>) => void` | Replace the gradient and re-render |
+| `setStops` | `(stops) => void` | Replace the stops |
+| `addStop` | `(color, position?) => number` | Add a stop and return its index (`-1` when full) |
+| `removeStop` | `(index?) => boolean` | Remove the selected or given stop |
+| `updateOptions` | `() => void` | Re-read options and re-render |
+| `destroy` | `() => void` | Unbind events and remove the editor |
+
+## Interactions
+
+- Drag a handle to move the stop; the panel color follows the selected stop.
+- Click an empty spot on the preview bar to insert a stop with the interpolated color.
+- Changing the panel color with `syncStopsOnChange: true` updates the selected stop.
+- The preview bar is always drawn left-to-right so handle percentages map directly to positions; the exported CSS still uses the configured type and angle.
+
+## Utilities
+
+```ts
+import {
+  parseGradient,
+  serializeGradient,
+  interpolateStops,
+  resolveGradientPositions,
+} from '@ew-color-picker/gradient'
+```
+
+`parseGradient` supports all six prefixes (`linear` / `radial` / `conic`, optionally `repeating-`), `deg` / `rad` / `grad` / `turn` angles, `to <side-or-corner>`, radial shape/size/`at`, conic `from`/`at`, `in <color-space>` hints and double-position stops. Length-based stop positions are rejected with a warning. `serializeGradient` produces a stable round-trip.
+
+`interpolateStops` computes the color at a percentage; supported spaces are sRGB, sRGB-linear, HSL, OKLab and OKLCH with four hue directions. `lab` / `lch` / `hwb` hints fall back to sRGB.
+
+## Styling
+
+Gradient styles ship inside the main stylesheet:
+
+```ts
+import '@ew-color-picker/style/dist/index.css'
+import '@ew-color-picker/style/dist/select.css'
+import '@ew-color-picker/style/dist/input-number.css'
+import '@ew-color-picker/style/dist/checkbox.css'
+```
+
+The editor uses the `Select`, `InputNumber` and `Checkbox` components from `@ew-color-picker/select`, `@ew-color-picker/input-number` and `@ew-color-picker/checkbox`.
+
+## DOM
+
+```html
+<div class="ew-gradient-container">
+  <div class="ew-gradient-preview">
+    <div class="ew-gradient-preview-bar" style="background: linear-gradient(90deg, …)">
+      <button type="button" class="ew-gradient-handle ew-gradient-handle-active" style="left: 0%"></button>
+      <button type="button" class="ew-gradient-handle" style="left: 100%"></button>
+    </div>
+  </div>
+  <div class="ew-gradient-row ew-gradient-row-type">…</div>
+  <div class="ew-gradient-row ew-gradient-row-radial">…</div>
+  <div class="ew-gradient-row ew-gradient-row-position">…</div>
+  <div class="ew-gradient-row ew-gradient-row-interp">…</div>
+  <div class="ew-gradient-row ew-gradient-row-stop">…</div>
+</div>
+```
+
+## Related
+
+- [Select](./select.md) · [InputNumber](./input-number.md) · [Plugin overview](./) · [Styles & classes](../api/styles.md)
+
 ## Hue Plugin
 
 Source: https://eveningwater.github.io/ew-color-picker/plugins/hue
@@ -2916,12 +3215,15 @@ Registration order in `@ew-color-picker/ew-color-picker`:
 | 5 | Alpha | `ewColorPickerAlpha` | alpha | Alpha slider |
 | 6 | Input | `ewColorPickerInput` | input | Text color input |
 | 7 | InputNumber | `ewColorPickerInputNumber` | input-number | Numeric inputs |
-| 8 | Button | `ewColorPickerButton` | button | Clear / Sure |
-| 9 | Predefine | `ewColorPickerPredefine` | predefine | Swatches |
-| 10 | ColorMode | `ewColorPickerColorMode` | color-mode | Hex / RGB / HSL |
-| 11 | Eyedropper | `ewColorPickerEyedropper` | eyedropper | Screen color picker (Chromium) |
-| 12 | CopyColor | `ewColorPickerCopyColor` | copy-color | Copy the current color to the clipboard |
-| 13 | — | — | style | CSS artifacts (not a plugin) |
+| 8 | Select | `ewColorPickerSelect` | select | Dropdown component (renders only when items are configured) |
+| 9 | Checkbox | `ewColorPickerCheckbox` | checkbox | Checkbox component (renders only when a label is configured) |
+| 10 | Button | `ewColorPickerButton` | button | Clear / Sure |
+| 11 | Predefine | `ewColorPickerPredefine` | predefine | Swatches |
+| 12 | ColorMode | `ewColorPickerColorMode` | color-mode | Hex / RGB / HSL |
+| 13 | Eyedropper | `ewColorPickerEyedropper` | eyedropper | Screen color picker (Chromium) |
+| 14 | CopyColor | `ewColorPickerCopyColor` | copy-color | Copy the current color to the clipboard |
+| 15 | Gradient | `ewColorPickerGradient` | gradient | Gradient editor with draggable stops (hidden by default) |
+| 16 | — | — | style | CSS artifacts (not a plugin) |
 
 ## Mount points
 
@@ -2978,9 +3280,9 @@ Register plugins manually — see [Installation](../guide/installation.md#per-pa
 ## Next steps
 
 - [Box](./box.md) · [Panel](./panel.md) · [Hue](./hue.md) · [Alpha](./alpha.md)
-- [Input](./input.md) · [InputNumber](./input-number.md) · [Button](./button.md)
+- [Input](./input.md) · [InputNumber](./input-number.md) · [Select](./select.md) · [Checkbox](./checkbox.md) · [Button](./button.md)
 - [Predefine](./predefine.md) · [ColorMode](./color-mode.md) · [Eyedropper](./eyedropper.md)
-- [CopyColor](./copy-color.md)
+- [CopyColor](./copy-color.md) · [Gradient](./gradient.md)
 - [Console](./console.md) · [Writing a plugin](../guide/plugin-dev.md)
 
 ## InputNumber Plugin
@@ -3360,6 +3662,140 @@ new ewColorPicker({
 ## Related
 
 - [Options · predefineColor](../api/options.md#predefinecolor) · [Styles](../api/styles.md)
+
+## Select Plugin
+
+Source: https://eveningwater.github.io/ew-color-picker/plugins/select
+
+# Select
+
+`@ew-color-picker/select` ships two pieces:
+
+1. **Plugin** `ewColorPickerSelect` — renders a dropdown in the bottom row when `selectItems` is provided;
+2. **Component** `Select` — a standalone controlled dropdown that other plugins can reuse (for example a gradient editor).
+
+| Item | Value |
+| --- | --- |
+| Package | `@ew-color-picker/select` |
+| `pluginName` | `ewColorPickerSelect` |
+| `applyOrder` | `Post` |
+| Mount point | `panelContainer` → `.ew-color-picker-bottom-row` (only when items are provided) |
+| Instance | `core.plugins.ewColorPickerSelect` |
+
+::: warning Extra stylesheet required
+```ts
+import '@ew-color-picker/style/dist/select.css'
+```
+Without it the dropdown is unstyled.
+:::
+
+## Plugin options
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `showSelect` | `boolean` | `true` | Set `false` to hide the dropdown |
+| `selectItems` | `SelectOption[]` | `[]` | Options to render; an empty list renders nothing |
+| `selectValue` | `string \| number` | `undefined` | Initially selected value |
+| `selectPlaceholder` | `string` | `undefined` | Text shown when no value is selected |
+| `selectClearable` | `boolean` | `true` | Show a clear icon once a value is selected |
+| `onSelectChange` | `(value, option) => void` | — | Called after the user picks an option |
+| `onSelectClear` | `() => void` | — | Called after the user clears the selection |
+
+```ts
+import ewColorPicker from '@ew-color-picker/core'
+import Select from '@ew-color-picker/select'
+
+ewColorPicker.use(Select)
+
+new ewColorPicker({
+  el: '#app',
+  selectItems: [
+    { label: 'Linear', value: 'linear' },
+    { label: 'Radial', value: 'radial' },
+  ],
+  onSelectChange: (value) => console.log(value),
+  onSelectClear: () => console.log('cleared'),
+})
+```
+
+## Plugin methods
+
+| Method | Signature | Description |
+| --- | --- | --- |
+| `createSelect` | `(options) => Select` | Create a component instance |
+| `updateOptions` | `() => void` | Re-read options and re-render |
+| `run` | `() => void` | Render the dropdown when items are configured |
+| `destroy` | `() => void` | Remove the dropdown and release events |
+
+## Select component
+
+```ts
+import { Select } from '@ew-color-picker/select'
+```
+
+### Options
+
+| Option | Type | Default |
+| --- | --- | --- |
+| `value` | `string \| number` | `undefined` |
+| `items` | `SelectOption[]` | `[]` |
+| `placeholder` | `string` | `''` |
+| `disabled` | `boolean` | `false` |
+| `size` | `'small' \| 'default' \| 'large'` | `'default'` |
+| `prefix` | `string` | `'ew-'` |
+| `clearable` | `boolean` | `true` |
+| `onChange` | `(value, option) => void` | — |
+| `onClear` | `() => void` | — |
+| `onOpen` / `onClose` | `() => void` | — |
+
+`SelectOption` is `{ label: string; value: string | number; disabled?: boolean }`.
+
+The clear icon only appears when `clearable` is `true` and a value is selected. Clicking it resets the value to `undefined`, restores the placeholder text, closes the dropdown and fires `onClear`. Disabled selects never show the clear icon.
+
+### Methods
+
+| Method | Signature | Description |
+| --- | --- | --- |
+| `getValue` | `() => string \| number \| undefined` | Current value |
+| `setValue` | `(value, triggerChange?) => void` | Set the value; pass `false` to skip `onChange` |
+| `clear` | `(triggerChange?) => void` | Reset to empty; pass `false` to skip `onClear` |
+| `setItems` | `(items) => void` | Replace the option list |
+| `setDisabled` | `(disabled) => void` | Toggle the disabled state |
+| `open` / `close` | `() => void` | Control the dropdown |
+| `isDropdownOpen` | `() => boolean` | Whether the dropdown is open |
+| `getElement` | `() => HTMLElement` | Root node |
+| `destroy` | `() => void` | Unbind events and remove the node |
+
+## Keyboard and accessibility
+
+| Key | Action |
+| --- | --- |
+| <kbd>ArrowDown</kbd> / <kbd>ArrowUp</kbd> | Open the dropdown or move the active option |
+| <kbd>Enter</kbd> | Select the active option |
+| <kbd>Escape</kbd> | Close the dropdown |
+| <kbd>Tab</kbd> | Close and move focus away |
+
+The trigger exposes `aria-haspopup="listbox"` / `aria-expanded`, and options use `role="option"` with `aria-selected` and `aria-disabled`.
+
+## DOM
+
+```html
+<div class="ew-select ew-select--default">
+  <button type="button" class="ew-select__trigger" aria-haspopup="listbox" aria-expanded="false">
+    <span class="ew-select__value">Linear</span>
+    <span class="ew-select__clear" role="button" aria-label="Clear selection"><svg class="ew-select__clear-icon">…</svg></span>
+    <span class="ew-select__arrow"><svg class="ew-select__arrow-icon">…</svg></span>
+  </button>
+  <div class="ew-select__dropdown" role="listbox">
+    <div class="ew-select__option ew-select__option--selected" role="option" data-select-index="0">Linear</div>
+    <div class="ew-select__option" role="option" data-select-index="1">Radial</div>
+  </div>
+</div>
+```
+
+## Related
+
+- [InputNumber](./input-number.md) · [Plugin overview](./) · [Styles & classes](../api/styles.md)
 
 ---
 
@@ -4577,9 +5013,10 @@ import '@ew-color-picker/style/dist/input-number.css'
 | --- | --- |
 | `index.css` | 颜色盒、面板、滑块、输入框、按钮、色板、模式切换器 |
 | `input-number.css` | 数字输入框组件 `.ew-input-number` 系列样式 |
+| `select.css` | 下拉选择组件 `.ew-select` 系列样式（使用 Select 时引入） |
 
 ::: warning
-两个文件都需要引入。只引入 `index.css` 时，RGB / HSL 模式下的数字输入框会丢失样式。
+`index.css` 与 `input-number.css` 都需要引入。只引入 `index.css` 时，RGB / HSL 模式下的数字输入框会丢失样式；使用 Select 组件时还需额外引入 `select.css`。
 :::
 
 ## 类名前缀
@@ -4683,6 +5120,21 @@ import '@ew-color-picker/style/dist/input-number.css'
 | `.ew-input-number__buttons` | 步进按钮容器 |
 | `.ew-input-number__button--up` / `--down` | 增加 / 减少按钮 |
 | `.ew-input-number__input` | 内部 input |
+
+### 下拉选择
+
+| 类名 | 说明 |
+| --- | --- |
+| `.ew-select` | 下拉选择根节点 |
+| `.ew-select--small` / `--default` / `--large` | 尺寸修饰 |
+| `.ew-select--open` / `--disabled` | 展开 / 禁用态 |
+| `.ew-select__trigger` | 触发器按钮 |
+| `.ew-select__value` / `--placeholder` | 当前值文本 |
+| `.ew-select__clear` / `--hidden` / `-icon` | 清空按钮及其显隐状态 |
+| `.ew-select__arrow` / `-icon` | 下拉箭头 |
+| `.ew-select__dropdown` | 下拉层 |
+| `.ew-select__option` | 单个选项 |
+| `.ew-select__option--selected` / `--active` / `--disabled` | 选中 / 高亮 / 禁用 |
 
 ### 状态类
 
@@ -4797,7 +5249,7 @@ Source: https://eveningwater.github.io/ew-color-picker/zh/examples/
 
 # 示例集
 
-下面是 14 个覆盖主要场景的最小示例。仓库 `examples/` 目录下有对应的完整 HTML 文件，可直接用浏览器打开。
+下面是 15 个覆盖主要场景的最小示例。仓库 `examples/` 目录下有对应的完整 HTML 文件，可直接用浏览器打开。
 
 ## 1. 基础用法
 
@@ -4965,6 +5417,25 @@ new ewColorPicker({
 
 复制按钮位于输入框上方的工具栏行，底色跟随当前颜色，复制成功后会弹出提示。详见 [CopyColor 插件](../plugins/copy-color.md)。
 
+## 15. 下拉选择
+
+```ts
+import '@ew-color-picker/style/dist/select.css'
+
+new ewColorPicker({
+  el: '#app',
+  selectItems: [
+    { label: '线性', value: 'linear' },
+    { label: '径向', value: 'radial' },
+  ],
+  selectValue: 'linear',
+  onSelectChange: (value) => console.log(value),
+  onSelectClear: () => console.log('已清空'),
+})
+```
+
+只有在 `selectItems` 非空时才会渲染下拉框；选中值后会显示清空图标，点击可重置选项。详见 [Select 插件](../plugins/select.md)。
+
 ## 相关
 
 - [在线演示](./demo.md)
@@ -4977,6 +5448,23 @@ new ewColorPicker({
 Source: https://eveningwater.github.io/ew-color-picker/zh/guide/changelog
 
 # 更新日志
+
+## 2.0.4
+
+### 新增
+
+- 新增 `@ew-color-picker/select` 下拉选择组件与插件：支持自定义选项、占位符、尺寸、键盘操作、外部点击关闭与 ARIA 无障碍规范，可通过 `selectClearable` 开启清空图标，配置项含 `selectItems` / `selectValue` / `selectPlaceholder` / `onSelectChange` / `onSelectClear`，仅在 `selectItems` 非空时渲染
+- 新增 `@ew-color-picker/gradient` 渐变插件：提供可拖拽色标的渐变编辑器，支持线性 / 径向 / 锥形、重复渐变、角度与位置、双位置色标，以及 `srgb` / `srgb-linear` / `hsl` / `oklab` / `oklch` 插值提示。CSS 字符串可通过 `parseGradient` / `serializeGradient` 稳定回环，默认仅在 `showGradient: true` 或提供 `gradient` / `gradientStops` 时渲染
+- 新增 `@ew-color-picker/checkbox` 复选框组件与插件：用主题化方块替代原生复选框外观，底层保留原生 input 以维持语义与键盘操作。插件在提供 `checkboxLabel` 时渲染到面板底部行，支持 `showCheckbox` / `checkboxChecked` / `checkboxDisabled` / `onCheckboxChange`
+- 聚合包新增 `createEwColorPicker(options)` 工厂函数导出，兼容入口包 `ew-color-picker` 同步支持该导出
+
+### 修复
+
+- 修复 `defaultColor` 的判断逻辑：此时实例插件尚未创建，改为按静态插件注册表判断 alpha 插件是否已注册；未启用 alpha 时，rgba 格式的默认值正确降级为 hex
+- 修复无初始颜色或延迟设置颜色时打开面板，色相柱背景、面板光标与色相 / 透明度滑块位置不正确的问题：面板显示后会按当前颜色重新同步定位
+- 修复色相柱与透明度柱在不同方向组合下面板宽度计算不准确，导致同排元素换行、左右边缘无法对齐的问题
+- 修复 `colorRgbaToHsva` 只接受 rgba 字符串的问题，现在兼容 hex / rgb / 颜色关键字等输入
+- 修复渐变编辑器停靠点行的布局问题：数字输入框数值被裁剪、删除 / 新增按钮被挤到下一行；输入框加宽并压缩步进按钮宽度与行间距后，单行内完整展示
 
 ## 2.0.3
 
@@ -5053,7 +5541,7 @@ ew-color-picker 不是一套「成品皮肤」，而是一个 **可组装的颜�
 
 | 方案 | 形态 | 框架约束 | 扩展方式 | 体积（unpacked） | 最近发布 |
 | --- | --- | --- | --- | --- | --- |
-| **ew-color-picker** | 聚合包 + 13 个插件包（含兼容入口 `ew-color-picker`） | 无（原生 DOM） | 插件注册 / 自写插件 | 聚合包 84.6 KB + 样式 36.1 KB（合计 120.7 KB），`core.min` 11.9 KB（gzip 3.9 KB） | 2026-10 |
+| **ew-color-picker** | 聚合包 + 14 个插件包（含兼容入口 `ew-color-picker`） | 无（原生 DOM） | 插件注册 / 自写插件 | 聚合包 84.6 KB + 样式 36.1 KB（合计 120.7 KB），`core.min` 11.9 KB（gzip 3.9 KB） | 2026-10 |
 | [Pickr](https://github.com/Simonwep/pickr) | 单包，UMD/ESM | 无 | 主题（classic/monolith/nano）+ 选项 | 280.3 KB | 2026-09 |
 | [iro.js](https://github.com/jaames/iro.js) | 单包 | 无 | 选项 + 组件组合 | 231.4 KB | 2021-07 |
 | [Coloris](https://github.com/melloware/coloris) | 单包 + 一份 CSS | 无 | CSS 变量主题 + 选项 | 152.2 KB | 2026-10 |
@@ -5104,7 +5592,7 @@ ewColorPicker.use(Panel).use(Hue)
 
 - **生态与社区规模小**：下载量、第三方教程、Issue 沉淀都无法与 Pickr、react-color 相比，遇到冷门问题更多要靠读源码。
 - **不提供官方框架绑定包**：React / Vue / Angular / Solid 的接入方式见[框架集成](./framework-integration)，受控组件与 SSR 场景按示例自行封装（约 20 行）。
-- **不支持渐变与多色编辑**：这类需求目前要选 iro.js 或专门的渐变选择器；屏幕取色可由可选的 `@ew-color-picker/eyedropper` 插件提供（仅 Chromium 系浏览器）。
+- **渐变与屏幕取色属于可选插件**：线性/径向/锥形渐变编辑由可选的 `@ew-color-picker/gradient` 插件提供，屏幕取色由 `@ew-color-picker/eyedropper` 插件提供（仅 Chromium 系浏览器）；更复杂的色彩空间运算与可视化场景仍建议选 iro.js。
 - **只有需要定制时才要理解插件模型**：默认装聚合入口或 `npm i ew-color-picker` 即可开箱使用；只有在替换局部 UI、组合自有插件时，才需要理解「核心 + 插件」的结构。
 - **想进一步减小体积需按需装子包**：聚合包 84.6 KB、样式 36.1 KB，已与 Coloris 同量级；若只用单个部件，按需安装插件包可以裁到核心 11.9 KB。
 
@@ -5465,6 +5953,15 @@ new ewColorPicker(document.querySelector('#picker')!) // 元素
 new ewColorPicker({ el: '#picker' })    // 配置对象
 ```
 
+也可以使用 `createEwColorPicker` 工厂函数，内部等价于 `new ewColorPicker(options)`：
+
+```ts
+import { createEwColorPicker } from '@ew-color-picker/ew-color-picker'
+// 无 scope 入口同样可用：import { createEwColorPicker } from 'ew-color-picker'
+
+const picker = createEwColorPicker({ el: '#picker', defaultColor: '#6366f1' })
+```
+
 ## 3. 监听颜色变化
 
 ```ts
@@ -5582,6 +6079,7 @@ ew-color-picker 是一个基于 **事件驱动 + 插件系统** 的颜色选择�
 | `@ew-color-picker/alpha` | 透明度滑块 |
 | `@ew-color-picker/input` | 文本输入框 |
 | `@ew-color-picker/input-number` | 数字输入框组件 |
+| `@ew-color-picker/select` | 下拉选择组件 |
 | `@ew-color-picker/button` | 清空 / 确定按钮 |
 | `@ew-color-picker/predefine` | 预定义颜色色板 |
 | `@ew-color-picker/color-mode` | Hex / RGB / HSL 模式切换 |
@@ -5641,7 +6139,7 @@ import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 ```
 
-> `index.css` 是核心样式，`input-number.css` 是数字输入框组件的独立样式入口，**两者都需要引入**，否则 RGB / HSL 模式下的数字框会失去样式。
+> `index.css` 是核心样式，`input-number.css` 是数字输入框组件的独立样式入口，**两者都需要引入**，否则 RGB / HSL 模式下的数字框会失去样式。使用 Select 组件时，再额外引入 `select.css`。
 
 如果希望沿用 v1 的包名，也可以直接安装无 scope 的聚合入口包，二者等价：
 
@@ -5657,7 +6155,7 @@ npm install ew-color-picker
 
 v2 是破坏性重构，v1 与 v2 的 API 不能混用：
 
-- **架构**：v1 是配置式单包；v2 拆分为 15 个包 + 1 个兼容入口，界面全部由插件组装，可通过 `Core.use(Plugin)` 自由组合与替换
+- **架构**：v1 是配置式单包；v2 拆分为 16 个包 + 1 个兼容入口，界面全部由插件组装，可通过 `Core.use(Plugin)` 自由组合与替换
 - **包名**：`ew-color-picker` 仍是入口，但内部指向 `@ew-color-picker/ew-color-picker`
 - **样式**：需要显式引入 `index.css` 与 `input-number.css` 两个文件
 - **配置与事件**：插件相关配置项（如 `hasAlpha`、`hasBox`）与 v1 有差异，请按本站在线演示重新接入
@@ -5927,20 +6425,20 @@ Source: https://eveningwater.github.io/ew-color-picker/zh/
 </div>
 
 <div class="doc-section">
-  <h2>2.0.3 更新内容</h2>
+  <h2>2.0.4 更新内容</h2>
   <p class="subtitle">最新版本已发布到 npm，本文档站已同步更新。</p>
   <div class="doc-cards">
-    <a class="doc-card" href="./plugins/eyedropper">
-      <h3>吸管取色插件</h3>
-      <p>基于原生 EyeDropper API 从屏幕任意位置取色，自带能力检测与取消静默处理。</p>
+    <a class="doc-card" href="./plugins/gradient">
+      <h3>渐变插件</h3>
+      <p>线性、径向、锥形渐变编辑器，可拖拽色标，支持重复渐变与多种插值色彩空间。</p>
     </a>
-    <a class="doc-card" href="./plugins/copy-color">
-      <h3>复制颜色插件</h3>
-      <p>一键复制当前颜色，按钮底色跟随颜色并自动切换图标，复制成功弹出内置提示。</p>
+    <a class="doc-card" href="./plugins/checkbox">
+      <h3>复选框插件</h3>
+      <p>主题化复选框外观，底层保留原生 input 的语义与键盘操作。</p>
     </a>
     <a class="doc-card" href="./guide/changelog">
       <h3>完整更新日志</h3>
-      <p>查看 2.0.3 的全部新增功能、修复项与文档变更。</p>
+      <p>查看 2.0.4 的全部新增功能、修复项与文档变更。</p>
     </a>
   </div>
 </div>
@@ -6385,6 +6883,113 @@ const picker = new ewColorPicker({
 - [事件 · clear / sure](../api/events.md)
 - [配置项 · clearText / sureText](../api/options.md#cleartext)
 
+## Checkbox 复选框插件
+
+Source: https://eveningwater.github.io/ew-color-picker/zh/plugins/checkbox
+
+# Checkbox 复选框
+
+`@ew-color-picker/checkbox` 包含两部分：
+
+1. **插件** `ewColorPickerCheckbox` —— 在提供 `checkboxLabel` 时，于底部行渲染一个复选框；
+2. **组件** `Checkbox` —— 可独立使用的受控复选框，内部保留原生 `input[type=checkbox]` 的语义与键盘能力，外观由自定义方块呈现。
+
+| 项 | 值 |
+| --- | --- |
+| 包 | `@ew-color-picker/checkbox` |
+| `pluginName` | `ewColorPickerCheckbox` |
+| `applyOrder` | `Post` |
+| 挂载点 | `panelContainer` → `.ew-color-picker-bottom-row`（仅在设置 `checkboxLabel` 时渲染） |
+| 访问实例 | `core.plugins.ewColorPickerCheckbox` |
+
+::: warning 需要额外样式
+```ts
+import '@ew-color-picker/style/dist/checkbox.css'
+```
+未引入时复选框没有样式。
+:::
+
+## 配置项
+
+| 配置 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `showCheckbox` | `boolean` | `true` | `false` 时隐藏复选框 |
+| `checkboxLabel` | `string` | `undefined` | 文本；为空时不渲染 |
+| `checkboxChecked` | `boolean` | `false` | 初始选中状态 |
+| `checkboxDisabled` | `boolean` | `false` | 禁用交互 |
+| `onCheckboxChange` | `(checked: boolean) => void` | - | 用户切换后触发 |
+
+```ts
+import ewColorPicker from '@ew-color-picker/core'
+import Checkbox from '@ew-color-picker/checkbox'
+
+ewColorPicker.use(Checkbox)
+
+new ewColorPicker({
+  el: '#app',
+  checkboxLabel: '反向渐变',
+  checkboxChecked: true,
+  onCheckboxChange: (checked) => console.log(checked),
+})
+```
+
+## 插件方法
+
+| 方法 | 签名 | 说明 |
+| --- | --- | --- |
+| `createCheckbox` | `(options) => Checkbox` | 创建组件实例 |
+| `updateOptions` | `() => void` | 重新读取配置并重新渲染 |
+| `run` | `() => void` | 在有文本时渲染复选框 |
+| `destroy` | `() => void` | 移除复选框并释放事件 |
+
+## Checkbox 组件
+
+```ts
+import { Checkbox } from '@ew-color-picker/checkbox'
+```
+
+### 配置项
+
+| 配置 | 类型 | 默认值 |
+| --- | --- | --- |
+| `checked` | `boolean` | `false` |
+| `label` | `string` | `''` |
+| `disabled` | `boolean` | `false` |
+| `size` | `'small' \| 'default' \| 'large'` | `'default'` |
+| `prefix` | `string` | `'ew-'` |
+| `onChange` | `(checked: boolean) => void` | - |
+
+### 方法
+
+| 方法 | 签名 | 说明 |
+| --- | --- | --- |
+| `isChecked` | `() => boolean` | 当前选中状态 |
+| `setChecked` | `(checked, triggerChange?) => void` | 设置状态；传 `false` 不触发 `onChange` |
+| `setLabel` | `(label) => void` | 替换文本 |
+| `setDisabled` | `(disabled) => void` | 切换禁用状态 |
+| `getElement` | `() => HTMLLabelElement` | 根节点 |
+| `destroy` | `() => void` | 解绑事件并移除节点 |
+
+## 无障碍
+
+组件把原生 `<input type="checkbox">` 视觉隐藏后包在 `<label>` 内：点击方块或文本都能切换，键盘焦点与 <kbd>Space</kbd> 也保持原生行为。原生 input 通过 `:checked` 与 `:focus-visible` 驱动自定义方块的外观，禁用状态由 `input.disabled` 与 `ew-checkbox--disabled` 类同时体现。
+
+## DOM
+
+```html
+<label class="ew-checkbox ew-checkbox--default ew-checkbox--checked">
+  <input class="ew-checkbox__input" type="checkbox" checked />
+  <span class="ew-checkbox__box">
+    <svg class="ew-color-picker-icon ew-checkbox__check-icon">…</svg>
+  </span>
+  <span class="ew-checkbox__label">反向渐变</span>
+</label>
+```
+
+## 相关链接
+
+- [Gradient 渐变](./gradient.md) · [Select 下拉选择](./select.md) · [样式与类名](../api/styles.md)
+
 ## ColorMode 颜色模式插件
 
 Source: https://eveningwater.github.io/ew-color-picker/zh/plugins/color-mode
@@ -6583,7 +7188,7 @@ ewColorPicker.use(Box).use(Panel)
 ## 输出内容
 
 ```text
- ew-color-picker@2.0.3  联系QQ：854806732  联系微信：eveningwater  github:https://github.com/eveningwater/ew-color-picker
+ ew-color-picker@2.0.4  联系QQ：854806732  联系微信：eveningwater  github:https://github.com/eveningwater/ew-color-picker
 ```
 
 样式通过 `%c` 注入，不影响页面。
@@ -6754,6 +7359,136 @@ new ewColorPicker({
 ## 相关链接
 
 - [Button 按钮](./button.md) · [插件总览](./) · [回调](../api/callbacks.md)
+
+## Gradient 渐变插件
+
+Source: https://eveningwater.github.io/ew-color-picker/zh/plugins/gradient
+
+# Gradient 渐变
+
+`@ew-color-picker/gradient` 在面板底部增加一个渐变编辑器：可拖拽的色标预览条、类型/角度控制、径向与锥形参数、插值色彩空间，以及可与解析器稳定回环的 CSS 字符串。
+
+::: warning 定位：颜色选择器的扩展，而不是独立的渐变选择器
+这个插件只负责渐变结构（色标、位置、类型、角度、重复与插值），不包含自己的取色 UI。选中色标后，颜色由颜色选择器的面板（Panel / Hue / Alpha / InputNumber 等）修改，再通过 `syncStopsOnChange` 写回该色标。因此它必须依赖 `panelContainer`，不能脱离颜色选择器单独使用；如果只想编辑渐变数据或需要独立的渐变组件，应直接使用包内导出的 `parseGradient`、`serializeGradient`、`interpolateStops` 等纯函数自行封装。
+:::
+
+| 项 | 值 |
+| --- | --- |
+| 包 | `@ew-color-picker/gradient` |
+| `pluginName` | `ewColorPickerGradient` |
+| `applyOrder` | `Post` |
+| 挂载点 | `panelContainer`（插入到 `.ew-color-picker-bottom-row` 之前） |
+| 访问实例 | `core.plugins.ewColorPickerGradient` |
+
+::: tip 默认不渲染
+传入 `showGradient: true`，或者提供 `gradient` / `gradientStops` 时才会渲染。
+:::
+
+```ts
+import ewColorPicker from '@ew-color-picker/core'
+import Gradient from '@ew-color-picker/gradient'
+
+ewColorPicker.use(Gradient)
+
+new ewColorPicker({
+  el: '#app',
+  gradientStops: ['#ff0000', '#0000ff'],
+  gradientType: 'linear',
+  gradientAngle: 90,
+  gradientChange: (css, value) => console.log(css),
+})
+```
+
+编辑器依赖面板：当 `hasPanel: false`（或 `ewColorPickerPanel: false`）时会输出警告并跳过渲染。
+
+## 配置项
+
+| 配置 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `showGradient` | `boolean` | `false` | 为 `true` 时无需色标也会渲染 |
+| `gradient` | `string \| GradientValue` | - | 初始渐变；字符串会先解析 |
+| `gradientType` | `'linear' \| 'radial' \| 'conic'` | `'linear'` | 渐变类型 |
+| `gradientRepeating` | `boolean` | `false` | 是否重复渐变 |
+| `gradientStops` | `Array<string \| GradientStop>` | 当前色 + 白色 | 初始色标 |
+| `gradientAngle` | `number` | `180` | 线性渐变角度（度） |
+| `gradientInterpolation` | `string \| null` | `null` | 插值色彩空间，如 `oklab`、`oklch longer hue` |
+| `minGradientStops` | `number` | `2` | 最少色标数 |
+| `maxGradientStops` | `number` | `8` | 最多色标数 |
+| `syncStopsOnChange` | `boolean` | `true` | 面板改色时写回当前选中的色标 |
+| `gradientChange` | `(css, value) => void` | - | 渐变变化回调 |
+
+`GradientStop` 为 `{ color: string; position?: number; position2?: number }`。带 `position2` 的色标是双位置色标，会在这段区间内保持同一颜色。
+
+## 实例方法
+
+| 方法 | 签名 | 说明 |
+| --- | --- | --- |
+| `getGradient` | `() => string` | 序列化当前渐变为 CSS |
+| `getGradientValue` | `() => GradientValue` | 获取结构化渐变数据副本 |
+| `getStops` | `() => GradientStop[]` | 获取色标副本 |
+| `setGradient` | `(string \| Partial<GradientValue>) => void` | 替换渐变并重新渲染 |
+| `setStops` | `(stops) => void` | 替换色标 |
+| `addStop` | `(color, position?) => number` | 新增色标并返回索引（达到上限返回 `-1`） |
+| `removeStop` | `(index?) => boolean` | 删除选中或指定色标 |
+| `updateOptions` | `() => void` | 重新读取配置并重新渲染 |
+| `destroy` | `() => void` | 解绑事件并移除编辑器 |
+
+## 交互说明
+
+- 拖拽手柄可移动色标位置，面板颜色会同步为当前选中的色标。
+- 点击预览条空白处会按插值颜色新增一个色标。
+- `syncStopsOnChange: true` 时，面板改色会写回当前选中的色标。
+- 预览条始终按从左到右绘制，便于手柄百分比与位置一一对应；导出的 CSS 仍按所选类型与角度序列化。
+
+## 工具函数
+
+```ts
+import {
+  parseGradient,
+  serializeGradient,
+  interpolateStops,
+  resolveGradientPositions,
+} from '@ew-color-picker/gradient'
+```
+
+`parseGradient` 支持全部 6 种前缀（`linear` / `radial` / `conic`，可带 `repeating-`）、`deg` / `rad` / `grad` / `turn` 角度、`to <side-or-corner>`、径向形状/尺寸/`at`、锥形 `from`/`at`、`in <color-space>` 插值提示与双位置色标；长度单位的位置会输出警告并被拒绝。`serializeGradient` 保证解析-序列化回环稳定。
+
+`interpolateStops` 计算某个百分比处的颜色，支持 sRGB、sRGB-linear、HSL、OKLab、OKLCH 以及四种 hue 方向；`lab` / `lch` / `hwb` 会回退为 sRGB。
+
+## 样式
+
+渐变样式包含在主样式文件中：
+
+```ts
+import '@ew-color-picker/style/dist/index.css'
+import '@ew-color-picker/style/dist/select.css'
+import '@ew-color-picker/style/dist/input-number.css'
+import '@ew-color-picker/style/dist/checkbox.css'
+```
+
+编辑器内部复用 `@ew-color-picker/select` 的 `Select`、`@ew-color-picker/input-number` 的 `InputNumber` 与 `@ew-color-picker/checkbox` 的 `Checkbox` 组件。
+
+## DOM
+
+```html
+<div class="ew-gradient-container">
+  <div class="ew-gradient-preview">
+    <div class="ew-gradient-preview-bar" style="background: linear-gradient(90deg, …)">
+      <button type="button" class="ew-gradient-handle ew-gradient-handle-active" style="left: 0%"></button>
+      <button type="button" class="ew-gradient-handle" style="left: 100%"></button>
+    </div>
+  </div>
+  <div class="ew-gradient-row ew-gradient-row-type">…</div>
+  <div class="ew-gradient-row ew-gradient-row-radial">…</div>
+  <div class="ew-gradient-row ew-gradient-row-position">…</div>
+  <div class="ew-gradient-row ew-gradient-row-interp">…</div>
+  <div class="ew-gradient-row ew-gradient-row-stop">…</div>
+</div>
+```
+
+## 相关链接
+
+- [Select 下拉选择](./select.md) · [InputNumber 数字输入框](./input-number.md) · [插件总览](./) · [样式与类名](../api/styles.md)
 
 ## Hue 色相滑块插件
 
@@ -6934,12 +7669,15 @@ export default class MyPlugin {
 | 5 | Alpha | `ewColorPickerAlpha` | `@ew-color-picker/alpha` | 透明度滑块 |
 | 6 | Input | `ewColorPickerInput` | `@ew-color-picker/input` | 文本颜色输入框 |
 | 7 | InputNumber | `ewColorPickerInputNumber` | `@ew-color-picker/input-number` | RGB/HSL 数值输入组（底层组件） |
-| 8 | Button | `ewColorPickerButton` | `@ew-color-picker/button` | 清空 / 确定按钮 |
-| 9 | Predefine | `ewColorPickerPredefine` | `@ew-color-picker/predefine` | 预定义颜色色块 |
-| 10 | ColorMode | `ewColorPickerColorMode` | `@ew-color-picker/color-mode` | Hex / RGB / HSL 模式切换 |
-| 11 | Eyedropper | `ewColorPickerEyedropper` | `@ew-color-picker/eyedropper` | 屏幕吸管取色（Chromium） |
-| 12 | CopyColor | `ewColorPickerCopyColor` | `@ew-color-picker/copy-color` | 复制当前颜色到剪贴板 |
-| 13 | — | — | `@ew-color-picker/style` | 样式产物（CSS，不是插件） |
+| 8 | Select | `ewColorPickerSelect` | `@ew-color-picker/select` | 下拉选择组件（仅在有选项时渲染） |
+| 9 | Checkbox | `ewColorPickerCheckbox` | `@ew-color-picker/checkbox` | 复选框组件（仅在有文本时渲染） |
+| 10 | Button | `ewColorPickerButton` | `@ew-color-picker/button` | 清空 / 确定按钮 |
+| 11 | Predefine | `ewColorPickerPredefine` | `@ew-color-picker/predefine` | 预定义颜色色块 |
+| 12 | ColorMode | `ewColorPickerColorMode` | `@ew-color-picker/color-mode` | Hex / RGB / HSL 模式切换 |
+| 13 | Eyedropper | `ewColorPickerEyedropper` | `@ew-color-picker/eyedropper` | 屏幕吸管取色（Chromium） |
+| 14 | CopyColor | `ewColorPickerCopyColor` | `@ew-color-picker/copy-color` | 复制当前颜色到剪贴板 |
+| 15 | Gradient | `ewColorPickerGradient` | `@ew-color-picker/gradient` | 渐变色编辑器（默认隐藏，可拖拽色标） |
+| 16 | — | — | `@ew-color-picker/style` | 样式产物（CSS，不是插件） |
 
 ## 挂载点
 
@@ -6980,7 +7718,7 @@ export default class MyPlugin {
 
 ## 按需组合
 
-只要引用了聚合包，12 个插件就都已注册。你可以用配置项裁剪 UI，而不必卸载插件：
+只要引用了聚合包，15 个插件就都已注册。你可以用配置项裁剪 UI，而不必卸载插件：
 
 ```ts
 new ewColorPicker({
@@ -7008,11 +7746,14 @@ new ewColorPicker({
 - [Alpha 透明度滑块](./alpha.md)
 - [Input 输入框](./input.md)
 - [InputNumber 数字输入框](./input-number.md)
+- [Select 下拉选择](./select.md)
+- [Checkbox 复选框](./checkbox.md)
 - [Button 按钮](./button.md)
 - [Predefine 预定义颜色](./predefine.md)
 - [ColorMode 颜色模式](./color-mode.md)
 - [Eyedropper 吸管](./eyedropper.md)
 - [CopyColor 复制颜色](./copy-color.md)
+- [Gradient 渐变](./gradient.md)
 - [Console 控制台](./console.md)
 - [编写自定义插件](../guide/plugin-dev.md)
 
@@ -7586,3 +8327,137 @@ const picker = new ewColorPicker({
 
 - [配置项 · predefineColor](../api/options.md#predefinecolor)
 - [样式与类名](../api/styles.md)
+
+## Select 下拉选择插件
+
+Source: https://eveningwater.github.io/ew-color-picker/zh/plugins/select
+
+# Select 下拉选择
+
+`@ew-color-picker/select` 包含两部分：
+
+1. **插件** `ewColorPickerSelect` —— 在提供 `selectItems` 时，于底部行渲染一个下拉选择框；
+2. **组件** `Select` —— 可独立使用的受控下拉组件，供其他插件（例如渐变编辑器）复用。
+
+| 项 | 值 |
+| --- | --- |
+| 包 | `@ew-color-picker/select` |
+| `pluginName` | `ewColorPickerSelect` |
+| `applyOrder` | `Post` |
+| 挂载点 | `panelContainer` → `.ew-color-picker-bottom-row`（仅在有选项时渲染） |
+| 访问实例 | `core.plugins.ewColorPickerSelect` |
+
+::: warning 需要额外样式
+```ts
+import '@ew-color-picker/style/dist/select.css'
+```
+未引入时下拉框没有样式。
+:::
+
+## 配置项
+
+| 配置 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `showSelect` | `boolean` | `true` | `false` 时隐藏下拉框 |
+| `selectItems` | `SelectOption[]` | `[]` | 选项列表；为空时不渲染 |
+| `selectValue` | `string \| number` | `undefined` | 初始选中值 |
+| `selectPlaceholder` | `string` | `undefined` | 未选中时显示的占位文案 |
+| `selectClearable` | `boolean` | `true` | 选中值后是否显示清空图标 |
+| `onSelectChange` | `(value, option) => void` | - | 用户选择后触发 |
+| `onSelectClear` | `() => void` | - | 用户清空选中项后触发 |
+
+```ts
+import ewColorPicker from '@ew-color-picker/core'
+import Select from '@ew-color-picker/select'
+
+ewColorPicker.use(Select)
+
+new ewColorPicker({
+  el: '#app',
+  selectItems: [
+    { label: '线性', value: 'linear' },
+    { label: '径向', value: 'radial' },
+  ],
+  onSelectChange: (value) => console.log(value),
+  onSelectClear: () => console.log('已清空'),
+})
+```
+
+## 插件方法
+
+| 方法 | 签名 | 说明 |
+| --- | --- | --- |
+| `createSelect` | `(options) => Select` | 创建组件实例 |
+| `updateOptions` | `() => void` | 重新读取配置并重新渲染 |
+| `run` | `() => void` | 在有选项时渲染下拉框 |
+| `destroy` | `() => void` | 移除下拉框并释放事件 |
+
+## Select 组件
+
+```ts
+import { Select } from '@ew-color-picker/select'
+```
+
+### 配置项
+
+| 配置 | 类型 | 默认值 |
+| --- | --- | --- |
+| `value` | `string \| number` | `undefined` |
+| `items` | `SelectOption[]` | `[]` |
+| `placeholder` | `string` | `''` |
+| `disabled` | `boolean` | `false` |
+| `size` | `'small' \| 'default' \| 'large'` | `'default'` |
+| `prefix` | `string` | `'ew-'` |
+| `clearable` | `boolean` | `true` |
+| `onChange` | `(value, option) => void` | - |
+| `onClear` | `() => void` | - |
+| `onOpen` / `onClose` | `() => void` | - |
+
+`SelectOption` 为 `{ label: string; value: string | number; disabled?: boolean }`。
+
+清空图标仅在 `clearable` 为 `true` 且已有选中值时显示。点击后会把值重置为 `undefined`、恢复占位文案、关闭下拉层并触发 `onClear`。禁用状态下不显示清空图标。
+
+### 方法
+
+| 方法 | 签名 | 说明 |
+| --- | --- | --- |
+| `getValue` | `() => string \| number \| undefined` | 当前值 |
+| `setValue` | `(value, triggerChange?) => void` | 设置值；传 `false` 不触发 `onChange` |
+| `clear` | `(triggerChange?) => void` | 清空选中值；传 `false` 不触发 `onClear` |
+| `setItems` | `(items) => void` | 替换选项列表 |
+| `setDisabled` | `(disabled) => void` | 切换禁用状态 |
+| `open` / `close` | `() => void` | 打开 / 关闭下拉层 |
+| `isDropdownOpen` | `() => boolean` | 下拉层是否打开 |
+| `getElement` | `() => HTMLElement` | 根节点 |
+| `destroy` | `() => void` | 解绑事件并移除节点 |
+
+## 键盘与无障碍
+
+| 按键 | 行为 |
+| --- | --- |
+| <kbd>ArrowDown</kbd> / <kbd>ArrowUp</kbd> | 打开下拉层，或在选项间移动 |
+| <kbd>Enter</kbd> | 选中当前高亮项 |
+| <kbd>Escape</kbd> | 关闭下拉层 |
+| <kbd>Tab</kbd> | 关闭并移出焦点 |
+
+触发器带有 `aria-haspopup="listbox"` / `aria-expanded`，选项使用 `role="option"` 并同步 `aria-selected`、`aria-disabled`。
+
+## DOM
+
+```html
+<div class="ew-select ew-select--default">
+  <button type="button" class="ew-select__trigger" aria-haspopup="listbox" aria-expanded="false">
+    <span class="ew-select__value">线性</span>
+    <span class="ew-select__clear" role="button" aria-label="Clear selection"><svg class="ew-select__clear-icon">…</svg></span>
+    <span class="ew-select__arrow"><svg class="ew-select__arrow-icon">…</svg></span>
+  </button>
+  <div class="ew-select__dropdown" role="listbox">
+    <div class="ew-select__option ew-select__option--selected" role="option" data-select-index="0">线性</div>
+    <div class="ew-select__option" role="option" data-select-index="1">径向</div>
+  </div>
+</div>
+```
+
+## 相关链接
+
+- [InputNumber 数字输入框](./input-number.md) · [插件总览](./) · [样式与类名](../api/styles.md)
