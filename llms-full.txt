@@ -286,6 +286,28 @@ new ewColorPicker(el, options)
 
 If `el` (or the first argument) is provided, `mount()` is called automatically.
 
+## createEwColorPicker
+
+The aggregate package `@ew-color-picker/ew-color-picker` and the unscoped `ew-color-picker` entry also export a factory. It is exactly `new ewColorPicker(options)` without the `new` keyword:
+
+```ts
+import { createEwColorPicker } from 'ew-color-picker'
+
+const picker = createEwColorPicker({
+  el: '#picker',
+  defaultColor: '#6366f1',
+})
+
+picker.setColor('#f00')
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `options` | `string \| HTMLElement \| ewColorPickerOptions` | Same as the first constructor argument |
+| Returns | `ewColorPicker` | A mounted instance ready for instance methods |
+
+When using the on-demand core package (`@ew-color-picker/core`), call `new ewColorPicker(options)` directly — the factory is only shipped by the aggregate package.
+
 ## Static methods
 
 ### use
@@ -4181,6 +4203,28 @@ new ewColorPicker({ el: '#picker', ...options })
 | `pluginOptions` | `Record<string, any>`（可选） | 内部使用的插件配置合并参数 |
 
 构造函数会依次完成：合并默认配置 → 解析容器 → 创建 `root` / `panelContainer` → 按 `applyOrder` 实例化已注册插件 → 绑定外部点击（`isClickOutside`）。
+
+## createEwColorPicker
+
+聚合包 `@ew-color-picker/ew-color-picker` 与无 scope 入口 `ew-color-picker` 额外导出工厂函数，内部等价于 `new ewColorPicker(options)`，只是省去 `new`：
+
+```ts
+import { createEwColorPicker } from 'ew-color-picker'
+
+const picker = createEwColorPicker({
+  el: '#picker',
+  defaultColor: '#6366f1',
+})
+
+picker.setColor('#f00')
+```
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `options` | `string \| HTMLElement \| ewColorPickerOptions` | 与构造函数第一个参数完全一致 |
+| 返回 | `ewColorPicker` | 已挂载的实例，可直接调用实例方法 |
+
+如果使用按需引入的 core 包（`@ew-color-picker/core`），请直接 `new ewColorPicker(options)`，工厂函数只由聚合包提供。
 
 ---
 
