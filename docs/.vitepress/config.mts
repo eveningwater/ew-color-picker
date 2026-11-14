@@ -321,7 +321,7 @@ export default defineConfig({
         search: enSearch,
         socialLinks: [{ icon: 'github', link: GITHUB }],
         footer: {
-          message: `Released under the MIT License · <a href="${BASE}llms.txt">llms.txt</a> · <a href="${CN_MIRROR}" target="_blank" rel="noopener">China site</a> · <a href="https://www.eveningwater.com" target="_blank" rel="noopener">More projects</a><br>Friendly links: ${friendLinksHtml}`,
+          message: `Released under the MIT License · <a href="${BASE}llms.txt">llms.txt</a> · <a href="${CN_MIRROR}" target="_blank" rel="noopener">China site</a><br>Friendly links: ${friendLinksHtml}`,
           copyright: 'Copyright © 2024-present eveningwater',
         },
       },
@@ -343,7 +343,7 @@ export default defineConfig({
         search: zhSearch,
         socialLinks: [{ icon: 'github', link: GITHUB }],
         footer: {
-          message: `基于 MIT 许可发布 · <a href="${BASE}llms.txt">llms.txt</a> · <a href="${CN_MIRROR}zh/" target="_blank" rel="noopener">国内访问</a> · <a href="https://www.eveningwater.com" target="_blank" rel="noopener">其他项目</a><br>友情链接：${friendLinksHtml}`,
+          message: `基于 MIT 许可发布 · <a href="${BASE}llms.txt">llms.txt</a> · <a href="${CN_MIRROR}zh/" target="_blank" rel="noopener">国内访问</a><br>友情链接：${friendLinksHtml}`,
           copyright: 'Copyright © 2024-present eveningwater',
         },
       },
