@@ -102,31 +102,33 @@ picker.plugins.ewColorPickerPanel.updateColor(20, 30)
 
 ## Positioning inside containers (drawers, modals, scroll panels)
 
-The built-in auto placement (`autoPanelPosition`) and `appendTo` both reason against the **viewport**:
+The built-in auto placement (`autoPanelPosition`) reasons against the **viewport** by default. When the picker lives inside a **non-viewport containing block** — e.g. a drawer body, a modal, or any ancestor with `position`, `transform`, `filter`, or `will-change` set — pass the `boundary` option so the panel is clamped to that container's visible area (its `getBoundingClientRect()` intersected with the viewport) instead of the whole viewport:
 
-- `adjustForViewport` clamps the panel with `window.innerWidth / innerHeight` only.
-- `appendTo` switches the panel to `position: fixed` (viewport-relative).
+```ts
+new ewColorPicker({
+  el: '#picker',
+  autoPanelPosition: true,
+  boundary: '.el-drawer__body', // or an HTMLElement
+})
+```
 
-When the picker lives inside a **non-viewport containing block** — e.g. a drawer body, a modal, or any ancestor with `position`, `transform`, `filter`, or `will-change` set — the panel's actual `offsetParent` is that ancestor (for `position: absolute`), so viewport-based clamping/coordinates produce a visible offset. `appendTo` avoids the offset but lets the panel escape the container's visual bounds and be clipped or overlap siblings.
+The panel is positioned against the box, clamped into the boundary, then converted back to the panel's `offsetParent` coordinates — so it stays aligned even when an ancestor has `transform` / `filter`. `boundary` also works together with `appendTo`.
 
-### Workaround pattern
+### Manual override (advanced)
 
-Until the core supports a configurable boundary, the proven approach (used in downstream wrappers) is to **take over positioning yourself**:
+If you need full control (e.g. custom flip logic, `ResizeObserver`-driven reflow), set `autoPanelPosition: false` and position the panel yourself. The proven pattern is:
 
-1. Set `autoPanelPosition: false` (and do not use `appendTo`).
-2. On open, measure the real boundary = `container.getBoundingClientRect()` **intersected** with the viewport (fall back to viewport if no container).
-3. Compute the panel's desired viewport-relative `left/top` from the trigger box, then `clamp` it into the boundary (with a margin).
-4. Because the panel is `position: absolute`, convert viewport coords to `offsetParent`-relative coords:
+1. Compute the boundary = `container.getBoundingClientRect()` intersected with the viewport (fall back to viewport if no container).
+2. Compute the panel's desired viewport-relative `left/top` from the trigger box, then `clamp` it into the boundary (with a margin).
+3. Because the panel is `position: absolute`, convert viewport coords to `offsetParent`-relative coords:
    ```ts
    const op = panel.offsetParent as HTMLElement | null;
    const parentRect = op ? op.getBoundingClientRect() : root.getBoundingClientRect();
    const left = viewportLeft - parentRect.left - (op?.clientLeft ?? 0);
    const top  = viewportTop  - parentRect.top  - (op?.clientTop  ?? 0);
    ```
-5. Re-run on `MutationObserver` (subtree class/style changes), `ResizeObserver` (panel size changes — e.g. switching the gradient tab), `window.resize`, and capture-phase `scroll`. Use `requestAnimationFrame` to coalesce.
-6. Only write `style.left/top` when the value actually changes, otherwise your own `MutationObserver` will loop.
-
-For a concrete reference implementation, see the `positionPanel` / `getBounds` logic in the `ew-qiaoda` wrapper (`ColorPickerEw.vue`).
+4. Re-run on subtree class/style changes, panel size changes (e.g. switching the gradient tab), `window.resize`, and capture-phase `scroll`. Use `requestAnimationFrame` to coalesce.
+5. Only write `style.left/top` when the value actually changes, otherwise your own `MutationObserver` will loop.
 
 ## Related
 

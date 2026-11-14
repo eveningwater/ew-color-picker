@@ -583,30 +583,37 @@ export default class ewColorPickerPanelPlugin {
     // 重新计算容器尺寸
     this.calculateContainerSize();
 
-    // 计算位置
-    const { offsetWidth: boxWidth, offsetHeight: boxHeight } =
-      getElementSize(colorBox);
     const [position = "bottom", align = "center"] = (
       panelPlacement || "bottom"
     ).split("-");
 
-    let { left, top } = this.calculatePosition(
+    // 以 box 视口坐标为锚点，算出面板期望的视口 rect，再按边界夹取，
+    // 最后换算回面板 offsetParent 坐标系（position:absolute 下 left/top 相对包含块）
+    const boxRect = getRect(colorBox);
+    const viewportRect = this.computePanelViewportRect(
+      boxRect,
       position,
-      align,
-      boxWidth,
-      boxHeight
+      align
     );
-
-    // 边界调整
-    const adjusted = this.adjustForViewport(rootElement, left, top);
+    const bounds = this.getBoundaryRect();
+    const { left: vpLeft, top: vpTop } = this.clampToBounds(
+      viewportRect,
+      bounds
+    );
 
     // 应用位置
     const panelContainer = this.ewColorPicker.getMountPoint("panelContainer");
     if (panelContainer) {
+      const { left, top } = this.toContainingBlockCoords(
+        vpLeft,
+        vpTop,
+        panelContainer,
+        rootElement
+      );
       setStyle(panelContainer, {
         position: "absolute",
-        left: `${adjusted.left}px`,
-        top: `${adjusted.top}px`,
+        left: `${left}px`,
+        top: `${top}px`,
       });
     }
   }
@@ -637,24 +644,21 @@ export default class ewColorPickerPanelPlugin {
     if (!panelContainer || !rootElement) return;
 
     const colorBox = $(`.${this.prefix}color-picker-box`, rootElement) || rootElement;
-    const { offsetWidth: boxWidth, offsetHeight: boxHeight } =
-      getElementSize(colorBox);
     const [position = "bottom", align = "center"] = (
       this.options.panelPlacement || "bottom"
     ).split("-");
-    const { left, top } = this.calculatePosition(
-      position,
-      align,
-      boxWidth,
-      boxHeight
-    );
-    const adjusted = this.adjustForViewport(rootElement, left, top);
-    const rootRect = getRect(rootElement);
+
+    // appendTo 下面板是 position:fixed，直接用视口坐标，无需 offsetParent 换算；
+    // 但仍按 boundary 夹取，避免越出指定容器可视区
+    const boxRect = getRect(colorBox);
+    const viewportRect = this.computePanelViewportRect(boxRect, position, align);
+    const bounds = this.getBoundaryRect();
+    const { left, top } = this.clampToBounds(viewportRect, bounds);
 
     setStyle(panelContainer, {
       position: "fixed",
-      left: `${rootRect.left + adjusted.left}px`,
-      top: `${rootRect.top + adjusted.top}px`,
+      left: `${left}px`,
+      top: `${top}px`,
     });
   }
 
@@ -712,38 +716,106 @@ export default class ewColorPickerPanelPlugin {
     return positions[position] || positions.bottom;
   }
 
-  // 视口边界调整
-  adjustForViewport(rootElement: HTMLElement, left: number, top: number) {
-    const margin = 8;
-    const rootRect = getRect(rootElement);
-    const viewportWidth =
-      window.innerWidth || document.documentElement.clientWidth;
-    const viewportHeight =
-      window.innerHeight || document.documentElement.clientHeight;
+  // 由 box 视口 rect 推导出面板期望的视口 rect
+  private computePanelViewportRect(
+    boxRect: DOMRect,
+    position: string,
+    align: string
+  ): { left: number; top: number; right: number; bottom: number } {
+    const { left, top } = this.calculatePosition(
+      position,
+      align,
+      boxRect.width,
+      boxRect.height
+    );
+    return {
+      left: boxRect.left + left,
+      top: boxRect.top + top,
+      right: boxRect.left + left + this.containerWidth,
+      bottom: boxRect.top + top + this.containerHeight,
+    };
+  }
 
-    // 计算面板在视口中的位置
-    const panelRect = {
+  // 解析边界：boundary 元素 rect 与视口的交集；未配置则为视口
+  private getBoundaryRect(): {
+    left: number;
+    top: number;
+    right: number;
+    bottom: number;
+  } {
+    const vw = window.innerWidth || document.documentElement.clientWidth;
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    const viewport = { left: 0, top: 0, right: vw, bottom: vh };
+    const { boundary } = this.options;
+    if (!boundary) return viewport;
+    const el =
+      typeof boundary === "string"
+        ? document.querySelector(boundary)
+        : (boundary as Element | null);
+    if (!el) return viewport;
+    const r = (el as HTMLElement).getBoundingClientRect();
+    return {
+      left: Math.max(viewport.left, r.left),
+      top: Math.max(viewport.top, r.top),
+      right: Math.min(viewport.right, r.right),
+      bottom: Math.min(viewport.bottom, r.bottom),
+    };
+  }
+
+  // 把面板视口 rect 夹进边界（预留 margin）
+  private clampToBounds(
+    rect: { left: number; top: number; right: number; bottom: number },
+    bounds: { left: number; top: number; right: number; bottom: number },
+    margin = 8
+  ): { left: number; top: number } {
+    let left = rect.left;
+    let top = rect.top;
+    const overflowLeft = bounds.left + margin - left;
+    const overflowRight = rect.right - (bounds.right - margin);
+    const overflowTop = bounds.top + margin - top;
+    const overflowBottom = rect.bottom - (bounds.bottom - margin);
+    if (overflowLeft > 0) left += overflowLeft;
+    if (overflowRight > 0) left -= overflowRight;
+    if (overflowTop > 0) top += overflowTop;
+    if (overflowBottom > 0) top -= overflowBottom;
+    return { left, top };
+  }
+
+  // 把视口坐标换算成面板 offsetParent（包含块）坐标系下的 left/top
+  private toContainingBlockCoords(
+    viewportLeft: number,
+    viewportTop: number,
+    panelContainer: HTMLElement,
+    fallback: HTMLElement
+  ): { left: number; top: number } {
+    const offsetParent =
+      (panelContainer.offsetParent as HTMLElement | null) || fallback;
+    const parentRect = offsetParent.getBoundingClientRect();
+    return {
+      left: viewportLeft - parentRect.left - (offsetParent.clientLeft || 0),
+      top: viewportTop - parentRect.top - (offsetParent.clientTop || 0),
+    };
+  }
+
+  // 视口边界调整（兼容旧调用：left/top 视为相对 rootElement 的坐标）
+  adjustForViewport(rootElement: HTMLElement, left: number, top: number) {
+    const rootRect = getRect(rootElement);
+    const viewportRect = {
       left: rootRect.left + left,
       top: rootRect.top + top,
       right: rootRect.left + left + this.containerWidth,
       bottom: rootRect.top + top + this.containerHeight,
     };
-
-    // 检查是否超出边界
-    const overflow = {
-      left: margin - panelRect.left,
-      top: margin - panelRect.top,
-      right: panelRect.right - (viewportWidth - margin),
-      bottom: panelRect.bottom - (viewportHeight - margin),
+    const bounds = this.getBoundaryRect();
+    const { left: vpLeft, top: vpTop } = this.clampToBounds(
+      viewportRect,
+      bounds
+    );
+    // 转回 root 相对坐标
+    return {
+      left: vpLeft - rootRect.left,
+      top: vpTop - rootRect.top,
     };
-
-    // 简单调整：哪边超出就往回推
-    if (overflow.left > 0) left += overflow.left;
-    if (overflow.right > 0) left -= overflow.right;
-    if (overflow.top > 0) top += overflow.top;
-    if (overflow.bottom > 0) top -= overflow.bottom;
-
-    return { left, top };
   }
 
   destroy() {

@@ -395,4 +395,210 @@ describe('Panel Plugin 实用功能测试', () => {
       expect(plugin.panel!.style.background).toBe(originalBackground);
     });
   });
+
+  describe('边界定位 boundary', () => {
+    const mockRect = (
+      left: number,
+      top: number,
+      width: number,
+      height: number
+    ): DOMRect =>
+      ({
+        left,
+        top,
+        right: left + width,
+        bottom: top + height,
+        width,
+        height,
+        x: left,
+        y: top,
+        toJSON: () => ({}),
+      }) as DOMRect;
+
+    it('getBoundaryRect 未配置时返回视口', () => {
+      mockCore.options.boundary = null;
+      plugin = new PanelPlugin(mockCore);
+      const bounds = (plugin as any).getBoundaryRect();
+      expect(bounds.left).toBe(0);
+      expect(bounds.top).toBe(0);
+      expect(bounds.right).toBe(window.innerWidth);
+      expect(bounds.bottom).toBe(window.innerHeight);
+    });
+
+    it('getBoundaryRect 配置元素时返回元素与视口交集', () => {
+      const boundaryEl = document.createElement('div');
+      document.body.appendChild(boundaryEl);
+      boundaryEl.getBoundingClientRect = () => mockRect(100, 50, 400, 350);
+      mockCore.options.boundary = boundaryEl;
+      plugin = new PanelPlugin(mockCore);
+      const bounds = (plugin as any).getBoundaryRect();
+      expect(bounds.left).toBe(100);
+      expect(bounds.top).toBe(50);
+      expect(bounds.right).toBe(500);
+      expect(bounds.bottom).toBe(400);
+      document.body.removeChild(boundaryEl);
+    });
+
+    it('clampToBounds 把面板 rect 夹进边界', () => {
+      mockCore.options.boundary = null;
+      plugin = new PanelPlugin(mockCore);
+      const rect = { left: -10, top: -10, right: 100, bottom: 100 };
+      const bounds = { left: 0, top: 0, right: 80, bottom: 80 };
+      const { left, top } = (plugin as any).clampToBounds(rect, bounds, 8);
+      // left: 左溢出 18 -> 8, 右溢出 28 -> -20
+      expect(left).toBe(-20);
+      // top: 上溢出 18 -> 8, 下溢出 28 -> -20
+      expect(top).toBe(-20);
+    });
+
+    it('toContainingBlockCoords 把视口坐标换算到 offsetParent', () => {
+      mockCore.options.boundary = null;
+      plugin = new PanelPlugin(mockCore);
+      const panelContainer = document.createElement('div');
+      const offsetParent = document.createElement('div');
+      offsetParent.getBoundingClientRect = () => mockRect(100, 50, 0, 0);
+      Object.defineProperty(offsetParent, 'clientLeft', { value: 2 });
+      Object.defineProperty(offsetParent, 'clientTop', { value: 3 });
+      Object.defineProperty(panelContainer, 'offsetParent', {
+        value: offsetParent,
+      });
+      const { left, top } = (plugin as any).toContainingBlockCoords(
+        200,
+        150,
+        panelContainer,
+        container
+      );
+      expect(left).toBe(98); // 200 - 100 - 2
+      expect(top).toBe(97); // 150 - 50 - 3
+    });
+
+    it('handleAutoPosition 按 boundary 夹取并换算到 offsetParent', () => {
+      const root = document.createElement('div');
+      const colorBox = document.createElement('div');
+      colorBox.className = 'ew-color-picker-box';
+      const panelContainer = document.createElement('div');
+      root.appendChild(colorBox);
+      root.appendChild(panelContainer);
+      document.body.appendChild(root);
+
+      colorBox.getBoundingClientRect = () => mockRect(200, 100, 40, 40);
+      root.getBoundingClientRect = () => mockRect(200, 100, 40, 40);
+      Object.defineProperty(panelContainer, 'offsetParent', { value: root });
+      Object.defineProperty(root, 'clientLeft', { value: 0 });
+      Object.defineProperty(root, 'clientTop', { value: 0 });
+
+      const boundary = document.createElement('div');
+      boundary.getBoundingClientRect = () => mockRect(0, 0, 300, 300);
+
+      mockCore = {
+        options: {
+          ewColorPickerPanel: true,
+          autoPanelPosition: true,
+          ewColorPickerBox: true,
+          panelPlacement: 'bottom',
+          boundary,
+          hueDirection: 'vertical',
+          alphaDirection: 'vertical',
+        },
+        currentColor: '#ff0000',
+        getColor: vi.fn(() => '#ff0000'),
+        setColor: vi.fn(),
+        on: vi.fn(),
+        off: vi.fn(),
+        trigger: vi.fn(),
+        getMountPoint: vi.fn((name: string) =>
+          name === 'root'
+            ? root
+            : name === 'panelContainer'
+            ? panelContainer
+            : undefined
+        ),
+      };
+
+      plugin = new PanelPlugin(mockCore);
+      // 锁死容器尺寸，避免 calculateContainerSize 在 happy-dom 下回退到 320/200
+      vi.spyOn(plugin, 'calculateContainerSize').mockImplementation(() => {});
+      plugin.containerWidth = 285;
+      plugin.containerHeight = 180;
+      plugin.handleAutoPosition();
+
+      // bottom 居中: left=(40-285)/2=-122.5, top=40
+      // 视口: left=200-122.5=77.5, right=77.5+285=362.5
+      //       top=100+40=140,  bottom=140+180=320
+      // 夹到 boundary(0,0,300,300) margin8:
+      //   右溢出 362.5-292=70.5 -> left=7（左移）
+      //   下溢出 320-292=28    -> top=140-28=112（上移）
+      // 换算到 root(offsetParent at 200,100):
+      //   left=7-200=-193, top=112-100=12
+      expect(panelContainer.style.position).toBe('absolute');
+      expect(panelContainer.style.left).toBe('-193px');
+      expect(panelContainer.style.top).toBe('12px');
+
+      document.body.removeChild(root);
+    });
+
+    it('handleAutoPosition 在 offsetParent 非 root 时仍定位正确', () => {
+      const root = document.createElement('div');
+      const colorBox = document.createElement('div');
+      colorBox.className = 'ew-color-picker-box';
+      const panelContainer = document.createElement('div');
+      const transformedAncestor = document.createElement('div');
+      root.appendChild(colorBox);
+      root.appendChild(panelContainer);
+      document.body.appendChild(transformedAncestor);
+      transformedAncestor.appendChild(root);
+
+      colorBox.getBoundingClientRect = () => mockRect(200, 100, 40, 40);
+      root.getBoundingClientRect = () => mockRect(200, 100, 40, 40);
+      // 模拟 transform 祖先成为 offsetParent
+      transformedAncestor.getBoundingClientRect = () =>
+        mockRect(50, 50, 500, 500);
+      Object.defineProperty(panelContainer, 'offsetParent', {
+        value: transformedAncestor,
+      });
+      Object.defineProperty(transformedAncestor, 'clientLeft', { value: 0 });
+      Object.defineProperty(transformedAncestor, 'clientTop', { value: 0 });
+
+      mockCore = {
+        options: {
+          ewColorPickerPanel: true,
+          autoPanelPosition: true,
+          ewColorPickerBox: true,
+          panelPlacement: 'bottom',
+          boundary: null,
+          hueDirection: 'vertical',
+          alphaDirection: 'vertical',
+        },
+        currentColor: '#ff0000',
+        getColor: vi.fn(() => '#ff0000'),
+        setColor: vi.fn(),
+        on: vi.fn(),
+        off: vi.fn(),
+        trigger: vi.fn(),
+        getMountPoint: vi.fn((name: string) =>
+          name === 'root'
+            ? root
+            : name === 'panelContainer'
+            ? panelContainer
+            : undefined
+        ),
+      };
+
+      plugin = new PanelPlugin(mockCore);
+      vi.spyOn(plugin, 'calculateContainerSize').mockImplementation(() => {});
+      plugin.containerWidth = 285;
+      plugin.containerHeight = 180;
+      plugin.handleAutoPosition();
+
+      // 视口 top=140, 不溢出视口；left=77.5 不溢出
+      // offsetParent=transformedAncestor at (50,50)
+      // left = 77.5 - 50 = 27.5
+      // top = 140 - 50 = 90
+      expect(panelContainer.style.position).toBe('absolute');
+      expect(panelContainer.style.left).toBe('27.5px');
+      expect(panelContainer.style.top).toBe('90px');
+
+      document.body.removeChild(transformedAncestor);
+    });
+  });
 }); 

@@ -32,6 +32,7 @@ export interface ewColorPickerOptions {
   pickerAnimationTime?: number;
   autoPanelPosition?: boolean;
   appendTo?: string | HTMLElement;
+  boundary?: string | HTMLElement | null;
   prefix?: string;
   panelPlacement?: 'top-start' | 'top' | 'top-end' | 'left-start' | 'left' | 'left-end' | 'right-start' | 'right' | 'right-end' | 'bottom-start' | 'bottom' | 'bottom-end';
   sure?: Function;
@@ -55,6 +56,7 @@ export const defaultConfig: Omit<ewColorPickerOptions, "el"> = {
   pickerAnimationTime: 200,
   autoPanelPosition: false,
   panelPlacement: "bottom",
+  boundary: null,
   prefix: DEFAULT_PREFIX,
   sure: () => {},
   clear: () => {},

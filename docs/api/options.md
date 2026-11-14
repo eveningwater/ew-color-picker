@@ -12,7 +12,7 @@ Every option below can be passed to the constructor. Defaults come from `default
 | Group | Options |
 | --- | --- |
 | Core | `el`, `disabled`, `defaultColor`, `size`, `predefineColor`, `isClickOutside` |
-| Layout | `hueDirection`, `alphaDirection`, `autoPanelPosition`, `panelPlacement`, `appendTo`, `prefix` |
+| Layout | `hueDirection`, `alphaDirection`, `autoPanelPosition`, `panelPlacement`, `appendTo`, `boundary`, `prefix` |
 | Labels | `clearText`, `sureText` |
 | Animation | `togglePickerAnimation`, `pickerAnimationTime` |
 | Plugin switches | `hasBox`, `hasPanel`, `hasInput`, `hasClear`, `hasSure`, `hue`, `alpha`, `showButton`, `showColorMode`, `showInputNumber`, `showEyedropper`, `showCopyColor` |
@@ -115,6 +115,22 @@ new ewColorPicker({
   el: '#picker',
   appendTo: document.body,
   panelPlacement: 'bottom',
+})
+```
+
+### boundary
+
+| Type | Default | Description |
+| --- | --- | --- |
+| `string \| HTMLElement \| null` | `null` | Clamp the panel inside a container's visible area instead of the whole viewport. Useful when the picker sits in a drawer, modal, or scroll panel. The element's `getBoundingClientRect()` is intersected with the viewport; pass a selector string or an element. `null` (default) keeps the original viewport-only behavior. |
+
+When `autoPanelPosition` is on, the panel is positioned against the box, then clamped into the boundary, and finally converted back to the panel's `offsetParent` coordinates — so it stays aligned even when an ancestor has `transform` / `filter`. Works with or without `appendTo`.
+
+```ts
+new ewColorPicker({
+  el: '#picker',
+  autoPanelPosition: true,
+  boundary: '.el-drawer__body',
 })
 ```
 

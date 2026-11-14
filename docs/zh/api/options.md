@@ -36,6 +36,7 @@ new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
 | `autoPanelPosition` | `boolean` | `false` | 面板自动定位（需注册 Box 插件且未关闭 `hasBox`） |
 | `panelPlacement` | 见下文 | `'bottom'` | 面板相对盒子的位置 |
 | `appendTo` | `string \| HTMLElement` | `undefined` | 面板容器挂载目标（弹窗 / 滚动容器场景用 `document.body`） |
+| `boundary` | `string \| HTMLElement \| null` | `null` | 面板夹取边界（抽屉 / 弹窗内传容器，默认视口） |
 | `prefix` | `string` | `'ew-'` | CSS 类名前缀，用于避免与其他库的样式冲突 |
 
 ### 显示开关
@@ -267,6 +268,23 @@ new ewColorPicker({
 ```
 
 > 面板容器会脱离实例根节点，仍可通过 `picker.getMountPoint('panelContainer')` 获取；点击面板内部不会触发「点击外部关闭」。
+
+## boundary
+
+- **类型**：`string | HTMLElement | null`
+- **默认值**：`null`
+
+把面板限制在某个容器的可视区内，而不是整个视口。适合取色器位于抽屉、弹窗、滚动容器内的场景。取该元素 `getBoundingClientRect()` 与视口的交集作为夹取边界；传选择器字符串或 DOM 元素均可。`null`（默认）保持原有的仅视口边界行为。
+
+启用 `autoPanelPosition` 时，面板先按盒子定位，再夹进 boundary，最后换算回面板 `offsetParent` 的坐标——因此即便祖先有 `transform` / `filter` 也能对齐。可与 `appendTo` 同时使用。
+
+```ts
+new ewColorPicker({
+  el: '#picker',
+  autoPanelPosition: true,
+  boundary: '.el-drawer__body',
+})
+```
 
 ## prefix
 
