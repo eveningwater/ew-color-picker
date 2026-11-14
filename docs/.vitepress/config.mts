@@ -15,6 +15,18 @@ const pageUrl = (path: string) =>
 
 const CN_MIRROR = 'https://ew-color-picker.eveningwater.com/'
 
+const friendLinks = [
+  { text: '餐小满（小微餐饮点餐系统）', link: 'https://www.eveningwater.com/canxiaoman/website/#/' },
+  { text: '夕水文学网（纯净古诗词站）', link: 'https://aspoem.eveningwater.com' },
+  { text: '夕水原创诗词作品', link: 'https://article.eveningwater.com/public' },
+  { text: '零食批发订货，一个应用就够了', link: 'https://www.eveningwater.com/snack-convenient/website/#/' },
+  { text: '夕水的个人主页', link: 'https://www.eveningwater.com' },
+]
+
+const friendLinksHtml = friendLinks
+  .map(({ text, link }) => `<a href="${link}" target="_blank" rel="noopener">${text}</a>`)
+  .join(' · ')
+
 const zhNav = [
   { text: '指南', link: '/zh/guide/', activeMatch: '/zh/guide/' },
   { text: 'API', link: '/zh/api/options', activeMatch: '/zh/api/' },
@@ -309,7 +321,7 @@ export default defineConfig({
         search: enSearch,
         socialLinks: [{ icon: 'github', link: GITHUB }],
         footer: {
-          message: `Released under the MIT License · <a href="${BASE}llms.txt">llms.txt</a> · <a href="${CN_MIRROR}" target="_blank" rel="noopener">China site</a> · <a href="https://www.eveningwater.com" target="_blank" rel="noopener">More projects</a>`,
+          message: `Released under the MIT License · <a href="${BASE}llms.txt">llms.txt</a> · <a href="${CN_MIRROR}" target="_blank" rel="noopener">China site</a> · <a href="https://www.eveningwater.com" target="_blank" rel="noopener">More projects</a><br>Friendly links: ${friendLinksHtml}`,
           copyright: 'Copyright © 2024-present eveningwater',
         },
       },
@@ -331,7 +343,7 @@ export default defineConfig({
         search: zhSearch,
         socialLinks: [{ icon: 'github', link: GITHUB }],
         footer: {
-          message: `基于 MIT 许可发布 · <a href="${BASE}llms.txt">llms.txt</a> · <a href="${CN_MIRROR}zh/" target="_blank" rel="noopener">国内访问</a> · <a href="https://www.eveningwater.com" target="_blank" rel="noopener">其他项目</a>`,
+          message: `基于 MIT 许可发布 · <a href="${BASE}llms.txt">llms.txt</a> · <a href="${CN_MIRROR}zh/" target="_blank" rel="noopener">国内访问</a> · <a href="https://www.eveningwater.com" target="_blank" rel="noopener">其他项目</a><br>友情链接：${friendLinksHtml}`,
           copyright: 'Copyright © 2024-present eveningwater',
         },
       },
