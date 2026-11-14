@@ -14,11 +14,18 @@ import {
   addClass,
   insertNode,
   isObject,
+  isString,
+  isHTMLElement,
   checkContainer,
   colorRgbaToHsva,
   colorHsvaToRgba,
   getStyle,
   getPrefix,
+  bindMouseDrag,
+  bindTouchDrag,
+  DEFAULT_PANEL_WIDTH,
+  DEFAULT_PANEL_HEIGHT,
+  throttle,
 } from "@ew-color-picker/utils";
 
 import { ewColorPickerOptions } from "@ew-color-picker/core";
@@ -79,27 +86,23 @@ export default class ewColorPickerPanelPlugin {
     if (this.isPanelAppended) this.updateAppendedPanelPosition();
   };
 
-  // 节流相关
-  private lastUpdateTime: number = 0;
-  private readonly throttleDelay: number = 16; // 约60fps
-
-  // 节流函数，用于优化拖拽性能
-  private throttledUpdate = (saturation: number, value: number) => {
-    const now = Date.now();
-    if (now - this.lastUpdateTime >= this.throttleDelay) {
-      this.lastUpdateTime = now;
-      
-      // 添加边界检查，防止异常值
-      if (isNaN(saturation) || isNaN(value) || 
-          saturation < 0 || saturation > 100 || 
-          value < 0 || value > 100) {
-        return;
-      }
-      
-      this.updateCursorPosition(saturation, value);
-      this.updateColor(saturation, value);
+  // 节流更新，用于优化拖拽性能
+  private throttledUpdate = throttle((saturation: number, value: number) => {
+    // 添加边界检查，防止异常值
+    if (
+      isNaN(saturation) ||
+      isNaN(value) ||
+      saturation < 0 ||
+      saturation > 100 ||
+      value < 0 ||
+      value > 100
+    ) {
+      return;
     }
-  };
+
+    this.updateCursorPosition(saturation, value);
+    this.updateColor(saturation, value);
+  }, 16);
 
   constructor(public ewColorPicker: ewColorPicker) {
     this.handleOptions();
@@ -159,7 +162,7 @@ export default class ewColorPickerPanelPlugin {
     const oldPanel = $(`.${this.prefix}color-picker-panel`, panelContainer);
 
     // 动态计算面板宽度
-    let panelWidth = 285;
+    let panelWidth = DEFAULT_PANEL_WIDTH;
     if (this.isAlphaHorizontal && this.isHueHorizontal) {
       // 如果都是水平方向，需要320px宽度（外层容器最小宽度）
       panelWidth = 320;
@@ -177,7 +180,7 @@ export default class ewColorPickerPanelPlugin {
     addClass(this.panel, `${this.prefix}color-picker-panel-dynamic-size`);
 
     this.panelWidth = panelWidth;
-    this.panelHeight = 180;
+    this.panelHeight = DEFAULT_PANEL_HEIGHT;
 
     setStyle(this.panel, {
       "--panel-width": panelWidth + "px",
@@ -268,20 +271,16 @@ export default class ewColorPickerPanelPlugin {
     // 添加拖拽状态标记
     this.isDragging = true;
 
-    const handleTouchMove = (e: TouchEvent) => {
-      if (this.isDragging && e.touches.length > 0) {
-        this.handlePanelTouchMove(e);
+    bindTouchDrag(
+      (e) => {
+        if (this.isDragging && e.touches.length > 0) {
+          this.handlePanelTouchMove(e);
+        }
+      },
+      () => {
+        this.isDragging = false;
       }
-    };
-
-    const handleTouchEnd = () => {
-      this.isDragging = false;
-      off(document, "touchmove", handleTouchMove as EventListener);
-      off(document, "touchend", handleTouchEnd as EventListener);
-    };
-
-    on(document, "touchmove", handleTouchMove as EventListener);
-    on(document, "touchend", handleTouchEnd as EventListener);
+    );
   }
 
   handlePanelTouchMove(event: TouchEvent) {
@@ -358,21 +357,17 @@ export default class ewColorPickerPanelPlugin {
     // 添加拖拽状态标记
     this.isDragging = true;
 
-    const handleMouseMove = (e: MouseEvent) => {
-      // 使用节流处理拖拽，提升性能
-      if (this.isDragging) {
-        this.handlePanelDrag(e);
+    bindMouseDrag(
+      (e) => {
+        // 使用节流处理拖拽，提升性能
+        if (this.isDragging) {
+          this.handlePanelDrag(e);
+        }
+      },
+      () => {
+        this.isDragging = false;
       }
-    };
-
-    const handleMouseUp = () => {
-      this.isDragging = false;
-      off(document, "mousemove", handleMouseMove as EventListener);
-      off(document, "mouseup", handleMouseUp as EventListener);
-    };
-
-    on(document, "mousemove", handleMouseMove as EventListener);
-    on(document, "mouseup", handleMouseUp as EventListener);
+    );
   }
 
   // 新增专门的拖拽处理函数
@@ -420,13 +415,13 @@ export default class ewColorPickerPanelPlugin {
     // 如果面板尺寸为0，尝试使用 getBoundingClientRect 或使用缓存值
     if (currentPanelWidth === 0 || currentPanelHeight === 0) {
       const rect = getRect(this.panel);
-      currentPanelWidth = rect.width || this.panelWidth || 285;
-      currentPanelHeight = rect.height || this.panelHeight || 180;
+      currentPanelWidth = rect.width || this.panelWidth || DEFAULT_PANEL_WIDTH;
+      currentPanelHeight = rect.height || this.panelHeight || DEFAULT_PANEL_HEIGHT;
       
       // 如果仍然为0，使用默认值
       if (currentPanelWidth === 0 || currentPanelHeight === 0) {
-        currentPanelWidth = 285;
-        currentPanelHeight = 180;
+        currentPanelWidth = DEFAULT_PANEL_WIDTH;
+        currentPanelHeight = DEFAULT_PANEL_HEIGHT;
       }
     }
     
@@ -748,12 +743,9 @@ export default class ewColorPickerPanelPlugin {
     const viewport = { left: 0, top: 0, right: vw, bottom: vh };
     const { boundary } = this.options;
     if (!boundary) return viewport;
-    const el =
-      typeof boundary === "string"
-        ? document.querySelector(boundary)
-        : (boundary as Element | null);
-    if (!el) return viewport;
-    const r = (el as HTMLElement).getBoundingClientRect();
+    const el = isString(boundary) ? $(boundary) : boundary;
+    if (!isHTMLElement(el)) return viewport;
+    const r = getRect(el);
     return {
       left: Math.max(viewport.left, r.left),
       top: Math.max(viewport.top, r.top),
@@ -790,7 +782,7 @@ export default class ewColorPickerPanelPlugin {
   ): { left: number; top: number } {
     const offsetParent =
       (panelContainer.offsetParent as HTMLElement | null) || fallback;
-    const parentRect = offsetParent.getBoundingClientRect();
+    const parentRect = getRect(offsetParent);
     return {
       left: viewportLeft - parentRect.left - (offsetParent.clientLeft || 0),
       top: viewportTop - parentRect.top - (offsetParent.clientTop || 0),

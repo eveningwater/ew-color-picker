@@ -109,7 +109,7 @@ export default class ewColorPickerColorModePlugin {
     }
   }
 
-  install(core: any) {
+  install(core: ewColorPicker) {
     this.ewColorPicker = core;
     
     const setupPlugin = () => {

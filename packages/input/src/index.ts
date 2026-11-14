@@ -37,7 +37,7 @@ export interface InputOptions {
 export default class ewColorPickerInputPlugin {
   static pluginName = "ewColorPickerInput";
   static applyOrder = ApplyOrder.Post;
-  options: InputOptions & Omit<ewColorPickerOptions, "el"> = {} as any;
+  options: InputOptions & Omit<ewColorPickerOptions, "el"> = {};
   input: HTMLInputElement | null = null;
   
   // 内部状态控制

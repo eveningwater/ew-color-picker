@@ -12,6 +12,8 @@ import {
   $,
   off,
   getRect,
+  getRatio,
+  bindMouseDrag,
   throttle,
   removeElement,
   getPrefix,
@@ -27,7 +29,7 @@ export interface AlphaOptions {
 export default class ewColorPickerAlphaPlugin {
   static pluginName = "ewColorPickerAlpha";
   static applyOrder = ApplyOrder.Post;
-  options: AlphaOptions & Omit<ewColorPickerOptions, "el"> = {} as any;
+  options: AlphaOptions & Omit<ewColorPickerOptions, "el"> = {};
   alphaBar: HTMLElement | null = null;
   alphaThumb: HTMLElement | null = null;
   isHorizontal: boolean = false;
@@ -185,15 +187,9 @@ export default class ewColorPickerAlphaPlugin {
     }
     
     const rect = getRect(this.alphaBar);
-    const isHorizontal = this.isHorizontal;
-    let alpha: number;
-    if (isHorizontal) {
-      const x = event.clientX - rect.left;
-      alpha = Math.max(0, Math.min(1, 1 - x / rect.width));
-    } else {
-      const y = event.clientY - rect.top;
-      alpha = Math.max(0, Math.min(1, 1 - y / rect.height));
-    }
+    const alpha = this.isHorizontal
+      ? getRatio(event.clientX, rect.left, rect.width, true)
+      : getRatio(event.clientY, rect.top, rect.height, true);
     this.updateAlpha(alpha);
   }
 
@@ -207,24 +203,13 @@ export default class ewColorPickerAlphaPlugin {
     
     const slider = this.alphaBar;
     const isHorizontal = this.isHorizontal;
-    const moveHandler = (e: MouseEvent) => {
+    bindMouseDrag((e) => {
       const rect = getRect(slider);
-      let alpha: number;
-      if (isHorizontal) {
-        const x = e.clientX - rect.left;
-        alpha = Math.max(0, Math.min(1, 1 - x / rect.width));
-      } else {
-        const y = e.clientY - rect.top;
-        alpha = Math.max(0, Math.min(1, 1 - y / rect.height));
-      }
+      const alpha = isHorizontal
+        ? getRatio(e.clientX, rect.left, rect.width, true)
+        : getRatio(e.clientY, rect.top, rect.height, true);
       this.throttledUpdateAlpha(alpha);
-    };
-    const upHandler = () => {
-      off(document, "mousemove", moveHandler as EventListener);
-      off(document, "mouseup", upHandler);
-    };
-    on(document, "mousemove", moveHandler as EventListener);
-    on(document, "mouseup", upHandler as EventListener);
+    });
   }
 
   updateAlpha(alpha: number) {

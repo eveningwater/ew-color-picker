@@ -3,6 +3,8 @@ import { isString } from "./type";
 export * from "./assert";
 export * from "./type";
 export * from "./dom";
+export * from "./drag";
+export { DEFAULT_PANEL_WIDTH, DEFAULT_PANEL_HEIGHT } from "./const";
 export * from "./env";
 export * from "./base";
 

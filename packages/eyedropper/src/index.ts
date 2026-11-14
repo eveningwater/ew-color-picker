@@ -25,7 +25,7 @@ export interface EyedropperOptions {
 export default class ewColorPickerEyedropperPlugin {
   static pluginName = "ewColorPickerEyedropper";
   static applyOrder = ApplyOrder.Post;
-  options: EyedropperOptions & Omit<ewColorPickerOptions, "el"> = {} as any;
+  options: EyedropperOptions & Omit<ewColorPickerOptions, "el"> = {};
   container: HTMLDivElement | null = null;
   button: HTMLButtonElement | null = null;
 

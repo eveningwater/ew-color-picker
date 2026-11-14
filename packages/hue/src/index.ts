@@ -13,6 +13,8 @@ import {
   $,
   throttle,
   getRect,
+  getRatio,
+  bindMouseDrag,
   removeElement,
   getPrefix,
 } from "@ew-color-picker/utils";
@@ -27,7 +29,7 @@ export interface HueOptions {
 export default class ewColorPickerHuePlugin {
   static pluginName = "ewColorPickerHue";
   static applyOrder = ApplyOrder.Post;
-  options: HueOptions & Omit<ewColorPickerOptions, "el"> = {} as any;
+  options: HueOptions & Omit<ewColorPickerOptions, "el"> = {};
   hueBar: HTMLElement | null = null;
   hueThumb: HTMLElement | null = null;
   isHorizontal: boolean = false;
@@ -184,15 +186,9 @@ export default class ewColorPickerHuePlugin {
     }
     
     const rect = getRect(this.hueBar);
-    const isHorizontal = this.isHorizontal;
-    let hue: number;
-    if (isHorizontal) {
-      const x = event.clientX - rect.left;
-      hue = Math.max(0, Math.min(360, (x / rect.width) * 360));
-    } else {
-      const y = event.clientY - rect.top;
-      hue = Math.max(0, Math.min(360, (1 - y / rect.height) * 360));
-    }
+    const hue = this.isHorizontal
+      ? getRatio(event.clientX, rect.left, rect.width) * 360
+      : getRatio(event.clientY, rect.top, rect.height, true) * 360;
     this.updateHue(hue);
   }
 
@@ -206,24 +202,13 @@ export default class ewColorPickerHuePlugin {
     
     const slider = this.hueBar;
     const isHorizontal = this.isHorizontal;
-    const moveHandler = (e: MouseEvent) => {
+    bindMouseDrag((e) => {
       const rect = getRect(slider);
-      let hue: number;
-      if (isHorizontal) {
-        const x = e.clientX - rect.left;
-        hue = Math.max(0, Math.min(360, (x / rect.width) * 360));
-      } else {
-        const y = e.clientY - rect.top;
-        hue = Math.max(0, Math.min(360, (1 - y / rect.height) * 360));
-      }
+      const hue = isHorizontal
+        ? getRatio(e.clientX, rect.left, rect.width) * 360
+        : getRatio(e.clientY, rect.top, rect.height, true) * 360;
       this.throttledUpdateHue(hue);
-    };
-    const upHandler = () => {
-      off(document, "mousemove", moveHandler as EventListener);
-      off(document, "mouseup", upHandler as EventListener);
-    };
-    on(document, "mousemove", moveHandler as EventListener);
-    on(document, "mouseup", upHandler as EventListener);
+    });
   }
 
   updateHue(hue: number) {
@@ -324,7 +309,7 @@ export default class ewColorPickerHuePlugin {
   }
 
   // 新增 install 方法，便于测试
-  install(core: any) {
+  install(core: ewColorPicker) {
     this.ewColorPicker = core;
     this.handleOptions();
 

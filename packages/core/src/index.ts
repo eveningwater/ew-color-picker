@@ -26,6 +26,7 @@ import {
   isString,
   isHTMLElement,
   DEFAULT_PREFIX,
+  $,
 } from "@ew-color-picker/utils";
 import ewColorPickerMergeOptions from "./mergeOptions";
 import type {
@@ -420,6 +421,8 @@ export default class ewColorPicker extends EventEmitter {
         this.syncAllPlugins(this.currentColor);
 
         setTimeout(() => {
+          // 实例可能在这个回调执行前已被销毁
+          if (this.isDestroyed) return;
           const panelPlugin = this.plugins.ewColorPickerPanel;
           if (panelPlugin && isFunction(panelPlugin.handleAutoPosition)) {
             panelPlugin.handleAutoPosition.call(panelPlugin);
@@ -489,7 +492,9 @@ export default class ewColorPicker extends EventEmitter {
 
     // 如果点击的是颜色盒子，不关闭（避免与盒子切换逻辑冲突）
     const prefix = this.options.prefix || DEFAULT_PREFIX;
-    const colorBox = rootElement?.querySelector(`.${prefix}color-picker-box`);
+    const colorBox = rootElement
+      ? $(`.${prefix}color-picker-box`, rootElement)
+      : null;
     if (colorBox && colorBox.contains(target)) return;
 
     // 点击面板和盒子之外的区域，关闭面板

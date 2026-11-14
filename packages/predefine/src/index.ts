@@ -34,7 +34,7 @@ export interface PredefineOptions {
 
 export default class ewColorPickerPredefinePlugin {
   static pluginName = "ewColorPickerPredefine";
-  options: PredefineOptions & Omit<ewColorPickerOptions, "el"> = {} as any;
+  options: PredefineOptions & Omit<ewColorPickerOptions, "el"> = {};
   predefineItems: HTMLElement[] = [];
   container: HTMLElement | null = null;
   

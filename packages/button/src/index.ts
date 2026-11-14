@@ -34,7 +34,7 @@ export interface ButtonOptions {
 export default class ewColorPickerButtonPlugin {
   static pluginName = "ewColorPickerButton";
   static applyOrder = ApplyOrder.Post;
-  options: ButtonOptions & Omit<ewColorPickerOptions, "el"> = {} as any;
+  options: ButtonOptions & Omit<ewColorPickerOptions, "el"> = {};
   clearButton: HTMLButtonElement | null = null;
   sureButton: HTMLButtonElement | null = null;
   

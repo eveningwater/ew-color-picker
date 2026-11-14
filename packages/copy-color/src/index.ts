@@ -33,7 +33,7 @@ export default class ewColorPickerCopyColorPlugin {
   static pluginName = "ewColorPickerCopyColor";
   static applyOrder = ApplyOrder.Post;
 
-  options: CopyColorOptions & Omit<ewColorPickerOptions, "el"> = {} as any;
+  options: CopyColorOptions & Omit<ewColorPickerOptions, "el"> = {};
   container: HTMLDivElement | null = null;
   button: HTMLButtonElement | null = null;
   tip: HTMLDivElement | null = null;

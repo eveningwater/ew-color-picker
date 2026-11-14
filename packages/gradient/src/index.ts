@@ -1,7 +1,6 @@
 import ewColorPicker, { ewColorPickerOptions } from "@ew-color-picker/core";
 import {
   on,
-  off,
   create,
   addClass,
   setAttr,
@@ -13,6 +12,12 @@ import {
   $,
   getPrefix,
   getRect,
+  bindMouseDrag,
+  DEFAULT_PANEL_WIDTH,
+  isString,
+  isObject,
+  isBoolean,
+  isNumber,
   colorToRgba,
   ApplyOrder,
 } from "@ew-color-picker/utils";
@@ -119,6 +124,7 @@ export default class ewColorPickerGradientPlugin {
   private pos2Input: InputNumber | null = null;
 
   private draggingIndex: number = -1;
+  private dragUnbind: (() => void) | null = null;
 
   private get prefix(): string {
     return getPrefix(this.ewColorPicker);
@@ -218,7 +224,7 @@ export default class ewColorPickerGradientPlugin {
     } = this.options;
 
     let value: GradientValue | null = null;
-    if (typeof gradient === "string") {
+    if (isString(gradient)) {
       const parsed = parseGradient(gradient);
       if (parsed) {
         value = parsed;
@@ -227,7 +233,7 @@ export default class ewColorPickerGradientPlugin {
           `[ewColorPicker warning]: Unable to parse gradient "${gradient}", fallback to default stops.`
         );
       }
-    } else if (gradient && typeof gradient === "object") {
+    } else if (isObject(gradient)) {
       value = cloneGradientValue(
         extend(createGradientValue(gradient.type || "linear"), gradient)
       );
@@ -240,15 +246,15 @@ export default class ewColorPickerGradientPlugin {
           ? gradientStops
           : [this.getCurrentColor(), "#ffffff"];
       value.stops = rawStops.map((stop) =>
-        typeof stop === "string" ? { color: stop } : { ...stop }
+        isString(stop) ? { color: stop } : { ...stop }
       );
     }
 
     if (gradientType) value.type = gradientType;
-    if (typeof gradientRepeating === "boolean") {
+    if (isBoolean(gradientRepeating)) {
       value.repeating = gradientRepeating;
     }
-    if (typeof gradientAngle === "number") {
+    if (isNumber(gradientAngle)) {
       value.angle = { value: gradientAngle, unit: "deg" };
     }
     if (gradientInterpolation !== undefined) {
@@ -478,8 +484,11 @@ export default class ewColorPickerGradientPlugin {
     event.stopPropagation();
     this.selectStop(index);
     this.draggingIndex = index;
-    on(document, "mousemove", this.handleDocumentMove as EventListener);
-    on(document, "mouseup", this.handleDocumentUp);
+    this.dragUnbind?.();
+    this.dragUnbind = bindMouseDrag(
+      this.handleDocumentMove,
+      this.handleDocumentUp
+    );
   }
 
   private handleDocumentMove = (event: MouseEvent) => {
@@ -500,15 +509,14 @@ export default class ewColorPickerGradientPlugin {
 
   private handleDocumentUp = () => {
     this.draggingIndex = -1;
-    off(document, "mousemove", this.handleDocumentMove as EventListener);
-    off(document, "mouseup", this.handleDocumentUp);
+    this.dragUnbind = null;
   };
 
   private getPositionByClientX(clientX: number): number {
     const bar = this.bar;
     if (!bar) return 0;
     const rect = getRect(bar);
-    const width = rect.width || bar.offsetWidth || 285;
+    const width = rect.width || bar.offsetWidth || DEFAULT_PANEL_WIDTH;
     const left = rect.left || 0;
     return roundPercent(((clientX - left) / width) * 100);
   }
@@ -905,7 +913,7 @@ export default class ewColorPickerGradientPlugin {
   }
 
   public setGradient(input: string | Partial<GradientValue>) {
-    if (typeof input === "string") {
+    if (isString(input)) {
       const parsed = parseGradient(input);
       if (!parsed) {
         warn(
@@ -914,10 +922,10 @@ export default class ewColorPickerGradientPlugin {
         return;
       }
       this.value = parsed;
-    } else if (input && typeof input === "object") {
+    } else if (isObject(input)) {
       const next = cloneGradientValue(this.value);
       if (input.type) next.type = input.type;
-      if (typeof input.repeating === "boolean") next.repeating = input.repeating;
+      if (isBoolean(input.repeating)) next.repeating = input.repeating;
       if (input.angle) next.angle = { ...input.angle };
       if (input.radialShape) next.radialShape = input.radialShape;
       if (input.radialSize) next.radialSize = input.radialSize;
@@ -943,7 +951,7 @@ export default class ewColorPickerGradientPlugin {
 
   public setStops(stops: Array<string | GradientStop>) {
     const mapped = (stops || []).map((stop) =>
-      typeof stop === "string" ? { color: stop } : { ...stop }
+      isString(stop) ? { color: stop } : { ...stop }
     );
     this.value.stops = this.normalizeStops(mapped);
     this.selectedIndex = clamp(
@@ -969,6 +977,7 @@ export default class ewColorPickerGradientPlugin {
       this.ewColorPicker.off("change", this.handleCoreChange);
       this.changeBound = false;
     }
+    this.dragUnbind?.();
     this.handleDocumentUp();
     this.removeContainer();
   }
