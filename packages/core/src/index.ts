@@ -102,6 +102,8 @@ const getMountOrderMap = () => {
 };
 
 // 应用顺序映射
+// 未声明 applyOrder 的插件按 0 处理，会先于所有 ApplyOrder.Post 插件执行，
+// 同档位再按插件注册/挂载顺序排序。
 const APPLY_ORDER_MAP = {
   [ApplyOrder.Pre]: -1,
   [ApplyOrder.Post]: 1,

@@ -125,7 +125,13 @@ export default class ewColorPickerEyedropperPlugin {
 
   private handleClick = async () => {
     if (this.destroyed) return;
-    const EyeDropperCtor = (window as any).EyeDropper;
+    const EyeDropperCtor = (
+      window as Window & {
+        EyeDropper?: new () => {
+          open: () => Promise<{ sRGBHex: string }>;
+        };
+      }
+    ).EyeDropper;
     if (!EyeDropperCtor) return;
 
     try {
@@ -137,9 +143,9 @@ export default class ewColorPickerEyedropperPlugin {
       if (isFunction(this.options.onEyedropperPick)) {
         this.options.onEyedropperPick(result.sRGBHex);
       }
-    } catch (error: any) {
+    } catch (error) {
       // 用户按 Esc 取消取色时 EyeDropper 会抛出 AbortError，属于正常流程
-      if (error && error.name === "AbortError") return;
+      if (error instanceof Error && error.name === "AbortError") return;
       warn(
         "[ewColorPicker warning]: Failed to pick color with EyeDropper",
         error

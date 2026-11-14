@@ -17,3 +17,9 @@ export interface BoxProps {
 }
 
 export type PartialBoxProps = Partial<BoxProps>;
+
+// 盒子尺寸：预设字符串 / 像素数值 / 宽高对象
+export type BoxSize =
+  | number
+  | string
+  | { width?: number | string; height?: number | string };

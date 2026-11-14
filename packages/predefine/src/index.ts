@@ -34,6 +34,7 @@ export interface PredefineOptions {
 
 export default class ewColorPickerPredefinePlugin {
   static pluginName = "ewColorPickerPredefine";
+  // 刻意不声明 applyOrder：缺省 0 让色板先于面板相关插件渲染到 panelContainer。
   options: PredefineOptions & Omit<ewColorPickerOptions, "el"> = {};
   predefineItems: HTMLElement[] = [];
   container: HTMLElement | null = null;

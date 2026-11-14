@@ -98,8 +98,7 @@ export default class ewColorPickerGradientPlugin {
   static pluginName = "ewColorPickerGradient";
   static applyOrder = ApplyOrder.Post;
 
-  options: GradientPluginOptions & Omit<ewColorPickerOptions, "el"> =
-    {} as any;
+  options: GradientPluginOptions & Omit<ewColorPickerOptions, "el"> = {};
   private ewColorPicker: ewColorPicker | null;
 
   private value: GradientValue = createGradientValue();

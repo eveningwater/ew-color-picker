@@ -47,6 +47,11 @@ export function createEwColorPicker(
 export default Core;
 
 // 为UMD构建添加全局变量
-if (typeof window !== 'undefined') {
-  (window as any).ewColorPicker = Core;
+declare global {
+  interface Window {
+    ewColorPicker: typeof Core;
+  }
+}
+if (typeof window !== "undefined") {
+  window.ewColorPicker = Core;
 }

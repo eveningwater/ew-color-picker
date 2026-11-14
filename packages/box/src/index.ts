@@ -21,6 +21,8 @@ import { getBoxChildren, processSizeConfig, getBoxIconColor } from "./method";
 
 export default class ewColorPickerBoxPlugin {
   static pluginName = "ewColorPickerBox";
+  // 刻意不声明 applyOrder：缺省 0 保证 Box 先于所有 Post 插件初始化，
+  // Panel 挂载与自动定位依赖此时已存在的盒子 DOM。
   options: ewColorPickerBoxPluginOptions & Omit<ewColorPickerOptions, "el"> = {};
   box: HTMLElement | null;
   hasColor: boolean;
