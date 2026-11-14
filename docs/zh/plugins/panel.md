@@ -162,6 +162,34 @@ setTimeout(() => {
 }, 3000)
 ```
 
+## 容器内定位（抽屉 / 弹窗 / 滚动区）
+
+内置的自动定位（`autoPanelPosition`）和 `appendTo` 都是按 **视口** 来计算的：
+
+- `adjustForViewport` 只用 `window.innerWidth / innerHeight` 做边界夹取。
+- `appendTo` 把面板切到 `position: fixed`（相对视口）。
+
+当取色器位于 **非视口的包含块** 内——例如抽屉主体、弹窗，或任何设置了 `position`、`transform`、`filter`、`will-change` 的祖先——面板真正的 `offsetParent` 是这个祖先（对 `position: absolute` 而言），于是按视口算出的坐标/夹取会出现可见偏移。`appendTo` 虽然避开了偏移，但会让面板脱离容器的可视范围，被 `overflow` 裁剪或与同级元素重叠。
+
+### 兜底方案
+
+在核心支持可配置边界之前，下游项目验证过的做法是 **自己接管定位**：
+
+1. 设 `autoPanelPosition: false`（也不要用 `appendTo`）。
+2. 打开面板时，用「容器 `getBoundingClientRect()` 与视口的交集」作为真实边界；找不到容器就退回视口。
+3. 以触发块为锚点算出面板期望的视口坐标 `left/top`，再 `clamp` 进边界（留 margin）。
+4. 因为面板是 `position: absolute`，把视口坐标换算成相对 `offsetParent` 的坐标：
+   ```ts
+   const op = panel.offsetParent as HTMLElement | null;
+   const parentRect = op ? op.getBoundingClientRect() : root.getBoundingClientRect();
+   const left = viewportLeft - parentRect.left - (op?.clientLeft ?? 0);
+   const top  = viewportTop  - parentRect.top  - (op?.clientTop  ?? 0);
+   ```
+5. 用 `MutationObserver`（子树 class/style 变化）、`ResizeObserver`（面板尺寸变化——如切到渐变页签会变高）、`window.resize`、捕获阶段 `scroll` 触发重算，并用 `requestAnimationFrame` 合并。
+6. 只在 `style.left/top` 值变化时才写入，否则自己的 `MutationObserver` 会死循环。
+
+具体实现可参考 `ew-qiaoda` 项目封装组件（`ColorPickerEw.vue`）里的 `positionPanel` / `getBounds` 逻辑。
+
 ## 相关
 
 - [Hue 色相滑块](./hue.md)
