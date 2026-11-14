@@ -10,13 +10,13 @@ Event-driven, plugin-based modern color picker. The core only keeps color state 
 pnpm add @ew-color-picker/ew-color-picker @ew-color-picker/style
 ```
 
-Latest release: `2.0.3` · [Changelog](https://eveningwater.github.io/ew-color-picker/guide/changelog)
+Latest release: `2.0.4` · [Changelog](https://eveningwater.github.io/ew-color-picker/guide/changelog)
 
 - Documentation: https://eveningwater.github.io/ew-color-picker/
 - China mirror (Alibaba Cloud ESA): https://ew-color-picker.eveningwater.com/
 - Live demo: https://eveningwater.github.io/ew-color-picker/examples/demo
 - Changelog: https://eveningwater.github.io/ew-color-picker/guide/changelog
-- Other projects: https://www.eveningwater.com
+- My website: https://www.eveningwater.com
 - AI index: [llms.txt](https://eveningwater.github.io/ew-color-picker/llms.txt) · [llms-full.txt](https://eveningwater.github.io/ew-color-picker/llms-full.txt)
 
 ## Features
