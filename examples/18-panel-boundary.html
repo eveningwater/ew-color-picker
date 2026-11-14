@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18. 容器内定位（boundary）</title>
+    <link rel="stylesheet" href="../packages/style/dist/index.css">
+    <link rel="stylesheet" href="../packages/style/dist/input-number.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f5; }
+        .demo { max-width: 760px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; }
+        .desc { color: #666; font-size: 13px; line-height: 1.8; }
+        code { background: #f3f4f6; padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+        .toolbar { margin-top: 16px; }
+        button { padding: 7px 14px; font-size: 13px; border: 1px solid #d0d7de; background: #fff; border-radius: 6px; cursor: pointer; }
+        button:hover { background: #f3f4f6; }
+
+        .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 420px; background: #fff; display: flex; flex-direction: column; box-shadow: -4px 0 16px rgba(0, 0, 0, .12); transform: translateX(100%); transition: transform .25s ease; z-index: 10; }
+        .drawer.open { transform: translateX(0); }
+        .drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid #eee; font-weight: 600; font-size: 14px; }
+        .drawer-body { position: relative; flex: 1; overflow-y: auto; padding: 16px; }
+        .case { padding: 14px; border: 1px dashed #d0d7de; border-radius: 6px; margin-bottom: 16px; }
+        .case-title { font-size: 13px; font-weight: 600; margin-bottom: 10px; }
+        .note { color: #999; font-size: 12px; line-height: 1.6; margin: 10px 0 0; }
+        .filler { height: 420px; display: flex; align-items: center; justify-content: center; color: #bbb; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="demo">
+        <h2>18. 面板在容器内定位（boundary）</h2>
+        <p class="desc">
+            面板默认只按视口做边界夹取。当取色器位于抽屉、弹窗或任何滚动容器内时，
+            传入 <code>boundary</code> 指定容器选择器，面板就会被限制在该容器的可视区域内，
+            不再越出容器被裁切。
+        </p>
+        <div class="toolbar">
+            <button id="openDrawer">打开抽屉</button>
+        </div>
+    </div>
+
+    <aside class="drawer open" id="drawer">
+        <header class="drawer-head">
+            <span>抽屉（模拟 el-drawer）</span>
+            <button id="closeDrawer">关闭</button>
+        </header>
+        <div class="drawer-body" id="drawerBody">
+            <div class="case">
+                <div class="case-title">① boundary: '.drawer-body'</div>
+                <div id="withBoundary"></div>
+                <p class="note">面板被夹在抽屉可视区内，靠近边缘时自动翻转，不会被裁切。</p>
+            </div>
+
+            <div class="filler">向下滚动 ↓</div>
+
+            <div class="case">
+                <div class="case-title">② 不传 boundary（仅按视口夹取）</div>
+                <div id="withoutBoundary"></div>
+                <p class="note">面板按视口计算，靠近抽屉底部时会越出容器边界。</p>
+            </div>
+
+            <div class="filler"></div>
+        </div>
+    </aside>
+
+    <script type="module">
+        import ewColorPicker from '../packages/ew-color-picker/src/index.ts';
+
+        const drawer = document.getElementById('drawer');
+
+        // ① 指定边界容器：面板始终落在抽屉可视区内
+        new ewColorPicker({
+            el: '#withBoundary',
+            autoPanelPosition: true,
+            boundary: '.drawer-body',
+            defaultColor: '#1890ff'
+        });
+
+        // ② 不指定边界：仍按视口夹取
+        new ewColorPicker({
+            el: '#withoutBoundary',
+            autoPanelPosition: true,
+            defaultColor: '#faad14'
+        });
+
+        document.getElementById('closeDrawer').addEventListener('click', () => {
+            drawer.classList.remove('open');
+        });
+        document.getElementById('openDrawer').addEventListener('click', () => {
+            drawer.classList.add('open');
+        });
+    </script>
+</body>
+</html>
