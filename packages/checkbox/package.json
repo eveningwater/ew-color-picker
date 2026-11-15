@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/checkbox",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "EW Color Picker Checkbox Plugin",
   "main": "dist/checkbox.min.js",
   "module": "dist/checkbox.esm.js",
@@ -11,7 +11,8 @@
   "scripts": {
     "build": "rollup -c ../../scripts/rollup.config.mjs",
     "dev": "rollup -c ../../scripts/rollup.config.mjs -w",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "color-picker",

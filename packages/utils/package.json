@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/utils",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "utils for ew-color-picker",
   "main": "dist/utils.min.js",
   "module": "dist/utils.esm.js",
@@ -9,7 +9,8 @@
   ],
   "scripts": {
     "build": "rimraf dist && rollup -c ../../scripts/rollup.config.mjs",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublishOnly": "npm run build"
   },
   "publishConfig": {
     "access": "public"

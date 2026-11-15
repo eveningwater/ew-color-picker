@@ -5,6 +5,35 @@ description: Release notes for ew-color-picker, including fixes, features and do
 
 # Changelog
 
+## 2.0.5
+
+### Fixes
+
+- Fixed panel positioning inside drawers, modals and scroll containers: new `boundary` option accepts a CSS selector or HTMLElement, clamping the panel within that container's visible area instead of only the viewport
+- Fixed `document.mousedown` listener leaking after `destroy()` when the panel show timer fired after destruction; the callback now bails out if the instance is already destroyed
+- Fixed root `build:xxx` shortcuts silently doing nothing (`pnpm -r build:xxx` matched no package scripts); replaced with `pnpm --filter <pkg> build` and added missing shortcuts for gradient, select, checkbox, copy-color and input-number
+
+### Refactor
+
+- Consolidated drag logic into `utils/drag.ts`: new `getRatio`, `bindMouseDrag` and `bindTouchDrag` utilities, reused by hue, alpha, panel and gradient; eliminates ~10 `as EventListener` casts
+- Extracted `DEFAULT_PANEL_WIDTH` / `DEFAULT_PANEL_HEIGHT` constants, replacing 7 hard-coded `285 / 180` occurrences across panel and gradient
+- Unified on utility functions: `isString` / `isObject` / `isBoolean` / `isNumber` replace raw `typeof` checks; `$` and `getRect` replace direct `querySelector` / `getBoundingClientRect` calls
+- Removed `as any` casts in plugin options initialization; `install(core: any)` aligned to `install(core: ewColorPicker)` across all plugins
+- `getPrefix` now uses `isString` and accepts `ewColorPicker` instance type instead of `any`
+- Removed unused `eventType` dead code from utils
+- Documented the implicit `applyOrder` sorting convention: plugins without `applyOrder` default to 0 and run before all `Post` plugins
+
+### Docs
+
+- Added `boundary` option documentation (English and Chinese) with usage examples
+- Added example page `18-panel-boundary.html` demonstrating container-bound panel positioning
+- Fixed docs site footer friend links showing Chinese text on the English version
+- Added missing example navigation links (15-18) to the examples index
+
+### Release
+
+- Added `prepublishOnly: "npm run build"` to all packages so dist is rebuilt before every publish
+
 ## 2.0.4
 
 ### Features

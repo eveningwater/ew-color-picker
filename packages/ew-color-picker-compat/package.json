@@ -1,6 +1,6 @@
 {
   "name": "ew-color-picker",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "EW Color Picker 聚合入口，内部指向 @ew-color-picker/ew-color-picker",
   "main": "index.cjs",
   "module": "index.mjs",
@@ -44,5 +44,8 @@
   "bugs": {
     "url": "https://github.com/eveningwater/ew-color-picker/issues"
   },
-  "homepage": "https://eveningwater.github.io/ew-color-picker/"
+  "homepage": "https://eveningwater.github.io/ew-color-picker/",
+  "scripts": {
+    "prepublishOnly": "echo 'No build needed - static entry files'"
+  }
 }

@@ -5,6 +5,35 @@ description: ew-color-picker 各版本的变更记录，含修复、新增与文
 
 # 更新日志
 
+## 2.0.5
+
+### 修复
+
+- 修复面板在抽屉、弹窗、滚动容器内的定位问题：新增 `boundary` 配置项，支持传入 CSS 选择器或 HTMLElement，面板会被限制在该容器的可视区域内，而非仅按视口夹取
+- 修复 `destroy()` 后 `setTimeout` 回调仍绑定 `document.mousedown` 监听导致泄漏的问题：回调现在会先检查实例是否已销毁
+- 修复根目录 `build:xxx` 快捷命令静默失败的问题（`pnpm -r build:xxx` 匹配不到任何子包脚本）；改为 `pnpm --filter <pkg> build`，并补齐 gradient、select、checkbox、copy-color、input-number 的快捷命令
+
+### 优化
+
+- 拖拽逻辑收口到 `utils/drag.ts`：新增 `getRatio`、`bindMouseDrag`、`bindTouchDrag` 工具函数，hue、alpha、panel、gradient 四包复用，消除约 10 处 `as EventListener` 强转
+- 提取 `DEFAULT_PANEL_WIDTH` / `DEFAULT_PANEL_HEIGHT` 常量，替换 panel 和 gradient 中 7 处硬编码的 `285 / 180`
+- 统一使用工具函数：`isString` / `isObject` / `isBoolean` / `isNumber` 替代原生 `typeof` 判断；`$` 和 `getRect` 替代直接调用 `querySelector` / `getBoundingClientRect`
+- 去掉插件 options 初始化中的 `as any` 强转；`install(core: any)` 统一为 `install(core: ewColorPicker)`
+- `getPrefix` 改用 `isString` 并明确接收 `ewColorPicker` 实例类型，替代 `any`
+- 删除 utils 中未使用的 `eventType` 死代码
+- 补充 `applyOrder` 排序规则的注释：未声明 `applyOrder` 的插件默认按 0 处理，先于所有 `Post` 插件执行
+
+### 文档
+
+- 新增 `boundary` 配置项的中英文文档及使用示例
+- 新增示例页 `18-panel-boundary.html`，演示容器内面板定位
+- 修复文档站英文版底部友情链接显示中文的问题
+- 补齐 examples 导航中缺失的 15-18 号链接
+
+### 发布
+
+- 所有包添加 `prepublishOnly: "npm run build"`，确保每次发布前自动构建最新产物
+
 ## 2.0.4
 
 ### 新增
