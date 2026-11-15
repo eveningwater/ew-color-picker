@@ -28,6 +28,7 @@
     "dev": "pnpm -r dev",
     "dev:preview": "node scripts/dev-server.js",
     "example": "node scripts/dev-server.js",
+    "bump": "node scripts/bump-version.js",
     "clean": "pnpm -r clean",
     "build:docs": "node scripts/build-docs.js && cd docs && DOCS_BASE=/ew-color-picker/ npm run build",
     "docs:dev": "cd docs && npm run dev",
