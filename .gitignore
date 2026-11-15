@@ -5,6 +5,7 @@ gh-pages
 .vitepress/dist
 **/.vitepress/cache
 .trae/
+.trae-html-share-packages/
 
 # macOS
 .DS_Store
