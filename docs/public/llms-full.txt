@@ -1256,6 +1256,16 @@ Source: https://eveningwater.github.io/ew-color-picker/guide/changelog
 
 # Changelog
 
+## 2.0.7
+
+### Fixes
+
+- Fixed the picker panel being covered by overlay masks in Element Plus Dialog and similar layered containers: the panel `z-index` was fixed at `1000` in the stylesheet while overlay libraries start at `2000` and increase on every open. The panel now raises its inline `z-index` to one above the highest ancestor level each time it opens, leaves normal pages to the stylesheet default, and falls back silently if reading or writing styles fails
+
+### Tests
+
+- Added regression tests for automatic `z-index` elevation inside layered containers, recomputation on repeated opens, and the untouched inline style on normal pages
+
 ## 2.0.6
 
 ### Fixes
@@ -5601,6 +5611,16 @@ new ewColorPicker({
 Source: https://eveningwater.github.io/ew-color-picker/zh/guide/changelog
 
 # 更新日志
+
+## 2.0.7
+
+### 修复
+
+- 修复颜色选择器面板在 Element Plus Dialog 等弹层容器中被遮罩层遮挡的问题：面板 `z-index` 此前在样式表中固定为 `1000`，而弹层组件库从 `2000` 起步且每次打开递增。现在每次打开面板都会自动将内联层级提升为「祖先最大层级 + 1」，普通页面仍由样式表默认值控制，样式读写异常时静默降级
+
+### 测试
+
+- 新增弹层容器内自动提升层级、重复打开重新计算、普通页面不写内联样式的回归用例
 
 ## 2.0.6
 
