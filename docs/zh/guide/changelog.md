@@ -5,6 +5,21 @@ description: ew-color-picker 各版本的变更记录，含修复、新增与文
 
 # 更新日志
 
+## 2.0.8
+
+### 修复
+
+- 修复通过 `<link>` 引入静态 CSS 时箭头和关闭图标位置错乱的问题：图标样式之前只由 core 入口在运行时注入，SCSS 构建产物（`@ew-color-picker/style`）中缺失，导致箭头偏移。现在 SCSS 源文件中也包含了这些规则
+- 箭头图标 `fill` 从硬编码的 `#666666` 改为 `currentColor`，图标可继承主题文字颜色
+- 修复 `hasBox: false` 配合 `appendTo` 时空的 root 容器仍占用 `line-height` 高度的问题：`.ew-color-picker` 空壳现在通过 `:empty { display: none }` 隐藏，盒子渲染后自动恢复显示
+- 修复 `hasBox: false` 时面板定位错误：定位锚点现在从 box 回退到用户传入的 `el` 容器（最后才回退到 root），不再以 0 尺寸的空壳为参照
+- 修复 `showPanel`/`hidePanel` 非幂等问题：面板已打开时再次调用 `showPanel` 会重新执行打开动画，动画先将高度重置为 `0`，视觉上表现为面板关闭。现在两个方法在面板已处于目标状态时直接返回
+
+### 文档
+
+- 中英文 README 新增 npm 版本、下载量、许可证、构建状态、TypeScript、Stars 徽章
+- 中英文 README 新增在线演示截图
+
 ## 2.0.7
 
 ### 修复

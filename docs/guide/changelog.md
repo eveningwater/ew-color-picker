@@ -5,6 +5,21 @@ description: Release notes for ew-color-picker, including fixes, features and do
 
 # Changelog
 
+## 2.0.8
+
+### Fixes
+
+- Fixed arrow and close icon positioning for users who load the static CSS via `<link>`: the icon rules were only injected at runtime by the core entry, so the SCSS build (`@ew-color-picker/style`) was missing them and the arrow rendered off-center. The rules are now in the SCSS source as well
+- Arrow icon `fill` changed from hard-coded `#666666` to `currentColor`, so icons inherit the theme text color
+- Fixed the empty root container taking up `line-height` height when `hasBox: false` is used together with `appendTo`: the `.ew-color-picker` shell is now hidden via `:empty { display: none }` and reappears automatically once the box is rendered
+- Fixed panel positioning when `hasBox: false`: the panel anchor now falls back from the box to the user-supplied `el` container (and only then to the root element), so the panel is no longer positioned against a 0-size empty shell
+- Fixed `showPanel`/`hidePanel` not being idempotent: calling `showPanel` while the panel was already open re-ran the open animation, which briefly reset the panel height to `0` and made it look like the panel closed. Both methods now return early when the panel is already in the target state
+
+### Docs
+
+- Added npm version, downloads, license, build, TypeScript and stars badges to both READMEs
+- Added a live demo screenshot to both READMEs
+
 ## 2.0.7
 
 ### Fixes
