@@ -50,6 +50,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          pnpm gh-pages -d docs/.vitepress/dist -b gh-pages \
+          pnpm gh-pages -d gh-pages -b gh-pages \
             -m "docs(deploy): publish $(git rev-parse --short HEAD)" \
             -r "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
