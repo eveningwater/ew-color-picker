@@ -275,6 +275,9 @@ importers:
       '@types/node':
         specifier: ^20.0.0
         version: 20.19.4
+      rimraf:
+        specifier: ^3.0.2
+        version: 3.0.2
       rollup:
         specifier: ^3.29.5
         version: 3.29.5
@@ -563,6 +566,10 @@ importers:
       '@ew-color-picker/core':
         specifier: workspace:^
         version: link:../core
+    devDependencies:
+      rimraf:
+        specifier: ^3.0.2
+        version: 3.0.2
 
 packages:
 
