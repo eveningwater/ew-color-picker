@@ -638,7 +638,16 @@ export default class ewColorPickerPanelPlugin {
     const rootElement = this.ewColorPicker.getMountPoint("root");
     if (!panelContainer || !rootElement) return;
 
-    const colorBox = $(`.${this.prefix}color-picker-box`, rootElement) || rootElement;
+    // 定位锚点优先级：box → 用户的 el 容器 → root 容器
+    // hasBox:false 时 root 是空壳（0 尺寸），直接用用户的 el 作为锚点，
+    // 这样自定义触发按钮场景下面板能正确相对按钮定位。
+    const userContainer = isFunction(this.ewColorPicker.getContainer)
+      ? this.ewColorPicker.getContainer()
+      : this.ewColorPicker.options?.el;
+    const colorBox =
+      $(`.${this.prefix}color-picker-box`, rootElement) ||
+      userContainer ||
+      rootElement;
     const [position = "bottom", align = "center"] = (
       this.options.panelPlacement || "bottom"
     ).split("-");

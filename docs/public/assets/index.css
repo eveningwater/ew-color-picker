@@ -95,6 +95,10 @@
   position: relative;
 }
 
+.ew-color-picker:empty {
+  display: none;
+}
+
 .ew-color-picker-panel-container {
   box-sizing: content-box;
   display: inline-block;
@@ -476,6 +480,32 @@
 
 .ew-color-picker-arrow-icon {
   fill: #fff;
+}
+
+.ew-color-picker-icon {
+  display: block;
+  fill: currentColor;
+  max-width: 100%;
+  max-height: 100%;
+  pointer-events: none;
+}
+
+.ew-color-picker-box-arrow-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  pointer-events: none;
+}
+
+.ew-color-picker-box-close-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  pointer-events: none;
 }
 
 @keyframes fadeIn {

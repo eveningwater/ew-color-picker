@@ -45,6 +45,10 @@ export function injectStyles(styles?: string, id?: string, prefix = 'ew-'): void
         position: relative;
       }
       
+      .ew-color-picker:empty {
+        display: none;
+      }
+      
       .ew-color-picker-panel-container {
         display: inline-block;
         position: absolute;

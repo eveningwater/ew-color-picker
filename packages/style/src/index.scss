@@ -111,6 +111,13 @@ $prefix: "ew-" !default;
   position: relative;
 }
 
+// 空主容器隐藏：hasBox:false + appendTo 场景下，root 内无 box 且 panel 已迁走，
+// 变为空壳。由于主容器是 inline-block，空元素仍占 line-height 高度，
+// 用 :empty 隐藏避免微小布局偏移；动态启用盒子时 root 不再为空，自动恢复显示。
+.#{$prefix}color-picker:empty {
+  display: none;
+}
+
 // 面板容器 - 优化整体布局
 .#{$prefix}color-picker-panel-container {
   // 显式声明盒模型，避免被宿主全局 box-sizing: border-box 影响尺寸计算
@@ -530,9 +537,38 @@ $prefix: "ew-" !default;
   display: inline-block;
 }
 
-// 箭头图标
+// 箭头图标（旧命名，保留兼容）
 .#{$prefix}color-picker-arrow-icon {
   fill: #fff;
+}
+
+// 通用 SVG 图标基础样式（防止宿主页面全局 svg 样式污染）
+.#{$prefix}color-picker-icon {
+  display: block;
+  fill: currentColor;
+  max-width: 100%;
+  max-height: 100%;
+  pointer-events: none;
+}
+
+// Box 触发按钮内的下拉箭头（有颜色时显示）
+.#{$prefix}color-picker-box-arrow-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  pointer-events: none;
+}
+
+// Box 触发按钮内的关闭图标（无颜色时显示）
+.#{$prefix}color-picker-box-close-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  pointer-events: none;
 }
 
 // 动画效果

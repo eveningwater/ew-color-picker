@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/button",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "EW Color Picker Button Plugin",
   "main": "dist/button.min.js",
   "module": "dist/button.esm.js",

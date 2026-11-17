@@ -386,6 +386,10 @@ export default class ewColorPicker extends EventEmitter {
   public showPanel(animationType?: string, duration?: number): void {
     if (this.isDestroyed) return;
 
+    // 幂等守卫：面板已打开时再次调用打开应为空操作，
+    // 避免重复执行 open 动画（如 slideDown 会先将高度置 0）导致面板异常关闭或闪烁。
+    if (this.pickerFlag) return;
+
     const panelContainer = this.mountPoints.get("panelContainer");
     if (!panelContainer) return;
 
@@ -471,6 +475,9 @@ export default class ewColorPicker extends EventEmitter {
   // 隐藏面板
   public hidePanel(animationType?: string, duration?: number): void {
     if (this.isDestroyed) return;
+
+    // 幂等守卫：面板已关闭时再次调用关闭应为空操作，避免重复执行 close 动画。
+    if (!this.pickerFlag) return;
 
     const panelContainer = this.mountPoints.get("panelContainer");
     if (!panelContainer) return;
