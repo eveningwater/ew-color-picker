@@ -5,6 +5,16 @@ description: Release notes for ew-color-picker, including fixes, features and do
 
 # Changelog
 
+## 2.0.7
+
+### Fixes
+
+- Fixed the picker panel being covered by overlay masks in Element Plus Dialog and similar layered containers: the panel `z-index` was fixed at `1000` in the stylesheet while overlay libraries start at `2000` and increase on every open. The panel now raises its inline `z-index` to one above the highest ancestor level each time it opens, leaves normal pages to the stylesheet default, and falls back silently if reading or writing styles fails
+
+### Tests
+
+- Added regression tests for automatic `z-index` elevation inside layered containers, recomputation on repeated opens, and the untouched inline style on normal pages
+
 ## 2.0.6
 
 ### Fixes
