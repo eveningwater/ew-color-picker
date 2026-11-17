@@ -132,7 +132,7 @@
 
 .demo-frame {
   width: 100%;
-  height: 500px;
+  height: 800px;
   border: 1px solid var(--vp-c-divider);
   border-radius: 18px;
   overflow: hidden;
@@ -168,7 +168,7 @@
 
 @media (max-width: 768px) {
   .demo-frame {
-    height: 640px;
+    height: 800px;
   }
 
   .doc-section {
