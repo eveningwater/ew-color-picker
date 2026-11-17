@@ -411,6 +411,8 @@ export default class ewColorPicker extends EventEmitter {
     const time =
       duration || pickerAnimationTime || DEFAULT_ANIMATION_TIME;
 
+    this.syncPanelZIndex();
+
     open(type, panelContainer, time)
       .then(() => {
         this.pickerFlag = true;
@@ -435,6 +437,35 @@ export default class ewColorPicker extends EventEmitter {
       .catch((error) => {
         warn(`[ewColorPicker error]: Failed to show panel: ${error}`);
       });
+  }
+
+  // 同步面板层级，避免在 Dialog/Drawer 等弹层容器中被遮罩层遮挡
+  private syncPanelZIndex(): void {
+    const panelContainer = this.mountPoints.get("panelContainer");
+    if (!panelContainer) return;
+
+    // 层级读取或写入失败时保持样式表默认值，不影响面板打开
+    tryErrorHandler(() => {
+      // 按触发元素祖先的最大层级自动提升，
+      // 每次打开都重新计算，兼容 Element Plus 等库逐次递增的 z-index
+      let maxZIndex = 0;
+      let current: HTMLElement | null = this.wrapper?.parentElement || null;
+      while (current && current !== document.body) {
+        const value = window.getComputedStyle(current).zIndex;
+        if (value && value !== "auto") {
+          const parsed = Number(value);
+          if (!isNaN(parsed)) {
+            maxZIndex = Math.max(maxZIndex, parsed);
+          }
+        }
+        current = current.parentElement;
+      }
+
+      // 默认样式为 1000，只有祖先层级更高时才需要内联覆盖
+      setStyle(panelContainer, {
+        zIndex: maxZIndex >= 1000 ? String(maxZIndex + 1) : "",
+      });
+    });
   }
 
   // 隐藏面板
