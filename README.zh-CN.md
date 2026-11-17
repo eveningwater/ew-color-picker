@@ -1,10 +1,19 @@
 # ew-color-picker
 
+![npm version](https://img.shields.io/npm/v/ew-color-picker)
+![npm downloads](https://img.shields.io/npm/dm/ew-color-picker)
+![license](https://img.shields.io/npm/l/ew-color-picker)
+![build](https://img.shields.io/github/actions/workflow/status/eveningwater/ew-color-picker/ci.yml?branch=master)
+![typescript](https://img.shields.io/badge/TypeScript-5-3178C6)
+![stars](https://img.shields.io/github/stars/eveningwater/ew-color-picker?style=social)
+
 **[English](./README.md) | 中文**
 
 事件驱动 + 插件化的现代颜色选择器。核心只维护颜色状态与事件，界面全部由插件组装，可按需组合、替换与扩展。
 
 **[立即体验在线演示 →](https://eveningwater.github.io/ew-color-picker/zh/examples/demo)** · **[中文文档](https://eveningwater.github.io/ew-color-picker/zh/)**
+
+![ew-color-picker demo](./docs/public/demo-preview.jpg)
 
 ```bash
 pnpm add @ew-color-picker/ew-color-picker @ew-color-picker/style

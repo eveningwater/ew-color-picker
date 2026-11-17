@@ -1,10 +1,19 @@
 # ew-color-picker
 
+![npm version](https://img.shields.io/npm/v/ew-color-picker)
+![npm downloads](https://img.shields.io/npm/dm/ew-color-picker)
+![license](https://img.shields.io/npm/l/ew-color-picker)
+![build](https://img.shields.io/github/actions/workflow/status/eveningwater/ew-color-picker/ci.yml?branch=master)
+![typescript](https://img.shields.io/badge/TypeScript-5-3178C6)
+![stars](https://img.shields.io/github/stars/eveningwater/ew-color-picker?style=social)
+
 **English | [中文](./README.zh-CN.md)**
 
 Event-driven, plugin-based modern color picker. The core only keeps color state and an event bus — all UI is assembled from plugins that can be composed, replaced, or extended.
 
 **[Try the live demo →](https://eveningwater.github.io/ew-color-picker/examples/demo)** · **[Documentation](https://eveningwater.github.io/ew-color-picker/)**
+
+![ew-color-picker demo](./docs/public/demo-preview.jpg)
 
 ```bash
 pnpm add @ew-color-picker/ew-color-picker @ew-color-picker/style
