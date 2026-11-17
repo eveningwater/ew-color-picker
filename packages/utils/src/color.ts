@@ -245,7 +245,8 @@ export function colorRgbaToHsla(rgba: string): { colorStr: string; colorObj: Hsl
         ")"
     ),
     colorObj: {
-      h: Math.round(h!),
+      // h 此时是 0-6 的扇区值，需与 colorStr、colorHslaToRgba 保持一致，统一为 0-360 角度
+      h: Math.round(h! * 60),
       s: Math.round(s * 100),
       l: Math.round(l * 100),
       a,
@@ -287,7 +288,9 @@ export function colorRgbaToHsva(rgba: string): HsvaColor {
   const r = parseFloat(rgbaArr[0]) || 0;
   const g = parseFloat(rgbaArr[1]) || 0;
   const b = parseFloat(rgbaArr[2]) || 0;
-  const a = rgbaArr.length >= 4 ? parseFloat(rgbaArr[3]) || 1 : 1;
+  const parsedAlpha = rgbaArr.length >= 4 ? parseFloat(rgbaArr[3]) : Number.NaN;
+  // 仅当透明度无法解析时才回退为 1，避免合法的 0 被当作假值吞掉
+  const a = Number.isNaN(parsedAlpha) ? 1 : parsedAlpha;
   
   // 将 RGB 值标准化到 0-1 范围
   const rNorm = r / 255;
