@@ -38,6 +38,9 @@
     "directory": "packages/utils"
   },
   "types": "dist/packages/utils/src/index.d.ts",
+  "devDependencies": {
+    "rimraf": "^3.0.2"
+  },
   "peerDependencies": {
     "@ew-color-picker/core": "workspace:^"
   },

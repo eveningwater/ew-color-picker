@@ -36,6 +36,19 @@ describe('Color Utils', () => {
       expect(hsva.s).toBe(0);
       expect(hsva.v).toBe(50);
     });
+
+    it('should preserve an alpha of 0', () => {
+      const rgba = 'rgba(255, 0, 0, 0)';
+      const hsva = colorRgbaToHsva(rgba);
+
+      expect(hsva.a).toBe(0);
+      expect(colorHsvaToRgba(hsva)).toBe('rgba(255, 0, 0, 0)');
+    });
+
+    it('should fall back to alpha 1 when alpha is missing or not parseable', () => {
+      expect(colorRgbaToHsva('rgba(255, 0, 0)').a).toBe(1);
+      expect(colorRgbaToHsva('rgba(255, 0, 0, abc)').a).toBe(1);
+    });
   });
 
   describe('colorHsvaToRgba', () => {
@@ -78,6 +91,19 @@ describe('Color Utils', () => {
       
       expect(result.colorObj.s).toBe(0);
       expect(result.colorObj.l).toBe(50);
+    });
+
+    it('should return hue in degrees and round-trip the color', () => {
+      const { colorObj } = colorRgbaToHsla('rgba(0, 202, 136, 1)');
+
+      expect(colorObj.h).toBe(160);
+
+      const parsed = parseRgbaString(colorHslaToRgba(colorObj));
+
+      expect(parsed?.r).toBe(0);
+      expect(parsed?.g).toBeCloseTo(202, -1);
+      expect(parsed?.b).toBeCloseTo(136, -1);
+      expect(parsed?.a).toBe(1);
     });
   });
 
