@@ -77,3 +77,10 @@ jobs:
             fi
           done
           echo "published: $published, skipped: $skipped"
+
+  docs:
+    name: Deploy docs
+    needs: publish
+    permissions:
+      contents: write
+    uses: ./.github/workflows/docs.yml
