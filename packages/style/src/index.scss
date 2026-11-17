@@ -530,9 +530,38 @@ $prefix: "ew-" !default;
   display: inline-block;
 }
 
-// 箭头图标
+// 箭头图标（旧命名，保留兼容）
 .#{$prefix}color-picker-arrow-icon {
   fill: #fff;
+}
+
+// 通用 SVG 图标基础样式（防止宿主页面全局 svg 样式污染）
+.#{$prefix}color-picker-icon {
+  display: block;
+  fill: currentColor;
+  max-width: 100%;
+  max-height: 100%;
+  pointer-events: none;
+}
+
+// Box 触发按钮内的下拉箭头（有颜色时显示）
+.#{$prefix}color-picker-box-arrow-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  pointer-events: none;
+}
+
+// Box 触发按钮内的关闭图标（无颜色时显示）
+.#{$prefix}color-picker-box-close-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  pointer-events: none;
 }
 
 // 动画效果
