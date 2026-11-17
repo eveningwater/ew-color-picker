@@ -5,6 +5,22 @@ description: ew-color-picker 各版本的变更记录，含修复、新增与文
 
 # 更新日志
 
+## 2.0.6
+
+### 修复
+
+- 修复 `colorRgbaToHsva` 把合法的透明度 `0` 转成 `1` 的问题（`parseFloat(...) || 1` 把 `0` 当成了假值）；该问题会导致全透明颜色在拖动色相或饱和度/明度后变不透明，`getHsvaColor()` 也会返回 `a: 1`
+- 修复 `colorRgbaToHsla` 返回的 `colorObj.h` 停留在内部 `0-6` 扇区值而非角度值的问题，避免 `colorHslaToRgba` 往返转换错色（如绿色 `rgba(0, 202, 136, 1)` 被还原成 `rgba(204, 10, 0, 1)`）
+
+### 测试
+
+- 新增回归测试：`rgba(..., 0)` 往返转换、透明度无法解析时的回退、HSL 色相与往返转换
+
+### 发布
+
+- 新增 GitHub Actions CI：在推送和 PR 到 `master` 时执行依赖安装、全量测试与全量构建
+- 为 `utils` 和 `core` 声明 `rimraf` 开发依赖，修复 pnpm 严格 `node_modules` 结构下清理脚本找不到命令的问题
+
 ## 2.0.5
 
 ### 修复

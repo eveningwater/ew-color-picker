@@ -5,6 +5,22 @@ description: Release notes for ew-color-picker, including fixes, features and do
 
 # Changelog
 
+## 2.0.6
+
+### Fixes
+
+- Fixed `colorRgbaToHsva` turning a valid alpha of `0` into `1` (`parseFloat(...) || 1` treated `0` as falsy), which made fully transparent colors opaque once hue or saturation/value was adjusted and made `getHsvaColor()` return `a: 1`
+- Fixed `colorRgbaToHsla` returning `colorObj.h` on the internal `0-6` scale instead of degrees, which broke the round trip through `colorHslaToRgba` (e.g. green `rgba(0, 202, 136, 1)` came back as `rgba(204, 10, 0, 1)`)
+
+### Tests
+
+- Added regression tests for the `rgba(..., 0)` round trip, the unparseable-alpha fallback and the HSL hue / round trip
+
+### Release
+
+- Added a GitHub Actions CI workflow running dependency install, the full test suite and a full package build on pushes and pull requests to `master`
+- Declared `rimraf` as a dev dependency of `utils` and `core` so clean builds work under pnpm's strict `node_modules` layout
+
 ## 2.0.5
 
 ### Fixes
