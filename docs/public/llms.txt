@@ -8,6 +8,11 @@ Event-driven, plugin-based color picker with Hex / RGB / HSL support, alpha chan
 - 仓库 / Repository: https://github.com/eveningwater/ew-color-picker
 - npm: https://www.npmjs.com/package/@ew-color-picker/ew-color-picker
 
+## Start here / 先读这个
+
+- [AI Usage Best Practices](https://eveningwater.github.io/ew-color-picker/guide/ai-best-practices): Canonical rules for AI coding assistants — install, both stylesheets, mount, layered containers, setColor, lifecycle, checklist.
+- [AI 使用最佳实践](https://eveningwater.github.io/ew-color-picker/zh/guide/ai-best-practices): 面向 AI 编码助手的最小正确写法——安装、双样式表、挂载、弹层层级、改色、生命周期与自检清单。
+
 ## English Docs
 
 - [Callbacks](https://eveningwater.github.io/ew-color-picker/api/callbacks): Core and plugin-level callbacks: changeColor, sure, clear, togglePicker, onClick, onChange, changeMode and their signatures.

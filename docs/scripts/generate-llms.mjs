@@ -69,9 +69,14 @@ index += `Event-driven, plugin-based color picker with Hex / RGB / HSL support, 
 index += `- 官网 / Website: ${SITE}\n`
 index += `- 仓库 / Repository: https://github.com/eveningwater/ew-color-picker\n`
 index += `- npm: https://www.npmjs.com/package/@ew-color-picker/ew-color-picker\n\n`
+index += `## Start here / 先读这个\n\n`
+index += `- [AI Usage Best Practices](${SITE}guide/ai-best-practices): Canonical rules for AI coding assistants — install, both stylesheets, mount, layered containers, setColor, lifecycle, checklist.\n`
+index += `- [AI 使用最佳实践](${SITE}zh/guide/ai-best-practices): 面向 AI 编码助手的最小正确写法——安装、双样式表、挂载、弹层层级、改色、生命周期与自检清单。\n\n`
 
 for (const section of SECTIONS) {
-  const list = files.filter((file) => section.match(relative(DOCS_DIR, file).split('\\').join('/')))
+  const list = files
+    .filter((file) => section.match(relative(DOCS_DIR, file).split('\\').join('/')))
+    .filter((file) => !relative(DOCS_DIR, file).endsWith('ai-best-practices.md'))
   if (!list.length) continue
 
   index += `## ${section.title}\n\n`
