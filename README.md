@@ -13,7 +13,7 @@ Event-driven, plugin-based modern color picker. The core only keeps color state 
 
 **[Try the live demo →](https://eveningwater.github.io/ew-color-picker/examples/demo)** · **[Documentation](https://eveningwater.github.io/ew-color-picker/)**
 
-![ew-color-picker demo](./docs/public/demo-preview.jpg)
+![ew-color-picker demo](./docs/public/demo-preview.gif)
 
 ```bash
 pnpm add @ew-color-picker/ew-color-picker @ew-color-picker/style
@@ -31,11 +31,40 @@ Latest release: `2.0.10` · [Changelog](https://eveningwater.github.io/ew-color-
 ## Features
 
 - **Plugin architecture** — Box, Panel, Hue, Alpha, Input, InputNumber, Button, Predefine, ColorMode, Eyedropper and CopyColor are independent plugins
+- **Panel size presets** — `panelMode: 'mini' | 'small' | 'medium' | 'large'` scales the panel and every control inside it, so mobile layouts fit without custom CSS
+- **Gradient editor** — multi-stop gradients with linear / radial / conic types, angle and repeating support
+- **Framework agnostic** — plain DOM core, mountable from Vue, React, Svelte or any other framework
 - **Event driven** — `change` / `sure` / `clear` / `toggle` / `mode-change` / `options-update` / `destroy`
 - **Multiple color spaces** — Hex, RGB and HSL input modes with alpha support
 - **Fully typed** — every package is written in TypeScript and ships declarations
 - **Instance isolation** — each instance owns its event bus, DOM and plugin instances
 - **Tree-shakeable** — 15 packages; import only the plugins you need
+
+## Comparison
+
+| | ew-color-picker | vue-color | react-colorful | iro.js |
+| --- | --- | --- | --- | --- |
+| Framework | Vanilla TS, framework-agnostic | Vue 2 | React | Vanilla JS |
+| Architecture | 15 composable plugins | Monolithic components | Monolithic components | Monolithic |
+| Gradient editor | Built in (multi-stop, linear / radial / conic) | No | No | No |
+| Eyedropper | Built in (native EyeDropper API) | No | No | No |
+| Mobile panel size presets | `panelMode` (4 sizes) | No | No | No |
+| Text / number color inputs | Built in | Picker-specific | No | No |
+| TypeScript | Yes | No | Yes | Yes |
+| Runtime dependencies | None | tinycolor2 | None | None |
+
+Full breakdown: [Comparison](https://eveningwater.github.io/ew-color-picker/guide/comparison).
+
+## Bundle size
+
+`@ew-color-picker/ew-color-picker` registers every plugin, so it is the worst case:
+
+| Asset | Minified | Gzipped |
+| --- | --- | --- |
+| `dist/index.min.js` (all 15 plugins) | 141 KB | **34.1 KB** |
+| `@ew-color-picker/style/dist/index.css` | 37 KB | 5.7 KB |
+
+Import individual plugin packages instead to ship only what you register.
 
 ## Packages
 
@@ -54,6 +83,9 @@ Latest release: `2.0.10` · [Changelog](https://eveningwater.github.io/ew-color-
 | `@ew-color-picker/button` | Clear / Sure buttons |
 | `@ew-color-picker/predefine` | Predefined swatches |
 | `@ew-color-picker/color-mode` | Hex / RGB / HSL mode switching |
+| `@ew-color-picker/gradient` | Multi-stop gradient editor (linear / radial / conic) |
+| `@ew-color-picker/select` | Themed select with truncated-text tooltip |
+| `@ew-color-picker/checkbox` | Themed checkbox used by the gradient editor |
 | `@ew-color-picker/eyedropper` | Screen color picker via the native EyeDropper API (Chromium) |
 | `@ew-color-picker/copy-color` | Copy the current color to the clipboard |
 
@@ -139,7 +171,8 @@ picker.on('mode-change', (mode) => console.log('mode:', mode))
 | `el` | `string \| HTMLElement` | `document.body` | Mount container; auto-mounts when provided |
 | `disabled` | `boolean` | `false` | Disable all interaction |
 | `defaultColor` | `string` | `''` | Initial and clear-restore color |
-| `size` | `string \| number \| object` | `'normal'` | `mini`/`small`/`normal`/`medium`/`large`, number, or `{ width, height }` |
+| `size` | `string \| number \| object` | `'normal'` | Trigger box size: `mini`/`small`/`normal`/`medium`/`large`, number, or `{ width, height }` |
+| `panelMode` | `'mini' \| 'small' \| 'medium' \| 'large'` | `'large'` | Panel size preset; scales the panel and all inner controls. Use `'mini'` on mobile |
 | `predefineColor` | `(string \| { color, disabled? })[]` | `[]` | Swatches; empty renders nothing |
 | `isClickOutside` | `boolean` | `true` | Close on outside click |
 | `hueDirection` | `'vertical' \| 'horizontal'` | `'vertical'` | Hue orientation |

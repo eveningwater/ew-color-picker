@@ -21,6 +21,7 @@ description: Panel 插件渲染饱和度/明度二维选择面板，支持拖拽
 | --- | --- | --- | --- |
 | `hasPanel` | `boolean` | `true` | `false` 时不渲染二维面板 |
 | `ewColorPickerPanel` | `boolean` | `true` | 兼容写法：`false` 等价于关闭面板，其余面板配置请直接放在顶层 |
+| `panelMode` | `'mini' \| 'small' \| 'medium' \| 'large'` | `'large'` | 面板尺寸档位，面板及其内部控件整体缩放 |
 | `hueDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | 影响面板计算宽度（水平布局更宽） |
 | `alphaDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | 同上，两者都水平时面板宽 320px |
 | `autoPanelPosition` | `boolean` | `false` | 是否根据触发器位置自动定位面板 |
@@ -43,13 +44,16 @@ description: Panel 插件渲染饱和度/明度二维选择面板，支持拖拽
 
 ### 面板宽度规则
 
-| hue 方向 | alpha 方向 | 面板宽度 |
-| --- | --- | --- |
-| 垂直 | 垂直 | 285px |
-| 水平 | 垂直（或反之） | 约 302px |
-| 水平 | 水平 | 320px |
+面板尺寸由 `panelMode` 决定：
 
-高度固定 180px，通过 CSS 变量 `--panel-width` / `--panel-height` 注入。
+| 档位 | 宽 × 高 | hue / alpha 都水平时 |
+| --- | --- | --- |
+| `mini` | 180 × 140 | 202px |
+| `small` | 220 × 150 | 247px |
+| `medium` | 250 × 165 | 281px |
+| `large` | 285 × 180 | 320px |
+
+默认（垂直滑块）下上表宽度即面板宽度。水平滑块会按档位等比加宽（以 `large` 为基准：单条水平 +17px，两条都水平 +35px）。尺寸通过 CSS 变量 `--panel-width` / `--panel-height` 注入。
 
 ## 实例方法
 

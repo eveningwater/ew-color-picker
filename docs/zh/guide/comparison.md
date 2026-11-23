@@ -20,7 +20,7 @@ ew-color-picker 不是一套「成品皮肤」，而是一个 **可组装的颜�
 
 | 方案 | 形态 | 框架约束 | 扩展方式 | 体积（unpacked） | 最近发布 |
 | --- | --- | --- | --- | --- | --- |
-| **ew-color-picker** | 聚合包 + 14 个插件包（含兼容入口 `ew-color-picker`） | 无（原生 DOM） | 插件注册 / 自写插件 | 聚合包 84.6 KB + 样式 36.1 KB（合计 120.7 KB），`core.min` 11.9 KB（gzip 3.9 KB） | 2026-10 |
+| **ew-color-picker** | 聚合包 + 14 个插件包（含兼容入口 `ew-color-picker`） | 无（原生 DOM） | 插件注册 / 自写插件 | 聚合包 147.2 KB；CSS 38 KB（gzip 6.3 KB）；`core.min` 11.9 KB（gzip 3.9 KB） | 2026-11 |
 | [Pickr](https://github.com/Simonwep/pickr) | 单包，UMD/ESM | 无 | 主题（classic/monolith/nano）+ 选项 | 280.3 KB | 2026-09 |
 | [iro.js](https://github.com/jaames/iro.js) | 单包 | 无 | 选项 + 组件组合 | 231.4 KB | 2021-07 |
 | [Coloris](https://github.com/melloware/coloris) | 单包 + 一份 CSS | 无 | CSS 变量主题 + 选项 | 152.2 KB | 2026-10 |
@@ -31,7 +31,7 @@ ew-color-picker 不是一套「成品皮肤」，而是一个 **可组装的颜�
 | 原生 `input[type=color]` | 浏览器内置 | 无 | 无（样式不可控） | 0 | 随浏览器 |
 | Spectrum | jQuery 插件 | jQuery | 选项 | 1804.2 KB | 2020-05 |
 
-需要强调的一点：体量数字不能直接等价为运行时开销。ew-color-picker 的聚合包包含 UMD.min 与 ESM 两份产物和 `.d.ts` 声明，实际引入的最小运行时是 `index.min.js` **81.8 KB（gzip 19.4 KB）**，按需只用核心时是 **11.9 KB（gzip 3.9 KB）**；加上两套样式（gzip 约 3.7 KB）即为完整开箱体积，npm 压缩包总计约 29 KB。
+需要强调的一点：体量数字不能直接等价为运行时开销。ew-color-picker 的聚合包包含 UMD.min 与 ESM 两份产物和 `.d.ts` 声明，实际引入的最小运行时是 `index.min.js` **141 KB（gzip 34.1 KB）**，按需只用核心时是 **11.9 KB（gzip 3.9 KB）**；加上两套样式（gzip 约 6.3 KB）即为完整开箱体积，gzip 后约 40 KB。
 
 ## ew-color-picker 的优势
 

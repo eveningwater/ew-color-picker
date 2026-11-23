@@ -12,7 +12,7 @@ Every option below can be passed to the constructor. Defaults come from `default
 | Group | Options |
 | --- | --- |
 | Core | `el`, `disabled`, `defaultColor`, `size`, `predefineColor`, `isClickOutside` |
-| Layout | `hueDirection`, `alphaDirection`, `autoPanelPosition`, `panelPlacement`, `appendTo`, `boundary`, `prefix` |
+| Layout | `panelMode`, `hueDirection`, `alphaDirection`, `autoPanelPosition`, `panelPlacement`, `appendTo`, `boundary`, `prefix` |
 | Labels | `clearText`, `sureText` |
 | Animation | `togglePickerAnimation`, `pickerAnimationTime` |
 | Plugin switches | `hasBox`, `hasPanel`, `hasInput`, `hasClear`, `hasSure`, `hue`, `alpha`, `showButton`, `showColorMode`, `showInputNumber`, `showEyedropper`, `showCopyColor` |
@@ -71,6 +71,31 @@ new ewColorPicker({ el: '#app', disabled: true })
 | `large` | 40px | 20px |
 
 Numbers are treated as pixels; objects accept `width`/`height`; CSS strings are used verbatim.
+
+### panelMode
+
+| Type | Default | Description |
+| --- | --- | --- |
+| `'mini' \| 'small' \| 'medium' \| 'large'` | `'large'` | Panel size preset. Scales the panel and everything inside it. |
+
+| Mode | Panel size | Both sliders horizontal | Suggested use |
+| --- | --- | --- | --- |
+| `mini` | 180 × 140 | 202px wide | Mobile |
+| `small` | 220 × 150 | 247px wide | Compact layouts / mobile landscape |
+| `medium` | 250 × 165 | 281px wide | Tablets, medium dialogs |
+| `large` | 285 × 180 | 320px wide | Desktop (the historical size) |
+
+Everything inside the panel scales with the mode: sliders and their thumbs, the cursor, the inputs and number inputs, buttons, preset swatches, the gradient editor and the mode switcher.
+
+```ts
+// Mobile
+new ewColorPicker({ el: '#app', panelMode: 'mini' })
+
+// Desktop default, identical to previous versions
+new ewColorPicker({ el: '#app' })
+```
+
+`panelMode` is not the same as `size`: `size` controls the trigger box (the small swatch button), while `panelMode` controls the panel that opens from it. They can be combined freely.
 
 ### predefineColor
 

@@ -21,6 +21,7 @@ description: The Panel plugin renders the saturation/value area with drag, touch
 | --- | --- | --- | --- |
 | `hasPanel` | `boolean` | `true` | Hide the 2D panel |
 | `ewColorPickerPanel` | `boolean` | `true` | Legacy switch: `false` disables the panel; pass other panel options at the top level |
+| `panelMode` | `'mini' \| 'small' \| 'medium' \| 'large'` | `'large'` | Panel size preset; scales the panel and every inner control |
 | `hueDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | Affects width |
 | `alphaDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | Affects width |
 | `autoPanelPosition` | `boolean` | `false` | Auto placement |
@@ -38,13 +39,16 @@ Gap 5px; positions are adjusted to stay inside the viewport.
 
 ### Width rules
 
-| Hue | Alpha | Width |
-| --- | --- | --- |
-| vertical | vertical | 285px |
-| horizontal | vertical (or vice versa) | ~302px |
-| horizontal | horizontal | 320px |
+Panel size comes from `panelMode`:
 
-Height is 180px, injected as `--panel-width` / `--panel-height`.
+| Mode | Width × Height | Both sliders horizontal |
+| --- | --- | --- |
+| `mini` | 180 × 140 | 202px |
+| `small` | 220 × 150 | 247px |
+| `medium` | 250 × 165 | 281px |
+| `large` | 285 × 180 | 320px |
+
+With the default (vertical) sliders the width above is the panel width. Horizontal sliders widen the panel proportionally to the mode (`large` is the reference: +17px for one horizontal slider, +35px for two). Size is injected as `--panel-width` / `--panel-height`.
 
 ## Methods
 

@@ -25,6 +25,7 @@ new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
 | `disabled` | `boolean` | `false` | 禁用全部交互 |
 | `defaultColor` | `string` | `''` | 初始颜色 |
 | `size` | `string \| number \| { width, height }` | `'normal'` | 颜色盒尺寸 |
+| `panelMode` | `'mini' \| 'small' \| 'medium' \| 'large'` | `'large'` | 面板尺寸档位，面板及其内部控件整体缩放，移动端建议 `'mini'` |
 | `predefineColor` | `(string \| { color, disabled? })[]` | `[]` | 预定义颜色 |
 | `isClickOutside` | `boolean` | `true` | 点击容器外部时收起面板 |
 | `hueDirection` | `'vertical' \| 'horizontal'` | `'vertical'` | 色相滑块方向 |
@@ -38,6 +39,24 @@ new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
 | `appendTo` | `string \| HTMLElement` | `undefined` | 面板容器挂载目标（弹窗 / 滚动容器场景用 `document.body`） |
 | `boundary` | `string \| HTMLElement \| null` | `null` | 面板夹取边界（抽屉 / 弹窗内传容器，默认视口） |
 | `prefix` | `string` | `'ew-'` | CSS 类名前缀，用于避免与其他库的样式冲突 |
+
+### panelMode 面板尺寸
+
+| 档位 | 面板宽 × 高 | 双水平滑块宽度 | 建议场景 |
+| --- | --- | --- | --- |
+| `mini` | 180 × 140 | 202px | 移动端 |
+| `small` | 220 × 150 | 247px | 紧凑布局 / 移动端横屏 |
+| `medium` | 250 × 165 | 281px | 平板、中型弹窗 |
+| `large` | 285 × 180 | 320px | 桌面端（历史默认尺寸） |
+
+面板内的滑块、光标、输入框、按钮、预设色、渐变编辑器、模式切换器等全部随档位等比缩放。
+
+```js
+new ewColorPicker({ el: '#app', panelMode: 'mini' })  // 移动端
+new ewColorPicker({ el: '#app' })                     // 桌面端，等同 2.0.9 之前的尺寸
+```
+
+`panelMode` 与 `size` 不同：`size` 控制颜色盒（触发器）尺寸，`panelMode` 控制弹出的面板尺寸，两者可自由组合。
 
 ### 显示开关
 

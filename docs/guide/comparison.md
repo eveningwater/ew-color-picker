@@ -20,7 +20,7 @@ The numbers below come from the npm registry (`unpackedSize` and last publish da
 
 | Option | Shape | Framework lock-in | Extension model | Unpacked size | Last publish |
 | --- | --- | --- | --- | --- | --- |
-| **ew-color-picker** | Aggregate package + 14 plugin packages (plus the `ew-color-picker` compat entry) | None (plain DOM) | Plugin registration / custom plugins | Aggregate 84.6 KB + styles 36.1 KB (120.7 KB total); `core.min` 11.9 KB (gzip 3.9 KB) | 2026-10 |
+| **ew-color-picker** | Aggregate package + 14 plugin packages (plus the `ew-color-picker` compat entry) | None (plain DOM) | Plugin registration / custom plugins | Aggregate 147.2 KB; CSS 38 KB (gzip 6.3 KB); `core.min` 11.9 KB (gzip 3.9 KB) | 2026-11 |
 | [Pickr](https://github.com/Simonwep/pickr) | Single package (UMD/ESM) | None | Themes (classic/monolith/nano) + options | 280.3 KB | 2026-09 |
 | [iro.js](https://github.com/jaames/iro.js) | Single package | None | Options + component composition | 231.4 KB | 2021-07 |
 | [Coloris](https://github.com/melloware/coloris) | Single package + CSS | None | CSS variables + options | 152.2 KB | 2026-10 |
@@ -31,7 +31,7 @@ The numbers below come from the npm registry (`unpackedSize` and last publish da
 | Native `input[type=color]` | Built into browsers | None | None (styling is not controllable) | 0 | with browser updates |
 | Spectrum | jQuery plugin | jQuery | Options | 1804.2 KB | 2020-05 |
 
-One caveat: unpacked size is not runtime cost. The aggregate package ships two artifacts (UMD.min and ESM) plus `.d.ts` declarations. The smallest runtime you can ship is `index.min.js` at **81.8 KB (gzip 19.4 KB)**, or **11.9 KB (gzip 3.9 KB)** when using the core alone. Add the two style sheets (about 3.7 KB gzipped) for the full out-of-the-box footprint — roughly 29 KB of tarballs in total.
+One caveat: unpacked size is not runtime cost. The aggregate package ships two artifacts (UMD.min and ESM) plus `.d.ts` declarations. The smallest runtime you can ship is `index.min.js` at **141 KB (gzip 34.1 KB)**, or **11.9 KB (gzip 3.9 KB)** when using the core alone. Add the two style sheets (gzip 6.3 KB) for the full out-of-the-box footprint — about 40 KB gzipped in total.
 
 ## Where ew-color-picker stands out
 

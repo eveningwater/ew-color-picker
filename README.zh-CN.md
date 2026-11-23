@@ -13,7 +13,7 @@
 
 **[立即体验在线演示 →](https://eveningwater.github.io/ew-color-picker/zh/examples/demo)** · **[中文文档](https://eveningwater.github.io/ew-color-picker/zh/)**
 
-![ew-color-picker demo](./docs/public/demo-preview.jpg)
+![ew-color-picker demo](./docs/public/demo-preview.gif)
 
 ```bash
 pnpm add @ew-color-picker/ew-color-picker @ew-color-picker/style
@@ -31,11 +31,40 @@ pnpm add @ew-color-picker/ew-color-picker @ew-color-picker/style
 ## 特性
 
 - **插件架构**：Box、Panel、Hue、Alpha、Input、InputNumber、Button、Predefine、ColorMode、Eyedropper、CopyColor 全部是独立插件
+- **面板尺寸档位**：`panelMode: 'mini' | 'small' | 'medium' | 'large'`，面板及内部控件整体缩放，移动端无需额外写 CSS
+- **渐变编辑器**：多停靠点渐变，支持线性 / 径向 / 圆锥，可调角度与重复
+- **框架无关**：原生 DOM 实现，可在 Vue、React、Svelte 等任意框架中挂载
 - **事件驱动**：`change` / `sure` / `clear` / `toggle` / `mode-change` / `options-update` / `destroy`
 - **多颜色模式**：Hex、RGB、HSL 输入切换，支持透明度
 - **完整类型**：全部包使用 TypeScript 编写并输出声明文件
 - **多实例隔离**：每个实例拥有独立事件总线、DOM 与插件实例
 - **按需加载**：15 个独立包，可只引入所需插件
+
+## 对比
+
+| | ew-color-picker | vue-color | react-colorful | iro.js |
+| --- | --- | --- | --- | --- |
+| 框架支持 | 原生 TS，框架无关 | Vue 2 | React | 原生 JS |
+| 架构 | 15 个可组合插件 | 单体组件 | 单体组件 | 单体 |
+| 渐变编辑器 | 内置（多停靠点，线性 / 径向 / 圆锥） | 无 | 无 | 无 |
+| 吸管取色 | 内置（原生 EyeDropper API） | 无 | 无 | 无 |
+| 移动端面板档位 | `panelMode`（4 档） | 无 | 无 | 无 |
+| 文本 / 数字颜色输入 | 内置 | 视具体组件而定 | 无 | 无 |
+| TypeScript | 是 | 否 | 是 | 是 |
+| 运行时依赖 | 无 | tinycolor2 | 无 | 无 |
+
+完整对比见 [对比文档](https://eveningwater.github.io/ew-color-picker/zh/guide/comparison)。
+
+## 体积
+
+`@ew-color-picker/ew-color-picker` 会注册全部插件，属于最大体积场景：
+
+| 资源 | 压缩前 | Gzip |
+| --- | --- | --- |
+| `dist/index.min.js`（全部 15 个插件） | 141 KB | **34.1 KB** |
+| `@ew-color-picker/style/dist/index.css` | 37 KB | 5.7 KB |
+
+按需引入单个插件包可以显著减小体积，只有注册的插件才会被打包。
 
 ## 包结构
 
@@ -54,6 +83,9 @@ pnpm add @ew-color-picker/ew-color-picker @ew-color-picker/style
 | `@ew-color-picker/button` | 清空 / 确定按钮 |
 | `@ew-color-picker/predefine` | 预定义颜色 |
 | `@ew-color-picker/color-mode` | Hex / RGB / HSL 模式切换 |
+| `@ew-color-picker/gradient` | 多停靠点渐变编辑器（线性 / 径向 / 圆锥） |
+| `@ew-color-picker/select` | 主题化下拉选择，截断时自动展示 tooltip |
+| `@ew-color-picker/checkbox` | 主题化复选框，供渐变编辑器使用 |
 | `@ew-color-picker/eyedropper` | 屏幕吸管取色（原生 EyeDropper API，Chromium） |
 | `@ew-color-picker/copy-color` | 复制当前颜色到剪贴板 |
 
@@ -139,7 +171,8 @@ picker.on('mode-change', (mode) => console.log('模式：', mode))
 | `el` | `string \| HTMLElement` | `document.body` | 挂载容器，提供后自动挂载 |
 | `disabled` | `boolean` | `false` | 禁用全部交互 |
 | `defaultColor` | `string` | `''` | 初始颜色，也是清空后的还原色 |
-| `size` | `string \| number \| object` | `'normal'` | 色块尺寸：`mini`/`small`/`normal`/`medium`/`large`、数字、`{ width, height }` |
+| `size` | `string \| number \| object` | `'normal'` | 颜色盒（触发器）尺寸：`mini`/`small`/`normal`/`medium`/`large`、数字、`{ width, height }` |
+| `panelMode` | `'mini' \| 'small' \| 'medium' \| 'large'` | `'large'` | 面板尺寸档位，面板及内部控件整体缩放；移动端建议 `'mini'` |
 | `predefineColor` | `(string \| { color, disabled? })[]` | `[]` | 预定义颜色，为空则不渲染 |
 | `isClickOutside` | `boolean` | `true` | 点击外部关闭面板 |
 | `hueDirection` | `'vertical' \| 'horizontal'` | `'vertical'` | 色相滑块方向 |
