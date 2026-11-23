@@ -28,6 +28,8 @@ export interface SelectOptions {
   size?: "small" | "default" | "large";
   prefix?: string;
   clearable?: boolean;
+  // 默认 true，选中值/选项文字被截断时悬浮展示完整内容
+  tooltip?: boolean;
   onChange?: (value: string | number, option: SelectOption) => void;
   onClear?: () => void;
   onOpen?: () => void;
@@ -46,6 +48,7 @@ export default class Select {
   private currentValue: string | number | undefined;
   private isOpen: boolean = false;
   private activeIndex: number = -1;
+  private tooltipNode: HTMLDivElement | null = null;
 
   private get prefix(): string {
     return this.options.prefix || DEFAULT_PREFIX;
@@ -61,6 +64,7 @@ export default class Select {
         size: "default",
         prefix: DEFAULT_PREFIX,
         clearable: true,
+        tooltip: true,
         onChange: () => {},
         onClear: () => {},
         onOpen: () => {},
@@ -191,6 +195,8 @@ export default class Select {
     }
 
     this.updateClearVisibility(isEmpty);
+    // 值变化后旧的 tooltip 文案已失效
+    this.hideTooltip();
   }
 
   private updateClearVisibility(isEmpty: boolean) {
@@ -209,7 +215,89 @@ export default class Select {
     if (!this.trigger || !this.dropdown) return;
     on(this.trigger, "click", this.handleTriggerClick);
     on(this.trigger, "keydown", this.handleKeydown as EventListener);
+    on(this.trigger, "mouseenter", this.handleTriggerMouseEnter);
+    on(this.trigger, "mouseleave", this.handleTriggerMouseLeave);
+    on(this.trigger, "focus", this.handleTriggerFocus);
+    on(this.trigger, "blur", this.handleTriggerBlur);
     on(this.dropdown, "click", this.handleDropdownClick);
+    on(this.dropdown, "mouseover", this.handleDropdownMouseOver);
+    on(this.dropdown, "mouseout", this.handleDropdownMouseOut);
+  }
+
+  private handleTriggerMouseEnter = () => {
+    this.maybeShowTooltip(this.valueText, this.trigger);
+  };
+
+  private handleTriggerMouseLeave = () => {
+    this.hideTooltip();
+  };
+
+  private handleTriggerFocus = () => {
+    this.maybeShowTooltip(this.valueText, this.trigger);
+  };
+
+  private handleTriggerBlur = () => {
+    this.hideTooltip();
+  };
+
+  private handleDropdownMouseOver = (event: Event) => {
+    if (this.options.tooltip === false) return;
+    const target = event.target as HTMLElement | null;
+    const optionNode = target?.closest(
+      `[data-select-index]`
+    ) as HTMLElement | null;
+    if (!optionNode) return;
+    this.maybeShowTooltip(optionNode, optionNode);
+  };
+
+  private handleDropdownMouseOut = () => {
+    this.hideTooltip();
+  };
+
+  // 仅当内容被截断时展示 tooltip
+  private maybeShowTooltip(
+    contentEl: HTMLElement | null,
+    anchorEl: HTMLElement | null
+  ) {
+    if (this.options.tooltip === false || !contentEl || !anchorEl) return;
+    const text = (contentEl.textContent || "").trim();
+    if (!text) return;
+    if (contentEl.scrollWidth <= contentEl.clientWidth) return;
+    this.showTooltip(text, anchorEl);
+  }
+
+  private ensureTooltip(): HTMLDivElement {
+    if (!this.tooltipNode) {
+      const node = create<HTMLDivElement>("div");
+      addClass(node, `${this.prefix}select__tooltip`);
+      setAttr(node, { role: "tooltip" });
+      document.body.appendChild(node);
+      this.tooltipNode = node;
+    }
+    return this.tooltipNode;
+  }
+
+  private showTooltip(text: string, anchor: HTMLElement) {
+    const node = this.ensureTooltip();
+    const p = this.prefix;
+    node.textContent = text;
+    addClass(node, `${p}select__tooltip--visible`);
+    removeClass(node, `${p}select__tooltip--bottom`);
+
+    const rect = anchor.getBoundingClientRect();
+    node.style.left = `${rect.left}px`;
+    node.style.top = `${rect.top - 6}px`;
+
+    // 上方空间不足时改为在下方展示
+    if (rect.top < node.offsetHeight + 8) {
+      node.style.top = `${rect.bottom + 6}px`;
+      addClass(node, `${p}select__tooltip--bottom`);
+    }
+  }
+
+  private hideTooltip() {
+    if (!this.tooltipNode) return;
+    removeClass(this.tooltipNode, `${this.prefix}select__tooltip--visible`);
   }
 
   private handleTriggerClick = (event: Event) => {
@@ -336,6 +424,7 @@ export default class Select {
       return;
     }
     this.isOpen = false;
+    this.hideTooltip();
     removeClass(this.container, `${this.prefix}select--open`);
     if (this.trigger) setAttr(this.trigger, { "aria-expanded": "false" });
     off(document, "mousedown", this.handleDocumentMousedown);
@@ -409,9 +498,19 @@ export default class Select {
     if (this.trigger) {
       off(this.trigger, "click", this.handleTriggerClick);
       off(this.trigger, "keydown", this.handleKeydown as EventListener);
+      off(this.trigger, "mouseenter", this.handleTriggerMouseEnter);
+      off(this.trigger, "mouseleave", this.handleTriggerMouseLeave);
+      off(this.trigger, "focus", this.handleTriggerFocus);
+      off(this.trigger, "blur", this.handleTriggerBlur);
     }
     if (this.dropdown) {
       off(this.dropdown, "click", this.handleDropdownClick);
+      off(this.dropdown, "mouseover", this.handleDropdownMouseOver);
+      off(this.dropdown, "mouseout", this.handleDropdownMouseOut);
+    }
+    if (this.tooltipNode) {
+      removeElement(this.tooltipNode);
+      this.tooltipNode = null;
     }
     if (this.container?.parentNode) {
       removeElement(this.container);

@@ -11,6 +11,8 @@ export interface SelectPluginOptions {
   selectPlaceholder?: string;
   // 默认 true，选中值后显示清空图标
   selectClearable?: boolean;
+  // 默认 true，文字被截断时悬浮展示完整内容，传 false 关闭
+  selectTooltip?: boolean;
   onSelectChange?: (value: string | number, option: SelectOption) => void;
   onSelectClear?: () => void;
 }
@@ -70,6 +72,7 @@ export class ewColorPickerSelectPlugin {
       placeholder: this.options.selectPlaceholder,
       prefix,
       clearable: this.options.selectClearable !== false,
+      tooltip: this.options.selectTooltip !== false,
       onChange: (value, option) => {
         if (isFunction(this.options.onSelectChange)) {
           this.options.onSelectChange(value, option);

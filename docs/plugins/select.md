@@ -34,6 +34,7 @@ Without it the dropdown is unstyled.
 | `selectValue` | `string \| number` | `undefined` | Initially selected value |
 | `selectPlaceholder` | `string` | `undefined` | Text shown when no value is selected |
 | `selectClearable` | `boolean` | `true` | Show a clear icon once a value is selected |
+| `selectTooltip` | `boolean` | `true` | Show a tooltip with the full text when the selected value or an option is truncated |
 | `onSelectChange` | `(value, option) => void` | — | Called after the user picks an option |
 | `onSelectClear` | `() => void` | — | Called after the user clears the selection |
 

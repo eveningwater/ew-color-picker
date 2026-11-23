@@ -8,6 +8,9 @@ export interface AnimationOptions {
   delay?: number;
 }
 
+// 元素 display 值的 data 属性 key，用于 hide 前保存 / show 时恢复
+const DISPLAY_DATA_KEY = "origDisplay";
+
 // 基础动画类
 export class Animation {
   private element: HTMLElement;
@@ -23,11 +26,22 @@ export class Animation {
     };
   }
 
+  // 保存元素当前 computed display 到 data 属性（用于 hide 之前）
+  private saveDisplay(): void {
+    const computed = window.getComputedStyle(this.element).display;
+    this.element.dataset[DISPLAY_DATA_KEY] = computed;
+  }
+
+  // 恢复元素的原始 display（用于 show），无保存时返回空字符串让 CSS 值生效
+  private restoreDisplay(): string {
+    return this.element.dataset[DISPLAY_DATA_KEY] || '';
+  }
+
   // 显示动画
   show(): Promise<void> {
     return new Promise((resolve) => {
       setStyle(this.element, {
-        display: 'block'
+        display: this.restoreDisplay()
       });
       resolve();
     });
@@ -36,6 +50,10 @@ export class Animation {
   // 隐藏动画
   hide(): Promise<void> {
     return new Promise((resolve) => {
+      // 先保存原始 display，再设 none
+      if (this.element.style.display !== 'none') {
+        this.saveDisplay();
+      }
       setStyle(this.element, {
         display: 'none'
       });
@@ -46,9 +64,9 @@ export class Animation {
   // 滑下动画
   slideDown(): Promise<void> {
     return new Promise((resolve) => {
-      // 先设置为 block 以获取真实高度
+      // 恢复原始 display（可能是 inline-flex / inline-block / block 等）
       setStyle(this.element, {
-        display: 'block',
+        display: this.restoreDisplay(),
         visibility: 'hidden'
       });     
       // 获取元素的完整高度（包括 padding 和 border）
@@ -88,6 +106,11 @@ export class Animation {
   // 滑上动画
   slideUp(): Promise<void> {
     return new Promise((resolve) => {
+      // 先保存原始 display（滑上结束后要设为 none，但下次打开需要恢复）
+      if (this.element.style.display !== 'none') {
+        this.saveDisplay();
+      }
+
       // 获取元素的完整高度
       const marginTop = getStyle(this.element, 'marginTop') as string;
       const marginBottom = getStyle(this.element, 'marginBottom') as string;
@@ -129,9 +152,9 @@ export class Animation {
       const element = this.element;
       const duration = this.options.duration!;
       
-      // 设置初始状态
+      // 恢复原始 display
       setStyle(element, {
-        display: 'block',
+        display: this.restoreDisplay(),
         opacity: '0'
       });
 
@@ -171,9 +194,13 @@ export class Animation {
       const element = this.element;
       const duration = this.options.duration!;
       
+      // 先保存原始 display
+      if (element.style.display !== 'none') {
+        this.saveDisplay();
+      }
+      
       // 确保元素可见
       setStyle(element, {
-        display: 'block',
         opacity: '1'
       });
       
@@ -283,10 +310,10 @@ export function debounce<T extends (...args: any[]) => any>(
   func: T,
   wait: number,
   immediate = false
-): (...args: Parameters<T>) => void {
+): (...args: any[]) => void {
   let timeout: ReturnType<typeof setTimeout> | null = null;
   
-  return function executedFunction(...args: Parameters<T>) {
+  return function executedFunction(...args: any[]) {
     const later = () => {
       timeout = null;
       if (!immediate) func(...args);
@@ -305,10 +332,10 @@ export function debounce<T extends (...args: any[]) => any>(
 export function throttle<T extends (...args: any[]) => any>(
   func: T,
   limit: number
-): (...args: Parameters<T>) => void {
+): (...args: any[]) => void {
   let inThrottle: boolean;
   
-  return function executedFunction(...args: Parameters<T>) {
+  return function executedFunction(...args: any[]) {
     if (!inThrottle) {
       func(...args);
       inThrottle = true;

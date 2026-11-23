@@ -5,6 +5,32 @@ description: Release notes for ew-color-picker, including fixes, features and do
 
 # Changelog
 
+## 2.0.10
+
+### Features
+
+- Added the `panelMode` option: `'mini' | 'small' | 'medium' | 'large'`, defaulting to `large` (unchanged behaviour). `mini` is designed for mobile. Sliders, cursors, inputs, buttons, predefine swatches, the gradient editor and the mode switcher all scale with the selected mode
+- Added a tooltip to the select component: when the selected value or an option label is truncated, hovering shows the full text. Enabled by default; disable with `selectTooltip: false`
+- Added `examples/19-panel-mode.html`, covering every combination of `panelMode`, horizontal hue/alpha and gradients
+
+### Fixes
+
+- Fixed the panel and the vertical hue/alpha sliders wrapping onto a new line in smaller modes: the panel container is now a vertical flex container and the panel plus sliders live in a single-row `top-row`
+- Fixed wrong panel widths in horizontal mode for smaller modes: the horizontal extra width was always calculated from the `large` base width, making `mini`/`small`/`medium` as wide as `large`
+- Fixed the animation module hard-coding `display: block` when showing the panel, which overrode the stylesheet layout: the animation module now saves and restores the element's original `display`, while showing/hiding is handled by the core through the `hidden` class
+- Fixed the absolutely positioned panel being stretched to the page width: the container now shrinks with `fit-content`, the panel/slider gaps are tighter, and no empty space is left on the right
+- Fixed RGBA/HSL inputs not fitting on one line in smaller modes: `mini`/`small`/`medium` now use a two-row 2×2 layout with inputs that adapt to the container width
+- Fixed the gradient editor layout at smaller sizes: the type row uses a two-row grid, and the stop row is forced onto one line with its two number inputs sharing the remaining space
+- Fixed hard-coded sizes and font sizes in input-number, select, checkbox and the mode switcher that were too large in smaller modes; they are now CSS variables that scale with the mode
+
+### Tests
+
+- Added select tooltip tests: shown when truncated, hidden when it fits, disabled via `selectTooltip: false`, and cleaned up on destroy
+
+### Docs
+
+- Documented the `selectTooltip` option in the English and Chinese select guides
+
 ## 2.0.9
 
 ### Fixes

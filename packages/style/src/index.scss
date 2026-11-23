@@ -3,10 +3,152 @@
 $prefix: "ew-" !default;
 // 基础样式 - 基于原版 ew-color-picker.min.css
 
-// CSS 变量默认值
+// CSS 变量默认值（对应 panelMode: large），各尺寸档位在文件末尾覆盖
 :root {
+  // 面板整体
   --panel-width: 285px;
   --panel-height: 180px;
+
+  // 面板外壳
+  --container-padding: 10px;
+  --container-margin-top: 8px;
+  --container-min-width: 320px;
+  --container-radius: 10px;
+  --panel-radius: 8px;
+  --content-gap: 12px;
+
+  // 滑块（hue / alpha）
+  --slider-width-v: 12px;   // 垂直时滑块柱宽
+  --slider-height-h: 12px;  // 水平时滑块柱高
+  --slider-gap: 4px;        // 垂直滑块与面板之间的 margin-left
+  --slider-hue-bg-offset: 3px;
+  --slider-alpha-top-gap: 3px;
+  --slider-hue-top-margin: 8px;
+
+  // 滑块拇指
+  --thumb-size-v: 4px;      // 垂直滑块拇指的高度
+  --thumb-size-v-bar: 12px; // 垂直滑块拇指的宽度（柱宽）
+  --thumb-size-h: 4px;      // 水平滑块拇指的宽度
+
+  // 颜色光标
+  --cursor-size: 4px;
+  --cursor-ring: 3px;
+
+  // 底部区域
+  --drop-container-margin-top: 6px;
+  --drop-container-padding-top: 4px;
+  --drop-container-min-height: 28px;
+  --bottom-row-gap: 8px;
+  --bottom-row-margin-top: 8px;
+  --mode-container-gap: 8px;
+  --mode-container-padding: 8px;
+  --mode-container-margin-top: 8px;
+  --mode-container-margin-bottom: 12px;
+  --mode-container-radius: 6px;
+  --mode-title-font-size: 16px;
+  --mode-btn-size: 24px;
+  --mode-btn-icon-size: 16px;
+  --mode-btn-radius: 4px;
+  --mode-arrow-size: 6px;
+  --mode-text-font-size: 14px;
+  --mode-text-min-width: 60px;
+  --mode-text-padding: 0 8px;
+
+  // 输入框
+  --input-height: 32px;
+  --input-line-height: 32px;
+  --input-font-size: 14px;
+  --input-padding: 0 8px;
+  --input-radius: 5px;
+  --default-input-height: 28px;
+  --default-input-padding: 4px 8px;
+  --default-input-font-size: 12px;
+
+  // InputNumber 组件
+  --input-number-height: 32px;
+  --input-number-border-width: 1.5px;
+  --input-number-radius: 5px;
+  --input-number-input-padding: 4px 8px;
+  --input-number-input-font-size: 13px;
+  --input-number-buttons-width: 28px;
+  --input-number-buttons-min-width: 22px;
+  --input-number-icon-size: 8px;
+
+  // Select 组件
+  --select-height: 32px;
+  --select-border-width: 1.5px;
+  --select-radius: 6px;
+  --select-padding: 0 8px;
+  --select-font-size: 13px;
+  --select-arrow-size: 10px;
+  --select-clear-size: 10px;
+
+  // Checkbox 组件
+  --checkbox-gap: 5px;
+  --checkbox-font-size: 12px;
+  --checkbox-border-width: 1.5px;
+  --checkbox-box-size: 14px;
+  --checkbox-box-radius: 3px;
+  --checkbox-icon-size: 9px;
+
+  // 按钮
+  --btn-padding: 5px;
+  --btn-font-size: 12px;
+  --btn-radius: 3px;
+  --btn-min-width: 60px;
+
+  // 预设色
+  --predefine-item-size: 20px;
+  --predefine-item-radius: 4px;
+  --predefine-gap: 8px;
+  --predefine-margin-top: 12px;
+  --predefine-font-size: 12px;
+
+  // 工具栏 / 吸管 / 复制按钮
+  --extra-row-gap: 8px;
+  --extra-row-margin-top: 8px;
+  --eyedropper-btn-height: 28px;
+  --eyedropper-btn-padding: 0 6px;
+  --eyedropper-btn-icon: 16px;
+  --copy-btn-size: 28px;
+  --copy-btn-icon: 14px;
+
+  // 渐变色编辑器
+  --gradient-bar-height: 14px;
+  --gradient-bar-radius: 7px;
+  --gradient-handle-size: 14px;
+  --gradient-row-gap: 4px;
+  --gradient-row-min-height: 24px;
+  --gradient-label-font-size: 12px;
+  --gradient-label-line-height: 24px;
+  --gradient-text-height: 24px;
+  --gradient-text-font-size: 12px;
+  --gradient-btn-height: 24px;
+  --gradient-btn-font-size: 12px;
+  --gradient-label-margin-top: 8px;
+  // 停靠点行两个数字输入框的首选宽度
+  --gradient-stop-number-width: 60px;
+
+  // 输入组
+  --inputs-group-gap: 4px;
+  --inputs-label-font-size: 12px;
+  --inputs-label-height: 18px;
+  --inputs-label-line-height: 18px;
+  --inputs-label-margin-bottom: 2px;
+
+  // hsl inputs
+  --hsl-input-height: 32px;
+
+  // mode-container 新结构
+  --mode-new-container-gap: 8px;
+  --mode-new-btn-size: 24px;
+  --mode-new-btn-icon: 16px;
+
+  // inputs group max/min width (color-mode plugin)
+  --color-inputs-max-width: 320px;
+  --color-inputs-min-width: 280px;
+  --color-inputs-gap: 6px;
+  --color-inputs-margin-bottom: 8px;
 }
 
 // 绝对定位元素
@@ -122,21 +264,53 @@ $prefix: "ew-" !default;
 .#{$prefix}color-picker-panel-container {
   // 显式声明盒模型，避免被宿主全局 box-sizing: border-box 影响尺寸计算
   box-sizing: content-box;
-  display: inline-block;
+  // position:absolute 会把 inline-flex 规范化成 block flex，
+  // block flex 默认 width:auto = containing block 宽度，需要 fit-content 让它 shrink-to-fit 内容
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: fit-content;
   position: absolute;
   left: 0;
   top: 100%;
-  margin-top: 8px;
-  padding: 10px;
+  margin-top: var(--container-margin-top);
+  padding: var(--container-padding);
   background: #fff;
-  border-radius: 10px;
+  border-radius: var(--container-radius);
   box-shadow: 0 8px 32px rgba(0,0,0,0.18);
   border: 1px solid #e5e6eb;
-  min-width: 320px;
   overflow: visible;
   z-index: 1000;
   transition: opacity 0.2s, transform 0.2s;
   opacity: 1;
+}
+// 顶部 row：panel + vertical hue slider + vertical alpha slider 永远一行
+.#{$prefix}color-picker-top-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  // flex gap 统一控制 panel 与 slider、slider 与 slider 的间距
+  // 用更紧凑的 slider-gap 让整体面板更窄
+  gap: var(--slider-gap);
+  // top-row 是容器宽度的唯一锚点，shrink-to-fit 自己的内容宽度
+  width: fit-content;
+  flex-shrink: 0;
+}
+// flex row 内的 vertical slider 不要再加 margin-left，让 flex gap 统一控制
+.#{$prefix}color-picker-top-row > .#{$prefix}color-picker-slider.#{$prefix}color-picker-is-vertical {
+  margin-left: 0;
+}
+// mode-container / extra-row / bottom-row / inputs-group 等 block 子元素：
+// max-width:0 + min-width:100% = shrink-to-fit 计算时不参与撑宽容器，但渲染时填满容器
+// 这样容器宽度完全由 top-row 决定
+.#{$prefix}color-picker-mode-container,
+.#{$prefix}color-picker-extra-row,
+.#{$prefix}color-picker-bottom-row,
+.#{$prefix}color-picker-inputs-group,
+.#{$prefix}color-picker-slider.#{$prefix}color-picker-is-horizontal,
+.#{$prefix}color-picker-gradient-container {
+  max-width: 0;
+  min-width: 100%;
 }
 .#{$prefix}fade-in {
   opacity: 1;
@@ -160,12 +334,12 @@ $prefix: "ew-" !default;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  gap: 12px;
+  gap: var(--content-gap);
 }
 
 // 颜色面板（尺寸统一由 .#{$prefix}color-picker-panel-dynamic-size 的 --panel-width / --panel-height 控制）
 .#{$prefix}color-picker-panel {
-  border-radius: 8px;
+  border-radius: var(--panel-radius);
   margin-bottom: 0;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   display: inline-block;
@@ -196,23 +370,23 @@ $prefix: "ew-" !default;
 
 // 垂直色相条紧贴面板
 .#{$prefix}color-picker-slider.#{$prefix}color-picker-is-vertical {
-  margin-left: 4px;
+  margin-left: var(--slider-gap);
   margin-top: 0;
-  height: 180px;
+  height: var(--panel-height);
   display: inline-block;
   vertical-align: top;
 }
 
 // 水平色相条
 .#{$prefix}color-picker-slider.#{$prefix}color-picker-is-horizontal {
-  margin-top: 8px;
+  margin-top: var(--slider-hue-top-margin);
   margin-bottom: 0;
 }
 
 // 垂直色相滑块背景
 .#{$prefix}color-picker-slider.#{$prefix}color-picker-is-vertical .#{$prefix}color-picker-slider-bar {
   background: linear-gradient(180deg, red, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, red);
-  margin-left: 3px;
+  margin-left: var(--slider-hue-bg-offset);
 }
 
 // 水平色相滑块背景
@@ -223,7 +397,7 @@ $prefix: "ew-" !default;
 // 垂直滑块尺寸
 .#{$prefix}color-picker-slider.#{$prefix}color-picker-is-vertical .#{$prefix}color-picker-alpha-slider-bar,
 .#{$prefix}color-picker-slider.#{$prefix}color-picker-is-vertical .#{$prefix}color-picker-slider-bar {
-  width: 12px;
+  width: var(--slider-width-v);
   height: 100%;
 }
 
@@ -231,12 +405,12 @@ $prefix: "ew-" !default;
 .#{$prefix}color-picker-slider.#{$prefix}color-picker-is-horizontal .#{$prefix}color-picker-alpha-slider-bar,
 .#{$prefix}color-picker-slider.#{$prefix}color-picker-is-horizontal .#{$prefix}color-picker-slider-bar {
   width: 100%;
-  height: 12px;
+  height: var(--slider-height-h);
 }
 
 // 水平透明度滑块间距
 .#{$prefix}color-picker-slider.#{$prefix}color-picker-is-horizontal .#{$prefix}color-picker-alpha-slider-bar {
-  margin-top: 3px;
+  margin-top: var(--slider-alpha-top-gap);
 }
 
 // 透明度背景
@@ -259,15 +433,15 @@ $prefix: "ew-" !default;
 // 水平滑块拇指尺寸
 .#{$prefix}color-picker-slider.#{$prefix}color-picker-is-horizontal .#{$prefix}color-picker-alpha-slider-thumb,
 .#{$prefix}color-picker-slider.#{$prefix}color-picker-is-horizontal .#{$prefix}color-picker-slider-thumb {
-  width: 4px;
+  width: var(--thumb-size-h);
   height: 100%;
 }
 
 // 垂直滑块拇指尺寸
 .#{$prefix}color-picker-slider.#{$prefix}color-picker-is-vertical .#{$prefix}color-picker-alpha-slider-thumb,
 .#{$prefix}color-picker-slider.#{$prefix}color-picker-is-vertical .#{$prefix}color-picker-slider-thumb {
-  width: 12px;
-  height: 4px;
+  width: var(--thumb-size-v-bar);
+  height: var(--thumb-size-v);
 }
 
 // 颜色光标
@@ -275,18 +449,18 @@ $prefix: "ew-" !default;
   left: 0;
   top: 0;
   cursor: default;
-  width: 4px;
-  height: 4px;
+  width: var(--cursor-size);
+  height: var(--cursor-size);
   border-radius: 50%;
-  box-shadow: 0 0 0 3px #fff, inset 0 0 2px 2px rgba(0, 0, 0, 0.4), 0 0 2px 3px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 0 var(--cursor-ring) #fff, inset 0 0 2px 2px rgba(0, 0, 0, 0.4), 0 0 2px 3px rgba(0, 0, 0, 0.5);
   transform: translate(-50%, -50%); // 使光标中心对准定位点
 }
 
 // 底部容器
 .#{$prefix}color-picker-drop-container {
-  margin-top: 6px;
-  padding-top: 4px;
-  min-height: 28px;
+  margin-top: var(--drop-container-margin-top);
+  padding-top: var(--drop-container-padding-top);
+  min-height: var(--drop-container-min-height);
   border-top: 1px solid #cdcdcd;
 }
 
@@ -305,8 +479,8 @@ $prefix: "ew-" !default;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  margin-top: 8px;
+  gap: var(--bottom-row-gap);
+  margin-top: var(--bottom-row-margin-top);
 }
 .#{$prefix}color-picker-bottom-row input {
   flex: 1 1 auto;
@@ -318,19 +492,19 @@ $prefix: "ew-" !default;
   gap: 2px;
 }
 .#{$prefix}color-picker-drop-btn-group button {
-  min-width: 60px;
+  min-width: var(--btn-min-width);
   box-sizing: border-box;
 }
 
 // 输入框样式
 .#{$prefix}color-picker-input {
   width: 100%;
-  height: 32px;
-  line-height: 32px;
+  height: var(--input-height);
+  line-height: var(--input-line-height);
   border: 1px solid #dcdfe6;
-  border-radius: 5px;
-  padding: 0 8px;
-  font-size: 14px;
+  border-radius: var(--input-radius);
+  padding: var(--input-padding);
+  font-size: var(--input-font-size);
   transition: border-color 0.2s;
   outline: none;
   box-sizing: border-box;
@@ -342,9 +516,9 @@ $prefix: "ew-" !default;
 
 // 按钮
 .#{$prefix}color-picker-drop-btn {
-  padding: 5px;
-  font-size: 12px;
-  border-radius: 3px;
+  padding: var(--btn-padding);
+  font-size: var(--btn-font-size);
+  border-radius: var(--btn-radius);
   transition: 0.1s;
   font-weight: 500;
   margin: 0;
@@ -381,18 +555,18 @@ $prefix: "ew-" !default;
 .#{$prefix}color-picker-predefine-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--predefine-gap);
   width: 100%;
-  font-size: 12px;
-  margin-top: 12px;
+  font-size: var(--predefine-font-size);
+  margin-top: var(--predefine-margin-top);
 }
 
 // 预定义颜色项
 .#{$prefix}color-picker-predefine-color {
   margin: 0;
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
+  width: var(--predefine-item-size);
+  height: var(--predefine-item-size);
+  border-radius: var(--predefine-item-radius);
   border: 1px solid #9b979b;
 }
 
@@ -644,50 +818,50 @@ $prefix: "ew-" !default;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  margin-top: 8px;
-  margin-bottom: 12px;
-  padding: 8px;
+  gap: var(--mode-container-gap);
+  margin-top: var(--mode-container-margin-top);
+  margin-bottom: var(--mode-container-margin-bottom);
+  padding: var(--mode-container-padding);
   border: 1px solid #e5e6eb;
-  border-radius: 6px;
+  border-radius: var(--mode-container-radius);
   background-color: #fafafa;
 }
 .#{$prefix}color-picker-mode-up-btn,
 .#{$prefix}color-picker-mode-down-btn {
-  width: 24px;
-  height: 24px;
-  flex: 0 0 24px;
+  width: var(--mode-btn-size);
+  height: var(--mode-btn-size);
+  flex: 0 0 var(--mode-btn-size);
   border: 1px solid #ddd;
   background: #fff;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: var(--mode-btn-radius);
   transition: all 0.2s;
 }
 /* 防止图标在 flex 布局中被压缩到 0 宽度 */
 .#{$prefix}color-picker-mode-up-btn svg,
 .#{$prefix}color-picker-mode-down-btn svg {
-  width: 16px;
-  height: 16px;
-  flex: 0 0 16px;
+  width: var(--mode-btn-icon-size);
+  height: var(--mode-btn-icon-size);
+  flex: 0 0 var(--mode-btn-icon-size);
 }
 .#{$prefix}color-picker-mode-text {
-  min-width: 60px;
+  min-width: var(--mode-text-min-width);
   text-align: center;
-  font-size: 14px;
+  font-size: var(--mode-text-font-size);
   font-weight: bold;
   color: #333;
   user-select: none;
-  padding: 0 8px;
+  padding: var(--mode-text-padding);
 }
 
 // ========== 输入组相关 ========== //
 .#{$prefix}color-picker-inputs-group {
   display: flex;
   flex-direction: row;
-  gap: 4px;
+  gap: var(--inputs-group-gap);
   align-items: flex-end;
   margin-bottom: 0;
   width: 100%;
@@ -700,14 +874,14 @@ $prefix: "ew-" !default;
   min-width: 0;
 }
 .#{$prefix}color-picker-input-label {
-  font-size: 12px;
+  font-size: var(--inputs-label-font-size);
   color: #666;
   text-align: center;
-  margin-bottom: 2px;
+  margin-bottom: var(--inputs-label-margin-bottom);
   letter-spacing: 1px;
   font-weight: bold;
-  height: 18px;
-  line-height: 18px;
+  height: var(--inputs-label-height);
+  line-height: var(--inputs-label-line-height);
   user-select: none;
 }
 
@@ -720,10 +894,10 @@ $prefix: "ew-" !default;
 // ========== 默认输入框样式 ========== //
 .#{$prefix}color-picker-input-default {
   width: 100%;
-  padding: 4px 8px;
+  padding: var(--default-input-padding);
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: var(--default-input-font-size);
   text-align: center;
 }
 
@@ -733,7 +907,7 @@ $prefix: "ew-" !default;
   justify-content: center;
   gap: 8px;
   width: 100%;
-  margin-top: 8px;
+  margin-top: var(--bottom-row-margin-top);
 }
 .#{$prefix}color-picker-drop-btn-group-single {
   display: flex;
@@ -785,11 +959,11 @@ $prefix: "ew-" !default;
 .#{$prefix}color-picker-panel-container .#{$prefix}color-picker-inputs-group {
   display: flex;
   width: 100%;
-  max-width: 320px;
-  min-width: 280px;
-  gap: 6px;
+  max-width: var(--color-inputs-max-width);
+  min-width: var(--color-inputs-min-width);
+  gap: var(--color-inputs-gap);
   justify-content: center;
-  margin-bottom: 8px;
+  margin-bottom: var(--color-inputs-margin-bottom);
   box-sizing: border-box;
 }
 
@@ -798,23 +972,23 @@ $prefix: "ew-" !default;
 .#{$prefix}color-picker-panel-container .#{$prefix}color-picker-hsl-s-input,
 .#{$prefix}color-picker-panel-container .#{$prefix}color-picker-hsl-l-input,
 .#{$prefix}color-picker-panel-container .#{$prefix}color-picker-hsl-a-input {
-  height: 32px;
-  min-height: 32px;
-  max-height: 32px;
+  height: var(--hsl-input-height);
+  min-height: var(--hsl-input-height);
+  max-height: var(--hsl-input-height);
   box-sizing: border-box;
 }
 .#{$prefix}color-picker-panel-container .#{$prefix}color-picker-hsl-h-input.#{$prefix}input-number,
 .#{$prefix}color-picker-panel-container .#{$prefix}color-picker-hsl-a-input.#{$prefix}input-number {
-  height: 32px;
-  min-height: 32px;
-  max-height: 32px;
+  height: var(--hsl-input-height);
+  min-height: var(--hsl-input-height);
+  max-height: var(--hsl-input-height);
 }
 .#{$prefix}color-picker-panel-container .#{$prefix}color-picker-hsl-s-input.#{$prefix}color-picker-input,
 .#{$prefix}color-picker-panel-container .#{$prefix}color-picker-hsl-l-input.#{$prefix}color-picker-input {
-  height: 32px;
-  min-height: 32px;
-  max-height: 32px;
-  line-height: 32px;
+  height: var(--hsl-input-height);
+  min-height: var(--hsl-input-height);
+  max-height: var(--hsl-input-height);
+  line-height: var(--hsl-input-height);
   width: 100%;
 }
 
@@ -823,8 +997,8 @@ $prefix: "ew-" !default;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 8px;
-  margin-top: 8px;
+  gap: var(--extra-row-gap);
+  margin-top: var(--extra-row-margin-top);
 }
 
 // ========== Eyedropper 吸管插件 ========== //
@@ -838,10 +1012,10 @@ $prefix: "ew-" !default;
   align-items: center;
   justify-content: center;
   gap: 4px;
-  height: 28px;
-  padding: 0 6px;
+  height: var(--eyedropper-btn-height);
+  padding: var(--eyedropper-btn-padding);
   box-sizing: border-box;
-  font-size: 12px;
+  font-size: var(--default-input-font-size);
   line-height: 1;
   color: #606266;
   background: transparent;
@@ -861,8 +1035,8 @@ $prefix: "ew-" !default;
 }
 .#{$prefix}color-picker-eyedropper-btn .#{$prefix}color-picker-icon {
   display: block;
-  width: 16px;
-  height: 16px;
+  width: var(--eyedropper-btn-icon);
+  height: var(--eyedropper-btn-icon);
 }
 
 // ========== CopyColor 复制颜色插件 ========== //
@@ -876,9 +1050,9 @@ $prefix: "ew-" !default;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  flex: 0 0 28px;
+  width: var(--copy-btn-size);
+  height: var(--copy-btn-size);
+  flex: 0 0 var(--copy-btn-size);
   padding: 0;
   box-sizing: border-box;
   border: 1px solid #dcdfe6;
@@ -903,8 +1077,8 @@ $prefix: "ew-" !default;
 }
 .#{$prefix}color-picker-copy-btn .#{$prefix}color-picker-icon {
   display: block;
-  width: 14px;
-  height: 14px;
+  width: var(--copy-btn-icon);
+  height: var(--copy-btn-icon);
 }
 // 复制成功提示气泡
 .#{$prefix}color-picker-copy-tip {
@@ -939,9 +1113,9 @@ $prefix: "ew-" !default;
   flex-direction: column;
   gap: 6px;
   width: 100%;
-  margin-top: 8px;
+  margin-top: var(--gradient-label-margin-top);
   box-sizing: border-box;
-  font-size: 12px;
+  font-size: var(--gradient-label-font-size);
 }
 .#{$prefix}gradient-preview {
   position: relative;
@@ -950,17 +1124,17 @@ $prefix: "ew-" !default;
 }
 .#{$prefix}gradient-preview-bar {
   position: relative;
-  height: 14px;
+  height: var(--gradient-bar-height);
   border: 1px solid #e5e6eb;
-  border-radius: 7px;
+  border-radius: var(--gradient-bar-radius);
   box-sizing: border-box;
   cursor: crosshair;
 }
 .#{$prefix}gradient-handle {
   position: absolute;
   top: 50%;
-  width: 14px;
-  height: 14px;
+  width: var(--gradient-handle-size);
+  height: var(--gradient-handle-size);
   padding: 0;
   margin: 0;
   border: 2px solid #fff;
@@ -980,13 +1154,13 @@ $prefix: "ew-" !default;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 4px;
-  min-height: 24px;
+  gap: var(--gradient-row-gap);
+  min-height: var(--gradient-row-min-height);
 }
 .#{$prefix}gradient-label {
   color: #666;
-  font-size: 12px;
-  line-height: 24px;
+  font-size: var(--gradient-label-font-size);
+  line-height: var(--gradient-label-line-height);
   white-space: nowrap;
 }
 .#{$prefix}gradient-select {
@@ -1000,12 +1174,12 @@ $prefix: "ew-" !default;
 .#{$prefix}gradient-text {
   flex: 1;
   min-width: 0;
-  height: 24px;
+  height: var(--gradient-text-height);
   padding: 0 6px;
   border: 1px solid #d9d9d9;
   border-radius: 6px;
   box-sizing: border-box;
-  font-size: 12px;
+  font-size: var(--gradient-text-font-size);
   outline: none;
 }
 .#{$prefix}gradient-text:focus {
@@ -1014,13 +1188,13 @@ $prefix: "ew-" !default;
 }
 .#{$prefix}gradient-btn {
   flex: none;
-  height: 24px;
+  height: var(--gradient-btn-height);
   padding: 0 6px;
   border: 1px solid #d9d9d9;
   border-radius: 6px;
   background: #fff;
   color: #333;
-  font-size: 12px;
+  font-size: var(--gradient-btn-font-size);
   line-height: 1;
   cursor: pointer;
   transition: border-color 0.2s, color 0.2s, transform 0.2s;
@@ -1039,4 +1213,503 @@ $prefix: "ew-" !default;
 .#{$prefix}gradient-container .#{$prefix}input-number__buttons {
   width: 24px;
   min-width: 24px;
+}
+
+// ========== Panel Mode 档位覆盖 ========== //
+// 选择器同时匹配 panel-container 和 panel 本体上的 mode 类，
+// CSS 变量声明在两者上都生效，子元素通过继承拿到对应值。
+
+// --- mini 档（移动端，面板 180×140） ---
+.#{$prefix}color-picker-panel-mini {
+  // 面板外壳
+  --container-padding: 6px;
+  --container-margin-top: 6px;
+  --container-min-width: 220px;
+  --container-radius: 8px;
+  --panel-radius: 6px;
+  --content-gap: 8px;
+
+  // 滑块
+  --slider-width-v: 9px;
+  --slider-height-h: 9px;
+  --slider-gap: 3px;
+  --slider-hue-bg-offset: 2px;
+  --slider-alpha-top-gap: 2px;
+  --slider-hue-top-margin: 5px;
+
+  // 滑块拇指
+  --thumb-size-v: 3px;
+  --thumb-size-v-bar: 9px;
+  --thumb-size-h: 3px;
+
+  // 颜色光标
+  --cursor-size: 3px;
+  --cursor-ring: 2px;
+
+  // 底部区域
+  --drop-container-margin-top: 4px;
+  --drop-container-padding-top: 3px;
+  --drop-container-min-height: 22px;
+  --bottom-row-gap: 5px;
+  --bottom-row-margin-top: 5px;
+  // mini 档：mode-container 紧凑压缩
+  --mode-container-gap: 4px;
+  --mode-container-padding: 4px;
+  --mode-container-margin-top: 4px;
+  --mode-container-margin-bottom: 6px;
+  --mode-container-radius: 4px;
+  --mode-title-font-size: 11px;
+  --mode-btn-size: 18px;
+  --mode-btn-icon-size: 10px;
+  --mode-btn-radius: 2px;
+  --mode-arrow-size: 4px;
+  --mode-text-font-size: 10px;
+  --mode-text-min-width: 36px;
+  --mode-text-padding: 0 2px;
+
+  // 输入框
+  --input-height: 24px;
+  --input-line-height: 24px;
+  --input-font-size: 11px;
+  --input-padding: 0 6px;
+  --input-radius: 4px;
+  --default-input-height: 22px;
+  --default-input-padding: 3px 6px;
+  --default-input-font-size: 11px;
+
+  // 按钮
+  --btn-padding: 3px;
+  --btn-font-size: 11px;
+  --btn-radius: 2px;
+  --btn-min-width: 44px;
+
+  // 预设色
+  --predefine-item-size: 14px;
+  --predefine-item-radius: 3px;
+  --predefine-gap: 5px;
+  --predefine-margin-top: 8px;
+  --predefine-font-size: 11px;
+
+  // 工具栏
+  --extra-row-gap: 5px;
+  --extra-row-margin-top: 5px;
+  --eyedropper-btn-height: 22px;
+  --eyedropper-btn-padding: 0 4px;
+  --eyedropper-btn-icon: 12px;
+  --copy-btn-size: 22px;
+  --copy-btn-icon: 11px;
+
+  // 渐变色编辑器
+  --gradient-bar-height: 10px;
+  --gradient-bar-radius: 5px;
+  --gradient-handle-size: 10px;
+  --gradient-row-gap: 3px;
+  --gradient-row-min-height: 20px;
+  --gradient-label-font-size: 11px;
+  --gradient-label-line-height: 20px;
+  --gradient-text-height: 20px;
+  --gradient-text-font-size: 11px;
+  --gradient-btn-height: 20px;
+  --gradient-btn-font-size: 11px;
+  --gradient-label-margin-top: 5px;
+  // 停靠点行两个数字输入框的首选宽度
+  --gradient-stop-number-width: 44px;
+
+  // 输入组
+  --inputs-group-gap: 3px;
+  --inputs-label-font-size: 11px;
+  --inputs-label-height: 15px;
+  --inputs-label-line-height: 15px;
+  --inputs-label-margin-bottom: 1px;
+
+  // HSL inputs
+  --hsl-input-height: 24px;
+
+  // InputNumber 组件（mini 档紧凑）
+  --input-number-height: 24px;
+  --input-number-border-width: 1px;
+  --input-number-radius: 3px;
+  --input-number-input-padding: 2px 4px;
+  --input-number-input-font-size: 11px;
+  --input-number-buttons-width: 18px;
+  --input-number-buttons-min-width: 16px;
+  --input-number-icon-size: 6px;
+
+  // Select 组件（mini 档紧凑）
+  --select-height: 24px;
+  --select-border-width: 1px;
+  --select-radius: 3px;
+  --select-padding: 0 5px;
+  --select-font-size: 11px;
+  --select-arrow-size: 8px;
+  --select-clear-size: 8px;
+
+  // Checkbox 组件（mini 档紧凑）
+  --checkbox-gap: 3px;
+  --checkbox-font-size: 10px;
+  --checkbox-border-width: 1px;
+  --checkbox-box-size: 11px;
+  --checkbox-box-radius: 2px;
+  --checkbox-icon-size: 7px;
+
+  // mode-container 新结构
+  --mode-new-container-gap: 5px;
+  --mode-new-btn-size: 20px;
+  --mode-new-btn-icon: 12px;
+
+  // inputs group max/min width
+  --color-inputs-max-width: 220px;
+  --color-inputs-min-width: 200px;
+  --color-inputs-gap: 4px;
+  --color-inputs-margin-bottom: 5px;
+}
+
+// --- small 档（面板 220×150） ---
+.#{$prefix}color-picker-panel-small {
+  --container-padding: 8px;
+  --container-margin-top: 7px;
+  --container-min-width: 260px;
+  --container-radius: 9px;
+  --panel-radius: 7px;
+  --content-gap: 10px;
+
+  --slider-width-v: 10px;
+  --slider-height-h: 10px;
+  --slider-gap: 3px;
+  --slider-hue-bg-offset: 2px;
+  --slider-alpha-top-gap: 2px;
+  --slider-hue-top-margin: 6px;
+
+  --thumb-size-v: 3px;
+  --thumb-size-v-bar: 10px;
+  --thumb-size-h: 3px;
+
+  --cursor-size: 3px;
+  --cursor-ring: 2px;
+
+  --drop-container-margin-top: 5px;
+  --drop-container-padding-top: 3px;
+  --drop-container-min-height: 25px;
+  --bottom-row-gap: 6px;
+  --bottom-row-margin-top: 6px;
+  --mode-container-gap: 5px;
+  --mode-container-padding: 5px;
+  --mode-container-margin-top: 5px;
+  --mode-container-margin-bottom: 8px;
+  --mode-container-radius: 5px;
+  --mode-title-font-size: 12px;
+  --mode-btn-size: 20px;
+  --mode-btn-icon-size: 12px;
+  --mode-btn-radius: 3px;
+  --mode-arrow-size: 5px;
+  --mode-text-font-size: 12px;
+  --mode-text-min-width: 46px;
+  --mode-text-padding: 0 4px;
+
+  --input-height: 28px;
+  --input-line-height: 28px;
+  --input-font-size: 12px;
+  --input-padding: 0 7px;
+  --input-radius: 4px;
+  --default-input-height: 25px;
+  --default-input-padding: 3px 7px;
+  --default-input-font-size: 11px;
+
+  --btn-padding: 4px;
+  --btn-font-size: 11px;
+  --btn-radius: 2px;
+  --btn-min-width: 50px;
+
+  --predefine-item-size: 17px;
+  --predefine-item-radius: 3px;
+  --predefine-gap: 6px;
+  --predefine-margin-top: 10px;
+  --predefine-font-size: 11px;
+
+  --extra-row-gap: 6px;
+  --extra-row-margin-top: 6px;
+  --eyedropper-btn-height: 25px;
+  --eyedropper-btn-padding: 0 5px;
+  --eyedropper-btn-icon: 14px;
+  --copy-btn-size: 25px;
+  --copy-btn-icon: 12px;
+
+  --gradient-bar-height: 12px;
+  --gradient-bar-radius: 6px;
+  --gradient-handle-size: 12px;
+  --gradient-row-gap: 3px;
+  --gradient-row-min-height: 22px;
+  --gradient-label-font-size: 11px;
+  --gradient-label-line-height: 22px;
+  --gradient-text-height: 22px;
+  --gradient-text-font-size: 11px;
+  --gradient-btn-height: 22px;
+  --gradient-btn-font-size: 11px;
+  --gradient-label-margin-top: 6px;
+  // 停靠点行两个数字输入框的首选宽度
+  --gradient-stop-number-width: 50px;
+
+  --inputs-group-gap: 3px;
+  --inputs-label-font-size: 11px;
+  --inputs-label-height: 16px;
+  --inputs-label-line-height: 16px;
+  --inputs-label-margin-bottom: 1px;
+
+  --hsl-input-height: 28px;
+
+  // InputNumber 组件（small 档紧凑）
+  --input-number-height: 28px;
+  --input-number-border-width: 1px;
+  --input-number-radius: 4px;
+  --input-number-input-padding: 3px 5px;
+  --input-number-input-font-size: 12px;
+  --input-number-buttons-width: 22px;
+  --input-number-buttons-min-width: 18px;
+  --input-number-icon-size: 7px;
+
+  // Select 组件（small 档紧凑）
+  --select-height: 28px;
+  --select-border-width: 1px;
+  --select-radius: 4px;
+  --select-padding: 0 6px;
+  --select-font-size: 12px;
+  --select-arrow-size: 9px;
+  --select-clear-size: 9px;
+
+  // Checkbox 组件（small 档紧凑）
+  --checkbox-gap: 4px;
+  --checkbox-font-size: 11px;
+  --checkbox-border-width: 1px;
+  --checkbox-box-size: 13px;
+  --checkbox-box-radius: 3px;
+  --checkbox-icon-size: 8px;
+
+  --mode-new-container-gap: 6px;
+  --mode-new-btn-size: 22px;
+  --mode-new-btn-icon: 14px;
+
+  --color-inputs-max-width: 260px;
+  --color-inputs-min-width: 230px;
+  --color-inputs-gap: 5px;
+  --color-inputs-margin-bottom: 6px;
+}
+
+// --- medium 档（面板 250×165） ---
+.#{$prefix}color-picker-panel-medium {
+  --container-padding: 9px;
+  --container-margin-top: 7px;
+  --container-min-width: 290px;
+  --container-radius: 9px;
+  --panel-radius: 7px;
+  --content-gap: 11px;
+
+  --slider-width-v: 11px;
+  --slider-height-h: 11px;
+  --slider-gap: 4px;
+  --slider-hue-bg-offset: 3px;
+  --slider-alpha-top-gap: 3px;
+  --slider-hue-top-margin: 7px;
+
+  --thumb-size-v: 4px;
+  --thumb-size-v-bar: 11px;
+  --thumb-size-h: 4px;
+
+  --cursor-size: 4px;
+  --cursor-ring: 3px;
+
+  --drop-container-margin-top: 5px;
+  --drop-container-padding-top: 3px;
+  --drop-container-min-height: 26px;
+  --bottom-row-gap: 7px;
+  --bottom-row-margin-top: 7px;
+  --mode-container-gap: 7px;
+  --mode-container-padding: 7px;
+  --mode-container-margin-top: 7px;
+  --mode-container-margin-bottom: 11px;
+  --mode-container-radius: 6px;
+  --mode-title-font-size: 15px;
+  --mode-btn-size: 23px;
+  --mode-btn-icon-size: 15px;
+  --mode-btn-radius: 4px;
+  --mode-arrow-size: 6px;
+  --mode-text-font-size: 13px;
+  --mode-text-min-width: 54px;
+  --mode-text-padding: 0 6px;
+
+  --input-height: 30px;
+  --input-line-height: 30px;
+  --input-font-size: 13px;
+  --input-padding: 0 7px;
+  --input-radius: 5px;
+  --default-input-height: 26px;
+  --default-input-padding: 4px 7px;
+  --default-input-font-size: 12px;
+
+  --btn-padding: 4px;
+  --btn-font-size: 12px;
+  --btn-radius: 3px;
+  --btn-min-width: 55px;
+
+  --predefine-item-size: 18px;
+  --predefine-item-radius: 4px;
+  --predefine-gap: 7px;
+  --predefine-margin-top: 11px;
+  --predefine-font-size: 12px;
+
+  --extra-row-gap: 7px;
+  --extra-row-margin-top: 7px;
+  --eyedropper-btn-height: 26px;
+  --eyedropper-btn-padding: 0 5px;
+  --eyedropper-btn-icon: 15px;
+  --copy-btn-size: 26px;
+  --copy-btn-icon: 13px;
+
+  --gradient-bar-height: 13px;
+  --gradient-bar-radius: 6px;
+  --gradient-handle-size: 13px;
+  --gradient-row-gap: 4px;
+  --gradient-row-min-height: 23px;
+  --gradient-label-font-size: 12px;
+  --gradient-label-line-height: 23px;
+  --gradient-text-height: 23px;
+  --gradient-text-font-size: 12px;
+  --gradient-btn-height: 23px;
+  --gradient-btn-font-size: 12px;
+  --gradient-label-margin-top: 7px;
+  // 停靠点行两个数字输入框的首选宽度
+  --gradient-stop-number-width: 54px;
+
+  --inputs-group-gap: 4px;
+  --inputs-label-font-size: 12px;
+  --inputs-label-height: 17px;
+  --inputs-label-line-height: 17px;
+  --inputs-label-margin-bottom: 2px;
+
+  --hsl-input-height: 30px;
+
+  // InputNumber 组件（medium 档，比默认略紧凑）
+  --input-number-height: 30px;
+  --input-number-border-width: 1px;
+  --input-number-radius: 4px;
+  --input-number-input-padding: 3px 6px;
+  --input-number-input-font-size: 13px;
+  --input-number-buttons-width: 24px;
+  --input-number-buttons-min-width: 20px;
+  --input-number-icon-size: 7px;
+
+  // Select 组件（medium 档紧凑）
+  --select-height: 30px;
+  --select-border-width: 1px;
+  --select-radius: 4px;
+  --select-padding: 0 7px;
+  --select-font-size: 12px;
+  --select-arrow-size: 9px;
+  --select-clear-size: 9px;
+
+  // Checkbox 组件（medium 档紧凑）
+  --checkbox-gap: 4px;
+  --checkbox-font-size: 11px;
+  --checkbox-border-width: 1px;
+  --checkbox-box-size: 14px;
+  --checkbox-box-radius: 3px;
+  --checkbox-icon-size: 8px;
+
+  --mode-new-container-gap: 7px;
+  --mode-new-btn-size: 23px;
+  --mode-new-btn-icon: 15px;
+
+  --color-inputs-max-width: 290px;
+  --color-inputs-min-width: 260px;
+  --color-inputs-gap: 6px;
+  --color-inputs-margin-bottom: 7px;
+}
+
+// --- 小/中档位：RGBA / HSL 输入框 flex-wrap 成两行 ---
+// mini / small / medium 档位下面板宽度不够 4 个 InputNumber 并排，
+// 让 inputs-group 自动折行，RG 占第一行、BA 占第二行
+.#{$prefix}color-picker-panel-mini .#{$prefix}color-picker-inputs-group,
+.#{$prefix}color-picker-panel-small .#{$prefix}color-picker-inputs-group,
+.#{$prefix}color-picker-panel-medium .#{$prefix}color-picker-inputs-group {
+  flex-wrap: wrap;
+  gap: var(--inputs-group-gap);
+}
+.#{$prefix}color-picker-panel-mini .#{$prefix}color-picker-inputs-col,
+.#{$prefix}color-picker-panel-small .#{$prefix}color-picker-inputs-col,
+.#{$prefix}color-picker-panel-medium .#{$prefix}color-picker-inputs-col {
+  flex: 0 0 calc(50% - var(--inputs-group-gap) / 2);
+  margin-bottom: var(--inputs-group-gap);
+}
+
+// --- 小/中档位：gradient-row-type 用 CSS Grid 精确分两行 ---
+// Row 1: 类型 label + 类型 select（select 跨剩余列）
+// Row 2: checkbox + 角度 label + angle input-number
+.#{$prefix}color-picker-panel-mini .#{$prefix}gradient-row-type,
+.#{$prefix}color-picker-panel-small .#{$prefix}gradient-row-type,
+.#{$prefix}color-picker-panel-medium .#{$prefix}gradient-row-type {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto auto;
+  row-gap: 4px;
+  column-gap: 3px;
+  align-items: center;
+}
+// 第一行：类型 label（col 1, row 1）
+.#{$prefix}color-picker-panel-mini .#{$prefix}gradient-row-type > *:nth-child(1),
+.#{$prefix}color-picker-panel-small .#{$prefix}gradient-row-type > *:nth-child(1),
+.#{$prefix}color-picker-panel-medium .#{$prefix}gradient-row-type > *:nth-child(1) {
+  grid-column: 1;
+  grid-row: 1;
+}
+// 第一行：类型 select（col 2, row 1，跨到最右）
+.#{$prefix}color-picker-panel-mini .#{$prefix}gradient-row-type > *:nth-child(2),
+.#{$prefix}color-picker-panel-small .#{$prefix}gradient-row-type > *:nth-child(2),
+.#{$prefix}color-picker-panel-medium .#{$prefix}gradient-row-type > *:nth-child(2) {
+  grid-column: 2 / -1;
+  grid-row: 1;
+  min-width: 0; // 允许 grid item 缩小
+}
+// 第二行：checkbox（col 1, row 2）
+.#{$prefix}color-picker-panel-mini .#{$prefix}gradient-row-type > *:nth-child(3),
+.#{$prefix}color-picker-panel-small .#{$prefix}gradient-row-type > *:nth-child(3),
+.#{$prefix}color-picker-panel-medium .#{$prefix}gradient-row-type > *:nth-child(3) {
+  grid-column: 1;
+  grid-row: 2;
+}
+// 第二行：角度 label（col 2, row 2）
+.#{$prefix}color-picker-panel-mini .#{$prefix}gradient-row-type > *:nth-child(4),
+.#{$prefix}color-picker-panel-small .#{$prefix}gradient-row-type > *:nth-child(4),
+.#{$prefix}color-picker-panel-medium .#{$prefix}gradient-row-type > *:nth-child(4) {
+  grid-column: 2;
+  grid-row: 2;
+}
+// 第二行：angle input-number（col 3, row 2）
+.#{$prefix}color-picker-panel-mini .#{$prefix}gradient-row-type > *:nth-child(5),
+.#{$prefix}color-picker-panel-small .#{$prefix}gradient-row-type > *:nth-child(5),
+.#{$prefix}color-picker-panel-medium .#{$prefix}gradient-row-type > *:nth-child(5) {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+// --- 停靠点行：强制单行展示 ---
+// 标签和按钮不收缩，两个数字输入框以各自模式的首选宽度为基准，按剩余空间自动分配
+.#{$prefix}gradient-row-stop {
+  flex-wrap: nowrap;
+}
+.#{$prefix}gradient-row-stop > .#{$prefix}input-number {
+  flex: 1 1 var(--gradient-stop-number-width, 60px);
+  width: var(--gradient-stop-number-width, 60px);
+  min-width: 0;
+}
+.#{$prefix}gradient-row-stop > .#{$prefix}gradient-label,
+.#{$prefix}gradient-row-stop > .#{$prefix}gradient-btn {
+  flex: none;
+}
+// 小档位下收紧按钮内边距，给输入框留出空间
+.#{$prefix}color-picker-panel-mini .#{$prefix}gradient-row-stop > .#{$prefix}gradient-btn,
+.#{$prefix}color-picker-panel-small .#{$prefix}gradient-row-stop > .#{$prefix}gradient-btn {
+  padding: 0 3px;
+}
+// mini 档数字输入框的步进按钮再窄一点，避免数字被裁切
+.#{$prefix}color-picker-panel-mini .#{$prefix}gradient-row-stop > .#{$prefix}input-number > .#{$prefix}input-number__buttons {
+  width: 14px;
+  min-width: 14px;
 }

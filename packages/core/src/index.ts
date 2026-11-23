@@ -18,6 +18,7 @@ import {
   tryErrorHandler,
   extend,
   addClass,
+  removeClass,
   colorRgbaToHsva,
   colorRgbaToHex,
   colorToRgba,
@@ -396,6 +397,7 @@ export default class ewColorPicker extends EventEmitter {
     // 只有在面板真正需要显示时才设置默认颜色
     // 当前没有颜色时优先使用配置的 defaultColor，未配置才回退到红色
     const { pickerAnimationTime, togglePicker, defaultColor } = this.options || {};
+    const prefix = this.options?.prefix || DEFAULT_PREFIX;
     if (!this.currentColor) {
       const fallbackColor = defaultColor || "#ff0000";
       this.currentColor = fallbackColor;
@@ -416,6 +418,10 @@ export default class ewColorPicker extends EventEmitter {
       duration || pickerAnimationTime || DEFAULT_ANIMATION_TIME;
 
     this.syncPanelZIndex();
+
+    // 在动画前先移除 hidden class，让 animation 模块的 display 值设置能正常生效
+    // （animation.ts 的 saveDisplay/restoreDisplay 机制依赖 CSS 值生效）
+    removeClass(panelContainer, `${prefix}color-picker-panel-container-hidden`);
 
     open(type, panelContainer, time)
       .then(() => {
@@ -483,6 +489,7 @@ export default class ewColorPicker extends EventEmitter {
     if (!panelContainer) return;
 
     const { pickerAnimationTime, togglePicker, autoPanelPosition } = this.options || {};
+    const prefix = this.options?.prefix || DEFAULT_PREFIX;
     const hasBox = this.plugins.ewColorPickerBox || false;
     const type = animationType || getAnimationType(this);
     const time =
@@ -491,6 +498,9 @@ export default class ewColorPicker extends EventEmitter {
     close(type, panelContainer, time)
       .then(() => {
         if (this.isDestroyed) return;
+
+        // 动画结束后加上 hidden class，保持初始状态一致
+        addClass(panelContainer, `${prefix}color-picker-panel-container-hidden`);
 
         // 重置自动定位样式（面板被挂载到外部容器时由 Panel 插件负责定位，不能重置）
         if (autoPanelPosition && hasBox && !this.options.appendTo) {

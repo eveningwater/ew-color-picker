@@ -25,6 +25,9 @@ import {
   bindTouchDrag,
   DEFAULT_PANEL_WIDTH,
   DEFAULT_PANEL_HEIGHT,
+  PANEL_MODE_SIZES,
+  DEFAULT_PANEL_MODE,
+  type PanelMode,
   throttle,
 } from "@ew-color-picker/utils";
 
@@ -36,6 +39,8 @@ export interface PanelOptions {
   hasPanel?: boolean;
   hueDirection?: "horizontal" | "vertical";
   alphaDirection?: "horizontal" | "vertical";
+  /** 面板尺寸档位，决定面板整体宽高及子元素缩放 */
+  panelMode?: PanelMode;
 }
 
 export default class ewColorPickerPanelPlugin {
@@ -72,6 +77,9 @@ export default class ewColorPickerPanelPlugin {
 
   // 面板是否被挂载到外部容器（appendTo）
   isPanelAppended: boolean = false;
+
+  // 当前面板尺寸档位
+  panelMode: PanelMode = DEFAULT_PANEL_MODE;
 
   private get prefix(): string {
     return getPrefix(this.ewColorPicker);
@@ -128,6 +136,10 @@ export default class ewColorPickerPanelPlugin {
       this.options = extend(this.options, this.ewColorPicker.options);
       this.isHueHorizontal = this.options.hueDirection === "horizontal";
       this.isAlphaHorizontal = this.options.alphaDirection === "horizontal";
+      const mode = this.options.panelMode;
+      if (mode && mode in PANEL_MODE_SIZES) {
+        this.panelMode = mode;
+      }
     }
   }
 
@@ -159,36 +171,69 @@ export default class ewColorPickerPanelPlugin {
       return;
     }
 
-    const oldPanel = $(`.${this.prefix}color-picker-panel`, panelContainer);
-
-    // 动态计算面板宽度
-    let panelWidth = DEFAULT_PANEL_WIDTH;
-    if (this.isAlphaHorizontal && this.isHueHorizontal) {
-      // 如果都是水平方向，需要320px宽度（外层容器最小宽度）
-      panelWidth = 320;
-    } else if (this.isAlphaHorizontal && !this.isHueHorizontal) {
-      // hue 垂直、alpha 水平：面板 + 垂直色相柱（4px margin + 15px）= 320px
-      panelWidth = 320 - 4 - 15;
-    } else if (!this.isAlphaHorizontal && this.isHueHorizontal) {
-      // hue 水平、alpha 垂直：面板 + 垂直透明度柱（4px margin + 12px）= 320px，
-      // 使 alpha 柱右边缘与下方横向 hue 柱对齐
-      panelWidth = 320 - 4 - 12;
+    // 清理旧的 top-row（update 重绘时避免重复 panel）
+    const oldTopRow = $(`.${this.prefix}color-picker-top-row`, panelContainer);
+    if (oldTopRow && oldTopRow.parentNode) {
+      oldTopRow.parentNode.removeChild(oldTopRow);
     }
-    // 如果都是垂直方向，保持285px宽度
+
+    // 从 panelMode 取基础宽高
+    const modeSizes = PANEL_MODE_SIZES[this.panelMode];
+    let panelWidth = modeSizes.width;
+    const panelHeight = modeSizes.height;
+
+    // 两滑块都水平时，为容纳 hue+alpha+mode-selector+swatch，需要额外宽度
+    // 额外量随 panelMode 缩放比例调整，large 档位历史上用 320
+    const modeScale = modeSizes.width / PANEL_MODE_SIZES.large.width;
+    const horizontalExtra = Math.round((320 - DEFAULT_PANEL_WIDTH) * modeScale);
+
+    if (this.isAlphaHorizontal && this.isHueHorizontal) {
+      // 两滑块都水平：panel 本身已经扩展以容纳横条
+      panelWidth = modeSizes.width + horizontalExtra;
+    } else if (this.isAlphaHorizontal && !this.isHueHorizontal) {
+      // hue 垂直、alpha 水平：panel 扩展后 + 右侧 hue 竖条
+      panelWidth = modeSizes.width + horizontalExtra - 4 - 15;
+    } else if (!this.isAlphaHorizontal && this.isHueHorizontal) {
+      // hue 水平、alpha 垂直：panel 扩展后 + 右侧 alpha 竖条
+      panelWidth = modeSizes.width + horizontalExtra - 4 - 12;
+    }
+
+    // 面板容器也加 panelMode 类，使容器级 CSS 变量（padding/radius 等）能被子元素的 mode 类覆盖
+    addClass(panelContainer, `${this.prefix}color-picker-panel-${this.panelMode}`);
+
+    // panel-container 是 inline-flex flex-col，top-row width = 内容实际宽度（flex shrink-to-fit）
+    // 所有 block 子元素（mode-container/extra-row/bottom-row/inputs-group）会自动 stretch 到容器宽度
+    // 所以 --color-inputs-max-width/min-width 直接设为 auto，让 flex 自动填充
+    setStyle(panelContainer, {
+      "--panel-width": panelWidth + "px",
+      "--panel-height": panelHeight + "px",
+      "--color-inputs-max-width": "auto",
+      "--color-inputs-min-width": "auto",
+    });
+
+    // 创建顶部 row wrapper：panel + vertical hue slider + vertical alpha slider 永远在一行
+    // hue/alpha 插件用 panel.parentNode.insertBefore(nextSibling) 插入 vertical slider，
+    // 此时 panel.parentNode 就是这个 wrapper，vertical slider 会自动插进 wrapper 里
+    const topRowWrapper = create("div");
+    addClass(topRowWrapper, `${this.prefix}color-picker-top-row`);
+
+    // 颜色面板本体，加 panelMode 类让 CSS 变量覆盖生效
     this.panel = create("div");
     addClass(this.panel, `${this.prefix}color-picker-panel`);
     addClass(this.panel, `${this.prefix}color-picker-panel-dynamic-size`);
+    addClass(this.panel, `${this.prefix}color-picker-panel-${this.panelMode}`);
 
     this.panelWidth = panelWidth;
-    this.panelHeight = DEFAULT_PANEL_HEIGHT;
+    this.panelHeight = panelHeight;
 
     setStyle(this.panel, {
       "--panel-width": panelWidth + "px",
-      "--panel-height": this.panelHeight + "px",
+      "--panel-height": panelHeight + "px",
     });
 
-    // 组装面板结构
-    insertNode(panelContainer, this.panel, oldPanel);
+    // 组装面板结构：panel 先进 topRowWrapper，wrapper 再进 panelContainer
+    insertNode(topRowWrapper, this.panel);
+    insertNode(panelContainer, topRowWrapper);
 
     // 创建颜色面板
     this.whitePanel = create("div");

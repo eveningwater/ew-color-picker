@@ -5,6 +5,32 @@ description: ew-color-picker 各版本的变更记录，含修复、新增与文
 
 # 更新日志
 
+## 2.0.10
+
+### 新增
+
+- 新增 `panelMode` 选项：`'mini' | 'small' | 'medium' | 'large'` 四档面板尺寸，默认 `large`（与之前一致）。`mini` 适合移动端；滑块、光标、输入框、按钮、预设色、渐变编辑器、模式切换区都会随档位同步缩放
+- 新增 select 组件 tooltip：选中值或下拉选项文字被截断时，悬浮展示完整内容。默认开启，可通过 `selectTooltip: false` 关闭
+- 新增示例 `examples/19-panel-mode.html`：覆盖 `panelMode` × 横向 hue/alpha × 渐变的全组合场景
+
+### 修复
+
+- 修复面板与纵向色相/透明度滑块在窄档位下被挤到下一行：面板容器改为纵向 flex，面板与滑块放进固定单行的 top-row
+- 修复横向模式下各档位面板宽度错误：横向扩展宽度此前固定按 `large` 的基准宽度计算，导致 `mini`/`small`/`medium` 与 `large` 一样宽
+- 修复面板显示时 `display` 被动画模块硬编码为 `block`、覆盖样式表布局的问题：动画模块改为保存/恢复元素的原始 `display`，面板的显示与隐藏由 core 统一管理 `hidden` 类
+- 修复面板绝对定位时宽度被拉伸到页面宽度的问题：容器改为 `fit-content` 收缩，面板与滑块间距收紧，右侧不再出现多余空白
+- 修复小档位下 RGBA/HSL 输入框一行显示不全：`mini`/`small`/`medium` 改为两行 2×2 布局，输入框随容器宽度自适应
+- 修复渐变编辑器在小档位下的布局错乱：类型行改为 grid 两行排版，停靠点行强制单行、两个数字输入框按剩余空间自动分配
+- 修复 input-number、select、checkbox 以及模式切换区尺寸和字号硬编码、在小档位下过大的问题，全部改为 CSS 变量并随档位缩放
+
+### 测试
+
+- 新增 select tooltip 用例：截断时展示、未截断不展示、`selectTooltip: false` 关闭、销毁时清理节点
+
+### 文档
+
+- 中英文 select 文档补充 `selectTooltip` 选项说明
+
 ## 2.0.9
 
 ### 修复

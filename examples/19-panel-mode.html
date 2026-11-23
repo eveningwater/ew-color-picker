@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>19. panelMode + 横向布局 + 渐变 全组合</title>
+    <link rel="stylesheet" href="../packages/style/dist/index.css">
+    <link rel="stylesheet" href="../packages/style/dist/input-number.css">
+    <link rel="stylesheet" href="../packages/style/dist/select.css">
+    <link rel="stylesheet" href="../packages/style/dist/checkbox.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            margin: 0;
+        }
+        .demo {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        }
+        h2 { margin-top: 0; color: #1a1a1a; font-size: 24px; }
+        .subtitle { color: #666; margin-bottom: 24px; font-size: 14px; }
+        h3 {
+            margin: 32px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1890ff;
+            color: #1890ff;
+            font-size: 16px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+        }
+        .item {
+            padding: 20px;
+            border: 1px solid #e8e8e8;
+            border-radius: 10px;
+            background: #fafbfc;
+            transition: box-shadow 0.2s;
+        }
+        .item:hover { box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06); }
+        .mode-label { font-size: 16px; font-weight: 600; color: #1890ff; margin-bottom: 4px; }
+        .mode-sub { font-size: 12px; color: #999; margin-bottom: 4px; }
+        .mode-opt { font-size: 11px; color: #888; margin-bottom: 14px; font-family: monospace; }
+        .picker-wrap { display: flex; justify-content: center; padding: 30px 10px 10px; }
+        .result {
+            margin-top: 14px; padding: 6px 10px; background: #fff; border-radius: 4px;
+            font-family: monospace; font-size: 12px; border: 1px solid #eee; color: #555;
+            word-break: break-all; min-height: 16px;
+        }
+        .preview {
+            margin-top: 10px; height: 30px; border-radius: 6px; border: 1px solid #e5e6eb;
+        }
+        .info {
+            margin-top: 30px; padding: 16px 20px; background: #fffbe6;
+            border: 1px solid #ffe58f; border-radius: 6px; font-size: 13px;
+            color: #614700; line-height: 1.8;
+        }
+        .info code {
+            background: #fff; padding: 2px 6px; border-radius: 3px;
+            border: 1px solid #ffd666; font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo">
+        <h2>19. panelMode 全组合测试</h2>
+        <div class="subtitle">
+            覆盖 <code>panelMode</code> × <code>hueDirection / alphaDirection</code> × <code>gradient</code> 三类配置
+        </div>
+
+        <!-- ========== 第一组：基础对比（纵向 hue/alpha） ========== -->
+        <h3>① 基础对比 · 默认纵向 hue/alpha</h3>
+        <div class="grid">
+            <div class="item">
+                <div class="mode-label">mini</div>
+                <div class="mode-sub">180×140 · 移动端竖屏</div>
+                <div class="mode-opt">panelMode:'mini'</div>
+                <div class="picker-wrap"><div id="p-mini"></div></div>
+                <div class="result" id="r-mini">#ff0000</div>
+            </div>
+            <div class="item">
+                <div class="mode-label">small</div>
+                <div class="mode-sub">220×150 · 紧凑型</div>
+                <div class="mode-opt">panelMode:'small'</div>
+                <div class="picker-wrap"><div id="p-small"></div></div>
+                <div class="result" id="r-small">#1890ff</div>
+            </div>
+            <div class="item">
+                <div class="mode-label">medium</div>
+                <div class="mode-sub">250×165 · 平板</div>
+                <div class="mode-opt">panelMode:'medium'</div>
+                <div class="picker-wrap"><div id="p-medium"></div></div>
+                <div class="result" id="r-medium">#52c41a</div>
+            </div>
+            <div class="item">
+                <div class="mode-label">large</div>
+                <div class="mode-sub">285×180 · 桌面默认</div>
+                <div class="mode-opt">panelMode:'large'</div>
+                <div class="picker-wrap"><div id="p-large"></div></div>
+                <div class="result" id="r-large">#f5222d</div>
+            </div>
+        </div>
+
+        <!-- ========== 第二组：横向布局 ========== -->
+        <h3>② 横向 hue + 横向 alpha</h3>
+        <div class="grid">
+            <div class="item">
+                <div class="mode-label">mini + horizontal</div>
+                <div class="mode-sub">面板自动加宽容纳横条</div>
+                <div class="mode-opt">hueDirection:'horizontal', alphaDirection:'horizontal'</div>
+                <div class="picker-wrap"><div id="p-mini-h"></div></div>
+                <div class="result" id="r-mini-h">#fa8c16</div>
+            </div>
+            <div class="item">
+                <div class="mode-label">small + horizontal</div>
+                <div class="mode-sub">横版 hue + alpha</div>
+                <div class="mode-opt">hueDirection:'horizontal', alphaDirection:'horizontal'</div>
+                <div class="picker-wrap"><div id="p-small-h"></div></div>
+                <div class="result" id="r-small-h">#722ed1</div>
+            </div>
+            <div class="item">
+                <div class="mode-label">medium + horizontal</div>
+                <div class="mode-sub">横版 hue + alpha</div>
+                <div class="mode-opt">hueDirection:'horizontal', alphaDirection:'horizontal'</div>
+                <div class="picker-wrap"><div id="p-medium-h"></div></div>
+                <div class="result" id="r-medium-h">#13c2c2</div>
+            </div>
+            <div class="item">
+                <div class="mode-label">large + horizontal</div>
+                <div class="mode-sub">横版 hue + alpha（基准）</div>
+                <div class="mode-opt">hueDirection:'horizontal', alphaDirection:'horizontal'</div>
+                <div class="picker-wrap"><div id="p-large-h"></div></div>
+                <div class="result" id="r-large-h">#eb2f96</div>
+            </div>
+        </div>
+
+        <!-- ========== 第三组：渐变选择器 ========== -->
+        <h3>③ 渐变颜色选择器（gradient）</h3>
+        <div class="grid">
+            <div class="item">
+                <div class="mode-label">mini + gradient</div>
+                <div class="mode-sub">移动端渐变取色</div>
+                <div class="mode-opt">gradientStops, gradientType:'linear'</div>
+                <div class="picker-wrap"><div id="p-mini-g"></div></div>
+                <div class="preview" id="prev-mini-g"></div>
+                <div class="result" id="r-mini-g"></div>
+            </div>
+            <div class="item">
+                <div class="mode-label">small + gradient</div>
+                <div class="mode-sub">紧凑型渐变</div>
+                <div class="mode-opt">gradientStops, gradientType:'linear'</div>
+                <div class="picker-wrap"><div id="p-small-g"></div></div>
+                <div class="preview" id="prev-small-g"></div>
+                <div class="result" id="r-small-g"></div>
+            </div>
+            <div class="item">
+                <div class="mode-label">medium + gradient</div>
+                <div class="mode-sub">平板渐变取色</div>
+                <div class="mode-opt">gradientStops, gradientType:'radial'</div>
+                <div class="picker-wrap"><div id="p-medium-g"></div></div>
+                <div class="preview" id="prev-medium-g"></div>
+                <div class="result" id="r-medium-g"></div>
+            </div>
+            <div class="item">
+                <div class="mode-label">large + gradient</div>
+                <div class="mode-sub">桌面渐变取色</div>
+                <div class="mode-opt">gradientStops, gradientType:'conic'</div>
+                <div class="picker-wrap"><div id="p-large-g"></div></div>
+                <div class="preview" id="prev-large-g"></div>
+                <div class="result" id="r-large-g"></div>
+            </div>
+        </div>
+
+        <!-- ========== 第四组：横向 + 渐变 极限组合 ========== -->
+        <h3>④ 横向布局 + 渐变（最复杂组合）</h3>
+        <div class="grid">
+            <div class="item">
+                <div class="mode-label">mini + horizontal + gradient</div>
+                <div class="mode-sub">最紧凑极限测试</div>
+                <div class="mode-opt">panelMode:'mini' + 横版 + linear</div>
+                <div class="picker-wrap"><div id="p-mini-hg"></div></div>
+                <div class="preview" id="prev-mini-hg"></div>
+                <div class="result" id="r-mini-hg"></div>
+            </div>
+            <div class="item">
+                <div class="mode-label">medium + horizontal + gradient</div>
+                <div class="mode-sub">横版 + 渐变取色</div>
+                <div class="mode-opt">panelMode:'medium' + 横版 + linear</div>
+                <div class="picker-wrap"><div id="p-medium-hg"></div></div>
+                <div class="preview" id="prev-medium-hg"></div>
+                <div class="result" id="r-medium-hg"></div>
+            </div>
+            <div class="item">
+                <div class="mode-label">large + horizontal + gradient</div>
+                <div class="mode-sub">桌面横版 + 渐变</div>
+                <div class="mode-opt">panelMode:'large' + 横版 + linear</div>
+                <div class="picker-wrap"><div id="p-large-hg"></div></div>
+                <div class="preview" id="prev-large-hg"></div>
+                <div class="result" id="r-large-hg"></div>
+            </div>
+        </div>
+
+        <div class="info">
+            <strong>用法：</strong>同时传入 <code>panelMode</code>、<code>hueDirection / alphaDirection</code>、<code>gradient*</code> 选项。<br>
+            <code>new ewColorPicker({ el: '#el', panelMode: 'mini', hueDirection: 'horizontal', alphaDirection: 'horizontal', gradientStops: ['#f00', '#00f'] })</code><br>
+            横向布局下 JS 会根据 <code>modeScale = modeSizes.width / 285</code> 自动计算额外宽度，确保横条能完整显示。
+        </div>
+    </div>
+
+    <script type="module">
+        import ewColorPicker from '../packages/ew-color-picker/src/index.ts';
+
+        // --- 通用：绑定 change 事件 ---
+        function bindChange(idKey) {
+            return function(c) {
+                const el = document.getElementById(`r-${idKey}`);
+                if (el) el.textContent = typeof c === 'string' ? c : JSON.stringify(c);
+            };
+        }
+        // --- 通用：绑定 gradientChange 事件 ---
+        function bindGradient(idKey) {
+            return function(css) {
+                const result = document.getElementById(`r-${idKey}`);
+                const prev = document.getElementById(`prev-${idKey}`);
+                if (result) result.textContent = css;
+                if (prev) prev.style.background = css;
+            };
+        }
+        function initGradientPreview(idKey, picker) {
+            const css = picker.plugins?.ewColorPickerGradient?.getGradient?.();
+            if (css) bindGradient(idKey)(css);
+        }
+
+        // ============ ① 基础对比 ============
+        [
+            ['mini',   '#ff0000'],
+            ['small',  '#1890ff'],
+            ['medium', '#52c41a'],
+            ['large',  '#f5222d'],
+        ].forEach(([mode, color]) => {
+            new ewColorPicker({
+                el: `#p-${mode}`,
+                defaultColor: color,
+                panelMode: mode,
+                autoPanelPosition: true,
+                alpha: true,
+                predefine: true,
+            }).on('change', bindChange(mode));
+        });
+
+        // ============ ② 横向 hue + alpha ============
+        [
+            ['mini',   '#fa8c16'],
+            ['small',  '#722ed1'],
+            ['medium', '#13c2c2'],
+            ['large',  '#eb2f96'],
+        ].forEach(([mode, color]) => {
+            new ewColorPicker({
+                el: `#p-${mode}-h`,
+                defaultColor: color,
+                panelMode: mode,
+                autoPanelPosition: true,
+                hueDirection: 'horizontal',
+                alphaDirection: 'horizontal',
+                alpha: true,
+                predefine: true,
+            }).on('change', bindChange(`${mode}-h`));
+        });
+
+        // ============ ③ 渐变选择器 ============
+        const gradientConfigs = [
+            { mode: 'mini',   type: 'linear',  color: '#ef4444' },
+            { mode: 'small',  type: 'linear',  color: '#f59e0b' },
+            { mode: 'medium', type: 'radial',  color: '#22c55e' },
+            { mode: 'large',  type: 'conic',   color: '#3b82f6' },
+        ];
+        gradientConfigs.forEach(({ mode, type, color }) => {
+            const picker = new ewColorPicker({
+                el: `#p-${mode}-g`,
+                defaultColor: color,
+                panelMode: mode,
+                autoPanelPosition: true,
+                gradientStops: ['#ef4444', '#f59e0b', '#3b82f6'],
+                gradientType: type,
+                gradientAngle: 90,
+                alpha: true,
+                predefine: true,
+                gradientChange: bindGradient(`${mode}-g`),
+            });
+            initGradientPreview(`${mode}-g`, picker);
+        });
+
+        // ============ ④ 横向 + 渐变 极限组合 ============
+        const hgConfigs = [
+            { mode: 'mini' },
+            { mode: 'medium' },
+            { mode: 'large' },
+        ];
+        hgConfigs.forEach(({ mode }) => {
+            const picker = new ewColorPicker({
+                el: `#p-${mode}-hg`,
+                defaultColor: '#a855f7',
+                panelMode: mode,
+                autoPanelPosition: true,
+                hueDirection: 'horizontal',
+                alphaDirection: 'horizontal',
+                gradientStops: ['#f43f5e', '#facc15', '#22c55e', '#3b82f6'],
+                gradientType: 'linear',
+                gradientAngle: 135,
+                alpha: true,
+                predefine: true,
+                gradientChange: bindGradient(`${mode}-hg`),
+            });
+            initGradientPreview(`${mode}-hg`, picker);
+        });
+    </script>
+</body>
+</html>

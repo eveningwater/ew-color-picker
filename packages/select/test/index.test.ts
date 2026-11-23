@@ -319,3 +319,89 @@ describe("Select plugin", () => {
     expect(clearNode.classList.contains("ew-select__clear--hidden")).toBe(true);
   });
 });
+
+describe("Select tooltip", () => {
+  let select: Select;
+
+  afterEach(() => {
+    select?.destroy();
+    document
+      .querySelectorAll(".ew-select__tooltip")
+      .forEach((node) => node.remove());
+  });
+
+  // jsdom 不做真实排版，需手动模拟文字是否溢出
+  function mockOverflow(el: HTMLElement, overflow: boolean) {
+    Object.defineProperty(el, "scrollWidth", {
+      configurable: true,
+      value: overflow ? 200 : 50,
+    });
+    Object.defineProperty(el, "clientWidth", {
+      configurable: true,
+      value: 100,
+    });
+  }
+
+  function getValueText(): HTMLElement {
+    return getTrigger(select).querySelector(
+      ".ew-select__value"
+    ) as HTMLElement;
+  }
+
+  it("shows a tooltip with the full text when the value is truncated", () => {
+    select = createSelect({ value: "linear" });
+    const trigger = getTrigger(select);
+    mockOverflow(getValueText(), true);
+
+    trigger.dispatchEvent(new MouseEvent("mouseenter"));
+
+    const tooltip = document.querySelector(
+      ".ew-select__tooltip"
+    ) as HTMLElement;
+    expect(tooltip).not.toBeNull();
+    expect(tooltip.textContent).toBe("线性渐变");
+    expect(
+      tooltip.classList.contains("ew-select__tooltip--visible")
+    ).toBe(true);
+
+    trigger.dispatchEvent(new MouseEvent("mouseleave"));
+    expect(
+      tooltip.classList.contains("ew-select__tooltip--visible")
+    ).toBe(false);
+  });
+
+  it("does not show a tooltip when the text fits", () => {
+    select = createSelect({ value: "linear" });
+    const trigger = getTrigger(select);
+    mockOverflow(getValueText(), false);
+
+    trigger.dispatchEvent(new MouseEvent("mouseenter"));
+
+    const tooltip = document.querySelector(
+      ".ew-select__tooltip"
+    ) as HTMLElement;
+    expect(tooltip).toBeNull();
+  });
+
+  it("can be disabled with tooltip: false", () => {
+    select = createSelect({ value: "linear", tooltip: false });
+    const trigger = getTrigger(select);
+    mockOverflow(getValueText(), true);
+
+    trigger.dispatchEvent(new MouseEvent("mouseenter"));
+
+    expect(document.querySelector(".ew-select__tooltip")).toBeNull();
+  });
+
+  it("removes the tooltip node on destroy", () => {
+    select = createSelect({ value: "linear" });
+    const trigger = getTrigger(select);
+    mockOverflow(getValueText(), true);
+
+    trigger.dispatchEvent(new MouseEvent("mouseenter"));
+    expect(document.querySelector(".ew-select__tooltip")).not.toBeNull();
+
+    select.destroy();
+    expect(document.querySelector(".ew-select__tooltip")).toBeNull();
+  });
+});

@@ -34,6 +34,7 @@ import '@ew-color-picker/style/dist/select.css'
 | `selectValue` | `string \| number` | `undefined` | 初始选中值 |
 | `selectPlaceholder` | `string` | `undefined` | 未选中时显示的占位文案 |
 | `selectClearable` | `boolean` | `true` | 选中值后是否显示清空图标 |
+| `selectTooltip` | `boolean` | `true` | 选中值或选项文字被截断时，悬浮展示完整内容 |
 | `onSelectChange` | `(value, option) => void` | - | 用户选择后触发 |
 | `onSelectClear` | `() => void` | - | 用户清空选中项后触发 |
 

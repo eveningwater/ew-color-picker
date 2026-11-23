@@ -1,7 +1,9 @@
 import {
   checkContainer,
   extend,
-  DEFAULT_PREFIX
+  DEFAULT_PREFIX,
+  DEFAULT_PANEL_MODE,
+  type PanelMode,
 } from "@ew-color-picker/utils";
 
 export interface WrapperElement extends HTMLElement {
@@ -34,6 +36,7 @@ export interface ewColorPickerOptions {
   appendTo?: string | HTMLElement;
   boundary?: string | HTMLElement | null;
   prefix?: string;
+  panelMode?: PanelMode;
   panelPlacement?: 'top-start' | 'top' | 'top-end' | 'left-start' | 'left' | 'left-end' | 'right-start' | 'right' | 'right-end' | 'bottom-start' | 'bottom' | 'bottom-end';
   sure?: Function;
   clear?: Function;
@@ -58,6 +61,7 @@ export const defaultConfig: Omit<ewColorPickerOptions, "el"> = {
   panelPlacement: "bottom",
   boundary: null,
   prefix: DEFAULT_PREFIX,
+  panelMode: DEFAULT_PANEL_MODE,
   sure: () => {},
   clear: () => {},
   togglePicker: () => {},
