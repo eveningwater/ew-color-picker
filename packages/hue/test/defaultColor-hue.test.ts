@@ -124,8 +124,9 @@ describe('Hue Plugin - defaultColor Integration', () => {
 
       huePlugin.syncColor('#00ff00'); // hue = 120
 
+      // 垂直色相条渐变自上而下色相递增，hue 120 应位于 1/3 处
       expect(parseFloat(huePlugin.hueThumb.style.top)).toBeCloseTo(
-        (1 - 120 / 360) * 200,
+        (120 / 360) * 200,
         3
       );
     });

@@ -1256,6 +1256,18 @@ Source: https://eveningwater.github.io/ew-color-picker/guide/changelog
 
 # Changelog
 
+## 2.0.9
+
+### Fixes
+
+- Fixed the vertical hue slider being out of sync with the colour panel: the stylesheet gradient increases hue from top to bottom (`linear-gradient(180deg, ...)`), but the thumb position and click/drag mapping used the inverted `1 - hue / 360` formula. The thumb now sits on the matching colour, and clicking or dragging picks the hue you actually see
+- Fixed the alpha slider having no colour: the background layer only showed the transparency checkerboard, so the alpha track gave no visual feedback. It now renders a gradient from the fully opaque current colour to transparent, following the horizontal or vertical direction, and updates whenever the colour changes
+- Fixed the console banner printing a stale version (`2.0.7`). The version is now injected from `package.json` at build time, so it can no longer drift from the published release
+
+### Tests
+
+- Added regression tests for the vertical hue thumb position and click mapping, the alpha gradient direction in both orientations, and the console banner version
+
 ## 2.0.8
 
 ### Fixes
@@ -5626,6 +5638,18 @@ new ewColorPicker({
 Source: https://eveningwater.github.io/ew-color-picker/zh/guide/changelog
 
 # 更新日志
+
+## 2.0.9
+
+### 修复
+
+- 修复垂直色相条与颜色面板不同步：样式表里的渐变是自上而下色相递增（`linear-gradient(180deg, ...)`），但滑块定位和点击/拖拽换算用了反向公式 `1 - hue / 360`。现在滑块会落在对应颜色上，点击或拖拽取到的也是看到的色相
+- 修复透明度条没有颜色：背景层只有透明棋盘格，拖动时没有任何视觉反馈。现在会按水平/垂直方向渲染「当前颜色（不透明）→ 透明」的渐变，并在颜色变化时同步更新
+- 修复控制台横幅打印过期版本号（`2.0.7`）。版本号改为构建时从 `package.json` 注入，不会再与发布版本不一致
+
+### 测试
+
+- 新增回归测试：垂直色相滑块定位与点击映射、两个方向的透明度渐变、控制台横幅版本号
 
 ## 2.0.8
 

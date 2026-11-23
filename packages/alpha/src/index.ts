@@ -32,6 +32,7 @@ export default class ewColorPickerAlphaPlugin {
   options: AlphaOptions & Omit<ewColorPickerOptions, "el"> = {};
   alphaBar: HTMLElement | null = null;
   alphaThumb: HTMLElement | null = null;
+  alphaBg: HTMLElement | null = null;
   isHorizontal: boolean = false;
 
   // 节流处理鼠标移动事件
@@ -55,9 +56,10 @@ export default class ewColorPickerAlphaPlugin {
     // 注册事件监听器
     if (isFunction(this.ewColorPicker.on)) {
       this.ewColorPicker.on("change", (color: string) => {
-        // 当颜色改变时，更新 alpha 滑块位置
+        // 当颜色改变时，更新 alpha 滑块位置与渐变背景
         const hsva = colorRgbaToHsva(color);
         this.updateAlphaThumbPosition(hsva.a);
+        this.updateAlphaBg(color);
       });
     }
 
@@ -79,6 +81,8 @@ export default class ewColorPickerAlphaPlugin {
         if (this.alphaBar && this.alphaBar.parentNode) {
           this.alphaBar.parentNode.removeChild(this.alphaBar);
           this.alphaBar = null;
+          this.alphaThumb = null;
+          this.alphaBg = null;
         }
       }
     }
@@ -134,6 +138,7 @@ export default class ewColorPickerAlphaPlugin {
     const alphaBg = create("div");
     addClass(alphaBg, `${this.prefix}color-picker-alpha-slider-bg`);
     insertNode(this.alphaBar, alphaBg);
+    this.alphaBg = alphaBg;
     this.alphaThumb = create("div");
     addClass(this.alphaThumb, `${this.prefix}color-picker-alpha-slider-thumb`);
     insertNode(this.alphaBar, this.alphaThumb);
@@ -158,12 +163,13 @@ export default class ewColorPickerAlphaPlugin {
       }
     }
 
-    // 设置初始 thumb 位置
+    // 设置初始 thumb 位置与渐变背景
     const currentColor = this.ewColorPicker.getColor();
     if (currentColor) {
       const hsva = colorRgbaToHsva(currentColor);
       this.updateAlphaThumbPosition(hsva.a);
     }
+    this.updateAlphaBg(currentColor);
   }
 
   bindEvents() {
@@ -238,6 +244,23 @@ export default class ewColorPickerAlphaPlugin {
     const hsva = colorRgbaToHsva(color);
     if (isNaN(hsva.a)) return;
     this.updateAlphaThumbPosition(hsva.a);
+    this.updateAlphaBg(color);
+  }
+
+  // 透明度条的渐变背景：不透明 -> 透明，与 thumb 定位方向保持一致
+  updateAlphaBg(color?: string) {
+    if (!this.alphaBg) return;
+    const currentColor = color || this.ewColorPicker.getColor();
+    const hsva = currentColor ? colorRgbaToHsva(currentColor) : null;
+    if (!hsva || isNaN(hsva.h)) {
+      setStyle(this.alphaBg, "background", "");
+      return;
+    }
+    const opaqueColor = colorHsvaToRgba({ ...hsva, a: 1 });
+    const gradient = this.isHorizontal
+      ? `linear-gradient(to right, ${opaqueColor}, transparent)`
+      : `linear-gradient(to top, transparent, ${opaqueColor})`;
+    setStyle(this.alphaBg, "background", gradient);
   }
 
   updateAlphaThumbPosition(alpha: number) {
@@ -273,6 +296,7 @@ export default class ewColorPickerAlphaPlugin {
     // 清理DOM引用
     this.alphaBar = null;
     this.alphaThumb = null;
+    this.alphaBg = null;
   }
 
   // 新增 install 方法，便于测试
@@ -283,9 +307,10 @@ export default class ewColorPickerAlphaPlugin {
     // 注册事件监听器
     if (isFunction(core.on)) {
       core.on("change", (color: string) => {
-        // 当颜色改变时，更新 alpha 滑块位置
+        // 当颜色改变时，更新 alpha 滑块位置与渐变背景
         const hsva = colorRgbaToHsva(color);
         this.updateAlphaThumbPosition(hsva.a);
+        this.updateAlphaBg(color);
       });
     }
 

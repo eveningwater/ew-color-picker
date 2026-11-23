@@ -186,9 +186,10 @@ export default class ewColorPickerHuePlugin {
     }
     
     const rect = getRect(this.hueBar);
+    // 垂直色相条渐变自顶向下为 red → ... → red，色相随 y 增大而增大
     const hue = this.isHorizontal
       ? getRatio(event.clientX, rect.left, rect.width) * 360
-      : getRatio(event.clientY, rect.top, rect.height, true) * 360;
+      : getRatio(event.clientY, rect.top, rect.height) * 360;
     this.updateHue(hue);
   }
 
@@ -206,7 +207,7 @@ export default class ewColorPickerHuePlugin {
       const rect = getRect(slider);
       const hue = isHorizontal
         ? getRatio(e.clientX, rect.left, rect.width) * 360
-        : getRatio(e.clientY, rect.top, rect.height, true) * 360;
+        : getRatio(e.clientY, rect.top, rect.height) * 360;
       this.throttledUpdateHue(hue);
     });
   }
@@ -279,9 +280,10 @@ export default class ewColorPickerHuePlugin {
       setStyle(this.hueThumb, "left", `${x}px`);
       setStyle(this.hueThumb, "top", `0px`);
     } else {
+      // 与垂直色相渐变方向保持一致：色相 0 在顶部，360 在底部
       const y = Math.max(
         0,
-        Math.min(rect.height, (1 - hue / 360) * rect.height)
+        Math.min(rect.height, (hue / 360) * rect.height)
       );
       setStyle(this.hueThumb, "top", `${y}px`);
       setStyle(this.hueThumb, "left", `0px`);

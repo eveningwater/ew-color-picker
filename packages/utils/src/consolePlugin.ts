@@ -3,8 +3,12 @@ import type { ewColorPickerMergeOptionsData } from "@ew-color-picker/core";
 import { extend, isFunction } from "./base";
 import { log } from "./assert";
 
+// 版本号由构建脚本从 package.json 注入，避免源码手写导致不同步
+declare const __EW_VERSION__: string;
+const version = typeof __EW_VERSION__ === "string" ? __EW_VERSION__ : "0.0.0";
+
 export const tips = [
-  `%c ew-color-picker@2.0.7%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `,
+  `%c ew-color-picker@${version}%c 联系QQ：854806732 %c 联系微信：eveningwater %c github:https://github.com/eveningwater/ew-color-picker %c `,
   "background:#0ca6dc ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff",
   "background:#ff7878 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff",
   "background:#ff7878 ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff",

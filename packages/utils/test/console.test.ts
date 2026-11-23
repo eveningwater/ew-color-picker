@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { create } from '../src/dom';
-import ConsolePlugin from '../src/consolePlugin';
+import ConsolePlugin, { tips } from '../src/consolePlugin';
 import { createMockCore } from '../../../test/setup';
+import { version as rootVersion } from '../../../package.json';
 
 describe('Console Plugin', () => {
   let container: HTMLElement;
@@ -24,6 +25,10 @@ describe('Console Plugin', () => {
   });
 
   describe('plugin installation', () => {
+    it('should print the current package version', () => {
+      expect(tips[0]).toContain(`ew-color-picker@${rootVersion}`);
+    });
+
     it('should install plugin correctly', () => {
       const plugin = new ConsolePlugin(mockCore);
       

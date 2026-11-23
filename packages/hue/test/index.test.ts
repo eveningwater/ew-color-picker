@@ -84,6 +84,66 @@ describe('Hue Plugin', () => {
     });
   });
 
+  describe('hue slider positioning', () => {
+    const rect = {
+      width: 100,
+      height: 200,
+      left: 0,
+      top: 0,
+      right: 100,
+      bottom: 200,
+      x: 0,
+      y: 0,
+      toJSON: () => ({})
+    } as DOMRect;
+
+    it('vertical thumb position increases with hue (matches gradient)', () => {
+      const plugin = new HuePlugin(mockCore);
+      plugin.install(mockCore);
+      plugin.hueBar!.getBoundingClientRect = () => rect;
+
+      plugin.updateHueThumbPosition(0);
+      expect(parseFloat(plugin.hueThumb!.style.top)).toBeCloseTo(0, 3);
+
+      plugin.updateHueThumbPosition(90);
+      expect(parseFloat(plugin.hueThumb!.style.top)).toBeCloseTo(50, 3);
+
+      plugin.updateHueThumbPosition(270);
+      expect(parseFloat(plugin.hueThumb!.style.top)).toBeCloseTo(150, 3);
+    });
+
+    it('vertical click maps top to low hue and bottom to high hue', () => {
+      const plugin = new HuePlugin(mockCore);
+      plugin.install(mockCore);
+      plugin.hueBar!.getBoundingClientRect = () => rect;
+
+      const spy = vi.spyOn(plugin, 'updateHue');
+      const clickAt = (clientY: number) =>
+        plugin.handleHueSliderClick({
+          clientY,
+          clientX: 6,
+          preventDefault: () => {},
+          stopPropagation: () => {}
+        } as unknown as MouseEvent);
+
+      clickAt(50); // 25% 处
+      expect(spy).toHaveBeenLastCalledWith(90);
+
+      clickAt(150); // 75% 处
+      expect(spy).toHaveBeenLastCalledWith(270);
+    });
+
+    it('horizontal thumb position is unchanged', () => {
+      mockCore.options.hueDirection = 'horizontal';
+      const plugin = new HuePlugin(mockCore);
+      plugin.install(mockCore);
+      plugin.hueBar!.getBoundingClientRect = () => rect;
+
+      plugin.updateHueThumbPosition(90);
+      expect(parseFloat(plugin.hueThumb!.style.left)).toBeCloseTo(25, 3);
+    });
+  });
+
   describe('color updates', () => {
     it('should update hue slider when color changes', () => {
       const plugin = new HuePlugin(mockCore);

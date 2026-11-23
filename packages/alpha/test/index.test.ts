@@ -182,6 +182,38 @@ describe('Alpha Plugin', () => {
     });
   });
 
+  describe('alpha slider gradient background', () => {
+    it('垂直方向：顶部不透明、底部透明', () => {
+      const plugin = new AlphaPlugin(mockCore);
+      plugin.updateAlphaBg('rgba(67, 11, 222, 0.5)');
+
+      const bg = plugin.alphaBg!.style.background;
+      expect(bg).toContain('linear-gradient');
+      expect(bg).toContain('to top');
+      expect(bg).toMatch(/transparent/);
+      expect(bg).toMatch(/67/);
+    });
+
+    it('水平方向：左侧不透明、右侧透明', () => {
+      mockCore.options.alphaDirection = 'horizontal';
+      const plugin = new AlphaPlugin(mockCore);
+      plugin.updateAlphaBg('rgba(67, 11, 222, 0.5)');
+
+      const bg = plugin.alphaBg!.style.background;
+      expect(bg).toContain('to right');
+      expect(bg).toMatch(/transparent/);
+    });
+
+    it('颜色变化时同步更新渐变背景', () => {
+      const plugin = new AlphaPlugin(mockCore);
+      plugin.updateAlphaBg('#00ff00');
+
+      const bg = plugin.alphaBg!.style.background;
+      expect(bg).toContain('linear-gradient');
+      expect(bg).toMatch(/0,\s*255,\s*0/);
+    });
+  });
+
   describe('rgba 默认值与 alpha 插件', () => {
     it('启用 alpha 插件时默认 rgba 颜色应保留透明度', () => {
       const el = document.createElement('div');
