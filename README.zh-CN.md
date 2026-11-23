@@ -34,17 +34,18 @@ pnpm add @ew-color-picker/ew-color-picker @ew-color-picker/style
 - **面板尺寸档位**：`panelMode: 'mini' | 'small' | 'medium' | 'large'`，面板及内部控件整体缩放，移动端无需额外写 CSS
 - **渐变编辑器**：多停靠点渐变，支持线性 / 径向 / 圆锥，可调角度与重复
 - **框架无关**：原生 DOM 实现，可在 Vue、React、Svelte 等任意框架中挂载
+- **官方封装包**：`@ew-color-picker/vue` 与 `@ew-color-picker/react`，薄封装、带类型、按需安装
 - **事件驱动**：`change` / `sure` / `clear` / `toggle` / `mode-change` / `options-update` / `destroy`
 - **多颜色模式**：Hex、RGB、HSL 输入切换，支持透明度
 - **完整类型**：全部包使用 TypeScript 编写并输出声明文件
 - **多实例隔离**：每个实例拥有独立事件总线、DOM 与插件实例
-- **按需加载**：15 个独立包，可只引入所需插件
+- **按需加载**：每个插件都是独立包，可只引入所需插件
 
 ## 对比
 
 | | ew-color-picker | vue-color | react-colorful | iro.js |
 | --- | --- | --- | --- | --- |
-| 框架支持 | 原生 TS，框架无关 | Vue 2 | React | 原生 JS |
+| 框架支持 | 原生 TS + 官方 Vue 3 / React 封装包 | Vue 2 | React | 原生 JS |
 | 架构 | 15 个可组合插件 | 单体组件 | 单体组件 | 单体 |
 | 渐变编辑器 | 内置（多停靠点，线性 / 径向 / 圆锥） | 无 | 无 | 无 |
 | 吸管取色 | 内置（原生 EyeDropper API） | 无 | 无 | 无 |
@@ -88,6 +89,8 @@ pnpm add @ew-color-picker/ew-color-picker @ew-color-picker/style
 | `@ew-color-picker/checkbox` | 主题化复选框，供渐变编辑器使用 |
 | `@ew-color-picker/eyedropper` | 屏幕吸管取色（原生 EyeDropper API，Chromium） |
 | `@ew-color-picker/copy-color` | 复制当前颜色到剪贴板 |
+| `@ew-color-picker/vue` | Vue 3 封装组件（`v-model`、类型化 props、暴露实例 API） |
+| `@ew-color-picker/react` | React 封装组件（`forwardRef`、类型化 props、暴露实例 API） |
 
 ## 安装
 
@@ -126,6 +129,43 @@ ewColorPicker.use(Box).use(Panel).use(Hue).use(Input).use(Button)
 
 new ewColorPicker({ el: '#colorPicker' })
 ```
+
+### Vue 3 / React
+
+```bash
+pnpm add @ew-color-picker/vue    # 或 @ew-color-picker/react
+```
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { EwColorPicker } from '@ew-color-picker/vue'
+import '@ew-color-picker/style/dist/index.css'
+import '@ew-color-picker/style/dist/input-number.css'
+
+const color = ref('#6366f1')
+</script>
+
+<template>
+  <EwColorPicker v-model="color" :options="{ panelMode: 'small' }" />
+</template>
+```
+
+```tsx
+import { useState } from 'react'
+import { EwColorPicker } from '@ew-color-picker/react'
+import '@ew-color-picker/style/dist/index.css'
+import '@ew-color-picker/style/dist/input-number.css'
+
+export function ColorField() {
+  const [color, setColor] = useState('#6366f1')
+  return (
+    <EwColorPicker value={color} onChange={setColor} options={{ panelMode: 'small' }} />
+  )
+}
+```
+
+封装包只负责宿主元素与实例生命周期，配置与事件全部转发给核心选择器，详见[框架集成](https://eveningwater.github.io/ew-color-picker/zh/guide/framework-integration)。
 
 ### UMD
 

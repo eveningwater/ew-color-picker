@@ -1,0 +1,50 @@
+{
+  "name": "@ew-color-picker/vue",
+  "version": "2.0.10",
+  "description": "Vue 3 component wrapper for ew-color-picker",
+  "main": "dist/vue.min.js",
+  "module": "dist/vue.esm.js",
+  "types": "dist/packages/vue/src/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c ../../scripts/rollup.config.mjs",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "color-picker",
+    "colorpicker",
+    "vue",
+    "vue3",
+    "vue-component",
+    "ui-component",
+    "component",
+    "typescript",
+    "plugin-system"
+  ],
+  "author": "eveningwater(854806732@qq.com)",
+  "license": "MIT",
+  "dependencies": {
+    "@ew-color-picker/core": "workspace:^",
+    "@ew-color-picker/ew-color-picker": "workspace:^"
+  },
+  "peerDependencies": {
+    "vue": "^3.3.0"
+  },
+  "devDependencies": {
+    "vue": "^3.5.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eveningwater/ew-color-picker.git",
+    "directory": "packages/vue"
+  },
+  "bugs": {
+    "url": "https://github.com/eveningwater/ew-color-picker/issues"
+  },
+  "homepage": "https://eveningwater.github.io/ew-color-picker/"
+}

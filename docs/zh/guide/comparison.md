@@ -70,10 +70,10 @@ ewColorPicker.use(Panel).use(Hue)
 ## 需要正视的局限
 
 - **生态与社区规模小**：下载量、第三方教程、Issue 沉淀都无法与 Pickr、react-color 相比，遇到冷门问题更多要靠读源码。
-- **不提供官方框架绑定包**：React / Vue / Angular / Solid 的接入方式见[框架集成](./framework-integration)，受控组件与 SSR 场景按示例自行封装（约 20 行）。
+- **封装包很薄且可选**：官方提供 Vue 3 与 React 两个封装包（`@ew-color-picker/vue`、`@ew-color-picker/react`）；Angular 与 Solid 按[框架集成](./framework-integration)里的示例自行复制。
 - **渐变与屏幕取色属于可选插件**：线性/径向/锥形渐变编辑由可选的 `@ew-color-picker/gradient` 插件提供，屏幕取色由 `@ew-color-picker/eyedropper` 插件提供（仅 Chromium 系浏览器）；更复杂的色彩空间运算与可视化场景仍建议选 iro.js。
 - **只有需要定制时才要理解插件模型**：默认装聚合入口或 `npm i ew-color-picker` 即可开箱使用；只有在替换局部 UI、组合自有插件时，才需要理解「核心 + 插件」的结构。
-- **想进一步减小体积需按需装子包**：聚合包 84.6 KB、样式 36.1 KB，已与 Coloris 同量级；若只用单个部件，按需安装插件包可以裁到核心 11.9 KB。
+- **想进一步减小体积需按需装子包**：聚合包 147.2 KB、样式 38 KB（gzip 合计约 40 KB），已与 Coloris 同量级；若只用单个部件，按需安装插件包可以裁到核心 11.9 KB。
 
 ## 选型建议
 

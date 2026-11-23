@@ -7,7 +7,7 @@ description: 'Minimal integration patterns for ew-color-picker in React, Vue 3, 
 
 ew-color-picker depends only on plain DOM and events — no framework runtime — so the same approach works everywhere: **create the instance on mount, call `destroy()` on unmount, and sync controlled values through `setColor()`**.
 
-Below are minimal, copy-paste wrappers for four frameworks. No official framework packages are published; the reasoning is covered in [Comparison & Positioning](./comparison).
+Below are minimal, copy-paste wrappers for four frameworks. Official thin packages ship for Vue 3 and React; Angular and Solid use the same pattern without a dedicated package. The positioning is covered in [Comparison & Positioning](./comparison).
 
 ## Common rules
 
@@ -22,6 +22,49 @@ import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 ```
+
+## Official packages
+
+```bash
+pnpm add @ew-color-picker/vue      # Vue 3
+pnpm add @ew-color-picker/react    # React
+```
+
+Both packages are thin: they own the host element and the instance lifecycle, forward every option, re-emit the core events and expose the picker instance through `ref`.
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { EwColorPicker } from '@ew-color-picker/vue'
+
+const color = ref('#6366f1')
+</script>
+
+<template>
+  <EwColorPicker v-model="color" :options="{ panelMode: 'small' }" />
+</template>
+```
+
+```tsx
+import { useRef, useState } from 'react'
+import { EwColorPicker, type EwColorPickerRef } from '@ew-color-picker/react'
+
+export function ColorField() {
+  const [color, setColor] = useState('#6366f1')
+  const pickerRef = useRef<EwColorPickerRef>(null)
+  return (
+    <EwColorPicker
+      ref={pickerRef}
+      value={color}
+      onChange={setColor}
+      onSure={(next) => console.log('sure', next, pickerRef.current?.getInstance())}
+      options={{ panelMode: 'small' }}
+    />
+  )
+}
+```
+
+The wrappers do not bundle styles: import `index.css` and `input-number.css` once in your app entry, as shown below. The sections after this one show the same integration without the wrappers, using only the aggregate package.
 
 ## React
 
@@ -195,4 +238,4 @@ An instance was not destroyed on unmount, so its leftover `document` click liste
 Only when you write the value back to the component and the component writes it back with `setColor()`. Compare old and new values to break the loop.
 
 **Do I need official wrapper packages?**
-The code above is the complete wrapper. If a project uses it in several places, extract these twenty lines into your own component rather than depending on a third-party package.
+They are optional. `@ew-color-picker/vue` and `@ew-color-picker/react` save the twenty lines of wiring on this page and keep props, refs and events typed. If you only need one picker, copy the pattern instead.

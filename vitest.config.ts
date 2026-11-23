@@ -46,6 +46,7 @@ export default defineConfig({
       '@ew-color-picker/eyedropper': resolve(__dirname, './packages/eyedropper/src'),
       '@ew-color-picker/copy-color': resolve(__dirname, './packages/copy-color/src'),
       '@ew-color-picker/gradient': resolve(__dirname, './packages/gradient/src'),
+      '@ew-color-picker/ew-color-picker': resolve(__dirname, './packages/ew-color-picker/src'),
       '@ew-color-picker/style': resolve(__dirname, './packages/style/src'),
     }
   }

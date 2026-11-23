@@ -7,7 +7,7 @@ description: 在 React、Vue 3、Angular 与 Solid 中集成 ew-color-picker 的
 
 ew-color-picker 只依赖原生 DOM 与事件，没有任何框架运行时依赖，因此在任意框架里都能用同一套方式接入：**挂载时创建实例、卸载时 `destroy()`、受控值通过 `setColor()` 同步**。
 
-本页给出四个框架的最小可用封装，可直接复制到项目中。官方不单独发布框架封装包，原因见[竞品对比与定位](./comparison)。
+本页给出四个框架的最小可用封装，可直接复制到项目中。Vue 3 与 React 另有官方薄封装包，Angular 与 Solid 沿用同一套写法。定位说明见[竞品对比与定位](./comparison)。
 
 ## 通用要点
 
@@ -22,6 +22,49 @@ import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 ```
+
+## 官方封装包
+
+```bash
+pnpm add @ew-color-picker/vue      # Vue 3
+pnpm add @ew-color-picker/react    # React
+```
+
+两个包都是薄封装：只负责宿主元素与实例生命周期，配置原样转发，核心事件重新抛出，并通过 `ref` 暴露选择器实例。
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { EwColorPicker } from '@ew-color-picker/vue'
+
+const color = ref('#6366f1')
+</script>
+
+<template>
+  <EwColorPicker v-model="color" :options="{ panelMode: 'small' }" />
+</template>
+```
+
+```tsx
+import { useRef, useState } from 'react'
+import { EwColorPicker, type EwColorPickerRef } from '@ew-color-picker/react'
+
+export function ColorField() {
+  const [color, setColor] = useState('#6366f1')
+  const pickerRef = useRef<EwColorPickerRef>(null)
+  return (
+    <EwColorPicker
+      ref={pickerRef}
+      value={color}
+      onChange={setColor}
+      onSure={(next) => console.log('sure', next, pickerRef.current?.getInstance())}
+      options={{ panelMode: 'small' }}
+    />
+  )
+}
+```
+
+封装包不内置样式：仍需在应用入口引入 `index.css` 与 `input-number.css`（见下方示例）。本节之后的 React / Vue 示例是等价的“不用封装包”写法，只依赖聚合包。
 
 ## React
 
@@ -195,4 +238,4 @@ Solid 的细粒度响应式不需要额外的同步逻辑：把 `props.value` �
 只有在「监听 change 后改写外部值，又用 setColor 写回组件」时才可能循环，用新旧值比较即可切断。
 
 **Q：需要自己写框架封装包吗？**
-上面的代码就是完整封装。如果项目内多处使用，建议把这 20 行沉淀为自己的组件，而不是依赖第三方封装包。
+可选。`@ew-color-picker/vue` 与 `@ew-color-picker/react` 省掉了本页那 20 行胶水代码，并保留 props、ref 与事件的类型提示。如果项目里只有一个取色器，直接复制示例写法即可。

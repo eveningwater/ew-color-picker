@@ -15,6 +15,9 @@ const UTILS = '@ew-color-picker/utils';
 const SELECT = '@ew-color-picker/select';
 const INPUT_NUMBER = '@ew-color-picker/input-number';
 const CHECKBOX = '@ew-color-picker/checkbox';
+const AGGREGATE = '@ew-color-picker/ew-color-picker';
+const VUE = 'vue';
+const REACT = 'react';
 // external 依赖对应的 UMD 全局变量
 const GLOBAL_NAMES = {
   [CORE]: 'Core',
@@ -22,6 +25,9 @@ const GLOBAL_NAMES = {
   [SELECT]: 'Select',
   [INPUT_NUMBER]: 'InputNumber',
   [CHECKBOX]: 'Checkbox',
+  [AGGREGATE]: 'ewColorPicker',
+  [VUE]: 'Vue',
+  [REACT]: 'React',
 };
 
 // pkgName: npm 包名（用于 banner）；globalName: UMD 全局变量名；
@@ -46,6 +52,18 @@ export const PACKAGES = {
     pkgName: 'gradient',
     globalName: 'Gradient',
     external: [CORE, UTILS, SELECT, INPUT_NUMBER, CHECKBOX],
+    exports: 'named',
+  },
+  vue: {
+    pkgName: 'vue',
+    globalName: 'EwColorPickerVue',
+    external: [AGGREGATE, CORE, VUE],
+    exports: 'named',
+  },
+  react: {
+    pkgName: 'react',
+    globalName: 'EwColorPickerReact',
+    external: [AGGREGATE, CORE, REACT],
     exports: 'named',
   },
   'ew-color-picker': {

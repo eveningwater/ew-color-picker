@@ -70,10 +70,10 @@ Bilingual documentation, per-API references, one page per plugin, plus `llms.txt
 ## Limitations to be honest about
 
 - **Small ecosystem**: download counts, community tutorials and issue history cannot match Pickr or react-color; unusual problems mean reading the source.
-- **No official framework wrappers**: React / Vue / Angular / Solid integration is covered in [Framework Integration](./framework-integration); controlled components and SSR need a thin wrapper of your own (around 20 lines).
+- **Wrappers stay thin and optional**: official packages cover Vue 3 and React (`@ew-color-picker/vue`, `@ew-color-picker/react`); Angular and Solid use the copy-paste recipes in [Framework Integration](./framework-integration).
 - **Gradients and screen sampling are optional plugins**: linear / radial / conic gradient editing ships as the optional `@ew-color-picker/gradient` plugin, and screen sampling as `@ew-color-picker/eyedropper` (Chromium-based browsers). For heavier color-space math and visualization work, iro.js is still the better fit.
 - **The plugin model only matters when you customize**: installing the aggregate package or `npm i ew-color-picker` works out of the box; you only need to understand core + plugins when replacing part of the UI or wiring your own plugins.
-- **Shrinking further means installing sub-packages**: the aggregate is 84.6 KB plus 36.1 KB of styles, already in Coloris territory; if you use a single piece, install plugin packages and trim down to the 11.9 KB core.
+- **Shrinking further means installing sub-packages**: the aggregate is 147.2 KB unpacked plus 38 KB of styles (about 40 KB gzipped in total), already in Coloris territory; if you use a single piece, install plugin packages and trim down to the 11.9 KB core.
 
 ## Choosing the right tool
 

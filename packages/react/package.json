@@ -1,0 +1,52 @@
+{
+  "name": "@ew-color-picker/react",
+  "version": "2.0.10",
+  "description": "React component wrapper for ew-color-picker",
+  "main": "dist/react.min.js",
+  "module": "dist/react.esm.js",
+  "types": "dist/packages/react/src/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c ../../scripts/rollup.config.mjs",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "color-picker",
+    "colorpicker",
+    "react",
+    "react-component",
+    "ui-component",
+    "component",
+    "typescript",
+    "plugin-system"
+  ],
+  "author": "eveningwater(854806732@qq.com)",
+  "license": "MIT",
+  "dependencies": {
+    "@ew-color-picker/core": "workspace:^",
+    "@ew-color-picker/ew-color-picker": "workspace:^"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eveningwater/ew-color-picker.git",
+    "directory": "packages/react"
+  },
+  "bugs": {
+    "url": "https://github.com/eveningwater/ew-color-picker/issues"
+  },
+  "homepage": "https://eveningwater.github.io/ew-color-picker/"
+}

@@ -34,17 +34,18 @@ Latest release: `2.0.10` · [Changelog](https://eveningwater.github.io/ew-color-
 - **Panel size presets** — `panelMode: 'mini' | 'small' | 'medium' | 'large'` scales the panel and every control inside it, so mobile layouts fit without custom CSS
 - **Gradient editor** — multi-stop gradients with linear / radial / conic types, angle and repeating support
 - **Framework agnostic** — plain DOM core, mountable from Vue, React, Svelte or any other framework
+- **Official wrappers** — `@ew-color-picker/vue` and `@ew-color-picker/react` are thin, typed and optional
 - **Event driven** — `change` / `sure` / `clear` / `toggle` / `mode-change` / `options-update` / `destroy`
 - **Multiple color spaces** — Hex, RGB and HSL input modes with alpha support
 - **Fully typed** — every package is written in TypeScript and ships declarations
 - **Instance isolation** — each instance owns its event bus, DOM and plugin instances
-- **Tree-shakeable** — 15 packages; import only the plugins you need
+- **Tree-shakeable** — every plugin is its own package; import only the ones you register
 
 ## Comparison
 
 | | ew-color-picker | vue-color | react-colorful | iro.js |
 | --- | --- | --- | --- | --- |
-| Framework | Vanilla TS, framework-agnostic | Vue 2 | React | Vanilla JS |
+| Framework | Vanilla TS + official Vue 3 / React wrappers | Vue 2 | React | Vanilla JS |
 | Architecture | 15 composable plugins | Monolithic components | Monolithic components | Monolithic |
 | Gradient editor | Built in (multi-stop, linear / radial / conic) | No | No | No |
 | Eyedropper | Built in (native EyeDropper API) | No | No | No |
@@ -88,6 +89,8 @@ Import individual plugin packages instead to ship only what you register.
 | `@ew-color-picker/checkbox` | Themed checkbox used by the gradient editor |
 | `@ew-color-picker/eyedropper` | Screen color picker via the native EyeDropper API (Chromium) |
 | `@ew-color-picker/copy-color` | Copy the current color to the clipboard |
+| `@ew-color-picker/vue` | Vue 3 wrapper (`v-model`, typed props, exposed instance API) |
+| `@ew-color-picker/react` | React wrapper (`forwardRef`, typed props, exposed instance API) |
 
 ## Install
 
@@ -126,6 +129,43 @@ ewColorPicker.use(Box).use(Panel).use(Hue).use(Input).use(Button)
 
 new ewColorPicker({ el: '#colorPicker' })
 ```
+
+### Vue 3 / React
+
+```bash
+pnpm add @ew-color-picker/vue    # or @ew-color-picker/react
+```
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { EwColorPicker } from '@ew-color-picker/vue'
+import '@ew-color-picker/style/dist/index.css'
+import '@ew-color-picker/style/dist/input-number.css'
+
+const color = ref('#6366f1')
+</script>
+
+<template>
+  <EwColorPicker v-model="color" :options="{ panelMode: 'small' }" />
+</template>
+```
+
+```tsx
+import { useState } from 'react'
+import { EwColorPicker } from '@ew-color-picker/react'
+import '@ew-color-picker/style/dist/index.css'
+import '@ew-color-picker/style/dist/input-number.css'
+
+export function ColorField() {
+  const [color, setColor] = useState('#6366f1')
+  return (
+    <EwColorPicker value={color} onChange={setColor} options={{ panelMode: 'small' }} />
+  )
+}
+```
+
+The wrappers only own the host element and the instance lifecycle; options and events are forwarded to the core picker. See [Framework Integration](https://eveningwater.github.io/ew-color-picker/guide/framework-integration).
 
 ### UMD
 
