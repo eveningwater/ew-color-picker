@@ -1256,6 +1256,32 @@ Source: https://eveningwater.github.io/ew-color-picker/guide/changelog
 
 # Changelog
 
+## 2.0.10
+
+### Features
+
+- Added the `panelMode` option: `'mini' | 'small' | 'medium' | 'large'`, defaulting to `large` (unchanged behaviour). `mini` is designed for mobile. Sliders, cursors, inputs, buttons, predefine swatches, the gradient editor and the mode switcher all scale with the selected mode
+- Added a tooltip to the select component: when the selected value or an option label is truncated, hovering shows the full text. Enabled by default; disable with `selectTooltip: false`
+- Added `examples/19-panel-mode.html`, covering every combination of `panelMode`, horizontal hue/alpha and gradients
+
+### Fixes
+
+- Fixed the panel and the vertical hue/alpha sliders wrapping onto a new line in smaller modes: the panel container is now a vertical flex container and the panel plus sliders live in a single-row `top-row`
+- Fixed wrong panel widths in horizontal mode for smaller modes: the horizontal extra width was always calculated from the `large` base width, making `mini`/`small`/`medium` as wide as `large`
+- Fixed the animation module hard-coding `display: block` when showing the panel, which overrode the stylesheet layout: the animation module now saves and restores the element's original `display`, while showing/hiding is handled by the core through the `hidden` class
+- Fixed the absolutely positioned panel being stretched to the page width: the container now shrinks with `fit-content`, the panel/slider gaps are tighter, and no empty space is left on the right
+- Fixed RGBA/HSL inputs not fitting on one line in smaller modes: `mini`/`small`/`medium` now use a two-row 2×2 layout with inputs that adapt to the container width
+- Fixed the gradient editor layout at smaller sizes: the type row uses a two-row grid, and the stop row is forced onto one line with its two number inputs sharing the remaining space
+- Fixed hard-coded sizes and font sizes in input-number, select, checkbox and the mode switcher that were too large in smaller modes; they are now CSS variables that scale with the mode
+
+### Tests
+
+- Added select tooltip tests: shown when truncated, hidden when it fits, disabled via `selectTooltip: false`, and cleaned up on destroy
+
+### Docs
+
+- Documented the `selectTooltip` option in the English and Chinese select guides
+
 ## 2.0.9
 
 ### Fixes
@@ -3848,6 +3874,7 @@ Without it the dropdown is unstyled.
 | `selectValue` | `string \| number` | `undefined` | Initially selected value |
 | `selectPlaceholder` | `string` | `undefined` | Text shown when no value is selected |
 | `selectClearable` | `boolean` | `true` | Show a clear icon once a value is selected |
+| `selectTooltip` | `boolean` | `true` | Show a tooltip with the full text when the selected value or an option is truncated |
 | `onSelectChange` | `(value, option) => void` | — | Called after the user picks an option |
 | `onSelectClear` | `() => void` | — | Called after the user clears the selection |
 
@@ -5638,6 +5665,32 @@ new ewColorPicker({
 Source: https://eveningwater.github.io/ew-color-picker/zh/guide/changelog
 
 # 更新日志
+
+## 2.0.10
+
+### 新增
+
+- 新增 `panelMode` 选项：`'mini' | 'small' | 'medium' | 'large'` 四档面板尺寸，默认 `large`（与之前一致）。`mini` 适合移动端；滑块、光标、输入框、按钮、预设色、渐变编辑器、模式切换区都会随档位同步缩放
+- 新增 select 组件 tooltip：选中值或下拉选项文字被截断时，悬浮展示完整内容。默认开启，可通过 `selectTooltip: false` 关闭
+- 新增示例 `examples/19-panel-mode.html`：覆盖 `panelMode` × 横向 hue/alpha × 渐变的全组合场景
+
+### 修复
+
+- 修复面板与纵向色相/透明度滑块在窄档位下被挤到下一行：面板容器改为纵向 flex，面板与滑块放进固定单行的 top-row
+- 修复横向模式下各档位面板宽度错误：横向扩展宽度此前固定按 `large` 的基准宽度计算，导致 `mini`/`small`/`medium` 与 `large` 一样宽
+- 修复面板显示时 `display` 被动画模块硬编码为 `block`、覆盖样式表布局的问题：动画模块改为保存/恢复元素的原始 `display`，面板的显示与隐藏由 core 统一管理 `hidden` 类
+- 修复面板绝对定位时宽度被拉伸到页面宽度的问题：容器改为 `fit-content` 收缩，面板与滑块间距收紧，右侧不再出现多余空白
+- 修复小档位下 RGBA/HSL 输入框一行显示不全：`mini`/`small`/`medium` 改为两行 2×2 布局，输入框随容器宽度自适应
+- 修复渐变编辑器在小档位下的布局错乱：类型行改为 grid 两行排版，停靠点行强制单行、两个数字输入框按剩余空间自动分配
+- 修复 input-number、select、checkbox 以及模式切换区尺寸和字号硬编码、在小档位下过大的问题，全部改为 CSS 变量并随档位缩放
+
+### 测试
+
+- 新增 select tooltip 用例：截断时展示、未截断不展示、`selectTooltip: false` 关闭、销毁时清理节点
+
+### 文档
+
+- 中英文 select 文档补充 `selectTooltip` 选项说明
 
 ## 2.0.9
 
@@ -8665,6 +8718,7 @@ import '@ew-color-picker/style/dist/select.css'
 | `selectValue` | `string \| number` | `undefined` | 初始选中值 |
 | `selectPlaceholder` | `string` | `undefined` | 未选中时显示的占位文案 |
 | `selectClearable` | `boolean` | `true` | 选中值后是否显示清空图标 |
+| `selectTooltip` | `boolean` | `true` | 选中值或选项文字被截断时，悬浮展示完整内容 |
 | `onSelectChange` | `(value, option) => void` | - | 用户选择后触发 |
 | `onSelectClear` | `() => void` | - | 用户清空选中项后触发 |
 
