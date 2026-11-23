@@ -1,7 +1,15 @@
 import { defineConfig } from 'vitest/config';
 import { resolve } from 'path';
+import { readFileSync } from 'fs';
+
+const rootVersion = JSON.parse(
+  readFileSync(resolve(__dirname, './package.json'), 'utf8')
+).version;
 
 export default defineConfig({
+  define: {
+    __EW_VERSION__: JSON.stringify(rootVersion)
+  },
   test: {
     environment: 'happy-dom',
     globals: true,

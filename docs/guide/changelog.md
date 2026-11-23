@@ -5,6 +5,18 @@ description: Release notes for ew-color-picker, including fixes, features and do
 
 # Changelog
 
+## 2.0.9
+
+### Fixes
+
+- Fixed the vertical hue slider being out of sync with the colour panel: the stylesheet gradient increases hue from top to bottom (`linear-gradient(180deg, ...)`), but the thumb position and click/drag mapping used the inverted `1 - hue / 360` formula. The thumb now sits on the matching colour, and clicking or dragging picks the hue you actually see
+- Fixed the alpha slider having no colour: the background layer only showed the transparency checkerboard, so the alpha track gave no visual feedback. It now renders a gradient from the fully opaque current colour to transparent, following the horizontal or vertical direction, and updates whenever the colour changes
+- Fixed the console banner printing a stale version (`2.0.7`). The version is now injected from `package.json` at build time, so it can no longer drift from the published release
+
+### Tests
+
+- Added regression tests for the vertical hue thumb position and click mapping, the alpha gradient direction in both orientations, and the console banner version
+
 ## 2.0.8
 
 ### Fixes

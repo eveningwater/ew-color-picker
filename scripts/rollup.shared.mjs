@@ -139,6 +139,11 @@ export function createPackageConfigs(pkgDir) {
     throw new Error(`[rollup] no build spec found for package "${dirName}"`);
   }
 
+  // 构建期注入当前包版本号，避免源码里手写版本号导致不同步
+  const pkgVersion = JSON.parse(
+    fs.readFileSync(path.join(pkgDir, 'package.json'), 'utf8')
+  ).version;
+
   const localTsconfig = path.join(pkgDir, 'tsconfig.json');
   const tsconfig = fs.existsSync(localTsconfig)
     ? localTsconfig
@@ -154,6 +159,7 @@ export function createPackageConfigs(pkgDir) {
       }),
       replace({
         __DEV__: !minify,
+        __EW_VERSION__: JSON.stringify(pkgVersion),
         'process.env.NODE_ENV': minify ? 'production' : 'development',
         preventAssignment: true,
       }),
