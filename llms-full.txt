@@ -1531,10 +1531,10 @@ Bilingual documentation, per-API references, one page per plugin, plus `llms.txt
 ## Limitations to be honest about
 
 - **Small ecosystem**: download counts, community tutorials and issue history cannot match Pickr or react-color; unusual problems mean reading the source.
-- **No official framework wrappers**: React / Vue / Angular / Solid integration is covered in [Framework Integration](./framework-integration); controlled components and SSR need a thin wrapper of your own (around 20 lines).
+- **Wrappers stay thin and optional**: official packages cover Vue 3 and React (`@ew-color-picker/vue`, `@ew-color-picker/react`); Angular and Solid use the copy-paste recipes in [Framework Integration](./framework-integration).
 - **Gradients and screen sampling are optional plugins**: linear / radial / conic gradient editing ships as the optional `@ew-color-picker/gradient` plugin, and screen sampling as `@ew-color-picker/eyedropper` (Chromium-based browsers). For heavier color-space math and visualization work, iro.js is still the better fit.
 - **The plugin model only matters when you customize**: installing the aggregate package or `npm i ew-color-picker` works out of the box; you only need to understand core + plugins when replacing part of the UI or wiring your own plugins.
-- **Shrinking further means installing sub-packages**: the aggregate is 84.6 KB plus 36.1 KB of styles, already in Coloris territory; if you use a single piece, install plugin packages and trim down to the 11.9 KB core.
+- **Shrinking further means installing sub-packages**: the aggregate is 147.2 KB unpacked plus 38 KB of styles (about 40 KB gzipped in total), already in Coloris territory; if you use a single piece, install plugin packages and trim down to the 11.9 KB core.
 
 ## Choosing the right tool
 
@@ -1672,7 +1672,7 @@ Source: https://eveningwater.github.io/ew-color-picker/guide/framework-integrati
 
 ew-color-picker depends only on plain DOM and events — no framework runtime — so the same approach works everywhere: **create the instance on mount, call `destroy()` on unmount, and sync controlled values through `setColor()`**.
 
-Below are minimal, copy-paste wrappers for four frameworks. No official framework packages are published; the reasoning is covered in [Comparison & Positioning](./comparison).
+Below are minimal, copy-paste wrappers for four frameworks. Official thin packages ship for Vue 3 and React; Angular and Solid use the same pattern without a dedicated package. The positioning is covered in [Comparison & Positioning](./comparison).
 
 ## Common rules
 
@@ -1687,6 +1687,49 @@ import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 ```
+
+## Official packages
+
+```bash
+pnpm add @ew-color-picker/vue      # Vue 3
+pnpm add @ew-color-picker/react    # React
+```
+
+Both packages are thin: they own the host element and the instance lifecycle, forward every option, re-emit the core events and expose the picker instance through `ref`.
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { EwColorPicker } from '@ew-color-picker/vue'
+
+const color = ref('#6366f1')
+</script>
+
+<template>
+  <EwColorPicker v-model="color" :options="{ panelMode: 'small' }" />
+</template>
+```
+
+```tsx
+import { useRef, useState } from 'react'
+import { EwColorPicker, type EwColorPickerRef } from '@ew-color-picker/react'
+
+export function ColorField() {
+  const [color, setColor] = useState('#6366f1')
+  const pickerRef = useRef<EwColorPickerRef>(null)
+  return (
+    <EwColorPicker
+      ref={pickerRef}
+      value={color}
+      onChange={setColor}
+      onSure={(next) => console.log('sure', next, pickerRef.current?.getInstance())}
+      options={{ panelMode: 'small' }}
+    />
+  )
+}
+```
+
+The wrappers do not bundle styles: import `index.css` and `input-number.css` once in your app entry, as shown below. The sections after this one show the same integration without the wrappers, using only the aggregate package.
 
 ## React
 
@@ -1860,7 +1903,7 @@ An instance was not destroyed on unmount, so its leftover `document` click liste
 Only when you write the value back to the component and the component writes it back with `setColor()`. Compare old and new values to break the loop.
 
 **Do I need official wrapper packages?**
-The code above is the complete wrapper. If a project uses it in several places, extract these twenty lines into your own component rather than depending on a third-party package.
+They are optional. `@ew-color-picker/vue` and `@ew-color-picker/react` save the twenty lines of wiring on this page and keep props, refs and events typed. If you only need one picker, copy the pattern instead.
 
 ## Quick Start
 
@@ -5964,10 +6007,10 @@ ewColorPicker.use(Panel).use(Hue)
 ## 需要正视的局限
 
 - **生态与社区规模小**：下载量、第三方教程、Issue 沉淀都无法与 Pickr、react-color 相比，遇到冷门问题更多要靠读源码。
-- **不提供官方框架绑定包**：React / Vue / Angular / Solid 的接入方式见[框架集成](./framework-integration)，受控组件与 SSR 场景按示例自行封装（约 20 行）。
+- **封装包很薄且可选**：官方提供 Vue 3 与 React 两个封装包（`@ew-color-picker/vue`、`@ew-color-picker/react`）；Angular 与 Solid 按[框架集成](./framework-integration)里的示例自行复制。
 - **渐变与屏幕取色属于可选插件**：线性/径向/锥形渐变编辑由可选的 `@ew-color-picker/gradient` 插件提供，屏幕取色由 `@ew-color-picker/eyedropper` 插件提供（仅 Chromium 系浏览器）；更复杂的色彩空间运算与可视化场景仍建议选 iro.js。
 - **只有需要定制时才要理解插件模型**：默认装聚合入口或 `npm i ew-color-picker` 即可开箱使用；只有在替换局部 UI、组合自有插件时，才需要理解「核心 + 插件」的结构。
-- **想进一步减小体积需按需装子包**：聚合包 84.6 KB、样式 36.1 KB，已与 Coloris 同量级；若只用单个部件，按需安装插件包可以裁到核心 11.9 KB。
+- **想进一步减小体积需按需装子包**：聚合包 147.2 KB、样式 38 KB（gzip 合计约 40 KB），已与 Coloris 同量级；若只用单个部件，按需安装插件包可以裁到核心 11.9 KB。
 
 ## 选型建议
 
@@ -6099,7 +6142,7 @@ Source: https://eveningwater.github.io/ew-color-picker/zh/guide/framework-integr
 
 ew-color-picker 只依赖原生 DOM 与事件，没有任何框架运行时依赖，因此在任意框架里都能用同一套方式接入：**挂载时创建实例、卸载时 `destroy()`、受控值通过 `setColor()` 同步**。
 
-本页给出四个框架的最小可用封装，可直接复制到项目中。官方不单独发布框架封装包，原因见[竞品对比与定位](./comparison)。
+本页给出四个框架的最小可用封装，可直接复制到项目中。Vue 3 与 React 另有官方薄封装包，Angular 与 Solid 沿用同一套写法。定位说明见[竞品对比与定位](./comparison)。
 
 ## 通用要点
 
@@ -6114,6 +6157,49 @@ import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 ```
+
+## 官方封装包
+
+```bash
+pnpm add @ew-color-picker/vue      # Vue 3
+pnpm add @ew-color-picker/react    # React
+```
+
+两个包都是薄封装：只负责宿主元素与实例生命周期，配置原样转发，核心事件重新抛出，并通过 `ref` 暴露选择器实例。
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { EwColorPicker } from '@ew-color-picker/vue'
+
+const color = ref('#6366f1')
+</script>
+
+<template>
+  <EwColorPicker v-model="color" :options="{ panelMode: 'small' }" />
+</template>
+```
+
+```tsx
+import { useRef, useState } from 'react'
+import { EwColorPicker, type EwColorPickerRef } from '@ew-color-picker/react'
+
+export function ColorField() {
+  const [color, setColor] = useState('#6366f1')
+  const pickerRef = useRef<EwColorPickerRef>(null)
+  return (
+    <EwColorPicker
+      ref={pickerRef}
+      value={color}
+      onChange={setColor}
+      onSure={(next) => console.log('sure', next, pickerRef.current?.getInstance())}
+      options={{ panelMode: 'small' }}
+    />
+  )
+}
+```
+
+封装包不内置样式：仍需在应用入口引入 `index.css` 与 `input-number.css`（见下方示例）。本节之后的 React / Vue 示例是等价的“不用封装包”写法，只依赖聚合包。
 
 ## React
 
@@ -6287,7 +6373,7 @@ Solid 的细粒度响应式不需要额外的同步逻辑：把 `props.value` �
 只有在「监听 change 后改写外部值，又用 setColor 写回组件」时才可能循环，用新旧值比较即可切断。
 
 **Q：需要自己写框架封装包吗？**
-上面的代码就是完整封装。如果项目内多处使用，建议把这 20 行沉淀为自己的组件，而不是依赖第三方封装包。
+可选。`@ew-color-picker/vue` 与 `@ew-color-picker/react` 省掉了本页那 20 行胶水代码，并保留 props、ref 与事件的类型提示。如果项目里只有一个取色器，直接复制示例写法即可。
 
 ## 快速开始
 
