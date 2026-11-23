@@ -523,7 +523,7 @@ Every option below can be passed to the constructor. Defaults come from `default
 | Group | Options |
 | --- | --- |
 | Core | `el`, `disabled`, `defaultColor`, `size`, `predefineColor`, `isClickOutside` |
-| Layout | `hueDirection`, `alphaDirection`, `autoPanelPosition`, `panelPlacement`, `appendTo`, `boundary`, `prefix` |
+| Layout | `panelMode`, `hueDirection`, `alphaDirection`, `autoPanelPosition`, `panelPlacement`, `appendTo`, `boundary`, `prefix` |
 | Labels | `clearText`, `sureText` |
 | Animation | `togglePickerAnimation`, `pickerAnimationTime` |
 | Plugin switches | `hasBox`, `hasPanel`, `hasInput`, `hasClear`, `hasSure`, `hue`, `alpha`, `showButton`, `showColorMode`, `showInputNumber`, `showEyedropper`, `showCopyColor` |
@@ -582,6 +582,31 @@ new ewColorPicker({ el: '#app', disabled: true })
 | `large` | 40px | 20px |
 
 Numbers are treated as pixels; objects accept `width`/`height`; CSS strings are used verbatim.
+
+### panelMode
+
+| Type | Default | Description |
+| --- | --- | --- |
+| `'mini' \| 'small' \| 'medium' \| 'large'` | `'large'` | Panel size preset. Scales the panel and everything inside it. |
+
+| Mode | Panel size | Both sliders horizontal | Suggested use |
+| --- | --- | --- | --- |
+| `mini` | 180 × 140 | 202px wide | Mobile |
+| `small` | 220 × 150 | 247px wide | Compact layouts / mobile landscape |
+| `medium` | 250 × 165 | 281px wide | Tablets, medium dialogs |
+| `large` | 285 × 180 | 320px wide | Desktop (the historical size) |
+
+Everything inside the panel scales with the mode: sliders and their thumbs, the cursor, the inputs and number inputs, buttons, preset swatches, the gradient editor and the mode switcher.
+
+```ts
+// Mobile
+new ewColorPicker({ el: '#app', panelMode: 'mini' })
+
+// Desktop default, identical to previous versions
+new ewColorPicker({ el: '#app' })
+```
+
+`panelMode` is not the same as `size`: `size` controls the trigger box (the small swatch button), while `panelMode` controls the panel that opens from it. They can be combined freely.
 
 ### predefineColor
 
@@ -1456,7 +1481,7 @@ The numbers below come from the npm registry (`unpackedSize` and last publish da
 
 | Option | Shape | Framework lock-in | Extension model | Unpacked size | Last publish |
 | --- | --- | --- | --- | --- | --- |
-| **ew-color-picker** | Aggregate package + 14 plugin packages (plus the `ew-color-picker` compat entry) | None (plain DOM) | Plugin registration / custom plugins | Aggregate 84.6 KB + styles 36.1 KB (120.7 KB total); `core.min` 11.9 KB (gzip 3.9 KB) | 2026-10 |
+| **ew-color-picker** | Aggregate package + 14 plugin packages (plus the `ew-color-picker` compat entry) | None (plain DOM) | Plugin registration / custom plugins | Aggregate 147.2 KB; CSS 38 KB (gzip 6.3 KB); `core.min` 11.9 KB (gzip 3.9 KB) | 2026-11 |
 | [Pickr](https://github.com/Simonwep/pickr) | Single package (UMD/ESM) | None | Themes (classic/monolith/nano) + options | 280.3 KB | 2026-09 |
 | [iro.js](https://github.com/jaames/iro.js) | Single package | None | Options + component composition | 231.4 KB | 2021-07 |
 | [Coloris](https://github.com/melloware/coloris) | Single package + CSS | None | CSS variables + options | 152.2 KB | 2026-10 |
@@ -1467,7 +1492,7 @@ The numbers below come from the npm registry (`unpackedSize` and last publish da
 | Native `input[type=color]` | Built into browsers | None | None (styling is not controllable) | 0 | with browser updates |
 | Spectrum | jQuery plugin | jQuery | Options | 1804.2 KB | 2020-05 |
 
-One caveat: unpacked size is not runtime cost. The aggregate package ships two artifacts (UMD.min and ESM) plus `.d.ts` declarations. The smallest runtime you can ship is `index.min.js` at **81.8 KB (gzip 19.4 KB)**, or **11.9 KB (gzip 3.9 KB)** when using the core alone. Add the two style sheets (about 3.7 KB gzipped) for the full out-of-the-box footprint — roughly 29 KB of tarballs in total.
+One caveat: unpacked size is not runtime cost. The aggregate package ships two artifacts (UMD.min and ESM) plus `.d.ts` declarations. The smallest runtime you can ship is `index.min.js` at **141 KB (gzip 34.1 KB)**, or **11.9 KB (gzip 3.9 KB)** when using the core alone. Add the two style sheets (gzip 6.3 KB) for the full out-of-the-box footprint — about 40 KB gzipped in total.
 
 ## Where ew-color-picker stands out
 
@@ -3645,6 +3670,7 @@ Source: https://eveningwater.github.io/ew-color-picker/plugins/panel
 | --- | --- | --- | --- |
 | `hasPanel` | `boolean` | `true` | Hide the 2D panel |
 | `ewColorPickerPanel` | `boolean` | `true` | Legacy switch: `false` disables the panel; pass other panel options at the top level |
+| `panelMode` | `'mini' \| 'small' \| 'medium' \| 'large'` | `'large'` | Panel size preset; scales the panel and every inner control |
 | `hueDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | Affects width |
 | `alphaDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | Affects width |
 | `autoPanelPosition` | `boolean` | `false` | Auto placement |
@@ -3662,13 +3688,16 @@ Gap 5px; positions are adjusted to stay inside the viewport.
 
 ### Width rules
 
-| Hue | Alpha | Width |
-| --- | --- | --- |
-| vertical | vertical | 285px |
-| horizontal | vertical (or vice versa) | ~302px |
-| horizontal | horizontal | 320px |
+Panel size comes from `panelMode`:
 
-Height is 180px, injected as `--panel-width` / `--panel-height`.
+| Mode | Width × Height | Both sliders horizontal |
+| --- | --- | --- |
+| `mini` | 180 × 140 | 202px |
+| `small` | 220 × 150 | 247px |
+| `medium` | 250 × 165 | 281px |
+| `large` | 285 × 180 | 320px |
+
+With the default (vertical) sliders the width above is the panel width. Horizontal sliders widen the panel proportionally to the mode (`large` is the reference: +17px for one horizontal slider, +35px for two). Size is injected as `--panel-width` / `--panel-height`.
 
 ## Methods
 
@@ -4753,6 +4782,7 @@ new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
 | `disabled` | `boolean` | `false` | 禁用全部交互 |
 | `defaultColor` | `string` | `''` | 初始颜色 |
 | `size` | `string \| number \| { width, height }` | `'normal'` | 颜色盒尺寸 |
+| `panelMode` | `'mini' \| 'small' \| 'medium' \| 'large'` | `'large'` | 面板尺寸档位，面板及其内部控件整体缩放，移动端建议 `'mini'` |
 | `predefineColor` | `(string \| { color, disabled? })[]` | `[]` | 预定义颜色 |
 | `isClickOutside` | `boolean` | `true` | 点击容器外部时收起面板 |
 | `hueDirection` | `'vertical' \| 'horizontal'` | `'vertical'` | 色相滑块方向 |
@@ -4766,6 +4796,24 @@ new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
 | `appendTo` | `string \| HTMLElement` | `undefined` | 面板容器挂载目标（弹窗 / 滚动容器场景用 `document.body`） |
 | `boundary` | `string \| HTMLElement \| null` | `null` | 面板夹取边界（抽屉 / 弹窗内传容器，默认视口） |
 | `prefix` | `string` | `'ew-'` | CSS 类名前缀，用于避免与其他库的样式冲突 |
+
+### panelMode 面板尺寸
+
+| 档位 | 面板宽 × 高 | 双水平滑块宽度 | 建议场景 |
+| --- | --- | --- | --- |
+| `mini` | 180 × 140 | 202px | 移动端 |
+| `small` | 220 × 150 | 247px | 紧凑布局 / 移动端横屏 |
+| `medium` | 250 × 165 | 281px | 平板、中型弹窗 |
+| `large` | 285 × 180 | 320px | 桌面端（历史默认尺寸） |
+
+面板内的滑块、光标、输入框、按钮、预设色、渐变编辑器、模式切换器等全部随档位等比缩放。
+
+```js
+new ewColorPicker({ el: '#app', panelMode: 'mini' })  // 移动端
+new ewColorPicker({ el: '#app' })                     // 桌面端，等同 2.0.9 之前的尺寸
+```
+
+`panelMode` 与 `size` 不同：`size` 控制颜色盒（触发器）尺寸，`panelMode` 控制弹出的面板尺寸，两者可自由组合。
 
 ### 显示开关
 
@@ -5866,7 +5914,7 @@ ew-color-picker 不是一套「成品皮肤」，而是一个 **可组装的颜�
 
 | 方案 | 形态 | 框架约束 | 扩展方式 | 体积（unpacked） | 最近发布 |
 | --- | --- | --- | --- | --- | --- |
-| **ew-color-picker** | 聚合包 + 14 个插件包（含兼容入口 `ew-color-picker`） | 无（原生 DOM） | 插件注册 / 自写插件 | 聚合包 84.6 KB + 样式 36.1 KB（合计 120.7 KB），`core.min` 11.9 KB（gzip 3.9 KB） | 2026-10 |
+| **ew-color-picker** | 聚合包 + 14 个插件包（含兼容入口 `ew-color-picker`） | 无（原生 DOM） | 插件注册 / 自写插件 | 聚合包 147.2 KB；CSS 38 KB（gzip 6.3 KB）；`core.min` 11.9 KB（gzip 3.9 KB） | 2026-11 |
 | [Pickr](https://github.com/Simonwep/pickr) | 单包，UMD/ESM | 无 | 主题（classic/monolith/nano）+ 选项 | 280.3 KB | 2026-09 |
 | [iro.js](https://github.com/jaames/iro.js) | 单包 | 无 | 选项 + 组件组合 | 231.4 KB | 2021-07 |
 | [Coloris](https://github.com/melloware/coloris) | 单包 + 一份 CSS | 无 | CSS 变量主题 + 选项 | 152.2 KB | 2026-10 |
@@ -5877,7 +5925,7 @@ ew-color-picker 不是一套「成品皮肤」，而是一个 **可组装的颜�
 | 原生 `input[type=color]` | 浏览器内置 | 无 | 无（样式不可控） | 0 | 随浏览器 |
 | Spectrum | jQuery 插件 | jQuery | 选项 | 1804.2 KB | 2020-05 |
 
-需要强调的一点：体量数字不能直接等价为运行时开销。ew-color-picker 的聚合包包含 UMD.min 与 ESM 两份产物和 `.d.ts` 声明，实际引入的最小运行时是 `index.min.js` **81.8 KB（gzip 19.4 KB）**，按需只用核心时是 **11.9 KB（gzip 3.9 KB）**；加上两套样式（gzip 约 3.7 KB）即为完整开箱体积，npm 压缩包总计约 29 KB。
+需要强调的一点：体量数字不能直接等价为运行时开销。ew-color-picker 的聚合包包含 UMD.min 与 ESM 两份产物和 `.d.ts` 声明，实际引入的最小运行时是 `index.min.js` **141 KB（gzip 34.1 KB）**，按需只用核心时是 **11.9 KB（gzip 3.9 KB）**；加上两套样式（gzip 约 6.3 KB）即为完整开箱体积，gzip 后约 40 KB。
 
 ## ew-color-picker 的优势
 
@@ -8377,6 +8425,7 @@ Source: https://eveningwater.github.io/ew-color-picker/zh/plugins/panel
 | --- | --- | --- | --- |
 | `hasPanel` | `boolean` | `true` | `false` 时不渲染二维面板 |
 | `ewColorPickerPanel` | `boolean` | `true` | 兼容写法：`false` 等价于关闭面板，其余面板配置请直接放在顶层 |
+| `panelMode` | `'mini' \| 'small' \| 'medium' \| 'large'` | `'large'` | 面板尺寸档位，面板及其内部控件整体缩放 |
 | `hueDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | 影响面板计算宽度（水平布局更宽） |
 | `alphaDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | 同上，两者都水平时面板宽 320px |
 | `autoPanelPosition` | `boolean` | `false` | 是否根据触发器位置自动定位面板 |
@@ -8399,13 +8448,16 @@ Source: https://eveningwater.github.io/ew-color-picker/zh/plugins/panel
 
 ### 面板宽度规则
 
-| hue 方向 | alpha 方向 | 面板宽度 |
-| --- | --- | --- |
-| 垂直 | 垂直 | 285px |
-| 水平 | 垂直（或反之） | 约 302px |
-| 水平 | 水平 | 320px |
+面板尺寸由 `panelMode` 决定：
 
-高度固定 180px，通过 CSS 变量 `--panel-width` / `--panel-height` 注入。
+| 档位 | 宽 × 高 | hue / alpha 都水平时 |
+| --- | --- | --- |
+| `mini` | 180 × 140 | 202px |
+| `small` | 220 × 150 | 247px |
+| `medium` | 250 × 165 | 281px |
+| `large` | 285 × 180 | 320px |
+
+默认（垂直滑块）下上表宽度即面板宽度。水平滑块会按档位等比加宽（以 `large` 为基准：单条水平 +17px，两条都水平 +35px）。尺寸通过 CSS 变量 `--panel-width` / `--panel-height` 注入。
 
 ## 实例方法
 
