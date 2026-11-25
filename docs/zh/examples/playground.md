@@ -7,7 +7,7 @@ description: 在浏览器里直接修改并运行 ew-color-picker 的全部示�
 
 内置 24 个示例，覆盖基础用法、布局与朝向、事件、面板定位、插件以及 Input / Button / Select / InputNumber / Tooltip 等独立组件。Playground 在独立窗口中运行，选择示例后可直接修改 HTML / CSS / JS，并在右侧查看预览。
 
-<a class="playground-entry" href="../../playground.html" target="_blank" rel="noopener">打开在线 Playground ↗</a>
+<PlaygroundEntry label="打开在线 Playground" />
 
 ::: tip 说明
 - Playground 是独立页面，会在新窗口打开，文档站只提供入口。

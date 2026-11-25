@@ -7,7 +7,7 @@ description: Edit and run every ew-color-picker example right in the browser.
 
 24 presets cover the basics, layout and orientation, events, panel placement, plugins, and the standalone Input / Button / Select / InputNumber / Tooltip components. The playground runs in its own window: pick a preset, edit the HTML / CSS / JS, and check the preview on the right.
 
-<a class="playground-entry" href="../../playground.html" target="_blank" rel="noopener">Open the Playground ↗</a>
+<PlaygroundEntry label="Open the Playground" />
 
 ::: tip Notes
 - The playground is a standalone page that opens in a new window; this site only links to it.
