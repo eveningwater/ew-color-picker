@@ -5,6 +5,28 @@ description: ew-color-picker 各版本的变更记录，含修复、新增与文
 
 # 更新日志
 
+## 2.0.12
+
+### 新增
+
+- `@ew-color-picker/input` 新增独立 `Input` 组件：支持 `value`、`placeholder`、`size`、`type`、`disabled`、`readonly` 与 `onChange` / `onFocus` / `onBlur` / `onEnter`，可脱离颜色选择器使用
+- `@ew-color-picker/button` 新增独立 `Button` 组件：支持 `default` / `primary` / `danger` / `text` 类型、三种尺寸、`block`、`disabled` 与 `onClick`
+- 新增样式入口 `@ew-color-picker/style/dist/input.css`、`@ew-color-picker/style/dist/button.css`
+- 新增示例 `examples/21-select.html`（Select 独立使用）、`examples/22-input.html`、`examples/23-button.html`，并加入示例导航
+
+### 重构
+
+- `@ew-color-picker/input`、`@ew-color-picker/button` 保留原插件默认导出，同时以具名导出暴露独立组件，UMD 产物 `exports` 调整为 `named`
+- 示例 22 由「颜色输入框插件」改为独立 Input 组件演示
+
+### 测试
+
+- 新增 Input、Button 独立组件单元测试共 12 个用例
+
+### 文档
+
+- 中英文 input / button 文档与包 README 新增「独立使用」章节
+
 ## 2.0.11
 
 ### 新增

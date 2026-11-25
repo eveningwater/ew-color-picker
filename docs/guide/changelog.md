@@ -5,6 +5,28 @@ description: Release notes for ew-color-picker, including fixes, features and do
 
 # Changelog
 
+## 2.0.12
+
+### Features
+
+- `@ew-color-picker/input` now ships a standalone `Input` component with `value`, `placeholder`, `size`, `type`, `disabled`, `readonly`, `onChange` / `onFocus` / `onBlur` / `onEnter`, usable without the color picker
+- `@ew-color-picker/button` now ships a standalone `Button` component with `default` / `primary` / `danger` / `text` types, three sizes, `block`, `disabled` and `onClick`
+- Added style entries `@ew-color-picker/style/dist/input.css` and `@ew-color-picker/style/dist/button.css`
+- Added `examples/21-select.html` (standalone Select), `examples/22-input.html` and `examples/23-button.html`, together with navigation entries
+
+### Refactor
+
+- `@ew-color-picker/input` and `@ew-color-picker/button` keep their plugin default export and additionally expose the standalone components as named exports; UMD `exports` switched to `named`
+- Example 22 now demonstrates the standalone Input component instead of the color input plugin
+
+### Tests
+
+- Added 12 unit tests for the standalone Input and Button components
+
+### Docs
+
+- Added a “Standalone usage” section to the English/Chinese input and button docs and package READMEs
+
 ## 2.0.11
 
 ### Features

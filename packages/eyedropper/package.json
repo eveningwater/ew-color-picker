@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/eyedropper",
-  "version": "2.0.11",
+  "version": "2.0.12",
   "description": "EW Color Picker Eyedropper Plugin",
   "main": "dist/eyedropper.min.js",
   "module": "dist/eyedropper.esm.js",

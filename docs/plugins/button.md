@@ -93,6 +93,34 @@ const picker = new ewColorPicker({
 })
 ```
 
+## Standalone Button component
+
+The package also exports a generic button that works without the color picker (import `button.css` separately).
+
+```ts
+import { Button } from '@ew-color-picker/button'
+import '@ew-color-picker/style/dist/button.css'
+
+const button = new Button({
+  text: 'Confirm',
+  type: 'primary',
+  size: 'default',
+  onClick: () => console.log('clicked'),
+})
+
+document.querySelector('#app')!.appendChild(button.getElement())
+
+button.setText('Submit')
+button.setDisabled(true)
+button.destroy()
+```
+
+Options: `text`, `type` (`default | primary | danger | text`), `size`, `disabled`, `block`, `nativeType`, `prefix`, `onClick`.
+
+Methods: `setText()`, `setDisabled()`, `setType()`, `isDisabled()`, `getElement()`, `destroy()`.
+
+See [examples/23-button.html](https://github.com/eveningwater/ew-color-picker/blob/master/examples/23-button.html).
+
 ## Related
 
 - [Events · clear / sure](../api/events.md) · [Options · clearText](../api/options.md#labels)

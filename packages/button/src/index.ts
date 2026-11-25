@@ -326,4 +326,7 @@ declare module "@ew-color-picker/core" {
   interface CustomOptions {
     ewColorPickerButton: ButtonOptions;
   }
-} 
+}
+
+export { default as Button } from "./button";
+export type { ButtonComponentOptions, ButtonType, ButtonSize } from "./button";

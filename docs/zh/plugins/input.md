@@ -108,6 +108,45 @@ picker.on('change', (color) => {
 })
 ```
 
+## 独立使用 Input 组件
+
+该包同时导出一个不依赖颜色选择器的通用输入框，可用于搜索框、表单等场景（样式需单独引入 `input.css`）。
+
+```ts
+import { Input } from '@ew-color-picker/input'
+import '@ew-color-picker/style/dist/input.css'
+
+const input = new Input({
+  value: '',
+  placeholder: '请输入内容',
+  size: 'default',
+  onChange: (value) => console.log(value),
+  onEnter: (value) => console.log('提交', value),
+})
+
+document.querySelector('#app')!.appendChild(input.getElement())
+
+input.setValue('hello')
+input.setDisabled(true)
+input.destroy()
+```
+
+| 选项 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| value | string | `''` | 初始值 |
+| placeholder | string | `''` | 占位文案 |
+| size | `small \| default \| large` | `default` | 尺寸 |
+| type | `text \| password \| number \| search` | `text` | 原生类型 |
+| disabled / readonly | boolean | `false` | 禁用 / 只读 |
+| prefix | string | `ew` | 类名前缀 |
+| onChange | `(value, event) => void` | - | 输入时触发 |
+| onFocus / onBlur | `(value, event) => void` | - | 聚焦 / 失焦 |
+| onEnter | `(value, event) => void` | - | 回车时触发 |
+
+方法：`getValue()`、`setValue(value, triggerChange?)`、`setPlaceholder()`、`setDisabled()`、`setReadonly()`、`focus()`、`getElement()`、`destroy()`。
+
+完整示例见 [examples/22-input.html](https://github.com/eveningwater/ew-color-picker/blob/master/examples/22-input.html)。
+
 ## 相关
 
 - [ColorMode 颜色模式](./color-mode.md) — 决定输入框显示格式

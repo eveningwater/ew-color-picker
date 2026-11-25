@@ -79,6 +79,35 @@ const picker = new ewColorPicker({
 })
 ```
 
+## Standalone Input component
+
+The package also exports a generic input that works without the color picker (import `input.css` separately).
+
+```ts
+import { Input } from '@ew-color-picker/input'
+import '@ew-color-picker/style/dist/input.css'
+
+const input = new Input({
+  value: '',
+  placeholder: 'Type something',
+  size: 'default',
+  onChange: (value) => console.log(value),
+  onEnter: (value) => console.log('submit', value),
+})
+
+document.querySelector('#app')!.appendChild(input.getElement())
+
+input.setValue('hello')
+input.setDisabled(true)
+input.destroy()
+```
+
+Options: `value`, `placeholder`, `size` (`small | default | large`), `type`, `disabled`, `readonly`, `prefix`, `onChange`, `onFocus`, `onBlur`, `onEnter`.
+
+Methods: `getValue()`, `setValue(value, triggerChange?)`, `setPlaceholder()`, `setDisabled()`, `setReadonly()`, `focus()`, `getElement()`, `destroy()`.
+
+See [examples/22-input.html](https://github.com/eveningwater/ew-color-picker/blob/master/examples/22-input.html).
+
 ## Related
 
 - [ColorMode](./color-mode.md) · [InputNumber](./input-number.md)

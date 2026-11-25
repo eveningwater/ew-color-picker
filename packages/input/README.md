@@ -50,6 +50,31 @@ const colorPicker = new ewColorPicker({
 - `setDisabled(disabled: boolean)`: 设置禁用状态
 - `update(color: string)`: 更新颜色值
 
+## 独立使用
+
+该包同时导出一个不依赖颜色选择器的通用输入框，样式需单独引入 `@ew-color-picker/style/input.css`。
+
+```javascript
+import { Input } from '@ew-color-picker/input';
+import '@ew-color-picker/style/dist/input.css';
+
+const input = new Input({
+  placeholder: '请输入内容',
+  size: 'default',
+  onChange: (value) => console.log(value),
+  onEnter: (value) => console.log('提交', value)
+});
+
+document.querySelector('#app').appendChild(input.getElement());
+
+input.setValue('hello');
+input.setDisabled(true);
+input.destroy();
+```
+
+选项：`value`、`placeholder`、`size`、`type`、`disabled`、`readonly`、`prefix`、`onChange`、`onFocus`、`onBlur`、`onEnter`。
+方法：`getValue()`、`setValue()`、`setPlaceholder()`、`setDisabled()`、`setReadonly()`、`focus()`、`getElement()`、`destroy()`。
+
 ## 许可证
 
 MIT 

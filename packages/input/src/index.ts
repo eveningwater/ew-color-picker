@@ -416,4 +416,7 @@ declare module "@ew-color-picker/core" {
   interface CustomOptions {
     ewColorPickerInput: InputOptions;
   }
-} 
+}
+
+export { default as Input } from "./input";
+export type { InputComponentOptions } from "./input";

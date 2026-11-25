@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>22. 输入框组件（Input）</title>
+    <link rel="stylesheet" href="../packages/style/dist/input.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f5; }
+        .demo { max-width: 800px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; }
+        .item { margin-bottom: 24px; padding: 15px; border: 1px solid #e8e8e8; border-radius: 6px; }
+        .title { font-weight: 600; margin-bottom: 10px; }
+        .field { width: 320px; }
+        .row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+        .row .field { width: 200px; }
+        .result { margin-top: 10px; padding: 8px; background: #f8f9fa; border-radius: 4px; font-family: monospace; font-size: 13px; }
+        .hint { color: #999; font-size: 12px; margin-top: 8px; }
+    </style>
+</head>
+<body>
+    <div class="demo">
+        <h2>22. 输入框组件（Input）</h2>
+        <p style="color:#666;font-size:13px;">直接实例化 <code>Input</code> 组件使用，不依赖颜色选择器。</p>
+
+        <div class="item">
+            <div class="title">1. 基础用法 + onChange</div>
+            <div class="field" id="input1"></div>
+            <div class="result" id="result1">当前值: 空</div>
+        </div>
+
+        <div class="item">
+            <div class="title">2. 尺寸 small / default / large</div>
+            <div class="row" id="sizes"></div>
+        </div>
+
+        <div class="item">
+            <div class="title">3. 禁用与只读</div>
+            <div class="row" id="states"></div>
+        </div>
+
+        <div class="item">
+            <div class="title">4. 回车提交（onEnter）+ 外部 setValue</div>
+            <div class="field" id="input4"></div>
+            <div class="result" id="result4">提交记录: 无</div>
+            <div class="hint">输入内容后按 <kbd>Enter</kbd> 触发 onEnter；点击下方按钮调用实例的 setValue。</div>
+            <button id="resetBtn" style="margin-top:10px;padding:6px 12px;border:1px solid #d0d7de;border-radius:6px;background:#fff;cursor:pointer;">setValue('hello ew-color-picker')</button>
+        </div>
+    </div>
+    <script type="module">
+        import { Input } from '../packages/input/src/index.ts';
+
+        const mount = (id, options) => {
+            const input = new Input(options);
+            document.getElementById(id).appendChild(input.getElement());
+            return input;
+        };
+
+        mount('input1', {
+            placeholder: '请输入内容',
+            onChange(value) {
+                document.getElementById('result1').textContent = '当前值: ' + (value || '空');
+            }
+        });
+
+        const sizeRow = document.getElementById('sizes');
+        ['small', 'default', 'large'].forEach((size) => {
+            const field = document.createElement('div');
+            field.className = 'field';
+            const input = new Input({ value: size, size });
+            field.appendChild(input.getElement());
+            sizeRow.appendChild(field);
+        });
+
+        const stateRow = document.getElementById('states');
+        [['disabled: true', { value: '禁用态', disabled: true }], ['readonly: true', { value: '只读态', readonly: true }]].forEach(([, options]) => {
+            const field = document.createElement('div');
+            field.className = 'field';
+            const input = new Input(options);
+            field.appendChild(input.getElement());
+            stateRow.appendChild(field);
+        });
+
+        const logs = [];
+        const input4 = mount('input4', {
+            placeholder: '输入后按 Enter',
+            onEnter(value) {
+                logs.push(value || '(空)');
+                document.getElementById('result4').textContent = '提交记录: ' + logs.join(' → ');
+            }
+        });
+        document.getElementById('resetBtn').onclick = () => {
+            input4.setValue('hello ew-color-picker');
+        };
+
+        window.basicInput = input4;
+    </script>
+</body>
+</html>

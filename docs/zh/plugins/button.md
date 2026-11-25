@@ -117,6 +117,43 @@ const picker = new ewColorPicker({
 })
 ```
 
+## 独立使用 Button 组件
+
+该包同时导出一个不依赖颜色选择器的通用按钮，可用于任意操作按钮（样式需单独引入 `button.css`）。
+
+```ts
+import { Button } from '@ew-color-picker/button'
+import '@ew-color-picker/style/dist/button.css'
+
+const button = new Button({
+  text: '确定',
+  type: 'primary',
+  size: 'default',
+  onClick: () => console.log('clicked'),
+})
+
+document.querySelector('#app')!.appendChild(button.getElement())
+
+button.setText('提交')
+button.setDisabled(true)
+button.destroy()
+```
+
+| 选项 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| text | string | `''` | 按钮文案 |
+| type | `default \| primary \| danger \| text` | `default` | 类型 |
+| size | `small \| default \| large` | `default` | 尺寸 |
+| disabled | boolean | `false` | 是否禁用 |
+| block | boolean | `false` | 是否占满整行 |
+| nativeType | `button \| submit \| reset` | `button` | 原生 type |
+| prefix | string | `ew` | 类名前缀 |
+| onClick | `(event) => void` | - | 点击回调 |
+
+方法：`setText()`、`setDisabled()`、`setType()`、`isDisabled()`、`getElement()`、`destroy()`。
+
+完整示例见 [examples/23-button.html](https://github.com/eveningwater/ew-color-picker/blob/master/examples/23-button.html)。
+
 ## 相关
 
 - [事件 · clear / sure](../api/events.md)

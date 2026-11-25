@@ -64,6 +64,30 @@ const colorPicker = new ewColorPicker({
 - `setSureText(text: string)`: 设置确定按钮文本
 - `setDisabled(disabled: boolean)`: 设置禁用状态
 
+## 独立使用
+
+该包同时导出一个不依赖颜色选择器的通用按钮，样式需单独引入 `@ew-color-picker/style/button.css`。
+
+```javascript
+import { Button } from '@ew-color-picker/button';
+import '@ew-color-picker/style/dist/button.css';
+
+const button = new Button({
+  text: '确定',
+  type: 'primary',
+  onClick: () => console.log('clicked')
+});
+
+document.querySelector('#app').appendChild(button.getElement());
+
+button.setText('提交');
+button.setDisabled(true);
+button.destroy();
+```
+
+选项：`text`、`type`（`default | primary | danger | text`）、`size`、`disabled`、`block`、`nativeType`、`prefix`、`onClick`。
+方法：`setText()`、`setDisabled()`、`setType()`、`isDisabled()`、`getElement()`、`destroy()`。
+
 ## 许可证
 
 MIT 

@@ -1,0 +1,96 @@
+@import './variable.scss';
+// 类名前缀，可通过 @use ... with ($prefix: "my-") 自定义，需与 JS 侧 prefix 选项保持一致
+$prefix: "ew-" !default;
+
+.#{$prefix}button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  padding: 0 15px;
+  box-sizing: border-box;
+  border: 1px solid #dcdfe6;
+  border-radius: var(--btn-radius, 4px);
+  background: #fff;
+  color: #606266;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  outline: none;
+  transition: color 0.2s, border-color 0.2s, background-color 0.2s;
+}
+
+.#{$prefix}button:hover {
+  border-color: #4096ef;
+  color: #4096ef;
+}
+
+.#{$prefix}button--primary {
+  border-color: #4096ef;
+  background: #4096ef;
+  color: #fff;
+}
+
+.#{$prefix}button--primary:hover {
+  border-color: #66b1ff;
+  background: #66b1ff;
+  color: #fff;
+}
+
+.#{$prefix}button--danger {
+  border-color: #f56c6c;
+  background: #f56c6c;
+  color: #fff;
+}
+
+.#{$prefix}button--danger:hover {
+  border-color: #f78989;
+  background: #f78989;
+  color: #fff;
+}
+
+.#{$prefix}button--text {
+  border-color: transparent;
+  background: transparent;
+  color: #4096ef;
+}
+
+.#{$prefix}button--text:hover {
+  border-color: transparent;
+  background: transparent;
+  color: #66b1ff;
+}
+
+.#{$prefix}button--small {
+  height: 28px;
+  padding: 0 11px;
+  font-size: 12px;
+}
+
+.#{$prefix}button--large {
+  height: 36px;
+  padding: 0 19px;
+  font-size: 14px;
+}
+
+.#{$prefix}button--block {
+  display: flex;
+  width: 100%;
+}
+
+.#{$prefix}button:disabled,
+.#{$prefix}button--disabled {
+  border-color: #e4e7ed;
+  background: #f5f7fa;
+  color: #c0c4cc;
+  cursor: not-allowed;
+}
+
+.#{$prefix}button--primary:disabled,
+.#{$prefix}button--danger:disabled {
+  border-color: #a0cfff;
+  background: #a0cfff;
+  color: #fff;
+}
