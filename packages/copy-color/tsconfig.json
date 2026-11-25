@@ -9,7 +9,8 @@
   },
   "include": [
     "src/**/*",
-    "../core/src/**/*"
+    "../core/src/**/*",
+    "../utils/src/**/*"
   ],
   "exclude": [
     "node_modules",
