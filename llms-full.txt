@@ -853,6 +853,7 @@ Source: https://eveningwater.github.io/ew-color-picker/api/styles
 | `@ew-color-picker/style/dist/index.css` | Yes | Picker, box, panel, sliders, buttons, mode switcher, predefine |
 | `@ew-color-picker/style/dist/input-number.css` | Yes for numeric inputs | InputNumber component |
 | `@ew-color-picker/style/dist/select.css` | Only when using Select | Select dropdown component |
+| `@ew-color-picker/style/dist/tooltip.css` | Required by Select / Gradient tooltips | Tooltip utility (`.ew-tooltip`) |
 
 ```ts
 import '@ew-color-picker/style/dist/index.css'
@@ -860,7 +861,7 @@ import '@ew-color-picker/style/dist/input-number.css'
 ```
 
 ::: warning
-Importing only `index.css` leaves RGB/HSL numeric inputs unstyled. Add `select.css` only when you use the Select component.
+Importing only `index.css` leaves RGB/HSL numeric inputs unstyled. Add `select.css` and `tooltip.css` only when you use the Select component.
 :::
 
 ## Class prefix
@@ -870,6 +871,7 @@ All class names start with `ew-` by default (e.g. `.ew-color-picker-box`, `.ew-i
 ```scss
 @use "@ew-color-picker/style/src/index.scss" with ($prefix: "my-");
 @use "@ew-color-picker/style/src/input-number.scss" with ($prefix: "my-");
+@use "@ew-color-picker/style/src/tooltip.scss" with ($prefix: "my-");
 ```
 
 The prebuilt `dist/*.css` files always use the `ew-` prefix; keep the default `prefix` option when using them.
@@ -1255,6 +1257,7 @@ The copy button sits in its own toolbar row above the color value input, is fill
 
 ```ts
 import '@ew-color-picker/style/dist/select.css'
+import '@ew-color-picker/style/dist/tooltip.css'
 
 new ewColorPicker({
   el: '#app',
@@ -2131,7 +2134,7 @@ const picker = new ewColorPicker({ el: '#app' })
 ```
 
 ::: warning Two stylesheets
-`index.css` covers the picker. `input-number.css` is required for the numeric inputs used by RGB/HSL modes. Import both. The optional `select.css` is only needed for the Select component.
+`index.css` covers the picker. `input-number.css` is required for the numeric inputs used by RGB/HSL modes. Import both. The optional `select.css` and `tooltip.css` are only needed for the Select or Gradient components.
 :::
 
 To keep the v1 package name, install the unscoped entry package instead — it is equivalent:
@@ -3256,11 +3259,12 @@ Gradient styles ship inside the main stylesheet:
 ```ts
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/select.css'
+import '@ew-color-picker/style/dist/tooltip.css'
 import '@ew-color-picker/style/dist/input-number.css'
 import '@ew-color-picker/style/dist/checkbox.css'
 ```
 
-The editor uses the `Select`, `InputNumber` and `Checkbox` components from `@ew-color-picker/select`, `@ew-color-picker/input-number` and `@ew-color-picker/checkbox`.
+The editor uses the `Select`, `InputNumber` and `Checkbox` components from `@ew-color-picker/select`, `@ew-color-picker/input-number` and `@ew-color-picker/checkbox`; truncated Select labels use [`@ew-color-picker/tooltip`](./tooltip).
 
 ## DOM
 
@@ -3496,7 +3500,7 @@ Register plugins manually — see [Installation](../guide/installation.md#per-pa
 - [Box](./box.md) · [Panel](./panel.md) · [Hue](./hue.md) · [Alpha](./alpha.md)
 - [Input](./input.md) · [InputNumber](./input-number.md) · [Select](./select.md) · [Checkbox](./checkbox.md) · [Button](./button.md)
 - [Predefine](./predefine.md) · [ColorMode](./color-mode.md) · [Eyedropper](./eyedropper.md)
-- [CopyColor](./copy-color.md) · [Gradient](./gradient.md)
+- [CopyColor](./copy-color.md) · [Gradient](./gradient.md) · [Tooltip](./tooltip.md)
 - [Console](./console.md) · [Writing a plugin](../guide/plugin-dev.md)
 
 ## InputNumber Plugin
@@ -3933,9 +3937,12 @@ Source: https://eveningwater.github.io/ew-color-picker/plugins/select
 ::: warning Extra stylesheet required
 ```ts
 import '@ew-color-picker/style/dist/select.css'
+import '@ew-color-picker/style/dist/tooltip.css'
 ```
-Without it the dropdown is unstyled.
+Without the first file the dropdown is unstyled; without the second one the truncated-value tooltip stays invisible.
 :::
+
+The `selectTooltip` hint is rendered by the standalone [`@ew-color-picker/tooltip`](./tooltip) package, which you can also use in your own components.
 
 ## Plugin options
 
@@ -4045,6 +4052,78 @@ The trigger exposes `aria-haspopup="listbox"` / `aria-expanded`, and options use
 ## Related
 
 - [InputNumber](./input-number.md) · [Plugin overview](./) · [Styles & classes](../api/styles.md)
+
+## Tooltip
+
+Source: https://eveningwater.github.io/ew-color-picker/plugins/tooltip
+
+# Tooltip
+
+`@ew-color-picker/tooltip` is the floating hint used by Select (when the selected value or an option is truncated) and available to any other component you build. It is a plain DOM utility, not a core plugin: import it wherever you need a tooltip.
+
+| Item | Value |
+| --- | --- |
+| Package | `@ew-color-picker/tooltip` |
+| Class | `Tooltip` |
+| Helper | `isTextTruncated(el)` |
+| Styles | `@ew-color-picker/style/dist/tooltip.css` |
+
+::: warning Extra stylesheet
+```ts
+import '@ew-color-picker/style/dist/tooltip.css'
+```
+The Select and Gradient components rely on it as well.
+:::
+
+## Usage
+
+```ts
+import Tooltip, { isTextTruncated } from '@ew-color-picker/tooltip'
+
+const tooltip = new Tooltip({ prefix: 'ew-' })
+
+if (isTextTruncated(target)) {
+  tooltip.show(target.textContent!.trim(), target)
+}
+
+// hide without removing the node
+tooltip.hide()
+
+// remove the node when the owner is destroyed
+tooltip.destroy()
+```
+
+## Options
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `prefix` | `string` | `'ew-'` | Class prefix; keep it in sync with the picker prefix |
+| `container` | `HTMLElement` | `document.body` | Parent element the tooltip node is appended to |
+| `offset` | `number` | `6` | Gap between the tooltip and its anchor, in px |
+| `className` | `string` | `''` | Extra class name applied to the tooltip node |
+
+## Methods
+
+| Method | Description |
+| --- | --- |
+| `show(text, anchor)` | Show the hint; empty text behaves like `hide()` |
+| `hide()` | Hide the hint but keep the node |
+| `isVisible()` | Whether the hint is currently visible |
+| `getElement()` | Return the tooltip node |
+| `destroy()` | Remove the node and release the instance |
+
+## Positioning
+
+The node is `position: fixed` and sits above the anchor. `show()` measures the node and flips it below the anchor (adding the `--bottom` modifier) when there is not enough room above. Position is recalculated on every `show()` call.
+
+## Classes
+
+`.ew-tooltip`, `.ew-tooltip--visible` and `.ew-tooltip--bottom`. The prefix follows the `prefix` option, so a `my-` prefix produces `.my-tooltip`.
+
+## See also
+
+- [Select](./select) — uses this package for truncated option text
+- [Styles & Classes](../api/styles) — stylesheet entries and class prefix
 
 ---
 
@@ -5322,9 +5401,10 @@ import '@ew-color-picker/style/dist/input-number.css'
 | `index.css` | 颜色盒、面板、滑块、输入框、按钮、色板、模式切换器 |
 | `input-number.css` | 数字输入框组件 `.ew-input-number` 系列样式 |
 | `select.css` | 下拉选择组件 `.ew-select` 系列样式（使用 Select 时引入） |
+| `tooltip.css` | 悬浮提示工具类 `.ew-tooltip`（Select / Gradient 使用时引入） |
 
 ::: warning
-`index.css` 与 `input-number.css` 都需要引入。只引入 `index.css` 时，RGB / HSL 模式下的数字输入框会丢失样式；使用 Select 组件时还需额外引入 `select.css`。
+`index.css` 与 `input-number.css` 都需要引入。只引入 `index.css` 时，RGB / HSL 模式下的数字输入框会丢失样式；使用 Select 组件时还需额外引入 `select.css` 与 `tooltip.css`。
 :::
 
 ## 类名前缀
@@ -5729,6 +5809,7 @@ new ewColorPicker({
 
 ```ts
 import '@ew-color-picker/style/dist/select.css'
+import '@ew-color-picker/style/dist/tooltip.css'
 
 new ewColorPicker({
   el: '#app',
@@ -6598,7 +6679,7 @@ import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 ```
 
-> `index.css` 是核心样式，`input-number.css` 是数字输入框组件的独立样式入口，**两者都需要引入**，否则 RGB / HSL 模式下的数字框会失去样式。使用 Select 组件时，再额外引入 `select.css`。
+> `index.css` 是核心样式，`input-number.css` 是数字输入框组件的独立样式入口，**两者都需要引入**，否则 RGB / HSL 模式下的数字框会失去样式。使用 Select 或 Gradient 组件时，再额外引入 `select.css` 与 `tooltip.css`。
 
 如果希望沿用 v1 的包名，也可以直接安装无 scope 的聚合入口包，二者等价：
 
@@ -7921,11 +8002,12 @@ import {
 ```ts
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/select.css'
+import '@ew-color-picker/style/dist/tooltip.css'
 import '@ew-color-picker/style/dist/input-number.css'
 import '@ew-color-picker/style/dist/checkbox.css'
 ```
 
-编辑器内部复用 `@ew-color-picker/select` 的 `Select`、`@ew-color-picker/input-number` 的 `InputNumber` 与 `@ew-color-picker/checkbox` 的 `Checkbox` 组件。
+编辑器内部复用 `@ew-color-picker/select` 的 `Select`、`@ew-color-picker/input-number` 的 `InputNumber` 与 `@ew-color-picker/checkbox` 的 `Checkbox` 组件；下拉文字被截断时由 [`@ew-color-picker/tooltip`](./tooltip) 展示完整内容。
 
 ## DOM
 
@@ -8213,6 +8295,7 @@ new ewColorPicker({
 - [Eyedropper 吸管](./eyedropper.md)
 - [CopyColor 复制颜色](./copy-color.md)
 - [Gradient 渐变](./gradient.md)
+- [Tooltip 悬浮提示](./tooltip.md)
 - [Console 控制台](./console.md)
 - [编写自定义插件](../guide/plugin-dev.md)
 
@@ -8843,9 +8926,12 @@ Source: https://eveningwater.github.io/ew-color-picker/zh/plugins/select
 ::: warning 需要额外样式
 ```ts
 import '@ew-color-picker/style/dist/select.css'
+import '@ew-color-picker/style/dist/tooltip.css'
 ```
-未引入时下拉框没有样式。
+未引入第一个文件时下拉框没有样式；未引入第二个文件时，截断文字的悬浮提示不可见。
 :::
+
+`selectTooltip` 的悬浮提示由独立的 [`@ew-color-picker/tooltip`](./tooltip) 包渲染，你也可以在自己的组件里直接使用它。
 
 ## 配置项
 
@@ -8955,3 +9041,75 @@ import { Select } from '@ew-color-picker/select'
 ## 相关链接
 
 - [InputNumber 数字输入框](./input-number.md) · [插件总览](./) · [样式与类名](../api/styles.md)
+
+## Tooltip 悬浮提示
+
+Source: https://eveningwater.github.io/ew-color-picker/zh/plugins/tooltip
+
+# Tooltip 悬浮提示
+
+`@ew-color-picker/tooltip` 是 Select（选中值或选项文字被截断时）等插件使用的悬浮提示，也可以直接用于你自己的组件。它是普通 DOM 工具，不是核心插件，按需引入即可。
+
+| 项 | 值 |
+| --- | --- |
+| 包 | `@ew-color-picker/tooltip` |
+| 类 | `Tooltip` |
+| 工具函数 | `isTextTruncated(el)` |
+| 样式 | `@ew-color-picker/style/dist/tooltip.css` |
+
+::: warning 需要额外样式
+```ts
+import '@ew-color-picker/style/dist/tooltip.css'
+```
+Select 与 Gradient 组件同样依赖它。
+:::
+
+## 使用
+
+```ts
+import Tooltip, { isTextTruncated } from '@ew-color-picker/tooltip'
+
+const tooltip = new Tooltip({ prefix: 'ew-' })
+
+if (isTextTruncated(target)) {
+  tooltip.show(target.textContent!.trim(), target)
+}
+
+// 隐藏但保留节点
+tooltip.hide()
+
+// 宿主销毁时移除节点
+tooltip.destroy()
+```
+
+## 配置项
+
+| 配置 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `prefix` | `string` | `'ew-'` | 类名前缀，需与选择器前缀保持一致 |
+| `container` | `HTMLElement` | `document.body` | tooltip 节点的挂载父元素 |
+| `offset` | `number` | `6` | 与锚点的间距（px） |
+| `className` | `string` | `''` | 附加到节点上的自定义类名 |
+
+## 方法
+
+| 方法 | 说明 |
+| --- | --- |
+| `show(text, anchor)` | 展示提示；空文案等同于 `hide()` |
+| `hide()` | 隐藏提示，节点保留 |
+| `isVisible()` | 当前是否可见 |
+| `getElement()` | 获取 tooltip 节点 |
+| `destroy()` | 移除节点并释放实例 |
+
+## 定位规则
+
+节点使用 `position: fixed`，默认位于锚点上方。`show()` 时会测量节点高度，上方空间不足则翻转到锚点下方并追加 `--bottom` 修饰类。每次 `show()` 都会重新计算位置。
+
+## 类名
+
+`.ew-tooltip`、`.ew-tooltip--visible`、`.ew-tooltip--bottom`。前缀跟随 `prefix` 配置，例如传入 `my-` 时会生成 `.my-tooltip`。
+
+## 相关文档
+
+- [Select 下拉选择](./select) —— 使用本包展示被截断的选项文字
+- [样式与类名](../api/styles) —— 样式入口与类名前缀
