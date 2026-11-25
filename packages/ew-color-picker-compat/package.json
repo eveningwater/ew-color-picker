@@ -49,8 +49,8 @@
   },
   "homepage": "https://eveningwater.github.io/ew-color-picker/",
   "scripts": {
-    "build": "rimraf dist && rollup -c ../../scripts/rollup.config.mjs",
-    "clean": "rimraf dist",
+    "build": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && rollup -c ../../scripts/rollup.config.mjs",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
     "prepublishOnly": "npm run build"
   }
 }
