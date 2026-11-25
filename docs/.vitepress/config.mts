@@ -49,6 +49,7 @@ const zhNav = [
   { text: '更新日志', link: '/zh/guide/changelog', activeMatch: '/zh/guide/changelog' },
   { text: '框架集成', link: '/zh/guide/framework-integration', activeMatch: '/zh/guide/framework-integration' },
   { text: '在线演示', link: '/zh/examples/demo', activeMatch: '/zh/examples/demo' },
+  { text: '在线 Playground', link: '/zh/examples/playground', activeMatch: '/zh/examples/playground' },
   { text: '国内访问', link: `${CN_MIRROR}zh/`, target: '_blank', rel: 'noopener' },
   { text: '其他项目', link: 'https://www.eveningwater.com', target: '_blank', rel: 'noopener' },
 ]
@@ -61,6 +62,7 @@ const enNav = [
   { text: 'Changelog', link: '/guide/changelog', activeMatch: '/guide/changelog' },
   { text: 'Frameworks', link: '/guide/framework-integration', activeMatch: '/guide/framework-integration' },
   { text: 'Live Demo', link: '/examples/demo', activeMatch: '/examples/demo' },
+  { text: 'Playground', link: '/examples/playground', activeMatch: '/examples/playground' },
   { text: 'China Site', link: `${CN_MIRROR}`, target: '_blank', rel: 'noopener' },
   { text: 'More Projects', link: 'https://www.eveningwater.com', target: '_blank', rel: 'noopener' },
 ]
@@ -123,6 +125,7 @@ const zhSidebar = {
       text: '示例',
       items: [
         { text: '示例索引', link: '/zh/examples/' },
+        { text: '在线 Playground', link: '/zh/examples/playground' },
         { text: '在线演示', link: '/zh/examples/demo' },
       ],
     },
@@ -187,6 +190,7 @@ const enSidebar = {
       text: 'Examples',
       items: [
         { text: 'Index', link: '/examples/' },
+        { text: 'Playground', link: '/examples/playground' },
         { text: 'Live Demo', link: '/examples/demo' },
       ],
     },

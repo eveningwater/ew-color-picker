@@ -1278,6 +1278,60 @@ The dropdown only renders when `selectItems` is not empty. Once a value is selec
 - [Live demo](./demo.md)
 - [Options](../api/options.md) · [Methods](../api/methods.md) · [Events](../api/events.md)
 
+## Online Playground
+
+Source: https://eveningwater.github.io/ew-color-picker/examples/playground
+
+# Online Playground
+
+24 presets cover the basics, layout and orientation, events, panel placement, plugins, and the standalone Input / Button / Select / InputNumber / Tooltip components. The playground runs in its own window: pick a preset, edit the HTML / CSS / JS, and check the preview on the right.
+
+<a class="playground-entry" href="../../playground.html" target="_blank" rel="noopener">Open the Playground ↗</a>
+
+::: tip Notes
+- The playground is a standalone page that opens in a new window; this site only links to it.
+- Presets load the published UMD bundle from unpkg, so no local install is required.
+- The editor is provided by `ew-iframe-editor` and uses `ew-code-editor` by default.
+- Every preset also has a full page under the repository's `examples/` directory.
+:::
+
+## Covered examples
+
+| No. | Examples |
+| --- | --- |
+| 01 - 05 | Basics, size and orientation, predefined colors, buttons, events and callbacks |
+| 06 - 10 | Panel placement, animation, disabled state, color mode, instance API |
+| 11 - 15 | InputNumber, multiple instances, eyedropper, copy color, Select plugin |
+| 16 - 20 | Gradient, Checkbox, panel boundary, panel mode, standalone Tooltip |
+| 21 - 24 | Standalone Select / Input / Button, UMD bundle |
+
+## Powered by ew-iframe-editor
+
+The editor on this page is built with [ew-iframe-editor](https://eveningwater.github.io/ew-iframe-editor/). It embeds an online code editor through an adapter, accepts inline code or a `requestUrl`, defaults to `ew-code-editor`, and lets you plug in your own editor.
+
+```bash
+pnpm add ew-iframe-editor
+```
+
+```ts
+import { createEditor } from 'ew-iframe-editor'
+
+const { iframe, destroy } = createEditor({
+  container: '#editor',
+  code: {
+    html: '<div id="app"></div>',
+    css: 'body { font-family: sans-serif; }',
+    js: 'console.log("hello")',
+  },
+})
+```
+
+## Related
+
+- [Live demo](./demo.md)
+- [Examples index](./index.md)
+- [ew-iframe-editor live demo](https://eveningwater.github.io/ew-iframe-editor/)
+
 ## Changelog
 
 Source: https://eveningwater.github.io/ew-color-picker/guide/changelog
@@ -6046,6 +6100,60 @@ new ewColorPicker({
 - [配置项](../api/options.md)
 - [实例方法](../api/methods.md)
 - [事件](../api/events.md)
+
+## 在线 Playground
+
+Source: https://eveningwater.github.io/ew-color-picker/zh/examples/playground
+
+# 在线 Playground
+
+内置 24 个示例，覆盖基础用法、布局与朝向、事件、面板定位、插件以及 Input / Button / Select / InputNumber / Tooltip 等独立组件。Playground 在独立窗口中运行，选择示例后可直接修改 HTML / CSS / JS，并在右侧查看预览。
+
+<a class="playground-entry" href="../../playground.html" target="_blank" rel="noopener">打开在线 Playground ↗</a>
+
+::: tip 说明
+- Playground 是独立页面，会在新窗口打开，文档站只提供入口。
+- 示例通过 unpkg 加载已发布的 UMD 产物，不需要本地安装依赖。
+- 编辑器由 `ew-iframe-editor` 提供，默认使用 `ew-code-editor`。
+- 示例代码同样可以在仓库的 `examples/` 目录中找到对应完整页面。
+:::
+
+## 示例覆盖范围
+
+| 编号 | 示例 |
+| --- | --- |
+| 01 - 05 | 基础用法、尺寸与朝向、预定义颜色、按钮、事件与回调 |
+| 06 - 10 | 面板方位、展开动画、禁用、颜色模式、实例 API |
+| 11 - 15 | InputNumber、多实例、吸管、复制颜色、Select 下拉插件 |
+| 16 - 20 | 渐变、Checkbox、面板边界、面板模式、Tooltip 独立使用 |
+| 21 - 24 | Select / Input / Button 独立使用、UMD 全量引入 |
+
+## 由 ew-iframe-editor 提供编辑能力
+
+本页的在线编辑器基于 [ew-iframe-editor](https://eveningwater.github.io/ew-iframe-editor/) 实现。它通过适配器模式把在线代码编辑器嵌入任意页面，支持直接传入代码或通过 `requestUrl` 加载文件，默认适配 `ew-code-editor`，也可以自定义编辑器。
+
+```bash
+pnpm add ew-iframe-editor
+```
+
+```ts
+import { createEditor } from 'ew-iframe-editor'
+
+const { iframe, destroy } = createEditor({
+  container: '#editor',
+  code: {
+    html: '<div id="app"></div>',
+    css: 'body { font-family: sans-serif; }',
+    js: 'console.log("hello")',
+  },
+})
+```
+
+## 相关
+
+- [在线演示](./demo.md)
+- [示例索引](./index.md)
+- [ew-iframe-editor 在线演示](https://eveningwater.github.io/ew-iframe-editor/)
 
 ## 更新日志
 

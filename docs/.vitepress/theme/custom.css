@@ -140,6 +140,27 @@
   box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
 }
 
+/* 在线 Playground 入口 */
+.playground-entry {
+  display: inline-flex;
+  align-items: center;
+  margin: 8px 0 16px;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff !important;
+  text-decoration: none !important;
+  background: linear-gradient(120deg, var(--ew-brand), var(--ew-brand-3));
+  box-shadow: 0 10px 24px rgba(79, 70, 229, 0.22);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.playground-entry:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(79, 70, 229, 0.28);
+}
+
 /* 代码块与表格微调 */
 .vp-doc div[class*='language-'] {
   border-radius: 12px;
