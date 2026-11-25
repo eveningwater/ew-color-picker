@@ -30,7 +30,7 @@ import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 ```
 
-`input-number.css` is **not** optional: RGB and HSL channel inputs render broken without it. Add `select.css` only if you render the Select component.
+`input-number.css` is **not** optional: RGB and HSL channel inputs render broken without it. Add `select.css` and `tooltip.css` only if you render the Select or Gradient components.
 
 For CDN usage, include both `<link>` tags. Users who load only the static CSS must not rely on styles injected at runtime by the core entry.
 

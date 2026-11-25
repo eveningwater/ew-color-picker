@@ -21,9 +21,12 @@ description: 'The Select plugin and standalone dropdown component: options, meth
 ::: warning Extra stylesheet required
 ```ts
 import '@ew-color-picker/style/dist/select.css'
+import '@ew-color-picker/style/dist/tooltip.css'
 ```
-Without it the dropdown is unstyled.
+Without the first file the dropdown is unstyled; without the second one the truncated-value tooltip stays invisible.
 :::
+
+The `selectTooltip` hint is rendered by the standalone [`@ew-color-picker/tooltip`](./tooltip) package, which you can also use in your own components.
 
 ## Plugin options
 

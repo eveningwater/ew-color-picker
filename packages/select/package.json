@@ -26,10 +26,12 @@
   "license": "MIT",
   "dependencies": {
     "@ew-color-picker/core": "workspace:^",
+    "@ew-color-picker/tooltip": "workspace:^",
     "@ew-color-picker/utils": "workspace:^"
   },
   "devDependencies": {
     "@ew-color-picker/core": "workspace:*",
+    "@ew-color-picker/tooltip": "workspace:*",
     "@ew-color-picker/utils": "workspace:*",
     "rollup": "^3.0.0",
     "rollup-plugin-typescript2": "^0.34.0",

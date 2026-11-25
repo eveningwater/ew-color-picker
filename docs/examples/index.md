@@ -169,6 +169,7 @@ The copy button sits in its own toolbar row above the color value input, is fill
 
 ```ts
 import '@ew-color-picker/style/dist/select.css'
+import '@ew-color-picker/style/dist/tooltip.css'
 
 new ewColorPicker({
   el: '#app',

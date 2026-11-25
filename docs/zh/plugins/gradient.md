@@ -101,11 +101,12 @@ import {
 ```ts
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/select.css'
+import '@ew-color-picker/style/dist/tooltip.css'
 import '@ew-color-picker/style/dist/input-number.css'
 import '@ew-color-picker/style/dist/checkbox.css'
 ```
 
-编辑器内部复用 `@ew-color-picker/select` 的 `Select`、`@ew-color-picker/input-number` 的 `InputNumber` 与 `@ew-color-picker/checkbox` 的 `Checkbox` 组件。
+编辑器内部复用 `@ew-color-picker/select` 的 `Select`、`@ew-color-picker/input-number` 的 `InputNumber` 与 `@ew-color-picker/checkbox` 的 `Checkbox` 组件；下拉文字被截断时由 [`@ew-color-picker/tooltip`](./tooltip) 展示完整内容。
 
 ## DOM
 

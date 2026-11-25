@@ -152,5 +152,6 @@ new ewColorPicker({
 - [Eyedropper 吸管](./eyedropper.md)
 - [CopyColor 复制颜色](./copy-color.md)
 - [Gradient 渐变](./gradient.md)
+- [Tooltip 悬浮提示](./tooltip.md)
 - [Console 控制台](./console.md)
 - [编写自定义插件](../guide/plugin-dev.md)

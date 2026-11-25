@@ -21,9 +21,12 @@ description: Select 插件与独立下拉组件：配置项、方法、键盘操
 ::: warning 需要额外样式
 ```ts
 import '@ew-color-picker/style/dist/select.css'
+import '@ew-color-picker/style/dist/tooltip.css'
 ```
-未引入时下拉框没有样式。
+未引入第一个文件时下拉框没有样式；未引入第二个文件时，截断文字的悬浮提示不可见。
 :::
+
+`selectTooltip` 的悬浮提示由独立的 [`@ew-color-picker/tooltip`](./tooltip) 包渲染，你也可以在自己的组件里直接使用它。
 
 ## 配置项
 

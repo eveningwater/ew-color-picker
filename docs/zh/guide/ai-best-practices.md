@@ -30,7 +30,7 @@ import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 ```
 
-`input-number.css` **不是可选项**：缺少它时 RGB / HSL 分通道数字输入框会错乱。只有渲染 Select 组件时才需要额外的 `select.css`。
+`input-number.css` **不是可选项**：缺少它时 RGB / HSL 分通道数字输入框会错乱。只有渲染 Select 或 Gradient 组件时才需要额外的 `select.css` 与 `tooltip.css`。
 
 CDN 场景需要同时引入两个 `<link>`。只用静态 CSS 的用户不能依赖 core 入口运行时注入的样式。
 

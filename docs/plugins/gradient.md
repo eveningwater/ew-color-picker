@@ -101,11 +101,12 @@ Gradient styles ship inside the main stylesheet:
 ```ts
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/select.css'
+import '@ew-color-picker/style/dist/tooltip.css'
 import '@ew-color-picker/style/dist/input-number.css'
 import '@ew-color-picker/style/dist/checkbox.css'
 ```
 
-The editor uses the `Select`, `InputNumber` and `Checkbox` components from `@ew-color-picker/select`, `@ew-color-picker/input-number` and `@ew-color-picker/checkbox`.
+The editor uses the `Select`, `InputNumber` and `Checkbox` components from `@ew-color-picker/select`, `@ew-color-picker/input-number` and `@ew-color-picker/checkbox`; truncated Select labels use [`@ew-color-picker/tooltip`](./tooltip).
 
 ## DOM
 

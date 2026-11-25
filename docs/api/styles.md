@@ -12,6 +12,7 @@ description: Stylesheet entries, CSS variables, class name groups and theming ti
 | `@ew-color-picker/style/dist/index.css` | Yes | Picker, box, panel, sliders, buttons, mode switcher, predefine |
 | `@ew-color-picker/style/dist/input-number.css` | Yes for numeric inputs | InputNumber component |
 | `@ew-color-picker/style/dist/select.css` | Only when using Select | Select dropdown component |
+| `@ew-color-picker/style/dist/tooltip.css` | Required by Select / Gradient tooltips | Tooltip utility (`.ew-tooltip`) |
 
 ```ts
 import '@ew-color-picker/style/dist/index.css'
@@ -19,7 +20,7 @@ import '@ew-color-picker/style/dist/input-number.css'
 ```
 
 ::: warning
-Importing only `index.css` leaves RGB/HSL numeric inputs unstyled. Add `select.css` only when you use the Select component.
+Importing only `index.css` leaves RGB/HSL numeric inputs unstyled. Add `select.css` and `tooltip.css` only when you use the Select component.
 :::
 
 ## Class prefix
@@ -29,6 +30,7 @@ All class names start with `ew-` by default (e.g. `.ew-color-picker-box`, `.ew-i
 ```scss
 @use "@ew-color-picker/style/src/index.scss" with ($prefix: "my-");
 @use "@ew-color-picker/style/src/input-number.scss" with ($prefix: "my-");
+@use "@ew-color-picker/style/src/tooltip.scss" with ($prefix: "my-");
 ```
 
 The prebuilt `dist/*.css` files always use the `ew-` prefix; keep the default `prefix` option when using them.

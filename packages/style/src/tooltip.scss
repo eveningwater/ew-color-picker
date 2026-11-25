@@ -1,0 +1,33 @@
+@import './variable.scss';
+// 类名前缀，可通过 @use ... with ($prefix: "my-") 自定义，需与 JS 侧 prefix 选项保持一致
+$prefix: "ew-" !default;
+
+// 悬浮提示（供 Select / Checkbox / Gradient 等复用）
+.#{$prefix}tooltip {
+  position: fixed;
+  z-index: 3000;
+  max-width: 240px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.78);
+  color: #fff;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: normal;
+  word-break: break-word;
+  pointer-events: none;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: opacity 0.15s;
+}
+
+.#{$prefix}tooltip--visible {
+  opacity: 1;
+}
+
+// 上方空间不足时展示在锚点下方
+.#{$prefix}tooltip--bottom {
+  transform: none;
+}

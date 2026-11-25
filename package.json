@@ -17,6 +17,7 @@
     "build:predefine": "pnpm --filter @ew-color-picker/predefine build",
     "build:colorMode": "pnpm --filter @ew-color-picker/color-mode build",
     "build:select": "pnpm --filter @ew-color-picker/select build",
+    "build:tooltip": "pnpm --filter @ew-color-picker/tooltip build",
     "build:gradient": "pnpm --filter @ew-color-picker/gradient build",
     "build:vue": "pnpm --filter @ew-color-picker/vue build",
     "build:react": "pnpm --filter @ew-color-picker/react build",

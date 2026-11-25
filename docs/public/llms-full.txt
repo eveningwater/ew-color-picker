@@ -523,7 +523,7 @@ Every option below can be passed to the constructor. Defaults come from `default
 | Group | Options |
 | --- | --- |
 | Core | `el`, `disabled`, `defaultColor`, `size`, `predefineColor`, `isClickOutside` |
-| Layout | `hueDirection`, `alphaDirection`, `autoPanelPosition`, `panelPlacement`, `appendTo`, `boundary`, `prefix` |
+| Layout | `panelMode`, `hueDirection`, `alphaDirection`, `autoPanelPosition`, `panelPlacement`, `appendTo`, `boundary`, `prefix` |
 | Labels | `clearText`, `sureText` |
 | Animation | `togglePickerAnimation`, `pickerAnimationTime` |
 | Plugin switches | `hasBox`, `hasPanel`, `hasInput`, `hasClear`, `hasSure`, `hue`, `alpha`, `showButton`, `showColorMode`, `showInputNumber`, `showEyedropper`, `showCopyColor` |
@@ -582,6 +582,31 @@ new ewColorPicker({ el: '#app', disabled: true })
 | `large` | 40px | 20px |
 
 Numbers are treated as pixels; objects accept `width`/`height`; CSS strings are used verbatim.
+
+### panelMode
+
+| Type | Default | Description |
+| --- | --- | --- |
+| `'mini' \| 'small' \| 'medium' \| 'large'` | `'large'` | Panel size preset. Scales the panel and everything inside it. |
+
+| Mode | Panel size | Both sliders horizontal | Suggested use |
+| --- | --- | --- | --- |
+| `mini` | 180 × 140 | 202px wide | Mobile |
+| `small` | 220 × 150 | 247px wide | Compact layouts / mobile landscape |
+| `medium` | 250 × 165 | 281px wide | Tablets, medium dialogs |
+| `large` | 285 × 180 | 320px wide | Desktop (the historical size) |
+
+Everything inside the panel scales with the mode: sliders and their thumbs, the cursor, the inputs and number inputs, buttons, preset swatches, the gradient editor and the mode switcher.
+
+```ts
+// Mobile
+new ewColorPicker({ el: '#app', panelMode: 'mini' })
+
+// Desktop default, identical to previous versions
+new ewColorPicker({ el: '#app' })
+```
+
+`panelMode` is not the same as `size`: `size` controls the trigger box (the small swatch button), while `panelMode` controls the panel that opens from it. They can be combined freely.
 
 ### predefineColor
 
@@ -828,6 +853,7 @@ Source: https://eveningwater.github.io/ew-color-picker/api/styles
 | `@ew-color-picker/style/dist/index.css` | Yes | Picker, box, panel, sliders, buttons, mode switcher, predefine |
 | `@ew-color-picker/style/dist/input-number.css` | Yes for numeric inputs | InputNumber component |
 | `@ew-color-picker/style/dist/select.css` | Only when using Select | Select dropdown component |
+| `@ew-color-picker/style/dist/tooltip.css` | Required by Select / Gradient tooltips | Tooltip utility (`.ew-tooltip`) |
 
 ```ts
 import '@ew-color-picker/style/dist/index.css'
@@ -835,7 +861,7 @@ import '@ew-color-picker/style/dist/input-number.css'
 ```
 
 ::: warning
-Importing only `index.css` leaves RGB/HSL numeric inputs unstyled. Add `select.css` only when you use the Select component.
+Importing only `index.css` leaves RGB/HSL numeric inputs unstyled. Add `select.css` and `tooltip.css` only when you use the Select component.
 :::
 
 ## Class prefix
@@ -845,6 +871,7 @@ All class names start with `ew-` by default (e.g. `.ew-color-picker-box`, `.ew-i
 ```scss
 @use "@ew-color-picker/style/src/index.scss" with ($prefix: "my-");
 @use "@ew-color-picker/style/src/input-number.scss" with ($prefix: "my-");
+@use "@ew-color-picker/style/src/tooltip.scss" with ($prefix: "my-");
 ```
 
 The prebuilt `dist/*.css` files always use the `ew-` prefix; keep the default `prefix` option when using them.
@@ -1230,6 +1257,7 @@ The copy button sits in its own toolbar row above the color value input, is fill
 
 ```ts
 import '@ew-color-picker/style/dist/select.css'
+import '@ew-color-picker/style/dist/tooltip.css'
 
 new ewColorPicker({
   el: '#app',
@@ -1255,6 +1283,32 @@ The dropdown only renders when `selectItems` is not empty. Once a value is selec
 Source: https://eveningwater.github.io/ew-color-picker/guide/changelog
 
 # Changelog
+
+## 2.0.10
+
+### Features
+
+- Added the `panelMode` option: `'mini' | 'small' | 'medium' | 'large'`, defaulting to `large` (unchanged behaviour). `mini` is designed for mobile. Sliders, cursors, inputs, buttons, predefine swatches, the gradient editor and the mode switcher all scale with the selected mode
+- Added a tooltip to the select component: when the selected value or an option label is truncated, hovering shows the full text. Enabled by default; disable with `selectTooltip: false`
+- Added `examples/19-panel-mode.html`, covering every combination of `panelMode`, horizontal hue/alpha and gradients
+
+### Fixes
+
+- Fixed the panel and the vertical hue/alpha sliders wrapping onto a new line in smaller modes: the panel container is now a vertical flex container and the panel plus sliders live in a single-row `top-row`
+- Fixed wrong panel widths in horizontal mode for smaller modes: the horizontal extra width was always calculated from the `large` base width, making `mini`/`small`/`medium` as wide as `large`
+- Fixed the animation module hard-coding `display: block` when showing the panel, which overrode the stylesheet layout: the animation module now saves and restores the element's original `display`, while showing/hiding is handled by the core through the `hidden` class
+- Fixed the absolutely positioned panel being stretched to the page width: the container now shrinks with `fit-content`, the panel/slider gaps are tighter, and no empty space is left on the right
+- Fixed RGBA/HSL inputs not fitting on one line in smaller modes: `mini`/`small`/`medium` now use a two-row 2×2 layout with inputs that adapt to the container width
+- Fixed the gradient editor layout at smaller sizes: the type row uses a two-row grid, and the stop row is forced onto one line with its two number inputs sharing the remaining space
+- Fixed hard-coded sizes and font sizes in input-number, select, checkbox and the mode switcher that were too large in smaller modes; they are now CSS variables that scale with the mode
+
+### Tests
+
+- Added select tooltip tests: shown when truncated, hidden when it fits, disabled via `selectTooltip: false`, and cleaned up on destroy
+
+### Docs
+
+- Documented the `selectTooltip` option in the English and Chinese select guides
 
 ## 2.0.9
 
@@ -1430,7 +1484,7 @@ The numbers below come from the npm registry (`unpackedSize` and last publish da
 
 | Option | Shape | Framework lock-in | Extension model | Unpacked size | Last publish |
 | --- | --- | --- | --- | --- | --- |
-| **ew-color-picker** | Aggregate package + 14 plugin packages (plus the `ew-color-picker` compat entry) | None (plain DOM) | Plugin registration / custom plugins | Aggregate 84.6 KB + styles 36.1 KB (120.7 KB total); `core.min` 11.9 KB (gzip 3.9 KB) | 2026-10 |
+| **ew-color-picker** | Aggregate package + 14 plugin packages (plus the `ew-color-picker` compat entry) | None (plain DOM) | Plugin registration / custom plugins | Aggregate 147.2 KB; CSS 38 KB (gzip 6.3 KB); `core.min` 11.9 KB (gzip 3.9 KB) | 2026-11 |
 | [Pickr](https://github.com/Simonwep/pickr) | Single package (UMD/ESM) | None | Themes (classic/monolith/nano) + options | 280.3 KB | 2026-09 |
 | [iro.js](https://github.com/jaames/iro.js) | Single package | None | Options + component composition | 231.4 KB | 2021-07 |
 | [Coloris](https://github.com/melloware/coloris) | Single package + CSS | None | CSS variables + options | 152.2 KB | 2026-10 |
@@ -1441,7 +1495,7 @@ The numbers below come from the npm registry (`unpackedSize` and last publish da
 | Native `input[type=color]` | Built into browsers | None | None (styling is not controllable) | 0 | with browser updates |
 | Spectrum | jQuery plugin | jQuery | Options | 1804.2 KB | 2020-05 |
 
-One caveat: unpacked size is not runtime cost. The aggregate package ships two artifacts (UMD.min and ESM) plus `.d.ts` declarations. The smallest runtime you can ship is `index.min.js` at **81.8 KB (gzip 19.4 KB)**, or **11.9 KB (gzip 3.9 KB)** when using the core alone. Add the two style sheets (about 3.7 KB gzipped) for the full out-of-the-box footprint — roughly 29 KB of tarballs in total.
+One caveat: unpacked size is not runtime cost. The aggregate package ships two artifacts (UMD.min and ESM) plus `.d.ts` declarations. The smallest runtime you can ship is `index.min.js` at **141 KB (gzip 34.1 KB)**, or **11.9 KB (gzip 3.9 KB)** when using the core alone. Add the two style sheets (gzip 6.3 KB) for the full out-of-the-box footprint — about 40 KB gzipped in total.
 
 ## Where ew-color-picker stands out
 
@@ -1480,10 +1534,10 @@ Bilingual documentation, per-API references, one page per plugin, plus `llms.txt
 ## Limitations to be honest about
 
 - **Small ecosystem**: download counts, community tutorials and issue history cannot match Pickr or react-color; unusual problems mean reading the source.
-- **No official framework wrappers**: React / Vue / Angular / Solid integration is covered in [Framework Integration](./framework-integration); controlled components and SSR need a thin wrapper of your own (around 20 lines).
+- **Wrappers stay thin and optional**: official packages cover Vue 3 and React (`@ew-color-picker/vue`, `@ew-color-picker/react`); Angular and Solid use the copy-paste recipes in [Framework Integration](./framework-integration).
 - **Gradients and screen sampling are optional plugins**: linear / radial / conic gradient editing ships as the optional `@ew-color-picker/gradient` plugin, and screen sampling as `@ew-color-picker/eyedropper` (Chromium-based browsers). For heavier color-space math and visualization work, iro.js is still the better fit.
 - **The plugin model only matters when you customize**: installing the aggregate package or `npm i ew-color-picker` works out of the box; you only need to understand core + plugins when replacing part of the UI or wiring your own plugins.
-- **Shrinking further means installing sub-packages**: the aggregate is 84.6 KB plus 36.1 KB of styles, already in Coloris territory; if you use a single piece, install plugin packages and trim down to the 11.9 KB core.
+- **Shrinking further means installing sub-packages**: the aggregate is 147.2 KB unpacked plus 38 KB of styles (about 40 KB gzipped in total), already in Coloris territory; if you use a single piece, install plugin packages and trim down to the 11.9 KB core.
 
 ## Choosing the right tool
 
@@ -1621,7 +1675,7 @@ Source: https://eveningwater.github.io/ew-color-picker/guide/framework-integrati
 
 ew-color-picker depends only on plain DOM and events — no framework runtime — so the same approach works everywhere: **create the instance on mount, call `destroy()` on unmount, and sync controlled values through `setColor()`**.
 
-Below are minimal, copy-paste wrappers for four frameworks. No official framework packages are published; the reasoning is covered in [Comparison & Positioning](./comparison).
+Below are minimal, copy-paste wrappers for four frameworks. Official thin packages ship for Vue 3 and React; Angular and Solid use the same pattern without a dedicated package. The positioning is covered in [Comparison & Positioning](./comparison).
 
 ## Common rules
 
@@ -1636,6 +1690,49 @@ import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 ```
+
+## Official packages
+
+```bash
+pnpm add @ew-color-picker/vue      # Vue 3
+pnpm add @ew-color-picker/react    # React
+```
+
+Both packages are thin: they own the host element and the instance lifecycle, forward every option, re-emit the core events and expose the picker instance through `ref`.
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { EwColorPicker } from '@ew-color-picker/vue'
+
+const color = ref('#6366f1')
+</script>
+
+<template>
+  <EwColorPicker v-model="color" :options="{ panelMode: 'small' }" />
+</template>
+```
+
+```tsx
+import { useRef, useState } from 'react'
+import { EwColorPicker, type EwColorPickerRef } from '@ew-color-picker/react'
+
+export function ColorField() {
+  const [color, setColor] = useState('#6366f1')
+  const pickerRef = useRef<EwColorPickerRef>(null)
+  return (
+    <EwColorPicker
+      ref={pickerRef}
+      value={color}
+      onChange={setColor}
+      onSure={(next) => console.log('sure', next, pickerRef.current?.getInstance())}
+      options={{ panelMode: 'small' }}
+    />
+  )
+}
+```
+
+The wrappers do not bundle styles: import `index.css` and `input-number.css` once in your app entry, as shown below. The sections after this one show the same integration without the wrappers, using only the aggregate package.
 
 ## React
 
@@ -1809,7 +1906,7 @@ An instance was not destroyed on unmount, so its leftover `document` click liste
 Only when you write the value back to the component and the component writes it back with `setColor()`. Compare old and new values to break the loop.
 
 **Do I need official wrapper packages?**
-The code above is the complete wrapper. If a project uses it in several places, extract these twenty lines into your own component rather than depending on a third-party package.
+They are optional. `@ew-color-picker/vue` and `@ew-color-picker/react` save the twenty lines of wiring on this page and keep props, refs and events typed. If you only need one picker, copy the pattern instead.
 
 ## Quick Start
 
@@ -2037,7 +2134,7 @@ const picker = new ewColorPicker({ el: '#app' })
 ```
 
 ::: warning Two stylesheets
-`index.css` covers the picker. `input-number.css` is required for the numeric inputs used by RGB/HSL modes. Import both. The optional `select.css` is only needed for the Select component.
+`index.css` covers the picker. `input-number.css` is required for the numeric inputs used by RGB/HSL modes. Import both. The optional `select.css` and `tooltip.css` are only needed for the Select or Gradient components.
 :::
 
 To keep the v1 package name, install the unscoped entry package instead — it is equivalent:
@@ -3162,11 +3259,12 @@ Gradient styles ship inside the main stylesheet:
 ```ts
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/select.css'
+import '@ew-color-picker/style/dist/tooltip.css'
 import '@ew-color-picker/style/dist/input-number.css'
 import '@ew-color-picker/style/dist/checkbox.css'
 ```
 
-The editor uses the `Select`, `InputNumber` and `Checkbox` components from `@ew-color-picker/select`, `@ew-color-picker/input-number` and `@ew-color-picker/checkbox`.
+The editor uses the `Select`, `InputNumber` and `Checkbox` components from `@ew-color-picker/select`, `@ew-color-picker/input-number` and `@ew-color-picker/checkbox`; truncated Select labels use [`@ew-color-picker/tooltip`](./tooltip).
 
 ## DOM
 
@@ -3402,7 +3500,7 @@ Register plugins manually — see [Installation](../guide/installation.md#per-pa
 - [Box](./box.md) · [Panel](./panel.md) · [Hue](./hue.md) · [Alpha](./alpha.md)
 - [Input](./input.md) · [InputNumber](./input-number.md) · [Select](./select.md) · [Checkbox](./checkbox.md) · [Button](./button.md)
 - [Predefine](./predefine.md) · [ColorMode](./color-mode.md) · [Eyedropper](./eyedropper.md)
-- [CopyColor](./copy-color.md) · [Gradient](./gradient.md)
+- [CopyColor](./copy-color.md) · [Gradient](./gradient.md) · [Tooltip](./tooltip.md)
 - [Console](./console.md) · [Writing a plugin](../guide/plugin-dev.md)
 
 ## InputNumber Plugin
@@ -3619,6 +3717,7 @@ Source: https://eveningwater.github.io/ew-color-picker/plugins/panel
 | --- | --- | --- | --- |
 | `hasPanel` | `boolean` | `true` | Hide the 2D panel |
 | `ewColorPickerPanel` | `boolean` | `true` | Legacy switch: `false` disables the panel; pass other panel options at the top level |
+| `panelMode` | `'mini' \| 'small' \| 'medium' \| 'large'` | `'large'` | Panel size preset; scales the panel and every inner control |
 | `hueDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | Affects width |
 | `alphaDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | Affects width |
 | `autoPanelPosition` | `boolean` | `false` | Auto placement |
@@ -3636,13 +3735,16 @@ Gap 5px; positions are adjusted to stay inside the viewport.
 
 ### Width rules
 
-| Hue | Alpha | Width |
-| --- | --- | --- |
-| vertical | vertical | 285px |
-| horizontal | vertical (or vice versa) | ~302px |
-| horizontal | horizontal | 320px |
+Panel size comes from `panelMode`:
 
-Height is 180px, injected as `--panel-width` / `--panel-height`.
+| Mode | Width × Height | Both sliders horizontal |
+| --- | --- | --- |
+| `mini` | 180 × 140 | 202px |
+| `small` | 220 × 150 | 247px |
+| `medium` | 250 × 165 | 281px |
+| `large` | 285 × 180 | 320px |
+
+With the default (vertical) sliders the width above is the panel width. Horizontal sliders widen the panel proportionally to the mode (`large` is the reference: +17px for one horizontal slider, +35px for two). Size is injected as `--panel-width` / `--panel-height`.
 
 ## Methods
 
@@ -3835,9 +3937,12 @@ Source: https://eveningwater.github.io/ew-color-picker/plugins/select
 ::: warning Extra stylesheet required
 ```ts
 import '@ew-color-picker/style/dist/select.css'
+import '@ew-color-picker/style/dist/tooltip.css'
 ```
-Without it the dropdown is unstyled.
+Without the first file the dropdown is unstyled; without the second one the truncated-value tooltip stays invisible.
 :::
+
+The `selectTooltip` hint is rendered by the standalone [`@ew-color-picker/tooltip`](./tooltip) package, which you can also use in your own components.
 
 ## Plugin options
 
@@ -3848,6 +3953,7 @@ Without it the dropdown is unstyled.
 | `selectValue` | `string \| number` | `undefined` | Initially selected value |
 | `selectPlaceholder` | `string` | `undefined` | Text shown when no value is selected |
 | `selectClearable` | `boolean` | `true` | Show a clear icon once a value is selected |
+| `selectTooltip` | `boolean` | `true` | Show a tooltip with the full text when the selected value or an option is truncated |
 | `onSelectChange` | `(value, option) => void` | — | Called after the user picks an option |
 | `onSelectClear` | `() => void` | — | Called after the user clears the selection |
 
@@ -3946,6 +4052,78 @@ The trigger exposes `aria-haspopup="listbox"` / `aria-expanded`, and options use
 ## Related
 
 - [InputNumber](./input-number.md) · [Plugin overview](./) · [Styles & classes](../api/styles.md)
+
+## Tooltip
+
+Source: https://eveningwater.github.io/ew-color-picker/plugins/tooltip
+
+# Tooltip
+
+`@ew-color-picker/tooltip` is the floating hint used by Select (when the selected value or an option is truncated) and available to any other component you build. It is a plain DOM utility, not a core plugin: import it wherever you need a tooltip.
+
+| Item | Value |
+| --- | --- |
+| Package | `@ew-color-picker/tooltip` |
+| Class | `Tooltip` |
+| Helper | `isTextTruncated(el)` |
+| Styles | `@ew-color-picker/style/dist/tooltip.css` |
+
+::: warning Extra stylesheet
+```ts
+import '@ew-color-picker/style/dist/tooltip.css'
+```
+The Select and Gradient components rely on it as well.
+:::
+
+## Usage
+
+```ts
+import Tooltip, { isTextTruncated } from '@ew-color-picker/tooltip'
+
+const tooltip = new Tooltip({ prefix: 'ew-' })
+
+if (isTextTruncated(target)) {
+  tooltip.show(target.textContent!.trim(), target)
+}
+
+// hide without removing the node
+tooltip.hide()
+
+// remove the node when the owner is destroyed
+tooltip.destroy()
+```
+
+## Options
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `prefix` | `string` | `'ew-'` | Class prefix; keep it in sync with the picker prefix |
+| `container` | `HTMLElement` | `document.body` | Parent element the tooltip node is appended to |
+| `offset` | `number` | `6` | Gap between the tooltip and its anchor, in px |
+| `className` | `string` | `''` | Extra class name applied to the tooltip node |
+
+## Methods
+
+| Method | Description |
+| --- | --- |
+| `show(text, anchor)` | Show the hint; empty text behaves like `hide()` |
+| `hide()` | Hide the hint but keep the node |
+| `isVisible()` | Whether the hint is currently visible |
+| `getElement()` | Return the tooltip node |
+| `destroy()` | Remove the node and release the instance |
+
+## Positioning
+
+The node is `position: fixed` and sits above the anchor. `show()` measures the node and flips it below the anchor (adding the `--bottom` modifier) when there is not enough room above. Position is recalculated on every `show()` call.
+
+## Classes
+
+`.ew-tooltip`, `.ew-tooltip--visible` and `.ew-tooltip--bottom`. The prefix follows the `prefix` option, so a `my-` prefix produces `.my-tooltip`.
+
+## See also
+
+- [Select](./select) — uses this package for truncated option text
+- [Styles & Classes](../api/styles) — stylesheet entries and class prefix
 
 ---
 
@@ -4726,6 +4904,7 @@ new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
 | `disabled` | `boolean` | `false` | 禁用全部交互 |
 | `defaultColor` | `string` | `''` | 初始颜色 |
 | `size` | `string \| number \| { width, height }` | `'normal'` | 颜色盒尺寸 |
+| `panelMode` | `'mini' \| 'small' \| 'medium' \| 'large'` | `'large'` | 面板尺寸档位，面板及其内部控件整体缩放，移动端建议 `'mini'` |
 | `predefineColor` | `(string \| { color, disabled? })[]` | `[]` | 预定义颜色 |
 | `isClickOutside` | `boolean` | `true` | 点击容器外部时收起面板 |
 | `hueDirection` | `'vertical' \| 'horizontal'` | `'vertical'` | 色相滑块方向 |
@@ -4739,6 +4918,24 @@ new ewColorPicker({ el: '#picker', defaultColor: '#6366f1' })
 | `appendTo` | `string \| HTMLElement` | `undefined` | 面板容器挂载目标（弹窗 / 滚动容器场景用 `document.body`） |
 | `boundary` | `string \| HTMLElement \| null` | `null` | 面板夹取边界（抽屉 / 弹窗内传容器，默认视口） |
 | `prefix` | `string` | `'ew-'` | CSS 类名前缀，用于避免与其他库的样式冲突 |
+
+### panelMode 面板尺寸
+
+| 档位 | 面板宽 × 高 | 双水平滑块宽度 | 建议场景 |
+| --- | --- | --- | --- |
+| `mini` | 180 × 140 | 202px | 移动端 |
+| `small` | 220 × 150 | 247px | 紧凑布局 / 移动端横屏 |
+| `medium` | 250 × 165 | 281px | 平板、中型弹窗 |
+| `large` | 285 × 180 | 320px | 桌面端（历史默认尺寸） |
+
+面板内的滑块、光标、输入框、按钮、预设色、渐变编辑器、模式切换器等全部随档位等比缩放。
+
+```js
+new ewColorPicker({ el: '#app', panelMode: 'mini' })  // 移动端
+new ewColorPicker({ el: '#app' })                     // 桌面端，等同 2.0.9 之前的尺寸
+```
+
+`panelMode` 与 `size` 不同：`size` 控制颜色盒（触发器）尺寸，`panelMode` 控制弹出的面板尺寸，两者可自由组合。
 
 ### 显示开关
 
@@ -5204,9 +5401,10 @@ import '@ew-color-picker/style/dist/input-number.css'
 | `index.css` | 颜色盒、面板、滑块、输入框、按钮、色板、模式切换器 |
 | `input-number.css` | 数字输入框组件 `.ew-input-number` 系列样式 |
 | `select.css` | 下拉选择组件 `.ew-select` 系列样式（使用 Select 时引入） |
+| `tooltip.css` | 悬浮提示工具类 `.ew-tooltip`（Select / Gradient 使用时引入） |
 
 ::: warning
-`index.css` 与 `input-number.css` 都需要引入。只引入 `index.css` 时，RGB / HSL 模式下的数字输入框会丢失样式；使用 Select 组件时还需额外引入 `select.css`。
+`index.css` 与 `input-number.css` 都需要引入。只引入 `index.css` 时，RGB / HSL 模式下的数字输入框会丢失样式；使用 Select 组件时还需额外引入 `select.css` 与 `tooltip.css`。
 :::
 
 ## 类名前缀
@@ -5611,6 +5809,7 @@ new ewColorPicker({
 
 ```ts
 import '@ew-color-picker/style/dist/select.css'
+import '@ew-color-picker/style/dist/tooltip.css'
 
 new ewColorPicker({
   el: '#app',
@@ -5638,6 +5837,32 @@ new ewColorPicker({
 Source: https://eveningwater.github.io/ew-color-picker/zh/guide/changelog
 
 # 更新日志
+
+## 2.0.10
+
+### 新增
+
+- 新增 `panelMode` 选项：`'mini' | 'small' | 'medium' | 'large'` 四档面板尺寸，默认 `large`（与之前一致）。`mini` 适合移动端；滑块、光标、输入框、按钮、预设色、渐变编辑器、模式切换区都会随档位同步缩放
+- 新增 select 组件 tooltip：选中值或下拉选项文字被截断时，悬浮展示完整内容。默认开启，可通过 `selectTooltip: false` 关闭
+- 新增示例 `examples/19-panel-mode.html`：覆盖 `panelMode` × 横向 hue/alpha × 渐变的全组合场景
+
+### 修复
+
+- 修复面板与纵向色相/透明度滑块在窄档位下被挤到下一行：面板容器改为纵向 flex，面板与滑块放进固定单行的 top-row
+- 修复横向模式下各档位面板宽度错误：横向扩展宽度此前固定按 `large` 的基准宽度计算，导致 `mini`/`small`/`medium` 与 `large` 一样宽
+- 修复面板显示时 `display` 被动画模块硬编码为 `block`、覆盖样式表布局的问题：动画模块改为保存/恢复元素的原始 `display`，面板的显示与隐藏由 core 统一管理 `hidden` 类
+- 修复面板绝对定位时宽度被拉伸到页面宽度的问题：容器改为 `fit-content` 收缩，面板与滑块间距收紧，右侧不再出现多余空白
+- 修复小档位下 RGBA/HSL 输入框一行显示不全：`mini`/`small`/`medium` 改为两行 2×2 布局，输入框随容器宽度自适应
+- 修复渐变编辑器在小档位下的布局错乱：类型行改为 grid 两行排版，停靠点行强制单行、两个数字输入框按剩余空间自动分配
+- 修复 input-number、select、checkbox 以及模式切换区尺寸和字号硬编码、在小档位下过大的问题，全部改为 CSS 变量并随档位缩放
+
+### 测试
+
+- 新增 select tooltip 用例：截断时展示、未截断不展示、`selectTooltip: false` 关闭、销毁时清理节点
+
+### 文档
+
+- 中英文 select 文档补充 `selectTooltip` 选项说明
 
 ## 2.0.9
 
@@ -5813,7 +6038,7 @@ ew-color-picker 不是一套「成品皮肤」，而是一个 **可组装的颜�
 
 | 方案 | 形态 | 框架约束 | 扩展方式 | 体积（unpacked） | 最近发布 |
 | --- | --- | --- | --- | --- | --- |
-| **ew-color-picker** | 聚合包 + 14 个插件包（含兼容入口 `ew-color-picker`） | 无（原生 DOM） | 插件注册 / 自写插件 | 聚合包 84.6 KB + 样式 36.1 KB（合计 120.7 KB），`core.min` 11.9 KB（gzip 3.9 KB） | 2026-10 |
+| **ew-color-picker** | 聚合包 + 14 个插件包（含兼容入口 `ew-color-picker`） | 无（原生 DOM） | 插件注册 / 自写插件 | 聚合包 147.2 KB；CSS 38 KB（gzip 6.3 KB）；`core.min` 11.9 KB（gzip 3.9 KB） | 2026-11 |
 | [Pickr](https://github.com/Simonwep/pickr) | 单包，UMD/ESM | 无 | 主题（classic/monolith/nano）+ 选项 | 280.3 KB | 2026-09 |
 | [iro.js](https://github.com/jaames/iro.js) | 单包 | 无 | 选项 + 组件组合 | 231.4 KB | 2021-07 |
 | [Coloris](https://github.com/melloware/coloris) | 单包 + 一份 CSS | 无 | CSS 变量主题 + 选项 | 152.2 KB | 2026-10 |
@@ -5824,7 +6049,7 @@ ew-color-picker 不是一套「成品皮肤」，而是一个 **可组装的颜�
 | 原生 `input[type=color]` | 浏览器内置 | 无 | 无（样式不可控） | 0 | 随浏览器 |
 | Spectrum | jQuery 插件 | jQuery | 选项 | 1804.2 KB | 2020-05 |
 
-需要强调的一点：体量数字不能直接等价为运行时开销。ew-color-picker 的聚合包包含 UMD.min 与 ESM 两份产物和 `.d.ts` 声明，实际引入的最小运行时是 `index.min.js` **81.8 KB（gzip 19.4 KB）**，按需只用核心时是 **11.9 KB（gzip 3.9 KB）**；加上两套样式（gzip 约 3.7 KB）即为完整开箱体积，npm 压缩包总计约 29 KB。
+需要强调的一点：体量数字不能直接等价为运行时开销。ew-color-picker 的聚合包包含 UMD.min 与 ESM 两份产物和 `.d.ts` 声明，实际引入的最小运行时是 `index.min.js` **141 KB（gzip 34.1 KB）**，按需只用核心时是 **11.9 KB（gzip 3.9 KB）**；加上两套样式（gzip 约 6.3 KB）即为完整开箱体积，gzip 后约 40 KB。
 
 ## ew-color-picker 的优势
 
@@ -5863,10 +6088,10 @@ ewColorPicker.use(Panel).use(Hue)
 ## 需要正视的局限
 
 - **生态与社区规模小**：下载量、第三方教程、Issue 沉淀都无法与 Pickr、react-color 相比，遇到冷门问题更多要靠读源码。
-- **不提供官方框架绑定包**：React / Vue / Angular / Solid 的接入方式见[框架集成](./framework-integration)，受控组件与 SSR 场景按示例自行封装（约 20 行）。
+- **封装包很薄且可选**：官方提供 Vue 3 与 React 两个封装包（`@ew-color-picker/vue`、`@ew-color-picker/react`）；Angular 与 Solid 按[框架集成](./framework-integration)里的示例自行复制。
 - **渐变与屏幕取色属于可选插件**：线性/径向/锥形渐变编辑由可选的 `@ew-color-picker/gradient` 插件提供，屏幕取色由 `@ew-color-picker/eyedropper` 插件提供（仅 Chromium 系浏览器）；更复杂的色彩空间运算与可视化场景仍建议选 iro.js。
 - **只有需要定制时才要理解插件模型**：默认装聚合入口或 `npm i ew-color-picker` 即可开箱使用；只有在替换局部 UI、组合自有插件时，才需要理解「核心 + 插件」的结构。
-- **想进一步减小体积需按需装子包**：聚合包 84.6 KB、样式 36.1 KB，已与 Coloris 同量级；若只用单个部件，按需安装插件包可以裁到核心 11.9 KB。
+- **想进一步减小体积需按需装子包**：聚合包 147.2 KB、样式 38 KB（gzip 合计约 40 KB），已与 Coloris 同量级；若只用单个部件，按需安装插件包可以裁到核心 11.9 KB。
 
 ## 选型建议
 
@@ -5998,7 +6223,7 @@ Source: https://eveningwater.github.io/ew-color-picker/zh/guide/framework-integr
 
 ew-color-picker 只依赖原生 DOM 与事件，没有任何框架运行时依赖，因此在任意框架里都能用同一套方式接入：**挂载时创建实例、卸载时 `destroy()`、受控值通过 `setColor()` 同步**。
 
-本页给出四个框架的最小可用封装，可直接复制到项目中。官方不单独发布框架封装包，原因见[竞品对比与定位](./comparison)。
+本页给出四个框架的最小可用封装，可直接复制到项目中。Vue 3 与 React 另有官方薄封装包，Angular 与 Solid 沿用同一套写法。定位说明见[竞品对比与定位](./comparison)。
 
 ## 通用要点
 
@@ -6013,6 +6238,49 @@ import ewColorPicker from '@ew-color-picker/ew-color-picker'
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 ```
+
+## 官方封装包
+
+```bash
+pnpm add @ew-color-picker/vue      # Vue 3
+pnpm add @ew-color-picker/react    # React
+```
+
+两个包都是薄封装：只负责宿主元素与实例生命周期，配置原样转发，核心事件重新抛出，并通过 `ref` 暴露选择器实例。
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { EwColorPicker } from '@ew-color-picker/vue'
+
+const color = ref('#6366f1')
+</script>
+
+<template>
+  <EwColorPicker v-model="color" :options="{ panelMode: 'small' }" />
+</template>
+```
+
+```tsx
+import { useRef, useState } from 'react'
+import { EwColorPicker, type EwColorPickerRef } from '@ew-color-picker/react'
+
+export function ColorField() {
+  const [color, setColor] = useState('#6366f1')
+  const pickerRef = useRef<EwColorPickerRef>(null)
+  return (
+    <EwColorPicker
+      ref={pickerRef}
+      value={color}
+      onChange={setColor}
+      onSure={(next) => console.log('sure', next, pickerRef.current?.getInstance())}
+      options={{ panelMode: 'small' }}
+    />
+  )
+}
+```
+
+封装包不内置样式：仍需在应用入口引入 `index.css` 与 `input-number.css`（见下方示例）。本节之后的 React / Vue 示例是等价的“不用封装包”写法，只依赖聚合包。
 
 ## React
 
@@ -6186,7 +6454,7 @@ Solid 的细粒度响应式不需要额外的同步逻辑：把 `props.value` �
 只有在「监听 change 后改写外部值，又用 setColor 写回组件」时才可能循环，用新旧值比较即可切断。
 
 **Q：需要自己写框架封装包吗？**
-上面的代码就是完整封装。如果项目内多处使用，建议把这 20 行沉淀为自己的组件，而不是依赖第三方封装包。
+可选。`@ew-color-picker/vue` 与 `@ew-color-picker/react` 省掉了本页那 20 行胶水代码，并保留 props、ref 与事件的类型提示。如果项目里只有一个取色器，直接复制示例写法即可。
 
 ## 快速开始
 
@@ -6411,7 +6679,7 @@ import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 ```
 
-> `index.css` 是核心样式，`input-number.css` 是数字输入框组件的独立样式入口，**两者都需要引入**，否则 RGB / HSL 模式下的数字框会失去样式。使用 Select 组件时，再额外引入 `select.css`。
+> `index.css` 是核心样式，`input-number.css` 是数字输入框组件的独立样式入口，**两者都需要引入**，否则 RGB / HSL 模式下的数字框会失去样式。使用 Select 或 Gradient 组件时，再额外引入 `select.css` 与 `tooltip.css`。
 
 如果希望沿用 v1 的包名，也可以直接安装无 scope 的聚合入口包，二者等价：
 
@@ -7734,11 +8002,12 @@ import {
 ```ts
 import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/select.css'
+import '@ew-color-picker/style/dist/tooltip.css'
 import '@ew-color-picker/style/dist/input-number.css'
 import '@ew-color-picker/style/dist/checkbox.css'
 ```
 
-编辑器内部复用 `@ew-color-picker/select` 的 `Select`、`@ew-color-picker/input-number` 的 `InputNumber` 与 `@ew-color-picker/checkbox` 的 `Checkbox` 组件。
+编辑器内部复用 `@ew-color-picker/select` 的 `Select`、`@ew-color-picker/input-number` 的 `InputNumber` 与 `@ew-color-picker/checkbox` 的 `Checkbox` 组件；下拉文字被截断时由 [`@ew-color-picker/tooltip`](./tooltip) 展示完整内容。
 
 ## DOM
 
@@ -8026,6 +8295,7 @@ new ewColorPicker({
 - [Eyedropper 吸管](./eyedropper.md)
 - [CopyColor 复制颜色](./copy-color.md)
 - [Gradient 渐变](./gradient.md)
+- [Tooltip 悬浮提示](./tooltip.md)
 - [Console 控制台](./console.md)
 - [编写自定义插件](../guide/plugin-dev.md)
 
@@ -8324,6 +8594,7 @@ Source: https://eveningwater.github.io/ew-color-picker/zh/plugins/panel
 | --- | --- | --- | --- |
 | `hasPanel` | `boolean` | `true` | `false` 时不渲染二维面板 |
 | `ewColorPickerPanel` | `boolean` | `true` | 兼容写法：`false` 等价于关闭面板，其余面板配置请直接放在顶层 |
+| `panelMode` | `'mini' \| 'small' \| 'medium' \| 'large'` | `'large'` | 面板尺寸档位，面板及其内部控件整体缩放 |
 | `hueDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | 影响面板计算宽度（水平布局更宽） |
 | `alphaDirection` | `'horizontal' \| 'vertical'` | `'vertical'` | 同上，两者都水平时面板宽 320px |
 | `autoPanelPosition` | `boolean` | `false` | 是否根据触发器位置自动定位面板 |
@@ -8346,13 +8617,16 @@ Source: https://eveningwater.github.io/ew-color-picker/zh/plugins/panel
 
 ### 面板宽度规则
 
-| hue 方向 | alpha 方向 | 面板宽度 |
-| --- | --- | --- |
-| 垂直 | 垂直 | 285px |
-| 水平 | 垂直（或反之） | 约 302px |
-| 水平 | 水平 | 320px |
+面板尺寸由 `panelMode` 决定：
 
-高度固定 180px，通过 CSS 变量 `--panel-width` / `--panel-height` 注入。
+| 档位 | 宽 × 高 | hue / alpha 都水平时 |
+| --- | --- | --- |
+| `mini` | 180 × 140 | 202px |
+| `small` | 220 × 150 | 247px |
+| `medium` | 250 × 165 | 281px |
+| `large` | 285 × 180 | 320px |
+
+默认（垂直滑块）下上表宽度即面板宽度。水平滑块会按档位等比加宽（以 `large` 为基准：单条水平 +17px，两条都水平 +35px）。尺寸通过 CSS 变量 `--panel-width` / `--panel-height` 注入。
 
 ## 实例方法
 
@@ -8652,9 +8926,12 @@ Source: https://eveningwater.github.io/ew-color-picker/zh/plugins/select
 ::: warning 需要额外样式
 ```ts
 import '@ew-color-picker/style/dist/select.css'
+import '@ew-color-picker/style/dist/tooltip.css'
 ```
-未引入时下拉框没有样式。
+未引入第一个文件时下拉框没有样式；未引入第二个文件时，截断文字的悬浮提示不可见。
 :::
+
+`selectTooltip` 的悬浮提示由独立的 [`@ew-color-picker/tooltip`](./tooltip) 包渲染，你也可以在自己的组件里直接使用它。
 
 ## 配置项
 
@@ -8665,6 +8942,7 @@ import '@ew-color-picker/style/dist/select.css'
 | `selectValue` | `string \| number` | `undefined` | 初始选中值 |
 | `selectPlaceholder` | `string` | `undefined` | 未选中时显示的占位文案 |
 | `selectClearable` | `boolean` | `true` | 选中值后是否显示清空图标 |
+| `selectTooltip` | `boolean` | `true` | 选中值或选项文字被截断时，悬浮展示完整内容 |
 | `onSelectChange` | `(value, option) => void` | - | 用户选择后触发 |
 | `onSelectClear` | `() => void` | - | 用户清空选中项后触发 |
 
@@ -8763,3 +9041,75 @@ import { Select } from '@ew-color-picker/select'
 ## 相关链接
 
 - [InputNumber 数字输入框](./input-number.md) · [插件总览](./) · [样式与类名](../api/styles.md)
+
+## Tooltip 悬浮提示
+
+Source: https://eveningwater.github.io/ew-color-picker/zh/plugins/tooltip
+
+# Tooltip 悬浮提示
+
+`@ew-color-picker/tooltip` 是 Select（选中值或选项文字被截断时）等插件使用的悬浮提示，也可以直接用于你自己的组件。它是普通 DOM 工具，不是核心插件，按需引入即可。
+
+| 项 | 值 |
+| --- | --- |
+| 包 | `@ew-color-picker/tooltip` |
+| 类 | `Tooltip` |
+| 工具函数 | `isTextTruncated(el)` |
+| 样式 | `@ew-color-picker/style/dist/tooltip.css` |
+
+::: warning 需要额外样式
+```ts
+import '@ew-color-picker/style/dist/tooltip.css'
+```
+Select 与 Gradient 组件同样依赖它。
+:::
+
+## 使用
+
+```ts
+import Tooltip, { isTextTruncated } from '@ew-color-picker/tooltip'
+
+const tooltip = new Tooltip({ prefix: 'ew-' })
+
+if (isTextTruncated(target)) {
+  tooltip.show(target.textContent!.trim(), target)
+}
+
+// 隐藏但保留节点
+tooltip.hide()
+
+// 宿主销毁时移除节点
+tooltip.destroy()
+```
+
+## 配置项
+
+| 配置 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `prefix` | `string` | `'ew-'` | 类名前缀，需与选择器前缀保持一致 |
+| `container` | `HTMLElement` | `document.body` | tooltip 节点的挂载父元素 |
+| `offset` | `number` | `6` | 与锚点的间距（px） |
+| `className` | `string` | `''` | 附加到节点上的自定义类名 |
+
+## 方法
+
+| 方法 | 说明 |
+| --- | --- |
+| `show(text, anchor)` | 展示提示；空文案等同于 `hide()` |
+| `hide()` | 隐藏提示，节点保留 |
+| `isVisible()` | 当前是否可见 |
+| `getElement()` | 获取 tooltip 节点 |
+| `destroy()` | 移除节点并释放实例 |
+
+## 定位规则
+
+节点使用 `position: fixed`，默认位于锚点上方。`show()` 时会测量节点高度，上方空间不足则翻转到锚点下方并追加 `--bottom` 修饰类。每次 `show()` 都会重新计算位置。
+
+## 类名
+
+`.ew-tooltip`、`.ew-tooltip--visible`、`.ew-tooltip--bottom`。前缀跟随 `prefix` 配置，例如传入 `my-` 时会生成 `.my-tooltip`。
+
+## 相关文档
+
+- [Select 下拉选择](./select) —— 使用本包展示被截断的选项文字
+- [样式与类名](../api/styles) —— 样式入口与类名前缀

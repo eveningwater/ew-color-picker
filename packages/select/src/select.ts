@@ -13,6 +13,7 @@ import {
   closeIcon,
   downArrowIcon,
 } from "@ew-color-picker/utils";
+import Tooltip, { isTextTruncated } from "@ew-color-picker/tooltip";
 
 export interface SelectOption {
   label: string;
@@ -48,7 +49,7 @@ export default class Select {
   private currentValue: string | number | undefined;
   private isOpen: boolean = false;
   private activeIndex: number = -1;
-  private tooltipNode: HTMLDivElement | null = null;
+  private tooltip: Tooltip | null = null;
 
   private get prefix(): string {
     return this.options.prefix || DEFAULT_PREFIX;
@@ -262,42 +263,23 @@ export default class Select {
     if (this.options.tooltip === false || !contentEl || !anchorEl) return;
     const text = (contentEl.textContent || "").trim();
     if (!text) return;
-    if (contentEl.scrollWidth <= contentEl.clientWidth) return;
+    if (!isTextTruncated(contentEl)) return;
     this.showTooltip(text, anchorEl);
   }
 
-  private ensureTooltip(): HTMLDivElement {
-    if (!this.tooltipNode) {
-      const node = create<HTMLDivElement>("div");
-      addClass(node, `${this.prefix}select__tooltip`);
-      setAttr(node, { role: "tooltip" });
-      document.body.appendChild(node);
-      this.tooltipNode = node;
+  private ensureTooltip(): Tooltip {
+    if (!this.tooltip) {
+      this.tooltip = new Tooltip({ prefix: this.prefix });
     }
-    return this.tooltipNode;
+    return this.tooltip;
   }
 
   private showTooltip(text: string, anchor: HTMLElement) {
-    const node = this.ensureTooltip();
-    const p = this.prefix;
-    node.textContent = text;
-    addClass(node, `${p}select__tooltip--visible`);
-    removeClass(node, `${p}select__tooltip--bottom`);
-
-    const rect = anchor.getBoundingClientRect();
-    node.style.left = `${rect.left}px`;
-    node.style.top = `${rect.top - 6}px`;
-
-    // 上方空间不足时改为在下方展示
-    if (rect.top < node.offsetHeight + 8) {
-      node.style.top = `${rect.bottom + 6}px`;
-      addClass(node, `${p}select__tooltip--bottom`);
-    }
+    this.ensureTooltip().show(text, anchor);
   }
 
   private hideTooltip() {
-    if (!this.tooltipNode) return;
-    removeClass(this.tooltipNode, `${this.prefix}select__tooltip--visible`);
+    this.tooltip?.hide();
   }
 
   private handleTriggerClick = (event: Event) => {
@@ -508,9 +490,9 @@ export default class Select {
       off(this.dropdown, "mouseover", this.handleDropdownMouseOver);
       off(this.dropdown, "mouseout", this.handleDropdownMouseOut);
     }
-    if (this.tooltipNode) {
-      removeElement(this.tooltipNode);
-      this.tooltipNode = null;
+    if (this.tooltip) {
+      this.tooltip.destroy();
+      this.tooltip = null;
     }
     if (this.container?.parentNode) {
       removeElement(this.container);

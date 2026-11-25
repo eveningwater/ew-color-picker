@@ -177,6 +177,7 @@ new ewColorPicker({
 
 ```ts
 import '@ew-color-picker/style/dist/select.css'
+import '@ew-color-picker/style/dist/tooltip.css'
 
 new ewColorPicker({
   el: '#app',

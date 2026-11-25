@@ -326,7 +326,7 @@ describe("Select tooltip", () => {
   afterEach(() => {
     select?.destroy();
     document
-      .querySelectorAll(".ew-select__tooltip")
+      .querySelectorAll(".ew-tooltip")
       .forEach((node) => node.remove());
   });
 
@@ -356,17 +356,17 @@ describe("Select tooltip", () => {
     trigger.dispatchEvent(new MouseEvent("mouseenter"));
 
     const tooltip = document.querySelector(
-      ".ew-select__tooltip"
+      ".ew-tooltip"
     ) as HTMLElement;
     expect(tooltip).not.toBeNull();
     expect(tooltip.textContent).toBe("线性渐变");
     expect(
-      tooltip.classList.contains("ew-select__tooltip--visible")
+      tooltip.classList.contains("ew-tooltip--visible")
     ).toBe(true);
 
     trigger.dispatchEvent(new MouseEvent("mouseleave"));
     expect(
-      tooltip.classList.contains("ew-select__tooltip--visible")
+      tooltip.classList.contains("ew-tooltip--visible")
     ).toBe(false);
   });
 
@@ -378,7 +378,7 @@ describe("Select tooltip", () => {
     trigger.dispatchEvent(new MouseEvent("mouseenter"));
 
     const tooltip = document.querySelector(
-      ".ew-select__tooltip"
+      ".ew-tooltip"
     ) as HTMLElement;
     expect(tooltip).toBeNull();
   });
@@ -390,7 +390,7 @@ describe("Select tooltip", () => {
 
     trigger.dispatchEvent(new MouseEvent("mouseenter"));
 
-    expect(document.querySelector(".ew-select__tooltip")).toBeNull();
+    expect(document.querySelector(".ew-tooltip")).toBeNull();
   });
 
   it("removes the tooltip node on destroy", () => {
@@ -399,9 +399,9 @@ describe("Select tooltip", () => {
     mockOverflow(getValueText(), true);
 
     trigger.dispatchEvent(new MouseEvent("mouseenter"));
-    expect(document.querySelector(".ew-select__tooltip")).not.toBeNull();
+    expect(document.querySelector(".ew-tooltip")).not.toBeNull();
 
     select.destroy();
-    expect(document.querySelector(".ew-select__tooltip")).toBeNull();
+    expect(document.querySelector(".ew-tooltip")).toBeNull();
   });
 });

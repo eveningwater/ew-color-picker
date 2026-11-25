@@ -28,7 +28,7 @@ const picker = new ewColorPicker({ el: '#app' })
 ```
 
 ::: warning Two stylesheets
-`index.css` covers the picker. `input-number.css` is required for the numeric inputs used by RGB/HSL modes. Import both. The optional `select.css` is only needed for the Select component.
+`index.css` covers the picker. `input-number.css` is required for the numeric inputs used by RGB/HSL modes. Import both. The optional `select.css` and `tooltip.css` are only needed for the Select or Gradient components.
 :::
 
 To keep the v1 package name, install the unscoped entry package instead — it is equivalent:

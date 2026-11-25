@@ -1,0 +1,48 @@
+{
+  "name": "@ew-color-picker/tooltip",
+  "version": "2.0.10",
+  "description": "Standalone tooltip utility used by ew-color-picker plugins",
+  "main": "dist/tooltip.min.js",
+  "module": "dist/tooltip.esm.js",
+  "types": "dist/packages/tooltip/src/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c ../../scripts/rollup.config.mjs",
+    "dev": "rollup -c ../../scripts/rollup.config.mjs -w",
+    "clean": "rimraf dist",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "color-picker",
+    "tooltip",
+    "popover",
+    "ui",
+    "typescript"
+  ],
+  "author": "eveningwater(854806732@qq.com)",
+  "license": "MIT",
+  "dependencies": {
+    "@ew-color-picker/utils": "workspace:^"
+  },
+  "devDependencies": {
+    "@ew-color-picker/utils": "workspace:*",
+    "rollup": "^3.0.0",
+    "rollup-plugin-typescript2": "^0.34.0",
+    "typescript": "^4.9.0",
+    "rimraf": "^3.0.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eveningwater/ew-color-picker.git",
+    "directory": "packages/tooltip"
+  },
+  "bugs": {
+    "url": "https://github.com/eveningwater/ew-color-picker/issues"
+  },
+  "homepage": "https://eveningwater.github.io/ew-color-picker/"
+}

@@ -132,5 +132,5 @@ Register plugins manually — see [Installation](../guide/installation.md#per-pa
 - [Box](./box.md) · [Panel](./panel.md) · [Hue](./hue.md) · [Alpha](./alpha.md)
 - [Input](./input.md) · [InputNumber](./input-number.md) · [Select](./select.md) · [Checkbox](./checkbox.md) · [Button](./button.md)
 - [Predefine](./predefine.md) · [ColorMode](./color-mode.md) · [Eyedropper](./eyedropper.md)
-- [CopyColor](./copy-color.md) · [Gradient](./gradient.md)
+- [CopyColor](./copy-color.md) · [Gradient](./gradient.md) · [Tooltip](./tooltip.md)
 - [Console](./console.md) · [Writing a plugin](../guide/plugin-dev.md)

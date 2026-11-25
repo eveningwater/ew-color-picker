@@ -186,33 +186,3 @@ $prefix: "ew-" !default;
   padding: 8px 12px;
   font-size: 14px;
 }
-
-// 文字被截断时的悬浮提示
-.#{$prefix}select__tooltip {
-  position: fixed;
-  z-index: 3000;
-  max-width: 240px;
-  padding: 4px 8px;
-  border-radius: 4px;
-  background: rgba(0, 0, 0, 0.78);
-  color: #fff;
-  font-family: inherit;
-  font-size: 12px;
-  line-height: 1.4;
-  white-space: normal;
-  word-break: break-word;
-  pointer-events: none;
-  opacity: 0;
-  transform: translateY(-100%);
-  transition: opacity 0.15s;
-  box-sizing: border-box;
-}
-
-.#{$prefix}select__tooltip--visible {
-  opacity: 1;
-}
-
-// 上方空间不足时展示在锚点下方
-.#{$prefix}select__tooltip--bottom {
-  transform: none;
-}

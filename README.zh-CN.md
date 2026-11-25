@@ -87,6 +87,7 @@ pnpm add @ew-color-picker/ew-color-picker @ew-color-picker/style
 | `@ew-color-picker/gradient` | 多停靠点渐变编辑器（线性 / 径向 / 圆锥） |
 | `@ew-color-picker/select` | 主题化下拉选择，截断时自动展示 tooltip |
 | `@ew-color-picker/checkbox` | 主题化复选框，供渐变编辑器使用 |
+| `@ew-color-picker/tooltip` | 独立悬浮提示工具包（也可用于自己的组件） |
 | `@ew-color-picker/eyedropper` | 屏幕吸管取色（原生 EyeDropper API，Chromium） |
 | `@ew-color-picker/copy-color` | 复制当前颜色到剪贴板 |
 | `@ew-color-picker/vue` | Vue 3 封装组件（`v-model`、类型化 props、暴露实例 API） |

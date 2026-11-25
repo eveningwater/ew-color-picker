@@ -15,6 +15,7 @@ const UTILS = '@ew-color-picker/utils';
 const SELECT = '@ew-color-picker/select';
 const INPUT_NUMBER = '@ew-color-picker/input-number';
 const CHECKBOX = '@ew-color-picker/checkbox';
+const TOOLTIP = '@ew-color-picker/tooltip';
 const AGGREGATE = '@ew-color-picker/ew-color-picker';
 const VUE = 'vue';
 const REACT = 'react';
@@ -25,6 +26,7 @@ const GLOBAL_NAMES = {
   [SELECT]: 'Select',
   [INPUT_NUMBER]: 'InputNumber',
   [CHECKBOX]: 'Checkbox',
+  [TOOLTIP]: 'Tooltip',
   [AGGREGATE]: 'ewColorPicker',
   [VUE]: 'Vue',
   [REACT]: 'React',
@@ -42,7 +44,7 @@ export const PACKAGES = {
   button: { pkgName: 'button', globalName: 'Button', external: [CORE, UTILS], exports: 'default' },
   input: { pkgName: 'input', globalName: 'Input', external: [CORE, UTILS], exports: 'default' },
   'input-number': { pkgName: 'input-number', globalName: 'InputNumber', external: [UTILS], exports: 'named' },
-  select: { pkgName: 'select', globalName: 'Select', external: [UTILS], exports: 'named' },
+  select: { pkgName: 'select', globalName: 'Select', external: [UTILS, TOOLTIP], exports: 'named' },
   checkbox: { pkgName: 'checkbox', globalName: 'Checkbox', external: [UTILS], exports: 'named' },
   predefine: { pkgName: 'predefine', globalName: 'Predefine', external: [CORE, UTILS], exports: 'default' },
   'color-mode': { pkgName: 'color-mode', globalName: 'ColorMode', distName: 'colorMode', external: [CORE, UTILS], exports: 'default' },
@@ -52,6 +54,12 @@ export const PACKAGES = {
     pkgName: 'gradient',
     globalName: 'Gradient',
     external: [CORE, UTILS, SELECT, INPUT_NUMBER, CHECKBOX],
+    exports: 'named',
+  },
+  tooltip: {
+    pkgName: 'tooltip',
+    globalName: 'Tooltip',
+    external: [UTILS],
     exports: 'named',
   },
   vue: {

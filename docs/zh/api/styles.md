@@ -19,9 +19,10 @@ import '@ew-color-picker/style/dist/input-number.css'
 | `index.css` | 颜色盒、面板、滑块、输入框、按钮、色板、模式切换器 |
 | `input-number.css` | 数字输入框组件 `.ew-input-number` 系列样式 |
 | `select.css` | 下拉选择组件 `.ew-select` 系列样式（使用 Select 时引入） |
+| `tooltip.css` | 悬浮提示工具类 `.ew-tooltip`（Select / Gradient 使用时引入） |
 
 ::: warning
-`index.css` 与 `input-number.css` 都需要引入。只引入 `index.css` 时，RGB / HSL 模式下的数字输入框会丢失样式；使用 Select 组件时还需额外引入 `select.css`。
+`index.css` 与 `input-number.css` 都需要引入。只引入 `index.css` 时，RGB / HSL 模式下的数字输入框会丢失样式；使用 Select 组件时还需额外引入 `select.css` 与 `tooltip.css`。
 :::
 
 ## 类名前缀

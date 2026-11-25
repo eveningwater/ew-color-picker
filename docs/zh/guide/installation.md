@@ -29,7 +29,7 @@ import '@ew-color-picker/style/dist/index.css'
 import '@ew-color-picker/style/dist/input-number.css'
 ```
 
-> `index.css` 是核心样式，`input-number.css` 是数字输入框组件的独立样式入口，**两者都需要引入**，否则 RGB / HSL 模式下的数字框会失去样式。使用 Select 组件时，再额外引入 `select.css`。
+> `index.css` 是核心样式，`input-number.css` 是数字输入框组件的独立样式入口，**两者都需要引入**，否则 RGB / HSL 模式下的数字框会失去样式。使用 Select 或 Gradient 组件时，再额外引入 `select.css` 与 `tooltip.css`。
 
 如果希望沿用 v1 的包名，也可以直接安装无 scope 的聚合入口包，二者等价：
 

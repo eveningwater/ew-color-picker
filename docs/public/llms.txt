@@ -47,6 +47,7 @@ Event-driven, plugin-based color picker with Hex / RGB / HSL support, alpha chan
 - [Panel Plugin](https://eveningwater.github.io/ew-color-picker/plugins/panel): The Panel plugin renders the saturation/value area with drag, touch support, auto placement and dynamic sizing.
 - [Predefine Plugin](https://eveningwater.github.io/ew-color-picker/plugins/predefine): Configure quick swatches with predefineColor, disable individual items, and update them at runtime.
 - [Select Plugin](https://eveningwater.github.io/ew-color-picker/plugins/select): The Select plugin and standalone dropdown component: options, methods, keyboard support and styling.
+- [Tooltip](https://eveningwater.github.io/ew-color-picker/plugins/tooltip): Standalone tooltip utility used by Select and other plugins — options, methods and positioning.
 
 ## 中文文档
 
@@ -82,4 +83,5 @@ Event-driven, plugin-based color picker with Hex / RGB / HSL support, alpha chan
 - [Panel 颜色面板插件](https://eveningwater.github.io/ew-color-picker/zh/plugins/panel): Panel 插件渲染饱和度/明度二维选择面板，支持拖拽与触摸、自动定位、面板尺寸自适应。
 - [Predefine 预定义颜色插件](https://eveningwater.github.io/ew-color-picker/zh/plugins/predefine): 用 predefineColor 配置一组快捷色块，支持逐项禁用、运行时更新与点击高亮。
 - [Select 下拉选择插件](https://eveningwater.github.io/ew-color-picker/zh/plugins/select): Select 插件与独立下拉组件：配置项、方法、键盘操作与样式。
+- [Tooltip 悬浮提示](https://eveningwater.github.io/ew-color-picker/zh/plugins/tooltip): 独立 tooltip 工具包，供 Select 等插件复用，也可直接用于自定义组件。
 

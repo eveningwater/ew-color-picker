@@ -87,6 +87,7 @@ Import individual plugin packages instead to ship only what you register.
 | `@ew-color-picker/gradient` | Multi-stop gradient editor (linear / radial / conic) |
 | `@ew-color-picker/select` | Themed select with truncated-text tooltip |
 | `@ew-color-picker/checkbox` | Themed checkbox used by the gradient editor |
+| `@ew-color-picker/tooltip` | Standalone tooltip utility (also usable in your own components) |
 | `@ew-color-picker/eyedropper` | Screen color picker via the native EyeDropper API (Chromium) |
 | `@ew-color-picker/copy-color` | Copy the current color to the clipboard |
 | `@ew-color-picker/vue` | Vue 3 wrapper (`v-model`, typed props, exposed instance API) |
