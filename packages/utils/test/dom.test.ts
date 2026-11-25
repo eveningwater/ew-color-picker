@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import {
   create,
   addClass,
@@ -14,6 +14,7 @@ import {
   insertNode,
   getRect,
   getOffset,
+  isTextTruncated,
   on,
   off
 } from '../src/dom';
@@ -213,4 +214,85 @@ describe('DOM Utils', () => {
       expect(clicked).toBe(false);
     });
   });
-}); 
+});
+
+describe('isTextTruncated', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+    document.body.innerHTML = '';
+  });
+
+  function createTextElement(width: number, scrollWidth: number): HTMLElement {
+    const el = document.createElement('span');
+    el.textContent = '一段会被截断的文本';
+    Object.defineProperty(el, 'offsetWidth', {
+      configurable: true,
+      value: width
+    });
+    Object.defineProperty(el, 'scrollWidth', {
+      configurable: true,
+      value: scrollWidth
+    });
+    document.body.appendChild(el);
+    return el;
+  }
+
+  it('returns false for null, undefined and empty elements', () => {
+    expect(isTextTruncated(null)).toBe(false);
+    expect(isTextTruncated(undefined)).toBe(false);
+    expect(isTextTruncated(document.createElement('span'))).toBe(false);
+  });
+
+  it('falls back to scrollWidth when Range is unavailable', () => {
+    vi.spyOn(document, 'createRange').mockImplementation(() => {
+      throw new Error('Range is not supported');
+    });
+
+    expect(isTextTruncated(createTextElement(100, 200))).toBe(true);
+    expect(isTextTruncated(createTextElement(100, 50))).toBe(false);
+  });
+
+  it('detects overflow with the Range width', () => {
+    vi.spyOn(document, 'createRange').mockReturnValue({
+      setStart: vi.fn(),
+      setEnd: vi.fn(),
+      getBoundingClientRect: () => ({ width: 120 })
+    } as unknown as Range);
+    vi.spyOn(window, 'getComputedStyle').mockReturnValue({
+      paddingLeft: '0px',
+      paddingRight: '0px'
+    } as unknown as CSSStyleDeclaration);
+
+    // scrollWidth 未溢出，但 Range 宽度溢出
+    expect(isTextTruncated(createTextElement(100, 50))).toBe(true);
+  });
+
+  it('adds horizontal padding to the Range width', () => {
+    vi.spyOn(document, 'createRange').mockReturnValue({
+      setStart: vi.fn(),
+      setEnd: vi.fn(),
+      getBoundingClientRect: () => ({ width: 95 })
+    } as unknown as Range);
+    vi.spyOn(window, 'getComputedStyle').mockReturnValue({
+      paddingLeft: '5px',
+      paddingRight: '5px'
+    } as unknown as CSSStyleDeclaration);
+
+    // 95 + 10 > 100，padding 让内容刚好溢出
+    expect(isTextTruncated(createTextElement(100, 50))).toBe(true);
+  });
+
+  it('returns false when neither Range nor scrollWidth overflows', () => {
+    vi.spyOn(document, 'createRange').mockReturnValue({
+      setStart: vi.fn(),
+      setEnd: vi.fn(),
+      getBoundingClientRect: () => ({ width: 80 })
+    } as unknown as Range);
+    vi.spyOn(window, 'getComputedStyle').mockReturnValue({
+      paddingLeft: '5px',
+      paddingRight: '5px'
+    } as unknown as CSSStyleDeclaration);
+
+    expect(isTextTruncated(createTextElement(100, 50))).toBe(false);
+  });
+});

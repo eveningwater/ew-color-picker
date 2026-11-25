@@ -5,6 +5,35 @@ description: ew-color-picker 各版本的变更记录，含修复、新增与文
 
 # 更新日志
 
+## 2.0.11
+
+### 新增
+
+- `@ew-color-picker/tooltip` 能力与 `el-tooltip` 对齐：12 种 `placement` 与视口内自动翻转/位移、`dark` / `light` 主题、箭头、`hover` / `click` / `focus` / `contextmenu` 触发、延迟展示/隐藏、自动关闭、受控可见、虚拟锚点、键盘操作与生命周期事件
+- 新增示例 `examples/20-tooltip.html`：覆盖主题、12 方位、四种触发方式、延迟与自动关闭、受控可见、虚拟锚点与禁用状态
+- `@ew-color-picker/utils` 新增 `clamp` 与 `placement` 模块（`Placement`、`PlacementSide`、`PlacementAlign`、`PLACEMENTS`、`isPlacement`、`parsePlacement`）
+
+### 重构
+
+- tooltip 中通用的方位解析与数值工具下沉到 `@ew-color-picker/utils`；tooltip 继续重新导出 `isTextTruncated`，保持既有用法兼容
+- tooltip 内部改用 utils 的 `$`、`getRect`、`getElementSize`、`getAttr` / `setAttr`、`isString`、`isFunction`、`isBoolean`、`isArray` 等工具函数
+
+### 修复
+
+- 调整 select 截断提示与触发器的间距为 6px，并关闭 `enterable`，避免浮层遮挡下拉交互
+- 打开状态下窗口滚动或尺寸变化时按帧合并重算 tooltip 位置，避免高频 reflow 与位置不同步
+- tooltip 隐藏时同步切换 `visibility`，不再残留不可见的交互层；`persistent: false` 时隐藏后销毁节点
+
+### 测试
+
+- 新增 tooltip 单元测试 75 个用例，覆盖定位与翻转、箭头、触发方式、运行时配置、生命周期与事件
+- 新增 `clamp`、`placement` 工具函数与 `isTextTruncated` 的单元测试
+
+### 文档
+
+- 中英文 tooltip 文档补充声明式/命令式用法、完整配置项、事件、方法与定位规则，并注明工具函数同时由 `@ew-color-picker/utils` 导出
+- 新增 tooltip 示例页，并在示例导航中加入入口
+
 ## 2.0.10
 
 ### 新增

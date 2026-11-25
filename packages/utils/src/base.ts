@@ -90,5 +90,15 @@ export const isPromise = (value: any): value is Promise<unknown> => {
  */
 export const handleClassName = (c?: string) => (c ? ` ${c}` : "");
 
+/**
+ * 把数值限制在 [min, max] 区间内
+ * @param value
+ * @param min
+ * @param max
+ * @returns
+ */
+export const clamp = (value: number, min: number, max: number) =>
+  Math.min(Math.max(value, min), max);
+
 // 重新导出type.ts中的函数
 export { isString, isFunction, isUndefined, isNull, isDeepArray, isDeepObject, throwError } from './type';

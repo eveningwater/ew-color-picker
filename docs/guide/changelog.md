@@ -5,6 +5,35 @@ description: Release notes for ew-color-picker, including fixes, features and do
 
 # Changelog
 
+## 2.0.11
+
+### Features
+
+- `@ew-color-picker/tooltip` now matches `el-tooltip`: 12 placements with automatic viewport flipping/shifting, `dark` / `light` effects, arrow, `hover` / `click` / `focus` / `contextmenu` triggers, show/hide delays, auto close, controlled visibility, virtual triggering, keyboard support and lifecycle events
+- Added `examples/20-tooltip.html`, covering themes, all 12 placements, the four trigger modes, delays and auto close, controlled visibility, virtual anchors and the disabled state
+- Added `clamp` and a `placement` module to `@ew-color-picker/utils` (`Placement`, `PlacementSide`, `PlacementAlign`, `PLACEMENTS`, `isPlacement`, `parsePlacement`)
+
+### Refactor
+
+- Moved the shared placement parsing and numeric helpers out of tooltip into `@ew-color-picker/utils`; tooltip keeps re-exporting `isTextTruncated` for backwards compatibility
+- Tooltip now uses the utils helpers `$`, `getRect`, `getElementSize`, `getAttr` / `setAttr`, `isString`, `isFunction`, `isBoolean` and `isArray`
+
+### Fixes
+
+- Tuned the select truncation hint to a 6px gap from its trigger and disabled `enterable`, so the floating panel no longer blocks the dropdown interaction
+- Tooltip position is now recalculated on scroll/resize while open, batched per animation frame to avoid high-frequency reflow and stale positions
+- Tooltip now toggles `visibility` when hiding, so no invisible interaction layer is left behind; with `persistent: false` the node is removed after hiding
+
+### Tests
+
+- Added 75 tooltip unit tests covering positioning and flipping, arrow placement, trigger modes, runtime options, lifecycle and events
+- Added unit tests for the `clamp` and `placement` helpers and for `isTextTruncated`
+
+### Docs
+
+- Documented declarative/imperative usage, the full option table, events, methods and positioning rules in the English and Chinese tooltip guides, noting that the helpers are also exported by `@ew-color-picker/utils`
+- Added a tooltip example page and linked it from the examples navigation
+
 ## 2.0.10
 
 ### Features

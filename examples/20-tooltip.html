@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>20. 悬浮提示（Tooltip）</title>
+    <link rel="stylesheet" href="../packages/style/dist/tooltip.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 24px; background: #f5f5f5; }
+        .demo { max-width: 960px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; }
+        h2 { margin-top: 0; }
+        h3 { font-size: 15px; margin: 0 0 14px; }
+        .item { margin-bottom: 24px; padding: 18px; border: 1px solid #e8e8e8; border-radius: 6px; }
+        .row { display: flex; flex-wrap: wrap; gap: 10px; }
+        .btn { padding: 8px 14px; border: 1px solid #d0d7de; border-radius: 6px; background: #fff; cursor: pointer; font-size: 13px; }
+        .btn:hover { border-color: #0ca6dc; color: #0ca6dc; }
+        .placement-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .placement-grid .btn { width: 100%; }
+        .result { margin-top: 12px; padding: 8px 10px; background: #f8f9fa; border-radius: 4px; font-family: monospace; font-size: 12px; color: #555; min-height: 18px; }
+        .hint { color: #999; font-size: 12px; margin-top: 10px; }
+        .virtual-anchor { width: 120px; height: 60px; display: flex; align-items: center; justify-content: center; margin-top: 10px; border: 1px dashed #0ca6dc; border-radius: 6px; color: #0ca6dc; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="demo">
+        <h2>20. 悬浮提示（Tooltip）</h2>
+
+        <div class="item">
+            <h3>1. 基础用法与主题（hover 触发）</h3>
+            <div class="row">
+                <button class="btn" id="basic-dark">默认 dark</button>
+                <button class="btn" id="basic-light">light 主题</button>
+                <button class="btn" id="basic-html">HTML 内容</button>
+            </div>
+            <div class="hint">默认 offset 12px、展示箭头，隐藏延迟 200ms。</div>
+        </div>
+
+        <div class="item">
+            <h3>2. 12 种方位（placement）</h3>
+            <div class="placement-grid" id="placements"></div>
+            <div class="hint">空间不足时会自动翻转到相反方位，可通过 fallbackPlacements 指定候选。</div>
+        </div>
+
+        <div class="item">
+            <h3>3. 触发方式（trigger）</h3>
+            <div class="row">
+                <button class="btn" id="trigger-hover">hover</button>
+                <button class="btn" id="trigger-click">click</button>
+                <button class="btn" id="trigger-focus">focus</button>
+                <button class="btn" id="trigger-contextmenu">右键 contextmenu</button>
+            </div>
+            <div class="hint">click 触发时，Enter / Space 也可打开；按 Esc 关闭。</div>
+        </div>
+
+        <div class="item">
+            <h3>4. 延迟展示与自动关闭</h3>
+            <div class="row">
+                <button class="btn" id="delay">showAfter 300ms / hideAfter 500ms</button>
+                <button class="btn" id="auto-close">展示后 2s 自动关闭</button>
+            </div>
+        </div>
+
+        <div class="item">
+            <h3>5. 受控可见（visible + 事件）</h3>
+            <div class="row">
+                <button class="btn" id="controlled-toggle">切换显示</button>
+            </div>
+            <div class="result" id="controlled-log">事件日志：无</div>
+        </div>
+
+        <div class="item">
+            <h3>6. 虚拟锚点 + 手动控制</h3>
+            <div class="row">
+                <button class="btn" id="virtual-show">手动 show()</button>
+                <button class="btn" id="virtual-hide">hide()</button>
+            </div>
+            <div class="virtual-anchor" id="virtual-anchor">虚拟锚点</div>
+            <div class="hint">virtualTriggering + virtualRef 使用任意元素或自定义 getBoundingClientRect 定位。</div>
+        </div>
+
+        <div class="item">
+            <h3>7. 禁用状态（disabled）</h3>
+            <div class="row">
+                <button class="btn" id="disabled-btn">hover 无反应</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { Tooltip } from '../packages/tooltip/src/index.ts';
+
+        // 1. 基础用法与主题
+        new Tooltip({ target: '#basic-dark', content: '这是一条默认的 dark 提示' });
+        new Tooltip({
+            target: '#basic-light',
+            content: '这是一条 light 主题提示',
+            effect: 'light'
+        });
+        new Tooltip({
+            target: '#basic-html',
+            content: '<b style="color:#67e8f9">富文本</b> 内容会按 HTML 解析',
+            rawContent: true
+        });
+
+        // 2. 12 种方位
+        const placements = [
+            'top-start', 'top', 'top-end',
+            'left-start', 'left', 'left-end',
+            'right-start', 'right', 'right-end',
+            'bottom-start', 'bottom', 'bottom-end'
+        ];
+        const grid = document.getElementById('placements');
+        placements.forEach((placement) => {
+            const btn = document.createElement('button');
+            btn.className = 'btn';
+            btn.textContent = placement;
+            grid.appendChild(btn);
+            new Tooltip({ target: btn, content: `placement: ${placement}`, placement });
+        });
+
+        // 3. 触发方式
+        new Tooltip({ target: '#trigger-hover', content: 'hover 触发', trigger: 'hover' });
+        new Tooltip({ target: '#trigger-click', content: 'click 触发，再次点击关闭', trigger: 'click' });
+        new Tooltip({ target: '#trigger-focus', content: 'focus 触发', trigger: 'focus' });
+        new Tooltip({ target: '#trigger-contextmenu', content: '右键触发', trigger: 'contextmenu' });
+
+        // 4. 延迟与自动关闭
+        new Tooltip({
+            target: '#delay',
+            content: '悬浮 300ms 后出现，移开 500ms 后消失',
+            showAfter: 300,
+            hideAfter: 500
+        });
+        new Tooltip({
+            target: '#auto-close',
+            content: '出现后 2 秒自动关闭',
+            autoClose: 2000
+        });
+
+        // 5. 受控可见
+        const controlledLog = document.getElementById('controlled-log');
+        let controlledVisible = false;
+        const controlledTooltip = new Tooltip({
+            target: '#controlled-toggle',
+            content: '受控模式：由外部 setOptions 控制显隐',
+            visible: false,
+            onVisibleChange(visible) {
+                controlledLog.textContent = `事件日志：visibleChange -> ${visible}`;
+            },
+            onShow() {
+                controlledLog.textContent = '事件日志：show';
+            },
+            onHide() {
+                controlledLog.textContent = '事件日志：hide';
+            }
+        });
+        document.getElementById('controlled-toggle').addEventListener('click', () => {
+            controlledVisible = !controlledVisible;
+            controlledTooltip.setOptions({ visible: controlledVisible });
+        });
+
+        // 6. 虚拟锚点 + 手动控制
+        const virtualAnchor = document.getElementById('virtual-anchor');
+        const virtualTooltip = new Tooltip({
+            virtualTriggering: true,
+            virtualRef: virtualAnchor,
+            content: '基于虚拟锚点定位的提示',
+            placement: 'top'
+        });
+        document.getElementById('virtual-show').addEventListener('click', () => {
+            virtualTooltip.show();
+        });
+        document.getElementById('virtual-hide').addEventListener('click', () => {
+            virtualTooltip.hide();
+        });
+
+        // 7. 禁用
+        new Tooltip({
+            target: '#disabled-btn',
+            content: '禁用后不会展示',
+            disabled: true
+        });
+    </script>
+</body>
+</html>

@@ -2,32 +2,97 @@
 // 类名前缀，可通过 @use ... with ($prefix: "my-") 自定义，需与 JS 侧 prefix 选项保持一致
 $prefix: "ew-" !default;
 
-// 悬浮提示（供 Select / Checkbox / Gradient 等复用）
+// 悬浮提示（供 Select / Checkbox / Gradient 等复用，能力对齐 el-tooltip）
 .#{$prefix}tooltip {
   position: fixed;
   z-index: 3000;
-  max-width: 240px;
-  padding: 4px 8px;
+  box-sizing: border-box;
+  max-width: var(--ew-tooltip-max-width, none);
+  padding: 5px 10px;
   border-radius: 4px;
-  background: rgba(0, 0, 0, 0.78);
-  color: #fff;
   font-family: inherit;
   font-size: 12px;
   line-height: 1.4;
-  white-space: normal;
+  text-align: left;
   word-break: break-word;
   pointer-events: none;
-  box-sizing: border-box;
   opacity: 0;
-  transform: translateY(-100%);
-  transition: opacity 0.15s;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+// 主题：dark（默认）
+.#{$prefix}tooltip--dark {
+  --ew-tooltip-bg: #303133;
+  --ew-tooltip-color: #fff;
+  --ew-tooltip-border-color: transparent;
+  --ew-tooltip-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+// 主题：light
+.#{$prefix}tooltip--light {
+  --ew-tooltip-bg: #fff;
+  --ew-tooltip-color: #303133;
+  --ew-tooltip-border-color: #e4e7ed;
+  --ew-tooltip-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.#{$prefix}tooltip--dark,
+.#{$prefix}tooltip--light {
+  background: var(--ew-tooltip-bg);
+  color: var(--ew-tooltip-color);
+  border: 1px solid var(--ew-tooltip-border-color);
+  box-shadow: var(--ew-tooltip-shadow);
 }
 
 .#{$prefix}tooltip--visible {
   opacity: 1;
+  visibility: visible;
 }
 
-// 上方空间不足时展示在锚点下方
-.#{$prefix}tooltip--bottom {
-  transform: none;
+// enterable：允许鼠标移入浮层内容
+.#{$prefix}tooltip--enterable {
+  pointer-events: auto;
+}
+
+.#{$prefix}tooltip__content {
+  display: block;
+}
+
+// 箭头：旋转方块，只给朝向视口外侧的两条边描边，内侧与浮层背景重合
+.#{$prefix}tooltip__arrow {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  background: inherit;
+  border: 1px solid transparent;
+  border-color: transparent;
+  transform: rotate(45deg);
+  pointer-events: none;
+  z-index: -1;
+}
+
+// 浮层在上方，箭头朝下：可见边为原始 right + bottom
+.#{$prefix}tooltip[data-placement^="top"] .#{$prefix}tooltip__arrow {
+  border-right-color: var(--ew-tooltip-border-color);
+  border-bottom-color: var(--ew-tooltip-border-color);
+}
+
+// 浮层在下方，箭头朝上：可见边为原始 left + top
+.#{$prefix}tooltip[data-placement^="bottom"] .#{$prefix}tooltip__arrow {
+  border-left-color: var(--ew-tooltip-border-color);
+  border-top-color: var(--ew-tooltip-border-color);
+}
+
+// 浮层在左侧，箭头朝右：可见边为原始 top + right
+.#{$prefix}tooltip[data-placement^="left"] .#{$prefix}tooltip__arrow {
+  border-top-color: var(--ew-tooltip-border-color);
+  border-right-color: var(--ew-tooltip-border-color);
+}
+
+// 浮层在右侧，箭头朝左：可见边为原始 left + bottom
+.#{$prefix}tooltip[data-placement^="right"] .#{$prefix}tooltip__arrow {
+  border-left-color: var(--ew-tooltip-border-color);
+  border-bottom-color: var(--ew-tooltip-border-color);
 }

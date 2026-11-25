@@ -1284,6 +1284,35 @@ Source: https://eveningwater.github.io/ew-color-picker/guide/changelog
 
 # Changelog
 
+## 2.0.11
+
+### Features
+
+- `@ew-color-picker/tooltip` now matches `el-tooltip`: 12 placements with automatic viewport flipping/shifting, `dark` / `light` effects, arrow, `hover` / `click` / `focus` / `contextmenu` triggers, show/hide delays, auto close, controlled visibility, virtual triggering, keyboard support and lifecycle events
+- Added `examples/20-tooltip.html`, covering themes, all 12 placements, the four trigger modes, delays and auto close, controlled visibility, virtual anchors and the disabled state
+- Added `clamp` and a `placement` module to `@ew-color-picker/utils` (`Placement`, `PlacementSide`, `PlacementAlign`, `PLACEMENTS`, `isPlacement`, `parsePlacement`)
+
+### Refactor
+
+- Moved the shared placement parsing and numeric helpers out of tooltip into `@ew-color-picker/utils`; tooltip keeps re-exporting `isTextTruncated` for backwards compatibility
+- Tooltip now uses the utils helpers `$`, `getRect`, `getElementSize`, `getAttr` / `setAttr`, `isString`, `isFunction`, `isBoolean` and `isArray`
+
+### Fixes
+
+- Tuned the select truncation hint to a 6px gap from its trigger and disabled `enterable`, so the floating panel no longer blocks the dropdown interaction
+- Tooltip position is now recalculated on scroll/resize while open, batched per animation frame to avoid high-frequency reflow and stale positions
+- Tooltip now toggles `visibility` when hiding, so no invisible interaction layer is left behind; with `persistent: false` the node is removed after hiding
+
+### Tests
+
+- Added 75 tooltip unit tests covering positioning and flipping, arrow placement, trigger modes, runtime options, lifecycle and events
+- Added unit tests for the `clamp` and `placement` helpers and for `isTextTruncated`
+
+### Docs
+
+- Documented declarative/imperative usage, the full option table, events, methods and positioning rules in the English and Chinese tooltip guides, noting that the helpers are also exported by `@ew-color-picker/utils`
+- Added a tooltip example page and linked it from the examples navigation
+
 ## 2.0.10
 
 ### Features
@@ -4061,11 +4090,13 @@ Source: https://eveningwater.github.io/ew-color-picker/plugins/tooltip
 
 `@ew-color-picker/tooltip` is the floating hint used by Select (when the selected value or an option is truncated) and available to any other component you build. It is a plain DOM utility, not a core plugin: import it wherever you need a tooltip.
 
+Its feature set mirrors Element Plus `el-tooltip`: 12 placements with viewport flipping/shifting, `dark` / `light` effects, arrow, configurable triggers, show/hide delays, controlled visibility, virtual triggering, keyboard support and lifecycle events.
+
 | Item | Value |
 | --- | --- |
 | Package | `@ew-color-picker/tooltip` |
 | Class | `Tooltip` |
-| Helper | `isTextTruncated(el)` |
+| Helper | `isTextTruncated(el)` — also exported by `@ew-color-picker/utils` |
 | Styles | `@ew-color-picker/style/dist/tooltip.css` |
 
 ::: warning Extra stylesheet
@@ -4077,6 +4108,27 @@ The Select and Gradient components rely on it as well.
 
 ## Usage
 
+Declarative mode — pass a trigger element and let the tooltip manage its own events:
+
+```ts
+import Tooltip from '@ew-color-picker/tooltip'
+
+const tooltip = new Tooltip({
+  target: '#save-btn',
+  content: 'Save the current color',
+  placement: 'top',
+  effect: 'light',
+})
+
+// update options later
+tooltip.setOptions({ placement: 'bottom', effect: 'dark' })
+
+// remove node and listeners when the owner is destroyed
+tooltip.destroy()
+```
+
+Imperative mode — useful when content depends on runtime state (this is how Select shows truncated text):
+
 ```ts
 import Tooltip, { isTextTruncated } from '@ew-color-picker/tooltip'
 
@@ -4086,10 +4138,7 @@ if (isTextTruncated(target)) {
   tooltip.show(target.textContent!.trim(), target)
 }
 
-// hide without removing the node
 tooltip.hide()
-
-// remove the node when the owner is destroyed
 tooltip.destroy()
 ```
 
@@ -4098,27 +4147,99 @@ tooltip.destroy()
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
 | `prefix` | `string` | `'ew-'` | Class prefix; keep it in sync with the picker prefix |
-| `container` | `HTMLElement` | `document.body` | Parent element the tooltip node is appended to |
-| `offset` | `number` | `6` | Gap between the tooltip and its anchor, in px |
-| `className` | `string` | `''` | Extra class name applied to the tooltip node |
+| `target` | `HTMLElement \| string` | — | Trigger element (or selector); bind trigger events automatically |
+| `content` | `string \| HTMLElement` | — | Tooltip content; strings may contain HTML when `rawContent` is on |
+| `rawContent` | `boolean` | `false` | Treat string content as HTML |
+| `effect` | `'dark' \| 'light'` | `'dark'` | Theme |
+| `placement` | `TooltipPlacement` | `'bottom'` | Preferred placement, 12 values (`top`, `top-start`, `left-end`, …) |
+| `fallbackPlacements` | `TooltipPlacement[]` | `[]` | Candidates tried when the preferred placement overflows; defaults to the opposite side |
+| `visible` | `boolean` | — | Controlled visibility; once passed, update it through `setOptions({ visible })` |
+| `disabled` | `boolean` | `false` | Ignore every trigger and show request |
+| `offset` | `number` | `12` | Gap between the tooltip and its anchor, in px |
+| `arrowOffset` | `number` | `5` | Minimum distance between the arrow and the tooltip edge |
+| `showArrow` | `boolean` | `true` | Render the arrow |
+| `showAfter` | `number` | `0` | Delay before showing (ms) |
+| `hideAfter` | `number` | `200` | Delay before hiding after the pointer leaves (ms) |
+| `autoClose` | `number` | `0` | Hide automatically N ms after showing; `0` disables |
+| `popperClass` | `string` | `''` | Extra class name on the tooltip node |
+| `popperStyle` | `string \| Record<string, string>` | `''` | Inline style on the tooltip node |
+| `appendTo` | `HTMLElement \| string` | `document.body` | Parent the tooltip node is appended to |
+| `teleported` | `boolean` | `true` | `false` renders the node next to the trigger |
+| `enterable` | `boolean` | `true` | Allow the pointer to move into the tooltip content |
+| `trigger` | `TooltipTrigger \| TooltipTrigger[]` | `'hover'` | `hover`, `click`, `focus`, `contextmenu`; arrays combine them |
+| `virtualTriggering` | `boolean` | `false` | Position from `virtualRef` instead of a DOM trigger |
+| `virtualRef` | `HTMLElement \| { getBoundingClientRect() }` | `null` | Virtual anchor used with `virtualTriggering` |
+| `triggerKeys` | `string[]` | `['Enter', 'Space']` | Keys that open a `click`-triggered tooltip |
+| `persistent` | `boolean` | `true` | Keep the node in the DOM after hiding |
+| `transition` | `string` | `''` | Extra class name for a custom transition |
+| `ariaLabel` | `string` | `''` | `aria-label` of the tooltip node |
+| `focusOnTarget` | `boolean` | `false` | Move focus back to the trigger after hiding |
+| `popperOptions` | `{ strategy?: 'fixed' \| 'absolute' }` | `{ strategy: 'fixed' }` | Positioning strategy: viewport or document coordinates |
+| `className` | `string` | `''` | Legacy alias of `popperClass` |
+| `container` | `HTMLElement` | — | Legacy alias of `appendTo` |
+
+## Events
+
+Pass callbacks as options (`onBeforeShow` …) or subscribe with `on()`:
+
+```ts
+tooltip.on('show', () => console.log('shown'))
+tooltip.on('visibleChange', (visible) => console.log(visible))
+```
+
+| Event | Payload | Description |
+| --- | --- | --- |
+| `beforeShow` | `Event \| undefined` | Fired before the tooltip becomes visible |
+| `show` | `Event \| undefined` | Fired after the tooltip becomes visible |
+| `beforeHide` | `Event \| undefined` | Fired before hiding |
+| `hide` | `Event \| undefined` | Fired after hiding |
+| `visibleChange` | `boolean` | Visibility requested/changed; use it with controlled `visible` |
 
 ## Methods
 
 | Method | Description |
 | --- | --- |
-| `show(text, anchor)` | Show the hint; empty text behaves like `hide()` |
-| `hide()` | Hide the hint but keep the node |
+| `show(content?, anchor?)` | Show the hint; empty content behaves like `hide()` |
+| `hide()` | Hide immediately but keep the node (unless `persistent` is `false`) |
+| `onOpen()` / `onClose()` | Same names as the exposed `el-tooltip` API |
 | `isVisible()` | Whether the hint is currently visible |
-| `getElement()` | Return the tooltip node |
-| `destroy()` | Remove the node and release the instance |
+| `getElement()` / `getContentElement()` | Tooltip node / content node |
+| `getTrigger()` | Resolved trigger element |
+| `isFocusInsideContent()` | Whether focus is inside the tooltip content |
+| `updatePopper()` | Recalculate position and arrow |
+| `setContent(content)` | Replace content while keeping the current state |
+| `setOptions(options)` | Merge new options at runtime |
+| `on(event, handler)` / `off(event, handler?)` | Subscribe / unsubscribe lifecycle events |
+| `destroy()` | Remove the node, timers and listeners |
 
 ## Positioning
 
-The node is `position: fixed` and sits above the anchor. `show()` measures the node and flips it below the anchor (adding the `--bottom` modifier) when there is not enough room above. Position is recalculated on every `show()` call.
+The node uses `position: fixed` (or `absolute` with `popperOptions.strategy`) and is placed on the anchor with the requested placement. It flips to `fallbackPlacements` (opposite side by default) when the preferred side does not fit, then shifts along the cross axis to stay inside the viewport. Position is recalculated on show, on `updatePopper()`, and on window scroll/resize while open.
+
+The arrow follows the anchor center and is clamped by `arrowOffset`.
+
+## Accessibility
+
+When visible, the trigger receives `aria-describedby` pointing at the tooltip node, which carries `role="tooltip"` and an optional `aria-label`. `Escape` hides the tooltip; `focusOnTarget` returns focus to the trigger.
 
 ## Classes
 
-`.ew-tooltip`, `.ew-tooltip--visible` and `.ew-tooltip--bottom`. The prefix follows the `prefix` option, so a `my-` prefix produces `.my-tooltip`.
+`.ew-tooltip`, `.ew-tooltip--dark`, `.ew-tooltip--light`, `.ew-tooltip--visible`, `.ew-tooltip--enterable`, `.ew-tooltip__content`, `.ew-tooltip__arrow`, plus a `data-placement` attribute on both the node and the arrow. The prefix follows the `prefix` option, so a `my-` prefix produces `.my-tooltip`.
+
+## Notes
+
+- `el-tooltip` slots are replaced by `content` (string / `HTMLElement`) and a real trigger element (`target`); the default slot has no direct equivalent in vanilla DOM.
+- `transition` accepts a class name; provide the matching CSS yourself. The default fade is built in.
+- `rawContent` renders HTML as-is — sanitize untrusted input yourself.
+
+## Examples
+
+A complete runnable playground lives in `examples/20-tooltip.html`, covering the dark / light themes, all 12 placements, the four trigger modes, delays and auto close, controlled visibility, virtual anchors and the disabled state.
+
+```bash
+pnpm example
+# open http://localhost:3000/examples/20-tooltip.html
+```
 
 ## See also
 
@@ -5837,6 +5958,35 @@ new ewColorPicker({
 Source: https://eveningwater.github.io/ew-color-picker/zh/guide/changelog
 
 # 更新日志
+
+## 2.0.11
+
+### 新增
+
+- `@ew-color-picker/tooltip` 能力与 `el-tooltip` 对齐：12 种 `placement` 与视口内自动翻转/位移、`dark` / `light` 主题、箭头、`hover` / `click` / `focus` / `contextmenu` 触发、延迟展示/隐藏、自动关闭、受控可见、虚拟锚点、键盘操作与生命周期事件
+- 新增示例 `examples/20-tooltip.html`：覆盖主题、12 方位、四种触发方式、延迟与自动关闭、受控可见、虚拟锚点与禁用状态
+- `@ew-color-picker/utils` 新增 `clamp` 与 `placement` 模块（`Placement`、`PlacementSide`、`PlacementAlign`、`PLACEMENTS`、`isPlacement`、`parsePlacement`）
+
+### 重构
+
+- tooltip 中通用的方位解析与数值工具下沉到 `@ew-color-picker/utils`；tooltip 继续重新导出 `isTextTruncated`，保持既有用法兼容
+- tooltip 内部改用 utils 的 `$`、`getRect`、`getElementSize`、`getAttr` / `setAttr`、`isString`、`isFunction`、`isBoolean`、`isArray` 等工具函数
+
+### 修复
+
+- 调整 select 截断提示与触发器的间距为 6px，并关闭 `enterable`，避免浮层遮挡下拉交互
+- 打开状态下窗口滚动或尺寸变化时按帧合并重算 tooltip 位置，避免高频 reflow 与位置不同步
+- tooltip 隐藏时同步切换 `visibility`，不再残留不可见的交互层；`persistent: false` 时隐藏后销毁节点
+
+### 测试
+
+- 新增 tooltip 单元测试 75 个用例，覆盖定位与翻转、箭头、触发方式、运行时配置、生命周期与事件
+- 新增 `clamp`、`placement` 工具函数与 `isTextTruncated` 的单元测试
+
+### 文档
+
+- 中英文 tooltip 文档补充声明式/命令式用法、完整配置项、事件、方法与定位规则，并注明工具函数同时由 `@ew-color-picker/utils` 导出
+- 新增 tooltip 示例页，并在示例导航中加入入口
 
 ## 2.0.10
 
@@ -9050,11 +9200,13 @@ Source: https://eveningwater.github.io/ew-color-picker/zh/plugins/tooltip
 
 `@ew-color-picker/tooltip` 是 Select（选中值或选项文字被截断时）等插件使用的悬浮提示，也可以直接用于你自己的组件。它是普通 DOM 工具，不是核心插件，按需引入即可。
 
+能力对齐 Element Plus 的 `el-tooltip`：12 种方位并自动翻转/位移、`dark` / `light` 主题、箭头、多种触发方式、展示/隐藏延迟、受控可见、虚拟锚点、键盘支持与生命周期事件。
+
 | 项 | 值 |
 | --- | --- |
 | 包 | `@ew-color-picker/tooltip` |
 | 类 | `Tooltip` |
-| 工具函数 | `isTextTruncated(el)` |
+| 工具函数 | `isTextTruncated(el)` —— 同时由 `@ew-color-picker/utils` 导出 |
 | 样式 | `@ew-color-picker/style/dist/tooltip.css` |
 
 ::: warning 需要额外样式
@@ -9066,6 +9218,27 @@ Select 与 Gradient 组件同样依赖它。
 
 ## 使用
 
+声明式：传入触发元素，由实例自己管理事件。
+
+```ts
+import Tooltip from '@ew-color-picker/tooltip'
+
+const tooltip = new Tooltip({
+  target: '#save-btn',
+  content: '保存当前颜色',
+  placement: 'top',
+  effect: 'light',
+})
+
+// 运行时更新配置
+tooltip.setOptions({ placement: 'bottom', effect: 'dark' })
+
+// 宿主销毁时移除节点与监听
+tooltip.destroy()
+```
+
+命令式：内容依赖运行时状态时使用（Select 截断提示就是这样做的）。
+
 ```ts
 import Tooltip, { isTextTruncated } from '@ew-color-picker/tooltip'
 
@@ -9075,10 +9248,7 @@ if (isTextTruncated(target)) {
   tooltip.show(target.textContent!.trim(), target)
 }
 
-// 隐藏但保留节点
 tooltip.hide()
-
-// 宿主销毁时移除节点
 tooltip.destroy()
 ```
 
@@ -9087,27 +9257,99 @@ tooltip.destroy()
 | 配置 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `prefix` | `string` | `'ew-'` | 类名前缀，需与选择器前缀保持一致 |
-| `container` | `HTMLElement` | `document.body` | tooltip 节点的挂载父元素 |
-| `offset` | `number` | `6` | 与锚点的间距（px） |
-| `className` | `string` | `''` | 附加到节点上的自定义类名 |
+| `target` | `HTMLElement \| string` | — | 触发元素（或选择器），自动绑定触发事件 |
+| `content` | `string \| HTMLElement` | — | 提示内容；`rawContent` 开启时字符串按 HTML 解析 |
+| `rawContent` | `boolean` | `false` | 是否把字符串内容按 HTML 渲染 |
+| `effect` | `'dark' \| 'light'` | `'dark'` | 主题 |
+| `placement` | `TooltipPlacement` | `'bottom'` | 首选方位，支持 12 种（`top`、`top-start`、`left-end` 等） |
+| `fallbackPlacements` | `TooltipPlacement[]` | `[]` | 首选方位放不下时的候选方位，默认取反方向 |
+| `visible` | `boolean` | — | 受控可见状态；传入后通过 `setOptions({ visible })` 更新 |
+| `disabled` | `boolean` | `false` | 忽略所有触发与展示请求 |
+| `offset` | `number` | `12` | 与锚点的间距（px） |
+| `arrowOffset` | `number` | `5` | 箭头距离浮层边缘的最小距离（px） |
+| `showArrow` | `boolean` | `true` | 是否展示箭头 |
+| `showAfter` | `number` | `0` | 展示延迟（ms） |
+| `hideAfter` | `number` | `200` | 指针离开后的隐藏延迟（ms） |
+| `autoClose` | `number` | `0` | 展示后自动隐藏的时长（ms），0 表示不自动隐藏 |
+| `popperClass` | `string` | `''` | 浮层节点上的自定义类名 |
+| `popperStyle` | `string \| Record<string, string>` | `''` | 浮层节点上的内联样式 |
+| `appendTo` | `HTMLElement \| string` | `document.body` | 浮层挂载的父元素 |
+| `teleported` | `boolean` | `true` | 为 `false` 时挂到触发元素同级 |
+| `enterable` | `boolean` | `true` | 是否允许鼠标移入浮层内容 |
+| `trigger` | `TooltipTrigger \| TooltipTrigger[]` | `'hover'` | `hover`、`click`、`focus`、`contextmenu`，可用数组组合 |
+| `virtualTriggering` | `boolean` | `false` | 使用 `virtualRef` 定位，不绑定触发事件 |
+| `virtualRef` | `HTMLElement \| { getBoundingClientRect() }` | `null` | 虚拟锚点 |
+| `triggerKeys` | `string[]` | `['Enter', 'Space']` | `click` 触发时，可打开提示的按键 |
+| `persistent` | `boolean` | `true` | 隐藏后是否保留 DOM |
+| `transition` | `string` | `''` | 自定义过渡类名 |
+| `ariaLabel` | `string` | `''` | 浮层节点的 `aria-label` |
+| `focusOnTarget` | `boolean` | `false` | 隐藏后是否把焦点移回触发元素 |
+| `popperOptions` | `{ strategy?: 'fixed' \| 'absolute' }` | `{ strategy: 'fixed' }` | 定位参照：视口或文档 |
+| `className` | `string` | `''` | 旧版别名，等同于 `popperClass` |
+| `container` | `HTMLElement` | — | 旧版别名，等同于 `appendTo` |
+
+## 事件
+
+既可以在配置里传回调（`onBeforeShow` 等），也可以用 `on()` 订阅：
+
+```ts
+tooltip.on('show', () => console.log('已展示'))
+tooltip.on('visibleChange', (visible) => console.log(visible))
+```
+
+| 事件 | 参数 | 说明 |
+| --- | --- | --- |
+| `beforeShow` | `Event \| undefined` | 展示前触发 |
+| `show` | `Event \| undefined` | 展示后触发 |
+| `beforeHide` | `Event \| undefined` | 隐藏前触发 |
+| `hide` | `Event \| undefined` | 隐藏后触发 |
+| `visibleChange` | `boolean` | 可见状态请求/变化；配合受控 `visible` 使用 |
 
 ## 方法
 
 | 方法 | 说明 |
 | --- | --- |
-| `show(text, anchor)` | 展示提示；空文案等同于 `hide()` |
-| `hide()` | 隐藏提示，节点保留 |
+| `show(content?, anchor?)` | 展示提示；空内容等同于 `hide()` |
+| `hide()` | 立即隐藏，默认保留节点（`persistent: false` 时移除） |
+| `onOpen()` / `onClose()` | 与 `el-tooltip` 暴露的同名方法对齐 |
 | `isVisible()` | 当前是否可见 |
-| `getElement()` | 获取 tooltip 节点 |
-| `destroy()` | 移除节点并释放实例 |
+| `getElement()` / `getContentElement()` | 获取浮层节点 / 内容节点 |
+| `getTrigger()` | 获取解析后的触发元素 |
+| `isFocusInsideContent()` | 焦点是否位于浮层内容内 |
+| `updatePopper()` | 重新计算位置与箭头 |
+| `setContent(content)` | 更新内容，保持当前状态 |
+| `setOptions(options)` | 运行时合并配置 |
+| `on(event, handler)` / `off(event, handler?)` | 订阅 / 取消订阅生命周期事件 |
+| `destroy()` | 移除节点、定时器与监听 |
 
 ## 定位规则
 
-节点使用 `position: fixed`，默认位于锚点上方。`show()` 时会测量节点高度，上方空间不足则翻转到锚点下方并追加 `--bottom` 修饰类。每次 `show()` 都会重新计算位置。
+节点使用 `position: fixed`（`popperOptions.strategy: 'absolute'` 时改为文档坐标）。按 `placement` 计算位置：首选方位在视口内放不下时，依次尝试 `fallbackPlacements`（默认反方向），再沿交叉轴平移，确保不超出视口。展示时、调用 `updatePopper()` 时，以及打开状态下的窗口滚动/尺寸变化都会重新计算。
+
+箭头跟随锚点中心，并通过 `arrowOffset` 限制在浮层边缘内。
+
+## 无障碍
+
+可见时，触发元素会被写入指向浮层的 `aria-describedby`；浮层带 `role="tooltip"` 和可选的 `aria-label`。按 `Escape` 可关闭；`focusOnTarget` 为真时关闭后焦点回到触发元素。
 
 ## 类名
 
-`.ew-tooltip`、`.ew-tooltip--visible`、`.ew-tooltip--bottom`。前缀跟随 `prefix` 配置，例如传入 `my-` 时会生成 `.my-tooltip`。
+`.ew-tooltip`、`.ew-tooltip--dark`、`.ew-tooltip--light`、`.ew-tooltip--visible`、`.ew-tooltip--enterable`、`.ew-tooltip__content`、`.ew-tooltip__arrow`，节点与箭头上还有 `data-placement` 属性。前缀跟随 `prefix` 配置，例如传入 `my-` 时会生成 `.my-tooltip`。
+
+## 说明
+
+- `el-tooltip` 的插槽在原生 DOM 中由 `content`（字符串 / `HTMLElement`）和真实触发元素（`target`）替代，默认插槽没有直接对应物。
+- `transition` 只是额外类名，需要你自己提供对应 CSS；默认淡入淡出已内置。
+- `rawContent` 会原样渲染 HTML，请自行对不可信内容做转义。
+
+## 示例
+
+仓库内提供了可直接运行的完整示例 `examples/20-tooltip.html`，覆盖 dark / light 主题、12 种方位、四种触发方式、延迟与自动关闭、受控可见、虚拟锚点与禁用状态。
+
+```bash
+pnpm example
+# 打开 http://localhost:3000/examples/20-tooltip.html
+```
 
 ## 相关文档
 

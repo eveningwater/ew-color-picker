@@ -269,7 +269,12 @@ export default class Select {
 
   private ensureTooltip(): Tooltip {
     if (!this.tooltip) {
-      this.tooltip = new Tooltip({ prefix: this.prefix });
+      // 截断提示保持贴近触发器的 6px 间距（tooltip 默认 12px）
+      this.tooltip = new Tooltip({
+        prefix: this.prefix,
+        offset: 6,
+        enterable: false,
+      });
     }
     return this.tooltip;
   }

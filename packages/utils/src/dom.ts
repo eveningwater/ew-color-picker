@@ -185,6 +185,41 @@ export const getOffset = (el: HTMLElement | null) => {
   };
 };
 
+// 内容是否被容器横向截断。
+// 用 Range 的宽度判断比 scrollWidth 更可靠，可规避 Firefox 的已知问题：
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1074543#c3
+export const isTextTruncated = (
+  el: HTMLElement | null | undefined
+): boolean => {
+  if (!el || !el.childNodes || !el.childNodes.length) {
+    return false;
+  }
+
+  if (
+    typeof document !== "undefined" &&
+    typeof document.createRange === "function"
+  ) {
+    try {
+      const range = document.createRange();
+      range.setStart(el, 0);
+      range.setEnd(el, el.childNodes.length);
+      const rangeWidth = range.getBoundingClientRect().width;
+      // 元素带 padding 时，Range 宽度不包含 padding，需要补上
+      const paddingLeft =
+        parseInt(getStyle(el, "paddingLeft") as string, 10) || 0;
+      const paddingRight =
+        parseInt(getStyle(el, "paddingRight") as string, 10) || 0;
+      if (rangeWidth + paddingLeft + paddingRight > el.offsetWidth) {
+        return true;
+      }
+    } catch {
+      // Range 不可用时回退到尺寸对比
+    }
+  }
+
+  return el.scrollWidth > el.offsetWidth;
+};
+
 // 计算面板位置
 export const calculatePanelPosition = (
   triggerElement: HTMLElement,

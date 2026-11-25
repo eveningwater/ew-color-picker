@@ -340,6 +340,10 @@ describe("Select tooltip", () => {
       configurable: true,
       value: 100,
     });
+    Object.defineProperty(el, "offsetWidth", {
+      configurable: true,
+      value: 100,
+    });
   }
 
   function getValueText(): HTMLElement {

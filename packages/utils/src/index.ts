@@ -3,6 +3,7 @@ import { isString } from "./type";
 export * from "./assert";
 export * from "./type";
 export * from "./dom";
+export * from "./placement";
 export * from "./drag";
 export {
   DEFAULT_PANEL_WIDTH,
