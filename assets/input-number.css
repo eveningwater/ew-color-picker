@@ -1,9 +1,8 @@
-@charset "UTF-8";
 .ew-input-number {
   display: flex;
   align-items: stretch;
-  border: 1.5px solid #d9d9d9;
-  border-radius: 8px;
+  border: var(--input-number-border-width, 1.5px) solid #d9d9d9;
+  border-radius: var(--input-number-radius, 8px);
   background: #fff;
   overflow: hidden;
   width: 100%;
@@ -12,7 +11,7 @@
   max-width: none;
   box-sizing: border-box;
   transition: border-color 0.2s;
-  height: 32px; /* 统一高度 */
+  height: var(--input-number-height, 32px);
 }
 
 .ew-input-number:focus-within {
@@ -23,26 +22,28 @@
   flex: 1;
   border: none;
   outline: none;
-  padding: 4px 10px;
-  font-size: 14px;
+  padding: var(--input-number-input-padding, 4px 10px);
+  font-size: var(--input-number-input-font-size, 14px);
   background: transparent;
   min-width: 0;
-  height: 100%; /* 继承父容器高度 */
+  height: 100%;
   box-sizing: border-box;
   color: #222;
   font-family: inherit;
+  line-height: 1;
 }
 
 .ew-input-number__buttons {
-  width: 32px;
-  min-width: 24px;
+  width: var(--input-number-buttons-width, 32px);
+  min-width: var(--input-number-buttons-min-width, 24px);
   display: flex;
   flex-direction: column;
   background: #fff;
-  height: 100%; /* 继承父容器高度 */
+  height: 100%;
   padding: 0;
   margin: 0;
-  border-left: 1px solid #e5e6eb;
+  border-left: var(--input-number-border-width, 1.5px) solid #e5e6eb;
+  flex-shrink: 0;
 }
 
 .ew-input-number__button {
@@ -71,9 +72,9 @@
 }
 
 .ew-input-number__icon {
-  width: 10px;
-  height: 10px;
-  flex: 0 0 10px;
+  width: var(--input-number-icon-size, 10px);
+  height: var(--input-number-icon-size, 10px);
+  flex: 0 0 var(--input-number-icon-size, 10px);
   display: block;
   margin: 0 auto;
   pointer-events: none;

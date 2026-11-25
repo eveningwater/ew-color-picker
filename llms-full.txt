@@ -1284,6 +1284,28 @@ Source: https://eveningwater.github.io/ew-color-picker/guide/changelog
 
 # Changelog
 
+## 2.0.12
+
+### Features
+
+- `@ew-color-picker/input` now ships a standalone `Input` component with `value`, `placeholder`, `size`, `type`, `disabled`, `readonly`, `onChange` / `onFocus` / `onBlur` / `onEnter`, usable without the color picker
+- `@ew-color-picker/button` now ships a standalone `Button` component with `default` / `primary` / `danger` / `text` types, three sizes, `block`, `disabled` and `onClick`
+- Added style entries `@ew-color-picker/style/dist/input.css` and `@ew-color-picker/style/dist/button.css`
+- Added `examples/21-select.html` (standalone Select), `examples/22-input.html` and `examples/23-button.html`, together with navigation entries
+
+### Refactor
+
+- `@ew-color-picker/input` and `@ew-color-picker/button` keep their plugin default export and additionally expose the standalone components as named exports; UMD `exports` switched to `named`
+- Example 22 now demonstrates the standalone Input component instead of the color input plugin
+
+### Tests
+
+- Added 12 unit tests for the standalone Input and Button components
+
+### Docs
+
+- Added a “Standalone usage” section to the English/Chinese input and button docs and package READMEs
+
 ## 2.0.11
 
 ### Features
@@ -2763,6 +2785,34 @@ const picker = new ewColorPicker({
 })
 ```
 
+## Standalone Button component
+
+The package also exports a generic button that works without the color picker (import `button.css` separately).
+
+```ts
+import { Button } from '@ew-color-picker/button'
+import '@ew-color-picker/style/dist/button.css'
+
+const button = new Button({
+  text: 'Confirm',
+  type: 'primary',
+  size: 'default',
+  onClick: () => console.log('clicked'),
+})
+
+document.querySelector('#app')!.appendChild(button.getElement())
+
+button.setText('Submit')
+button.setDisabled(true)
+button.destroy()
+```
+
+Options: `text`, `type` (`default | primary | danger | text`), `size`, `disabled`, `block`, `nativeType`, `prefix`, `onClick`.
+
+Methods: `setText()`, `setDisabled()`, `setType()`, `isDisabled()`, `getElement()`, `destroy()`.
+
+See [examples/23-button.html](https://github.com/eveningwater/ew-color-picker/blob/master/examples/23-button.html).
+
 ## Related
 
 - [Events · clear / sure](../api/events.md) · [Options · clearText](../api/options.md#labels)
@@ -3719,6 +3769,35 @@ const picker = new ewColorPicker({
   changeColor: (rgba) => console.log(rgba),
 })
 ```
+
+## Standalone Input component
+
+The package also exports a generic input that works without the color picker (import `input.css` separately).
+
+```ts
+import { Input } from '@ew-color-picker/input'
+import '@ew-color-picker/style/dist/input.css'
+
+const input = new Input({
+  value: '',
+  placeholder: 'Type something',
+  size: 'default',
+  onChange: (value) => console.log(value),
+  onEnter: (value) => console.log('submit', value),
+})
+
+document.querySelector('#app')!.appendChild(input.getElement())
+
+input.setValue('hello')
+input.setDisabled(true)
+input.destroy()
+```
+
+Options: `value`, `placeholder`, `size` (`small | default | large`), `type`, `disabled`, `readonly`, `prefix`, `onChange`, `onFocus`, `onBlur`, `onEnter`.
+
+Methods: `getValue()`, `setValue(value, triggerChange?)`, `setPlaceholder()`, `setDisabled()`, `setReadonly()`, `focus()`, `getElement()`, `destroy()`.
+
+See [examples/22-input.html](https://github.com/eveningwater/ew-color-picker/blob/master/examples/22-input.html).
 
 ## Related
 
@@ -5959,6 +6038,28 @@ Source: https://eveningwater.github.io/ew-color-picker/zh/guide/changelog
 
 # 更新日志
 
+## 2.0.12
+
+### 新增
+
+- `@ew-color-picker/input` 新增独立 `Input` 组件：支持 `value`、`placeholder`、`size`、`type`、`disabled`、`readonly` 与 `onChange` / `onFocus` / `onBlur` / `onEnter`，可脱离颜色选择器使用
+- `@ew-color-picker/button` 新增独立 `Button` 组件：支持 `default` / `primary` / `danger` / `text` 类型、三种尺寸、`block`、`disabled` 与 `onClick`
+- 新增样式入口 `@ew-color-picker/style/dist/input.css`、`@ew-color-picker/style/dist/button.css`
+- 新增示例 `examples/21-select.html`（Select 独立使用）、`examples/22-input.html`、`examples/23-button.html`，并加入示例导航
+
+### 重构
+
+- `@ew-color-picker/input`、`@ew-color-picker/button` 保留原插件默认导出，同时以具名导出暴露独立组件，UMD 产物 `exports` 调整为 `named`
+- 示例 22 由「颜色输入框插件」改为独立 Input 组件演示
+
+### 测试
+
+- 新增 Input、Button 独立组件单元测试共 12 个用例
+
+### 文档
+
+- 中英文 input / button 文档与包 README 新增「独立使用」章节
+
 ## 2.0.11
 
 ### 新增
@@ -7568,6 +7669,43 @@ const picker = new ewColorPicker({
 })
 ```
 
+## 独立使用 Button 组件
+
+该包同时导出一个不依赖颜色选择器的通用按钮，可用于任意操作按钮（样式需单独引入 `button.css`）。
+
+```ts
+import { Button } from '@ew-color-picker/button'
+import '@ew-color-picker/style/dist/button.css'
+
+const button = new Button({
+  text: '确定',
+  type: 'primary',
+  size: 'default',
+  onClick: () => console.log('clicked'),
+})
+
+document.querySelector('#app')!.appendChild(button.getElement())
+
+button.setText('提交')
+button.setDisabled(true)
+button.destroy()
+```
+
+| 选项 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| text | string | `''` | 按钮文案 |
+| type | `default \| primary \| danger \| text` | `default` | 类型 |
+| size | `small \| default \| large` | `default` | 尺寸 |
+| disabled | boolean | `false` | 是否禁用 |
+| block | boolean | `false` | 是否占满整行 |
+| nativeType | `button \| submit \| reset` | `button` | 原生 type |
+| prefix | string | `ew` | 类名前缀 |
+| onClick | `(event) => void` | - | 点击回调 |
+
+方法：`setText()`、`setDisabled()`、`setType()`、`isDisabled()`、`getElement()`、`destroy()`。
+
+完整示例见 [examples/23-button.html](https://github.com/eveningwater/ew-color-picker/blob/master/examples/23-button.html)。
+
 ## 相关
 
 - [事件 · clear / sure](../api/events.md)
@@ -8716,6 +8854,45 @@ picker.on('change', (color) => {
   console.log('当前颜色', color)
 })
 ```
+
+## 独立使用 Input 组件
+
+该包同时导出一个不依赖颜色选择器的通用输入框，可用于搜索框、表单等场景（样式需单独引入 `input.css`）。
+
+```ts
+import { Input } from '@ew-color-picker/input'
+import '@ew-color-picker/style/dist/input.css'
+
+const input = new Input({
+  value: '',
+  placeholder: '请输入内容',
+  size: 'default',
+  onChange: (value) => console.log(value),
+  onEnter: (value) => console.log('提交', value),
+})
+
+document.querySelector('#app')!.appendChild(input.getElement())
+
+input.setValue('hello')
+input.setDisabled(true)
+input.destroy()
+```
+
+| 选项 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| value | string | `''` | 初始值 |
+| placeholder | string | `''` | 占位文案 |
+| size | `small \| default \| large` | `default` | 尺寸 |
+| type | `text \| password \| number \| search` | `text` | 原生类型 |
+| disabled / readonly | boolean | `false` | 禁用 / 只读 |
+| prefix | string | `ew` | 类名前缀 |
+| onChange | `(value, event) => void` | - | 输入时触发 |
+| onFocus / onBlur | `(value, event) => void` | - | 聚焦 / 失焦 |
+| onEnter | `(value, event) => void` | - | 回车时触发 |
+
+方法：`getValue()`、`setValue(value, triggerChange?)`、`setPlaceholder()`、`setDisabled()`、`setReadonly()`、`focus()`、`getElement()`、`destroy()`。
+
+完整示例见 [examples/22-input.html](https://github.com/eveningwater/ew-color-picker/blob/master/examples/22-input.html)。
 
 ## 相关
 
