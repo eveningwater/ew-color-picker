@@ -265,7 +265,8 @@ new ewColorPicker({ el: '#b', defaultColor: '#f5222d' });`,
     picker.setColor(value);
     out('选择: ' + value);
   }
-});`
+});`,
+    { styles: ['select.css'] }
   ),
   createPreset(
     'gradient',
@@ -277,7 +278,8 @@ new ewColorPicker({ el: '#b', defaultColor: '#f5222d' });`,
   gradientType: 'linear',
   gradientAngle: 90,
   gradientChange: function (css) { out(css); }
-});`
+});`,
+    { styles: ['select.css', 'checkbox.css'] }
   ),
   createPreset(
     'checkbox',
@@ -288,7 +290,8 @@ new ewColorPicker({ el: '#b', defaultColor: '#f5222d' });`,
   checkboxLabel: '反向渐变',
   checkboxChecked: false,
   onCheckboxChange: function (checked) { out('checked: ' + checked); }
-});`
+});`,
+    { styles: ['checkbox.css'] }
   ),
   createPreset(
     'boundary',
@@ -321,7 +324,8 @@ new ewColorPicker({ el: '#b', defaultColor: '#f5222d' });`,
   hueDirection: 'horizontal',
   alphaDirection: 'horizontal',
   gradientStops: ['#f00', '#00f']
-});`
+});`,
+    { styles: ['select.css', 'checkbox.css'] }
   ),
   createPreset(
     'tooltip',
@@ -404,6 +408,7 @@ const picker = new ewColorPicker({ el: '#app', defaultColor: '#6366f1' });
 picker.on('change', function (color) { out('颜色: ' + color); });`,
     {
       html: '<div id="app"></div><p class="out" id="out">通过 unpkg 加载 UMD 全量包</p>',
+      styles: ['select.css', 'checkbox.css']
     }
   ),
 ]
