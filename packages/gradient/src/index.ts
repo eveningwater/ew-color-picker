@@ -126,7 +126,7 @@ export default class ewColorPickerGradientPlugin {
   private dragUnbind: (() => void) | null = null;
 
   private get prefix(): string {
-    return getPrefix(this.ewColorPicker);
+    return getPrefix(this.ewColorPicker!);
   }
 
   constructor(ewColorPicker: ewColorPicker) {
