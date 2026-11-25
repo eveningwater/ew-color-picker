@@ -38,6 +38,7 @@ export default defineConfig({
       '@ew-color-picker/input': resolve(__dirname, './packages/input/src'),
       '@ew-color-picker/input-number': resolve(__dirname, './packages/input-number/src'),
       '@ew-color-picker/select': resolve(__dirname, './packages/select/src'),
+      '@ew-color-picker/tooltip': resolve(__dirname, './packages/tooltip/src'),
       '@ew-color-picker/checkbox': resolve(__dirname, './packages/checkbox/src'),
       '@ew-color-picker/button': resolve(__dirname, './packages/button/src'),
       '@ew-color-picker/predefine': resolve(__dirname, './packages/predefine/src'),
