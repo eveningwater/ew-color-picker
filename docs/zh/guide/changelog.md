@@ -5,6 +5,21 @@ description: ew-color-picker 各版本的变更记录，含修复、新增与文
 
 # 更新日志
 
+## 2.0.13
+
+### 修复
+
+- 聚合包 `@ew-color-picker/ew-color-picker` 补上缺失的 `@ew-color-picker/tooltip` 依赖，避免使用 Select / Tooltip 时出现依赖缺失
+
+### 新增
+
+- 聚合包以具名导出补充独立组件 `Input`、`Button`、`Checkbox`、`Select`、`InputNumber`、`Tooltip` 及对应选项类型，可直接从 `@ew-color-picker/ew-color-picker` 引入
+- `ew-color-picker` 兼容包新增 UMD 全量产物 `dist/index.min.js`（已内置全部插件），支持 script 标签与 unpkg / jsdelivr 直接引入
+
+### 文档
+
+- 聚合包 README 新增「独立组件」用法示例
+
 ## 2.0.12
 
 ### 新增

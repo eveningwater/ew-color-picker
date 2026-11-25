@@ -341,6 +341,9 @@ importers:
       '@ew-color-picker/style':
         specifier: workspace:^
         version: link:../style
+      '@ew-color-picker/tooltip':
+        specifier: workspace:^
+        version: link:../tooltip
       '@ew-color-picker/utils':
         specifier: workspace:^
         version: link:../utils

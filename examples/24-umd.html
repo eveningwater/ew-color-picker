@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>24. UMD 全量引入（ew-color-picker）</title>
+    <link rel="stylesheet" href="../packages/style/dist/index.css">
+    <link rel="stylesheet" href="../packages/style/dist/input-number.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f5; }
+        .demo { max-width: 800px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; }
+        .item { margin-bottom: 24px; padding: 15px; border: 1px solid #e8e8e8; border-radius: 6px; }
+        .title { font-weight: 600; margin-bottom: 10px; }
+        .result { margin-top: 10px; padding: 8px; background: #f8f9fa; border-radius: 4px; font-family: monospace; font-size: 13px; }
+        .hint { color: #999; font-size: 12px; margin-top: 8px; }
+        pre { background: #f6f8fa; padding: 12px; border-radius: 6px; overflow: auto; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="demo">
+        <h2>24. UMD 全量引入（ew-color-picker）</h2>
+        <p style="color:#666;font-size:13px;">通过普通 script 标签加载 <code>ew-color-picker/dist/index.min.js</code>，全部插件已内置，无需构建工具。</p>
+
+        <div class="item">
+            <div class="title">script 标签用法</div>
+            <pre>&lt;link rel="stylesheet" href="https://unpkg.com/@ew-color-picker/style/dist/index.css"&gt;
+&lt;script src="https://unpkg.com/ew-color-picker/dist/index.min.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  const picker = new ewColorPicker('#picker')
+&lt;/script&gt;</pre>
+            <div id="picker"></div>
+            <div class="result" id="result">颜色: 无</div>
+            <div class="hint">当前页面直接引用仓库内的 UMD 产物，未经过模块打包。</div>
+        </div>
+    </div>
+
+    <script src="../packages/ew-color-picker-compat/dist/index.min.js"></script>
+    <script>
+        (function () {
+            if (typeof ewColorPicker !== 'function') {
+                document.getElementById('result').textContent = 'UMD 加载失败：ewColorPicker 不是构造函数';
+                return;
+            }
+            var picker = new ewColorPicker('#picker');
+            picker.on('change', function (color) {
+                document.getElementById('result').textContent = '颜色: ' + color;
+            });
+            window.umdPicker = picker;
+        })();
+    </script>
+</body>
+</html>

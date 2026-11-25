@@ -1,14 +1,17 @@
 {
   "name": "ew-color-picker",
-  "version": "2.0.12",
+  "version": "2.0.13",
   "description": "EW Color Picker 聚合入口，内部指向 @ew-color-picker/ew-color-picker",
   "main": "index.cjs",
   "module": "index.mjs",
   "types": "index.d.ts",
+  "unpkg": "dist/index.min.js",
+  "jsdelivr": "dist/index.min.js",
   "files": [
     "index.cjs",
     "index.mjs",
-    "index.d.ts"
+    "index.d.ts",
+    "dist"
   ],
   "keywords": [
     "color-picker",
@@ -46,6 +49,8 @@
   },
   "homepage": "https://eveningwater.github.io/ew-color-picker/",
   "scripts": {
-    "prepublishOnly": "echo 'No build needed - static entry files'"
+    "build": "rimraf dist && rollup -c ../../scripts/rollup.config.mjs",
+    "clean": "rimraf dist",
+    "prepublishOnly": "npm run build"
   }
 }

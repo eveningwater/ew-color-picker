@@ -5,6 +5,21 @@ description: Release notes for ew-color-picker, including fixes, features and do
 
 # Changelog
 
+## 2.0.13
+
+### Fixes
+
+- Added the missing `@ew-color-picker/tooltip` dependency to the `@ew-color-picker/ew-color-picker` aggregate, so Select / Tooltip usage no longer hits missing dependencies
+
+### Features
+
+- The aggregate now re-exports the standalone `Input`, `Button`, `Checkbox`, `Select`, `InputNumber` and `Tooltip` components (and their option types), importable directly from `@ew-color-picker/ew-color-picker`
+- The `ew-color-picker` compat package now ships a full UMD bundle at `dist/index.min.js` (all plugins included) for script tags and unpkg / jsdelivr usage
+
+### Docs
+
+- Documented standalone component usage in the aggregate package README
+
 ## 2.0.12
 
 ### Features

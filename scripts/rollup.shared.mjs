@@ -91,6 +91,7 @@ export const PACKAGES = {
       '@ew-color-picker/input',
       '@ew-color-picker/input-number',
       '@ew-color-picker/select',
+      '@ew-color-picker/tooltip',
       '@ew-color-picker/checkbox',
       '@ew-color-picker/predefine',
       '@ew-color-picker/color-mode',
@@ -98,6 +99,17 @@ export const PACKAGES = {
       '@ew-color-picker/copy-color',
       '@ew-color-picker/gradient',
     ],
+  },
+  // ew-color-picker 兼容包：额外产出 UMD 全量包，供 script 标签 / CDN 直接引入
+  'ew-color-picker-compat': {
+    pkgName: 'ew-color-picker',
+    globalName: 'ewColorPicker',
+    distName: 'index',
+    external: [],
+    exports: 'named',
+    declaration: false,
+    onlyUmd: true,
+    input: 'packages/ew-color-picker/src/index.ts',
   },
 };
 
@@ -122,7 +134,11 @@ function pruneForeignDeclarations(pkgDir) {
 
       const distDir = path.join(pkgDir, 'dist');
       if (!fs.existsSync(distDir)) return;
-      const keepDir = path.dirname(path.join(pkgDir, typesEntry));
+      const typesPath = path.resolve(pkgDir, typesEntry);
+      // types 入口不在 dist 内（如手写声明文件的包）时，dist 里不需要保留任何声明
+      const keepDir = typesPath.startsWith(distDir + path.sep)
+        ? path.dirname(typesPath)
+        : null;
 
       const walk = (dir) => {
         fs.readdirSync(dir, { withFileTypes: true }).forEach((entry) => {
@@ -131,7 +147,9 @@ function pruneForeignDeclarations(pkgDir) {
             walk(full);
             return;
           }
-          const isOwnDeclaration = full.startsWith(keepDir + path.sep);
+          const isOwnDeclaration = keepDir
+            ? full.startsWith(keepDir + path.sep)
+            : false;
           const shouldRemove =
             entry.name.endsWith('.d.ts.map') ||
             (entry.name.endsWith('.d.ts') && !isOwnDeclaration);
@@ -175,7 +193,7 @@ export function createPackageConfigs(pkgDir) {
     ? localTsconfig
     : path.join(rootDir, 'tsconfig.json');
 
-  return BUILD_TYPES.map(({ format, ext, minify }) => {
+  return (spec.onlyUmd ? BUILD_TYPES.filter((type) => type.format === 'umd') : BUILD_TYPES).map(({ format, ext, minify }) => {
     const plugins = [
       typescript({
         verbosity: -1,
@@ -200,7 +218,9 @@ export function createPackageConfigs(pkgDir) {
     });
 
     return {
-      input: path.join(pkgDir, 'src/index.ts'),
+      input: spec.input
+        ? path.join(rootDir, spec.input)
+        : path.join(pkgDir, 'src/index.ts'),
       output: {
         file: path.join(pkgDir, 'dist', `${spec.distName || dirName}${ext}`),
         name: spec.globalName,

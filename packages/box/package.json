@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/box",
-  "version": "2.0.12",
+  "version": "2.0.13",
   "description": "box for ew-color-picker",
   "main": "dist/box.min.js",
   "module": "dist/box.esm.js",

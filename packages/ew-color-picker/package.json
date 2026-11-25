@@ -1,6 +1,6 @@
 {
   "name": "@ew-color-picker/ew-color-picker",
-  "version": "2.0.12",
+  "version": "2.0.13",
   "description": "EW Color Picker - A modern color picker component with plugin architecture",
   "main": "dist/index.min.js",
   "module": "dist/index.esm.js",
@@ -46,6 +46,7 @@
     "@ew-color-picker/input": "workspace:^",
     "@ew-color-picker/input-number": "workspace:^",
     "@ew-color-picker/select": "workspace:^",
+    "@ew-color-picker/tooltip": "workspace:^",
     "@ew-color-picker/checkbox": "workspace:^",
     "@ew-color-picker/button": "workspace:^",
     "@ew-color-picker/predefine": "workspace:^",
