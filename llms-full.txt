@@ -1284,6 +1284,21 @@ Source: https://eveningwater.github.io/ew-color-picker/guide/changelog
 
 # Changelog
 
+## 2.0.13
+
+### Fixes
+
+- Added the missing `@ew-color-picker/tooltip` dependency to the `@ew-color-picker/ew-color-picker` aggregate, so Select / Tooltip usage no longer hits missing dependencies
+
+### Features
+
+- The aggregate now re-exports the standalone `Input`, `Button`, `Checkbox`, `Select`, `InputNumber` and `Tooltip` components (and their option types), importable directly from `@ew-color-picker/ew-color-picker`
+- The `ew-color-picker` compat package now ships a full UMD bundle at `dist/index.min.js` (all plugins included) for script tags and unpkg / jsdelivr usage
+
+### Docs
+
+- Documented standalone component usage in the aggregate package README
+
 ## 2.0.12
 
 ### Features
@@ -6037,6 +6052,21 @@ new ewColorPicker({
 Source: https://eveningwater.github.io/ew-color-picker/zh/guide/changelog
 
 # 更新日志
+
+## 2.0.13
+
+### 修复
+
+- 聚合包 `@ew-color-picker/ew-color-picker` 补上缺失的 `@ew-color-picker/tooltip` 依赖，避免使用 Select / Tooltip 时出现依赖缺失
+
+### 新增
+
+- 聚合包以具名导出补充独立组件 `Input`、`Button`、`Checkbox`、`Select`、`InputNumber`、`Tooltip` 及对应选项类型，可直接从 `@ew-color-picker/ew-color-picker` 引入
+- `ew-color-picker` 兼容包新增 UMD 全量产物 `dist/index.min.js`（已内置全部插件），支持 script 标签与 unpkg / jsdelivr 直接引入
+
+### 文档
+
+- 聚合包 README 新增「独立组件」用法示例
 
 ## 2.0.12
 
