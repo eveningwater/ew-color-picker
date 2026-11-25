@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ew-color-picker Playground</title>
+  <link rel="stylesheet" href="https://unpkg.com/@ew-color-picker/style@2/dist/select.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@ew-color-picker/style@2/dist/tooltip.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@ew-color-picker/style@2/dist/button.css" />
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      color: #0f172a;
+      font-family: Inter, -apple-system, "Segoe UI", "PingFang SC", sans-serif;
+      background: #f8fafc;
+    }
+    .bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-bottom: 1px solid #e2e8f0;
+      background: #fff;
+    }
+    .brand { font-size: 15px; font-weight: 600; margin-right: 8px; }
+    .label { font-size: 13px; color: #64748b; }
+    .preset { width: 240px; }
+    .spacer { flex: 1; }
+    .back {
+      font-size: 13px;
+      color: #4096ef;
+      text-decoration: none;
+    }
+    .back:hover { text-decoration: underline; }
+    .editor { flex: 1; min-height: 0; }
+    .fallback-select {
+      width: 100%;
+      padding: 5px 8px;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      font-size: 13px;
+      background: #fff;
+    }
+    @media (max-width: 640px) {
+      .preset { width: 100%; }
+      .spacer { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="bar">
+    <span class="brand">ew-color-picker Playground</span>
+    <span class="label">示例</span>
+    <div id="preset-select" class="preset"></div>
+    <div id="reload-button"></div>
+    <span class="spacer"></span>
+    <a class="back" href="./">返回文档</a>
+  </header>
+  <main id="editor" class="editor"></main>
+
+  <script src="https://unpkg.com/@ew-color-picker/utils@2/dist/utils.min.js"></script>
+  <script src="https://unpkg.com/@ew-color-picker/tooltip@2/dist/tooltip.min.js"></script>
+  <script src="https://unpkg.com/@ew-color-picker/select@2/dist/select.min.js"></script>
+  <script src="https://unpkg.com/@ew-color-picker/button@2/dist/button.min.js"></script>
+  <script src="https://unpkg.com/ew-iframe-editor@0.0.1/dist/index.global.js"></script>
+  <script type="module" src="./playground.js"></script>
+</body>
+</html>
