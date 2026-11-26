@@ -11,7 +11,7 @@
 
 Event-driven, plugin-based modern color picker. The core only keeps color state and an event bus — all UI is assembled from plugins that can be composed, replaced, or extended.
 
-**[Try the live demo →](https://eveningwater.github.io/ew-color-picker/examples/demo)** · **[Documentation](https://eveningwater.github.io/ew-color-picker/)**
+**[Playground — 24 editable examples →](https://eveningwater.github.io/ew-color-picker/playground.html)** · **[Live demo](https://eveningwater.github.io/ew-color-picker/examples/demo)** · **[Documentation](https://eveningwater.github.io/ew-color-picker/)**
 
 ![ew-color-picker demo](./docs/public/demo-preview.gif)
 
@@ -23,6 +23,7 @@ Latest release: `2.0.13` · [Changelog](https://eveningwater.github.io/ew-color-
 
 - Documentation: https://eveningwater.github.io/ew-color-picker/
 - China mirror (Alibaba Cloud ESA): https://ew-color-picker.eveningwater.com/
+- Playground (edit and run every example): https://eveningwater.github.io/ew-color-picker/playground.html
 - Live demo: https://eveningwater.github.io/ew-color-picker/examples/demo
 - Changelog: https://eveningwater.github.io/ew-color-picker/guide/changelog
 - My website: https://www.eveningwater.com
