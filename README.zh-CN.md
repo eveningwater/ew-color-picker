@@ -11,7 +11,7 @@
 
 事件驱动 + 插件化的现代颜色选择器。核心只维护颜色状态与事件，界面全部由插件组装，可按需组合、替换与扩展。
 
-**[在线 Playground（24 个可编辑示例）→](https://eveningwater.github.io/ew-color-picker/playground.html)** · **[在线演示](https://eveningwater.github.io/ew-color-picker/zh/examples/demo)** · **[中文文档](https://eveningwater.github.io/ew-color-picker/zh/)**
+**[在线 Playground（25 个可编辑示例）→](https://eveningwater.github.io/ew-color-picker/playground.html)** · **[在线演示](https://eveningwater.github.io/ew-color-picker/zh/examples/demo)** · **[中文文档](https://eveningwater.github.io/ew-color-picker/zh/)**
 
 ![ew-color-picker demo](./docs/public/demo-preview.gif)
 

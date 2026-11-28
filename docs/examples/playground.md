@@ -5,7 +5,7 @@ description: Edit and run every ew-color-picker example right in the browser.
 
 # Online Playground
 
-24 presets cover the basics, layout and orientation, events, panel placement, plugins, and the standalone Input / Button / Select / InputNumber / Tooltip components. The playground runs in its own window: pick a preset, edit the HTML / CSS / JS, and check the preview on the right.
+25 presets cover the basics, layout and orientation, events, panel placement, plugins, and the standalone Input / Button / Select / InputNumber / Checkbox / Tooltip components. The playground runs in its own window: pick a preset, edit the HTML / CSS / JS, and check the preview on the right.
 
 <PlaygroundEntry label="Open the Playground" />
 
@@ -25,6 +25,7 @@ description: Edit and run every ew-color-picker example right in the browser.
 | 11 - 15 | InputNumber, multiple instances, eyedropper, copy color, Select plugin |
 | 16 - 20 | Gradient, Checkbox, panel boundary, panel mode, standalone Tooltip |
 | 21 - 24 | Standalone Select / Input / Button, UMD bundle |
+| 25 | Standalone Checkbox |
 
 ## Powered by ew-iframe-editor
 

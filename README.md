@@ -11,7 +11,7 @@
 
 Event-driven, plugin-based modern color picker. The core only keeps color state and an event bus — all UI is assembled from plugins that can be composed, replaced, or extended.
 
-**[Playground — 24 editable examples →](https://eveningwater.github.io/ew-color-picker/playground.html)** · **[Live demo](https://eveningwater.github.io/ew-color-picker/examples/demo)** · **[Documentation](https://eveningwater.github.io/ew-color-picker/)**
+**[Playground — 25 editable examples →](https://eveningwater.github.io/ew-color-picker/playground.html)** · **[Live demo](https://eveningwater.github.io/ew-color-picker/examples/demo)** · **[Documentation](https://eveningwater.github.io/ew-color-picker/)**
 
 ![ew-color-picker demo](./docs/public/demo-preview.gif)
 
