@@ -411,4 +411,25 @@ picker.on('change', function (color) { out('颜色: ' + color); });`,
       styles: ['select.css', 'checkbox.css']
     }
   ),
+  createPreset(
+    'checkbox-component',
+    '25 Checkbox 独立使用',
+    `var checkbox = new Checkbox.Checkbox({
+  label: '记住我的选择',
+  checked: false,
+  onChange: function (checked) { out('checked: ' + checked); }
+});
+document.getElementById('app').appendChild(checkbox.getElement());
+
+document.getElementById('toggle').onclick = function () {
+  checkbox.setChecked(!checkbox.isChecked());
+};`,
+    {
+      packages: ['@ew-color-picker/utils', '@ew-color-picker/checkbox'],
+      styles: ['checkbox.css'],
+      html: `<div id="app"></div>
+<div class="row"><button id="toggle">切换选中状态</button></div>
+<p class="out" id="out">checked: false</p>`,
+    }
+  ),
 ]
